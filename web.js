@@ -1,0 +1,1 @@
+server = require('./src/server')('');
