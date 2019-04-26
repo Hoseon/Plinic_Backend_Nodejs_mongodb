@@ -24,6 +24,7 @@ var del = require('del');
 let UPLOAD_PATH = "./uploads/"
 //let PORT = 3000;
 
+//multer 선언 이미지 rest api 개발 20190425
 var storage = multer.diskStorage({
   destination: function(req, file, cb) {
     cb(null, path.join(__dirname, '../uploads/'));
