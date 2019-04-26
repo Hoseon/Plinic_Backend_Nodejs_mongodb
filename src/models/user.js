@@ -11,10 +11,29 @@ var UserSchema = new mongoose.Schema({
     },
   name: {
         type: String
-    },
+  },
   username: {
         type: String
-    },
+  },
+  gender: {
+        type: String
+  },
+  country: {
+        type: Object
+  },
+  birthday: {
+        type: String
+  },
+  skincomplaint: {
+        type: String
+  },
+  interest: {
+        type: String
+  },
+  user_jwt: {
+        type: Boolean,
+        default : true
+  },
   provider: {
         type: String
     },
