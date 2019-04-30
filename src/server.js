@@ -1,5 +1,6 @@
 const express = require('express');
-var bodyParser = require('body-parser');
+
+
 var passport = require('passport');
 var mongoose = require('mongoose');
 const MongoClient = require("mongodb").MongoClient;
@@ -19,6 +20,11 @@ var multer = require('multer');
 var path = require('path');
 var fs = require('fs');
 var del = require('del');
+var session = require('express-session');
+var flash = require('connect-flash');
+var bodyParser = require('body-parser');
+var cookieParser = require('cookie-parser');
+var methodOverride = require('method-override');
 
 
 let UPLOAD_PATH = "./uploads/"
@@ -44,15 +50,33 @@ module.exports = function(app) {
   app.use(cors());
 
   // get our request parameters
+  app.use(express.static(path.join(__dirname, 'public')));
+  app.use(bodyParser.json());
   app.use(bodyParser.urlencoded({
     extended: true
   }));
-  app.use(bodyParser.json());
+  app.use(cookieParser());
+  app.use(methodOverride("_method"));
+  app.use(flash());
+  app.use(session({
+    secret: 'MySecret'
+  }));
+  app.use(countVisitors);
 
   // Use the passport package in our application
+
+
+  // app.use(passport.initialize());
+
+
+  //관리자용
+  var passport = require('./config/passport');
   app.use(passport.initialize());
+  app.use(passport.session());
+
   var passportMiddleware = require('./middleware/passport');
   passport.use(passportMiddleware);
+
 
   passport.serializeUser(function(user, done) {
     done(null, user);
@@ -116,19 +140,19 @@ module.exports = function(app) {
 
 
   // Delete one image by its ID
-app.delete('/images/:id', (req, res, next) => {
+  app.delete('/images/:id', (req, res, next) => {
     let imgId = req.params.id;
 
     Image.findByIdAndRemove(imgId, (err, image) => {
-        if (err && image) {
-            res.sendStatus(400);
-        }
+      if (err && image) {
+        res.sendStatus(400);
+      }
 
-        del([path.join(__dirname, '../uploads/', image.filename)]).then(deleted => {
-            res.sendStatus(200);
-        })
+      del([path.join(__dirname, '../uploads/', image.filename)]).then(deleted => {
+        res.sendStatus(200);
+      })
     })
-});
+  });
 
 
 
@@ -137,10 +161,19 @@ app.delete('/images/:id', (req, res, next) => {
     return res.send('Hello! The API is at http://localhost:' + port + '/api');
   });
 
+
+
   var routes = require('./routes');
   app.use('/api', routes);
 
   app.set('view engine', 'ejs');
+  app.set('views', './src/views')
+
+
+  //플리닉 관리자 페이지 라우터 개발 20190430 추호선
+  app.use('/home', require('./home'));
+  app.use('/users', require('./users'));
+  app.use('/posts', require('./posts'));
 
   app.get('/ejs', (req, res) => {
     res.render('home');
@@ -290,7 +323,6 @@ app.delete('/images/:id', (req, res, next) => {
   });
   */
 
-
   mongoose.connect(config.db, {
     useNewUrlParser: true,
     useCreateIndex: true
@@ -312,4 +344,47 @@ app.delete('/images/:id', (req, res, next) => {
   app.listen(port);
   console.log('Plinic Server : http://localhost:' + port);
   return app;
+
+
+  function countVisitors(req, res, next) {
+    if (!req.cookies.count && req.cookies['connect.sid']) {
+      res.cookie('count', "", {
+        maxAge: 3600000,
+        httpOnly: true
+      });
+      var now = new Date();
+      var date = now.getFullYear() + "/" + now.getMonth() + "/" + now.getDate();
+      if (date != req.cookies.countDate) {
+        res.cookie('countDate', date, {
+          maxAge: 86400000,
+          httpOnly: true
+        });
+
+        var Counter = require('./models/Counter');
+        Counter.findOne({
+          name: "vistors"
+        }, function(err, counter) {
+          if (err) return next();
+          if (counter === null) {
+            Counter.create({
+              name: "vistors",
+              totalCount: 1,
+              todayCount: 1,
+              date: date
+            });
+          } else {
+            counter.totalCount++;
+            if (counter.date == date) {
+              counter.todayCount++;
+            } else {
+              counter.todayCount = 1;
+              counter.date = date;
+            }
+            counter.save();
+          }
+        });
+      }
+    }
+    return next();
+  }
 }

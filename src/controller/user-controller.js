@@ -13,8 +13,6 @@ function createToken(user) {
 
 exports.registerUser = (req, res) => {
     if (!req.body.email || !req.body.password) {
-        console.log(req.body.email);
-        console.log(req.body.password);
         return res.status(400).json({ 'msg': 'You need to send email and password' });
     }
 
