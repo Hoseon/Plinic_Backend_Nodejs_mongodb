@@ -11,13 +11,13 @@
     <% include partials/top %>
 <!-- main start-->
 
-<!-- views/posts/index.ejs -->
+<!-- views/banner/index.ejs -->
 <div class="index">
 <div class="message">
   <%= postsMessage %>
 </div>
   <div class="buttons">
-    <button class="float_left" onclick="location.href='/posts/new'">New</button>
+    <button class="float_left" onclick="location.href='/banner/new'">New</button>
     <% if(user) {%>
       <button class="float_right" onclick="location.href='/home/logout'">Logout</button>
       <button class="float_right" onclick="location.href='/users/<%= user._id %>'">My Profile (<%= user.nickname %>)</button>
@@ -44,13 +44,13 @@
       </tr>
     </thead>
     <tbody>
-      <% if(posts == null || posts.length == 0){ %>
+      <% if(banner == null || banner.length == 0){ %>
           <tr class="noData">
             <td colspan="5">There is no data to show :(</td>
           </tr>
       <% } %>
-      <% posts.forEach(function(post){ %>
-        <tr onclick="window.location = '/posts/<%= post._id %>?<%= urlQuery %>'">
+      <% banner.forEach(function(post){ %>
+        <tr onclick="window.location = '/banner/<%= post._id %>?<%= urlQuery %>'">
           <td><%= post.numId %></td>
           <td class="highlight" data-highlight="<%= search.highlight.title %>">
             <%= post.title %>
@@ -72,7 +72,7 @@
     <% for(i=1;i<=maxPage;i++){ %>
       <% if(i<=offset || i>maxPage-offset || (i>=page-(offset-1) && i<=page+(offset-1))){ %>
         <% if(i != page){ %>
-          <li>[<a href="/posts?page=<%= i %><%= partialQuery %>"> <%= i %> </a>]</li>
+          <li>[<a href="/banner?page=<%= i %><%= partialQuery %>"> <%= i %> </a>]</li>
         <% } else { %>
           <li>[ <b><%= i %></b> ]</li>
         <% } %>
@@ -89,7 +89,7 @@
       <% } %>
     </div>
     <div class="search float_right">
-      <form class="checkValidation" action="/posts/" id="search">
+      <form class="checkValidation" action="/banner/" id="search">
         <select name="searchType" <%= search.searchType=="author!"?"disabled":"" %>>
           <% var select %>
           <option value="title,body"
@@ -113,7 +113,7 @@
           <%= search.searchType=="author!"?"disabled":"" %>>
         <button type="submit" <%= search.searchType=="author!"?"disabled":"" %>>search</button>
         <%if(search.searchType){%>
-          <button type="button" onclick="window.location = '/posts?page=1'">cancel</button>
+          <button type="button" onclick="window.location = '/banner?page=1'">cancel</button>
         <%}%>
         <div class="message" id="searchError"></div>
       </form>
@@ -122,7 +122,7 @@
 </div>
 
 <!-- main end -->
-    </div><!--posts end -->
+    </div><!--banner end -->
     <footer>
       <% include ../partials/footer %>
     </footer>

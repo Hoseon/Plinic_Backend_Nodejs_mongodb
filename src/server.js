@@ -12,6 +12,7 @@ var KakaoStrategy = require('passport-kakao').Strategy;
 var ejs = require('ejs');
 var User = require('./models/user');
 var Image = require('./models/image');
+var Banner     = require('./models/Banner');
 const GoogleStrategy = require('passport-google-oauth20');
 var jwt = require('jsonwebtoken');
 var config = require('./config/config');
@@ -127,7 +128,7 @@ module.exports = function(app) {
   app.get('/images/:id', (req, res, next) => {
     let imgId = req.params.id;
 
-    Image.findById(imgId, (err, image) => {
+    Banner.findById(imgId, (err, image) => {
       if (err) {
         res.sendStatus(400);
       }
@@ -176,6 +177,8 @@ module.exports = function(app) {
   app.use('/home', require('./home'));
   app.use('/users', require('./users'));
   app.use('/posts', require('./posts'));
+  app.use('/menus', require('./menus'));
+  app.use('/banner', require('./banner'));
 
   app.get('/ejs', (req, res) => {
     res.render('home');

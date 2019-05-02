@@ -17,7 +17,7 @@
   <%= postsMessage %>
 </div>
   <div class="buttons">
-    <button class="float_left" onclick="location.href='/posts/new'">New</button>
+    <!-- <button class="float_left" onclick="location.href='/posts/new'">New</button> -->
     <% if(user) {%>
       <button class="float_right" onclick="location.href='/home/logout'">Logout</button>
       <button class="float_right" onclick="location.href='/users/<%= user._id %>'">My Profile (<%= user.nickname %>)</button>
@@ -27,40 +27,44 @@
     <% } %>
   </div>
   <table>
-    <colgroup>
+    <!-- <colgroup>
       <col class="num"/>
       <col class="title"/>
       <col class="views"/>
       <col class="date"/>
       <col class="author"/>
-    </colgroup>
+    </colgroup> -->
     <thead>
-      <tr>
+      <!-- <tr>
         <th>Num</th>
         <th>Title</th>
         <th>Views</th>
         <th>Date</th>
         <th>Author</th>
-      </tr>
+      </tr> -->
     </thead>
     <tbody>
-      <% if(posts == null || posts.length == 0){ %>
-          <tr class="noData">
-            <td colspan="5">There is no data to show :(</td>
-          </tr>
-      <% } %>
-      <% posts.forEach(function(post){ %>
-        <tr onclick="window.location = '/posts/<%= post._id %>?<%= urlQuery %>'">
-          <td><%= post.numId %></td>
-          <td class="highlight" data-highlight="<%= search.highlight.title %>">
-            <%= post.title %>
-            <span class="comments">(<%= post.comments.length %>)</span>
-          </td>
-          <td><%= post.views %></td>
-          <td><%= post.getFormattedDate(post.createdAt) %></td>
-          <td class="highlight" data-highlight="<%= search.highlight.author %>"><%= post.author.nickname %></td>
-        </tr>
-      <% }) %>
+      <tr onclick="location.href='/banner'">
+        <td>
+          배너관리
+        </td>
+      </tr>
+      <tr onclick="location.href='/posts'">
+        <td>
+          이벤트 메인 관리
+        </td>
+      </tr>
+      <tr>
+        <td>
+          케어존 관리
+        </td>
+      </tr>
+      <tr>
+        <td>
+          제품 관리
+        </td>
+      </tr>
+
     </tbody>
   </table>
   <ul class="pagination">
@@ -81,7 +85,7 @@
       <% } %>
     <%}%>
   </ul>
-  <div class="floats">
+  <!-- <div class="floats">
     <div class="counter float_left">
       <% if(counter){ %>
         Total <%= counter.totalCount %> visitors<br>
@@ -106,9 +110,9 @@
               <%= search.searchType=="author"?select="selected":"" %>>Author</option>
           <%}%>
         </select>
-        <input class="cvMinLength" cvMinLength="2"
+        <input class="cvMinLength" cvMinLength="3"
           cvMinLenErrTo="#searchError"
-          cvMinLenErrMsg="It should be at least 2 characters"
+          cvMinLenErrMsg="It should be at least 3 characters"
           type="text" name="searchText" value="<%= select?search.searchText:"" %>"
           <%= search.searchType=="author!"?"disabled":"" %>>
         <button type="submit" <%= search.searchType=="author!"?"disabled":"" %>>search</button>
@@ -118,7 +122,7 @@
         <div class="message" id="searchError"></div>
       </form>
     </div>
-  </div>
+  </div> -->
 </div>
 
 <!-- main end -->
