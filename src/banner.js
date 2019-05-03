@@ -28,6 +28,17 @@ let upload = multer({
   storage: storage
 })
 
+
+router.get('/list', function(req,res){
+    //var bannerlist = null;
+    async.waterfall([function(callback){
+      Banner.find(function(err, docs){
+        res.json(docs);
+      });
+    }]);
+  });
+
+
 router.get('/', function(req,res){
   var vistorCounter = null;
   var page = Math.max(1,req.query.page)>1?parseInt(req.query.page):1;
