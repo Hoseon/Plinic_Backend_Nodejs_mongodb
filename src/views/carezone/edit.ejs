@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <% include ../partials/head %>
+  </head>
+  <body>
+    <header>
+      <% include ../partials/header %>
+    </header>
+    <div class="posts">
+    <% include partials/top %>
+<!-- main start-->
+
+<!-- views/carezone/index.ejs -->
+<div class="edit">
+  <div class="buttons">
+    <button onclick="history.back()">Back</button>
+  </div>
+  <h3>케어존 관리</h3>
+  <form class="checkValidation" action="/carezone/<%=post._id%>?_method=put" method="post" enctype="multipart/form-data">
+    <div class="inputs">
+      <div class="floats">
+        <label>케어존 제목</label>
+        <input class="cvRequired" type="text" name="post[title]" cvRqErrMsg="Title is required." cvRqErrTo="#cvErrTitle" value="<%=post.title%>">
+        <div id="cvErrTitle" class="message"></div>
+      </div>
+      <div class="floats">
+        <label>Author</label>
+        <input disabled type="text" value="<%= user.nickname %>">
+      </div>
+      <div class="floats">
+        <label>케어존 설명</label>
+        <textarea class="cvRequired" name="post[body]" cvRqErrMsg="Body is required." cvRqErrTo="#cvErrBody"><%=post.body%></textarea>
+        <div id="cvErrBody" class="message"></div>
+      </div>
+      <div class="floats">
+        <label>케어존 이미지</label>
+        <input class="cvRequired" type="file" name="image" cvRqErrMsg="이미지 파일을 다시 업로드 해주세요." cvRqErrTo="#cvErrTitle" accept=".jpg, .jpeg, .png" value="">
+        </input>
+        <div id="cvErrTitle" class="message"></div>
+      </div>
+      <span>이전 케어존 이미지 파일 다운로드 : <a href="<%= url %>" download><%=preoriginalName%></a> - 링크 클릭</span>
+      <input type="hidden" name="prefilename" value="<%=prefilename%>" />
+      <input type="hidden" name="preoriginalName" value="<%=preoriginalName%>" />
+      <br />
+      <br />
+      <br />
+      <br />
+      <br />
+
+      <h3>미션 관리</h3>
+      <div class="floats">
+        <label>미션제목</label>
+        <textarea class="cvRequired" name="post[missontitle]" cvRqErrMsg="Body is required." cvRqErrTo="#cvErrBody"><%=post.missontitle%></textarea>
+        <div id="cvErrBody" class="message"></div>
+      </div>
+      <div class="floats">
+        <label>미션명</label>
+        <textarea class="cvRequired" name="post[missonsubtitle]" cvRqErrMsg="Body is required." cvRqErrTo="#cvErrBody"><%=post.missonsubtitle%></textarea>
+        <div id="cvErrBody" class="message"></div>
+      </div>
+      <div class="floats">
+        <label>보상 상품명</label>
+        <textarea class="cvRequired" name="post[product]" cvRqErrMsg="Body is required." cvRqErrTo="#cvErrBody"><%=post.product%></textarea>
+        <div id="cvErrBody" class="message"></div>
+      </div>
+      <div class="floats">
+        <label>미션 종료일</label>
+        <textarea class="cvRequired" name="post[endmission]" cvRqErrMsg="Body is required." cvRqErrTo="#cvErrBody"><%=post.endmission%></textarea>
+        <div id="cvErrBody" class="message"></div>
+      </div>
+      <div class="floats">
+        <label>상품 이미지</label>
+        <input class="cvRequired" type="file" name="prodimage" cvRqErrMsg="이미지 파일을 다시 업로드 해주세요." cvRqErrTo="#cvErrTitle" accept=".jpg, .jpeg, .png" value="">
+        </input>
+        <div id="cvErrTitle" class="message"></div>
+      </div>
+      <span>이전 미션 상품 이미지 파일 다운로드 : <a href="<%= prod_url %>" download><%=preprodoriginalname%></a> - 링크 클릭</span>
+      <input type="hidden" name="preprodfilename" value="<%=preprodfilename%>" />
+      <input type="hidden" name="preprodoriginalname" value="<%=preprodoriginalname%>" />
+
+
+    </div>
+
+
+    <div class="buttons">
+      <button type="submit">Submit</button>
+    </div>
+  </form>
+</div>
+
+<!-- main end -->
+    </div><!--carezone end -->
+    <footer>
+      <% include ../partials/footer %>
+    </footer>
+  </body>
+</html>

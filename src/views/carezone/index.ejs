@@ -11,13 +11,13 @@
     <% include partials/top %>
 <!-- main start-->
 
-<!-- views/posts/index.ejs -->
+<!-- views/carezone/index.ejs -->
 <div class="index">
 <div class="message">
   <%= postsMessage %>
 </div>
   <div class="buttons">
-    <!-- <button class="float_left" onclick="location.href='/posts/new'">New</button> -->
+    <button class="float_left" onclick="location.href='/carezone/new'">New</button>
     <% if(user) {%>
       <button class="float_right" onclick="location.href='/home/logout'">Logout</button>
       <button class="float_right" onclick="location.href='/users/<%= user._id %>'">My Profile (<%= user.nickname %>)</button>
@@ -27,44 +27,40 @@
     <% } %>
   </div>
   <table>
-    <!-- <colgroup>
+    <colgroup>
       <col class="num"/>
       <col class="title"/>
       <col class="views"/>
       <col class="date"/>
       <col class="author"/>
-    </colgroup> -->
+    </colgroup>
     <thead>
-      <!-- <tr>
+      <tr>
         <th>Num</th>
         <th>Title</th>
         <th>Views</th>
         <th>Date</th>
         <th>Author</th>
-      </tr> -->
+      </tr>
     </thead>
     <tbody>
-      <tr onclick="location.href='/banner'">
-        <td>
-          배너관리
-        </td>
-      </tr>
-      <tr onclick="location.href='/carezone'">
-        <td>
-          케어존 관리
-        </td>
-      </tr>
-      <tr onclick="location.href='/posts'">
-        <td>
-          이벤트 메인 관리
-        </td>
-      </tr>
-      <tr>
-        <td>
-          제품 관리
-        </td>
-      </tr>
-
+      <% if(carezone == null || carezone.length == 0){ %>
+          <tr class="noData">
+            <td colspan="5">There is no data to show :(</td>
+          </tr>
+      <% } %>
+      <% carezone.forEach(function(post){ %>
+        <tr onclick="window.location = '/carezone/<%= post._id %>?<%= urlQuery %>'">
+          <td><%= post.numId %></td>
+          <td class="highlight" data-highlight="<%= search.highlight.title %>">
+            <%= post.title %>
+            <span class="comments">(<%= post.comments.length %>)</span>
+          </td>
+          <td><%= post.views %></td>
+          <td><%= post.getFormattedDate(post.createdAt) %></td>
+          <td class="highlight" data-highlight="<%= search.highlight.author %>"><%= post.author.nickname %></td>
+        </tr>
+      <% }) %>
     </tbody>
   </table>
   <ul class="pagination">
@@ -76,7 +72,7 @@
     <% for(i=1;i<=maxPage;i++){ %>
       <% if(i<=offset || i>maxPage-offset || (i>=page-(offset-1) && i<=page+(offset-1))){ %>
         <% if(i != page){ %>
-          <li>[<a href="/posts?page=<%= i %><%= partialQuery %>"> <%= i %> </a>]</li>
+          <li>[<a href="/carezone?page=<%= i %><%= partialQuery %>"> <%= i %> </a>]</li>
         <% } else { %>
           <li>[ <b><%= i %></b> ]</li>
         <% } %>
@@ -85,7 +81,7 @@
       <% } %>
     <%}%>
   </ul>
-  <!-- <div class="floats">
+  <div class="floats">
     <div class="counter float_left">
       <% if(counter){ %>
         Total <%= counter.totalCount %> visitors<br>
@@ -93,7 +89,7 @@
       <% } %>
     </div>
     <div class="search float_right">
-      <form class="checkValidation" action="/posts/" id="search">
+      <form class="checkValidation" action="/carezone/" id="search">
         <select name="searchType" <%= search.searchType=="author!"?"disabled":"" %>>
           <% var select %>
           <option value="title,body"
@@ -110,23 +106,23 @@
               <%= search.searchType=="author"?select="selected":"" %>>Author</option>
           <%}%>
         </select>
-        <input class="cvMinLength" cvMinLength="3"
+        <input class="cvMinLength" cvMinLength="2"
           cvMinLenErrTo="#searchError"
-          cvMinLenErrMsg="It should be at least 3 characters"
+          cvMinLenErrMsg="It should be at least 2 characters"
           type="text" name="searchText" value="<%= select?search.searchText:"" %>"
           <%= search.searchType=="author!"?"disabled":"" %>>
         <button type="submit" <%= search.searchType=="author!"?"disabled":"" %>>search</button>
         <%if(search.searchType){%>
-          <button type="button" onclick="window.location = '/posts?page=1'">cancel</button>
+          <button type="button" onclick="window.location = '/carezone?page=1'">cancel</button>
         <%}%>
         <div class="message" id="searchError"></div>
       </form>
     </div>
-  </div> -->
+  </div>
 </div>
 
 <!-- main end -->
-    </div><!--posts end -->
+    </div><!--carezone end -->
     <footer>
       <% include ../partials/footer %>
     </footer>

@@ -13,6 +13,7 @@ var ejs = require('ejs');
 var User = require('./models/user');
 var Image = require('./models/image');
 var Banner     = require('./models/Banner');
+var Carezone     = require('./models/Carezone');
 const GoogleStrategy = require('passport-google-oauth20');
 var jwt = require('jsonwebtoken');
 var config = require('./config/config');
@@ -139,6 +140,60 @@ module.exports = function(app) {
   });
 
 
+  app.get('/prod_images/:id', (req, res, next) => {
+    let imgId = req.params.id;
+
+    Carezone.findById(imgId, (err, image) => {
+      if (err) {
+        res.sendStatus(400);
+      }
+      // stream the image back by loading the file
+      res.setHeader('Content-Type', 'image/jpeg');
+      fs.createReadStream(path.join(__dirname, '../uploads/', image.prodfilename)).pipe(res);
+    })
+  });
+
+  app.get('/carezone_images/:id', (req, res, next) => {
+    let imgId = req.params.id;
+
+    Carezone.findById(imgId, (err, image) => {
+      if (err) {
+        res.sendStatus(400);
+      }
+      // stream the image back by loading the file
+      res.setHeader('Content-Type', 'image/jpeg');
+      fs.createReadStream(path.join(__dirname, '../uploads/', image.filename)).pipe(res);
+    })
+  });
+
+
+  // Get one image by its ID
+  app.get('/carezone_images/:id', (req, res, next) => {
+    let imgId = req.params.id;
+
+    Carezone.findById(imgId, (err, image) => {
+      if (err) {
+        res.sendStatus(400);
+      }
+      // stream the image back by loading the file
+      res.setHeader('Content-Type', 'image/jpeg');
+      fs.createReadStream(path.join(__dirname, '../uploads/', image.filename)).pipe(res);
+    })
+  });
+
+  app.get('/carezone_prodimages/:id', (req, res, next) => {
+    let imgId = req.params.id;
+
+    Carezone.findById(imgId, (err, image) => {
+      if (err) {
+        res.sendStatus(400);
+      }
+      // stream the image back by loading the file
+      res.setHeader('Content-Type', 'image/jpeg');
+      fs.createReadStream(path.join(__dirname, '../uploads/', image.prodfilename)).pipe(res);
+    })
+  });
+
 
   // Delete one image by its ID
   app.delete('/images/:id', (req, res, next) => {
@@ -179,6 +234,7 @@ module.exports = function(app) {
   app.use('/posts', require('./posts'));
   app.use('/menus', require('./menus'));
   app.use('/banner', require('./banner'));
+  app.use('/carezone', require('./carezone'));
 
   app.get('/ejs', (req, res) => {
     res.render('home');
