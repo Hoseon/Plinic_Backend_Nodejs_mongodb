@@ -47,6 +47,17 @@ router.get('/main_list', function(req, res) {
   }]);
 });
 
+router.get('/mission/:id', function(req, res) {
+  //var carezonelist = null;
+  async.waterfall([function(callback) {
+    Carezone.findOne({
+      _id: req.params.id
+    }, function(err, docs) {
+      res.json(docs);
+    });
+  }]);
+});
+
 router.get('/', function(req, res) {
   var vistorCounter = null;
   var page = Math.max(1, req.query.page) > 1 ? parseInt(req.query.page) : 1;
