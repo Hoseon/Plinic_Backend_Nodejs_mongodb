@@ -154,6 +154,19 @@ module.exports = function(app) {
     })
   });
 
+  app.get('/beauty_images/:id', (req, res, next) => {
+    let imgId = req.params.id;
+
+    Beauty.findById(imgId, (err, image) => {
+      if (err) {
+        res.sendStatus(400);
+      }
+      // stream the image back by loading the file
+      res.setHeader('Content-Type', 'image/jpeg');
+      fs.createReadStream(path.join(__dirname, '../uploads/', image.filename)).pipe(res);
+    })
+  });
+
   app.get('/carezone_images/:id', (req, res, next) => {
     let imgId = req.params.id;
 
@@ -166,21 +179,20 @@ module.exports = function(app) {
       fs.createReadStream(path.join(__dirname, '../uploads/', image.filename)).pipe(res);
     })
   });
-
 
   // Get one image by its ID
-  app.get('/carezone_images/:id', (req, res, next) => {
-    let imgId = req.params.id;
-
-    Carezone.findById(imgId, (err, image) => {
-      if (err) {
-        res.sendStatus(400);
-      }
-      // stream the image back by loading the file
-      res.setHeader('Content-Type', 'image/jpeg');
-      fs.createReadStream(path.join(__dirname, '../uploads/', image.filename)).pipe(res);
-    })
-  });
+  // app.get('/carezone_images/:id', (req, res, next) => {
+  //   let imgId = req.params.id;
+  //
+  //   Carezone.findById(imgId, (err, image) => {
+  //     if (err) {
+  //       res.sendStatus(400);
+  //     }
+  //     // stream the image back by loading the file
+  //     res.setHeader('Content-Type', 'image/jpeg');
+  //     fs.createReadStream(path.join(__dirname, '../uploads/', image.filename)).pipe(res);
+  //   })
+  // });
 
   app.get('/carezone_prodimages/:id', (req, res, next) => {
     let imgId = req.params.id;

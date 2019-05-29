@@ -30,11 +30,18 @@ let upload = multer({
 
 
 router.get('/list', function(req, res) {
-  //var carezonelist = null;
   async.waterfall([function(callback) {
     Beauty.find(function(err, docs) {
       res.json(docs);
     });
+  }]);
+});
+
+router.get('/main_list', function(req, res) {
+  async.waterfall([function(callback) {
+    Beauty.find(function(err, docs) {
+      res.json(docs);
+    }).sort({"_id" : -1 }).limit(4);
   }]);
 });
 
