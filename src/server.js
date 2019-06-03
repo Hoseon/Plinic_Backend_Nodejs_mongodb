@@ -15,6 +15,7 @@ var Image = require('./models/image');
 var Banner     = require('./models/Banner');
 var Carezone     = require('./models/Carezone');
 var Beauty     = require('./models/Beauty');
+var Notice     = require('./models/Notice');
 const GoogleStrategy = require('passport-google-oauth20');
 var jwt = require('jsonwebtoken');
 var config = require('./config/config');
@@ -180,6 +181,34 @@ module.exports = function(app) {
     })
   });
 
+
+
+  app.get('/notice_images/:id', (req, res, next) => {
+    let imgId = req.params.id;
+
+    Notice.findById(imgId, (err, image) => {
+      if (err) {
+        res.sendStatus(400);
+      }
+      // stream the image back by loading the file
+      res.setHeader('Content-Type', 'image/jpeg');
+      fs.createReadStream(path.join(__dirname, '../uploads/', image.filename)).pipe(res);
+    })
+  });
+
+  app.get('/notice_prodimages/:id', (req, res, next) => {
+    let imgId = req.params.id;
+
+    Notice.findById(imgId, (err, image) => {
+      if (err) {
+        res.sendStatus(400);
+      }
+      // stream the image back by loading the file
+      res.setHeader('Content-Type', 'image/jpeg');
+      fs.createReadStream(path.join(__dirname, '../uploads/', image.prodfilename)).pipe(res);
+    })
+  });
+
   // Get one image by its ID
   // app.get('/carezone_images/:id', (req, res, next) => {
   //   let imgId = req.params.id;
@@ -276,6 +305,7 @@ module.exports = function(app) {
   app.use('/banner', require('./banner'));
   app.use('/carezone', require('./carezone'));
   app.use('/beauty', require('./beauty'));
+  app.use('/notice', require('./notice'));
 
   app.get('/ejs', (req, res) => {
     res.render('home');
