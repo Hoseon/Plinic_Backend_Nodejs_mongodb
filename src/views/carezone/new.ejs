@@ -54,8 +54,18 @@
         <div id="cvErrTitle" class="message"></div>
       </div>
       <div class="floats">
+        <label>최대 참여인원</label>
+        <input class="cvRequired" type="number" name="post[maxmember]" cvRqErrMsg="최대 인원을 입력해주세요." cvRqErrTo="#cvErrBody" value="">
+        <div id="cvErrTitle" class="message"></div>
+      </div>
+      <div class="floats">
         <label>보상 상품명</label>
         <input class="cvRequired" type="text" name="post[product]" cvRqErrMsg="상품명을 입력해주세요." cvRqErrTo="#cvErrBody" value="">
+        <div id="cvErrTitle" class="message"></div>
+      </div>
+      <div class="floats">
+        <label>미션 시작일</label>
+        <input class="cvRequired" type="date" name="post[startmission]" cvRqErrMsg="미션 종료일 선택 필수" cvRqErrTo="#cvErrBody" value="">
         <div id="cvErrTitle" class="message"></div>
       </div>
       <div class="floats">

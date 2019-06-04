@@ -21,10 +21,13 @@ var carezoneSchema = mongoose.Schema({
   missontitle : String,
   missonsubtitle: String,
   product: String,
+  startmission: Date,
   endmission: Date,
   prodfilename: String,
   prodoriginalname: String,
   proddesc: String,
+  maxmember: {type:Number, required:true},
+  currentmember : {type: Number},
 });
 
 carezoneSchema.methods.getFormattedDate = function (date) {

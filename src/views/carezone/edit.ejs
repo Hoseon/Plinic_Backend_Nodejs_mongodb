@@ -60,8 +60,18 @@
         <div id="cvErrBody" class="message"></div>
       </div>
       <div class="floats">
+        <label>최대참여인원</label>
+        <textarea class="cvRequired" name="post[maxmember]" cvRqErrMsg="Body is required." cvRqErrTo="#cvErrBody"><%=post.maxmember%></textarea>
+        <div id="cvErrBody" class="message"></div>
+      </div>
+      <div class="floats">
         <label>보상 상품명</label>
         <textarea class="cvRequired" name="post[product]" cvRqErrMsg="Body is required." cvRqErrTo="#cvErrBody"><%=post.product%></textarea>
+        <div id="cvErrBody" class="message"></div>
+      </div>
+      <div class="floats">
+        <label>미션 시작일</label>
+        <textarea class="cvRequired" name="post[startmission]" cvRqErrMsg="Body is required." cvRqErrTo="#cvErrBody"><%=post.startmission%></textarea>
         <div id="cvErrBody" class="message"></div>
       </div>
       <div class="floats">
