@@ -27,10 +27,18 @@ exports.registerUser = (req, res) => {
 
         let newUser = User(req.body);
         newUser.save((err, user) => {
+          console.log("bodybodybody" + req.body);
             if (err) {
                 return res.status(400).json({ 'msg': err });
             }
-            return res.status(201).json(user);
+           console.log("result" + user);
+
+            // return res.status(201).json(user);
+            return res.status(201).json({
+                token: createToken(user)
+            });
+            console.log("result2222" + user);
+
         });
     });
 };
