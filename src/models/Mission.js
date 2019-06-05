@@ -1,6 +1,8 @@
 var mongoose = require('mongoose');
 
 var carezoneSchema = mongoose.Schema({
+  missionID : {type:mongoose.Schema.Types.ObjectId, ref:'carezone', required:true},
+  member : { type:String },
   title: {type:String, required:true},
   body: {type:String, required:true},
   author: {type:mongoose.Schema.Types.ObjectId, ref:'user_admin', required:true},

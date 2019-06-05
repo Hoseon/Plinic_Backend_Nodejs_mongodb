@@ -22,22 +22,20 @@ exports.registerUser = (req, res) => {
         }
 
         if (user) {
-            return res.status(400).json({ 'msg': 'The user already exists' });
+          // return res.status(400).json({ 'msg': 'The user already exists' });
+            return res.status(400).json({ 'msg': '이미 등록된 회원입니다.' });
         }
 
         let newUser = User(req.body);
         newUser.save((err, user) => {
-          console.log("bodybodybody" + req.body);
             if (err) {
                 return res.status(400).json({ 'msg': err });
             }
-           console.log("result" + user);
 
             // return res.status(201).json(user);
             return res.status(201).json({
                 token: createToken(user)
             });
-            console.log("result2222" + user);
 
         });
     });
@@ -54,7 +52,8 @@ exports.loginUser = (req, res) => {
         }
 
         if (!user) {
-            return res.status(400).json({ 'msg': 'The user does not exist' });
+          // return res.status(400).json({ 'msg': 'The user does not exist' });
+            return res.status(400).json({ 'msg': '존재하지 않는 회원입니다.' });
         }
 
         user.comparePassword(req.body.password, (err, isMatch) => {
@@ -63,7 +62,8 @@ exports.loginUser = (req, res) => {
                     token: createToken(user)
                 });
             } else {
-                return res.status(400).json({ msg: 'The email and password don\'t match.' });
+              // return res.status(400).json({ msg: 'The email and password don\'t match.' });
+                return res.status(400).json({ msg: '이메일 / 비밀번호가 일치하지 않습니다.' });
             }
         });
     });
