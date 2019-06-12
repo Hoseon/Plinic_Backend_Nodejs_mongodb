@@ -26,6 +26,7 @@ var carezoneSchema = mongoose.Schema({
   prodfilename: String,
   prodoriginalname: String,
   proddesc: String,
+  caption: String,
   maxmember: {type:Number, required:true},
   currentmember : {type: Number},
   mission: [{

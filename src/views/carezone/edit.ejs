@@ -71,6 +71,11 @@
         <div id="cvErrBody" class="message"></div>
       </div>
       <div class="floats">
+        <label>하단 캡션</label>
+        <textarea class="cvRequired" name="post[caption]" cvRqErrMsg="Body is required." cvRqErrTo="#cvErrBody"><%=post.caption%></textarea>
+        <div id="cvErrBody" class="message"></div>
+      </div>
+      <div class="floats">
         <label>미션 시작일</label>
         <textarea class="cvRequired" name="post[startmission]" cvRqErrMsg="Body is required." cvRqErrTo="#cvErrBody"><%=post.startmission%></textarea>
         <div id="cvErrBody" class="message"></div>
