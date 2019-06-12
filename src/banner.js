@@ -34,7 +34,7 @@ router.get('/list', function(req,res){
     async.waterfall([function(callback){
       Banner.find(function(err, docs){
         res.json(docs);
-      }).sort({"_id" : 1});
+      }).sort({"_id" : -1});
     }]);
   });
 
