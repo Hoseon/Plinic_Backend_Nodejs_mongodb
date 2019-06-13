@@ -29,6 +29,7 @@ var carezoneSchema = mongoose.Schema({
   caption: String,
   maxmember: {type:Number, required:true},
   currentmember : {type: Number},
+  exposure : Date,
   mission: [{
     memberId: {type:mongoose.Schema.Types.ObjectId, ref:'user', required:true},
     name: {type: String},

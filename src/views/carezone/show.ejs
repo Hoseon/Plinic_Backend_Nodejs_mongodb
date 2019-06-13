@@ -55,6 +55,7 @@
     <div class="body highlight" data-highlight="<%= search.highlight.body %>">최대참여인원 : <%= post.maxmember %></div>
     <div class="body highlight" data-highlight="<%= search.highlight.body %>">보상 상품명 : <%= post.product %></div>
     <div class="body highlight" data-highlight="<%= search.highlight.body %>">하단 캡션 : <%= post.caption %></div>
+    <div class="body highlight" data-highlight="<%= search.highlight.body %>">미션 공개일 : <%= post.getFormattedDate(post.exposure) %></div>
     <div class="body highlight" data-highlight="<%= search.highlight.body %>">미션 시작일 : <%= post.getFormattedDate(post.startmission) %></div>
     <div class="body highlight" data-highlight="<%= search.highlight.body %>">미션 종료일 : <%= post.getFormattedDate(post.endmission) %></div>
     <div class="body highlight" data-highlight="<%= search.highlight.body %>"><img src="<%= prod_url %>"></div>

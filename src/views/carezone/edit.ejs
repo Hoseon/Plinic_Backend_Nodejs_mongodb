@@ -21,7 +21,7 @@
     <div class="inputs">
       <div class="floats">
         <label>케어존 제목</label>
-        <input class="cvRequired" type="text" name="post[title]" cvRqErrMsg="Title is required." cvRqErrTo="#cvErrTitle" value="<%=post.title%>">
+        <input class="cvRequired" maxlength="20" type="text" name="post[title]" cvRqErrMsg="Title is required." cvRqErrTo="#cvErrTitle" value="<%=post.title%>">
         <div id="cvErrTitle" class="message"></div>
       </div>
       <div class="floats">
@@ -52,12 +52,12 @@
       <h3>미션 관리</h3>
       <div class="floats">
         <label>미션제목</label>
-        <textarea class="cvRequired" name="post[missontitle]" cvRqErrMsg="Body is required." cvRqErrTo="#cvErrBody"><%=post.missontitle%></textarea>
+        <textarea class="cvRequired" maxlength="20" name="post[missontitle]" cvRqErrMsg="Body is required." cvRqErrTo="#cvErrBody"><%=post.missontitle%></textarea>
         <div id="cvErrBody" class="message"></div>
       </div>
       <div class="floats">
         <label>미션목표</label>
-        <textarea class="cvRequired" name="post[missonsubtitle]" cvRqErrMsg="Body is required." cvRqErrTo="#cvErrBody"><%=post.missonsubtitle%></textarea>
+        <textarea class="cvRequired" maxlength="20" name="post[missonsubtitle]" cvRqErrMsg="Body is required." cvRqErrTo="#cvErrBody"><%=post.missonsubtitle%></textarea>
         <div id="cvErrBody" class="message"></div>
       </div>
       <div class="floats">
@@ -67,12 +67,17 @@
       </div>
       <div class="floats">
         <label>보상 상품명</label>
-        <textarea class="cvRequired" name="post[product]" cvRqErrMsg="Body is required." cvRqErrTo="#cvErrBody"><%=post.product%></textarea>
+        <textarea class="cvRequired" maxlength="20" name="post[product]" cvRqErrMsg="Body is required." cvRqErrTo="#cvErrBody"><%=post.product%></textarea>
         <div id="cvErrBody" class="message"></div>
       </div>
       <div class="floats">
         <label>하단 캡션</label>
         <textarea class="cvRequired" name="post[caption]" cvRqErrMsg="Body is required." cvRqErrTo="#cvErrBody"><%=post.caption%></textarea>
+        <div id="cvErrBody" class="message"></div>
+      </div>
+      <div class="floats">
+        <label>미션 공개</label>
+        <textarea class="cvRequired" name="post[startmission]" cvRqErrMsg="Body is required." cvRqErrTo="#cvErrBody"><%=post.startmission%></textarea>
         <div id="cvErrBody" class="message"></div>
       </div>
       <div class="floats">
