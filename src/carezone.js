@@ -32,7 +32,7 @@ let upload = multer({
 router.get('/list', function(req, res) {
   //var carezonelist = null;
   async.waterfall([function(callback) {
-    Carezone.find( {exposure: {$lte : new Date()} } , function(err, docs) {
+    Carezone.find( {exposure: {$lte : new Date()}}, function(err, docs) {
       res.json(docs);
     }).sort({"_id" : -1 });
   }]);
@@ -41,7 +41,7 @@ router.get('/list', function(req, res) {
 router.get('/main_list', function(req, res) {
   //var carezonelist = null;
   async.waterfall([function(callback) {
-    Carezone.find(function(err, docs) {
+    Carezone.find( {exposure: {$lte : new Date()}}, function(err, docs) {
       res.json(docs);
     }).sort({"_id" : -1 }).limit(3);
   }]);
