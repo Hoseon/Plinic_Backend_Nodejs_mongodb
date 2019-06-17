@@ -18,6 +18,9 @@ routes.get('/', (req, res) => {
 routes.post('/register', userController.registerUser);
 routes.post('/login', userController.loginUser);
 
+
+routes.post('/missionsave', userController.missionSave);
+
 //routes.get('/auth/kakao', userController.loginUser_Kakao);
 
 routes.get('/auth/kakao', passport.authenticate('kakao',{

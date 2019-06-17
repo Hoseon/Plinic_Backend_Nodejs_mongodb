@@ -1,4 +1,5 @@
 var User = require('../models/user');
+var Mission = require('../models/Mission');
 var jwt = require('jsonwebtoken');
 var config = require('../config/config');
 var passport = require('passport');
@@ -10,6 +11,48 @@ function createToken(user) {
         expiresIn: 86400 // 86400 expires in 24 hours
       });
 }
+
+exports.missionSave = (req, res) => {
+
+    //console.log("-------------------------------request-------------");
+    console.log(req.body);
+    //console.log("-------------------------------response-------------" + res.body.id);
+
+
+    if (!req.body.missionID || !req.body.email) {
+        return res.status(400).json({ 'msg': '미션을 등록 할 수 없습니다. 관리자에게 문의 하세요.' });
+    }
+
+    Mission.findOne({ email: req.body.email }, (err, user) => {
+        if (err) {
+          return res.status(400).json({ 'msg': err });
+        }
+
+        if (user) {
+          //이미 미션을 등록 한 상태
+          // return res.status(400).json({ 'msg': 'The user already exists' });
+            return res.status(400).json({ 'msg': '이미 다른 미션을 등록 한 상태입니다. <br> (미션은 1인 1개만 등록 할 수 있습니다.)' });
+        } else {
+          //등록 한 미션이 없을 때
+          let newMission = Mission(req.body);
+          newMission.save((err, user) => {
+              if (err) {
+                console.log(err);
+                  return res.status(400).json({ 'msg': err });
+              }
+              return res.status(201).json(user);
+              // return res.status(201).json({
+              //     token: createToken(user)
+              // });
+
+          });
+          // return res.status(400).json({ 'msg': '이미 등록된 회원입니다.' });
+        }
+
+
+    });
+};
+
 
 exports.registerUser = (req, res) => {
     if (!req.body.email || !req.body.password) {

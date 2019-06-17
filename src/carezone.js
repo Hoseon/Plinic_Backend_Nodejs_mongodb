@@ -3,6 +3,7 @@ var router = express.Router();
 var mongoose = require('mongoose');
 var Carezone = require('./models/Carezone');
 var CarezoneCounter = require('./models/CarezoneCounter');
+var Mission = require('./models/Mission');
 var async = require('async');
 var User_admin = require('./models/User_admin');
 var multer = require('multer');
@@ -28,6 +29,44 @@ let upload = multer({
   storage: storage
 })
 
+
+//20190617 미션 포기
+router.get('/giveupmission/:id', function(req, res) {
+  //var carezonelist = null;
+  //console.log("chkmission" +req.params.id);
+  async.waterfall([function(callback) {
+    Mission.findOneAndRemove({
+      email: req.params.id
+    }, function(err, docs) {
+      res.json(docs);
+    });
+  }]);
+});
+
+//미션 참여중인지 체크 하는 내용
+router.get('/chkmission/:id', function(req, res) {
+  //var carezonelist = null;
+  // console.log("chkmission" +req.params.id);
+  async.waterfall([function(callback) {
+    Mission.findOne({
+      email: req.params.id
+    }, function(err, docs) {
+      res.json(docs);
+    });
+  }]);
+});
+
+router.get('/missioncount/:id', function(req, res) {
+  //var carezonelist = null;
+  // console.log("chkmission" +req.params.id);
+  async.waterfall([function(callback) {
+    Mission.count({
+      missionID: req.params.id
+    }, function(err, docs) {
+      res.json(docs);
+    });
+  }]);
+});
 
 router.get('/list', function(req, res) {
   //var carezonelist = null;
@@ -57,6 +96,8 @@ router.get('/mission/:id', function(req, res) {
     });
   }]);
 });
+
+
 
 router.get('/', function(req, res) {
   var vistorCounter = null;
