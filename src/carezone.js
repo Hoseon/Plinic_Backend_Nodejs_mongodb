@@ -29,6 +29,17 @@ let upload = multer({
   storage: storage
 })
 
+//20190617 미션 참여자 확인
+router.get('/getmissionmember/:id', function(req, res) {
+  async.waterfall([function(callback) {
+    Mission.find({
+      missionID : req.params.id
+    }, function(err, docs) {
+      res.json(docs);
+    });
+  }]);
+});
+
 
 //20190617 미션 포기
 router.get('/giveupmission/:id', function(req, res) {

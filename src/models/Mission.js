@@ -25,6 +25,7 @@ var missionSchema = mongoose.Schema({
   // product: String,
   startmission: Date,
   endmission: Date,
+  image_url: String,
   // prodfilename: String,
   // prodoriginalname: String,
   // proddesc: String,
