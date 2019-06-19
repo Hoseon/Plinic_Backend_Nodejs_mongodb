@@ -133,7 +133,7 @@ module.exports = function(app) {
     newUser.filename = req.file.filename;
     newUser.originalName = req.file.originalname;
     newUser.email = req.body.email
-    newUser.save({_id: req.body.id},err => {
+    newUser.save({_id: ObjectId(req.body.id)},err => {
       if (err) {
         return res.sendStatus(402);
       }
@@ -186,6 +186,7 @@ module.exports = function(app) {
     // fs.createReadStream(path.join(__dirname, '../uploads/', image.filename)).pipe(res);
     // })
   });
+
 
   app.get('/userupdateimages/:id', (req, res, next) => {
 
