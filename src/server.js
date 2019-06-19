@@ -109,7 +109,7 @@ module.exports = function(app) {
     });
   });
 
-  //이미지 업로드
+  //사용자 이미지 업로드
   app.post('/userimages', upload.single('image'), (req, res, next) => {
     // Create a new image model and fill the properties
     let newUser = new UserImage();
@@ -125,6 +125,41 @@ module.exports = function(app) {
       });
     });
   });
+
+  // Get all uploaded images
+  app.get('/userimages', (req, res, next) => {
+    // use lean() to get a plain JS object
+    // remove the version key from the response
+    UserImage.find({}, '-__v').lean().exec((err, images) => {
+      if (err) {
+        res.sendStatus(400);
+      }
+
+      // Manually set the correct URL to each image
+      for (let i = 0; i < images.length; i++) {
+        var img = images[i];
+        img.url = req.protocol + '://' + req.get('host') + '/images/' + img._id;
+      }
+      res.json(images);
+    })
+  });
+
+
+  // Get one image by its ID
+  app.get('/userimages/:id', (req, res, next) => {
+    let imgId = req.params.id;
+
+    UserImage.findById(imgId, (err, image) => {
+      if (err) {
+        res.sendStatus(400);
+      }
+      // stream the image back by loading the file
+      res.setHeader('Content-Type', 'image/jpeg');
+      fs.createReadStream(path.join(__dirname, '../uploads/', image.filename)).pipe(res);
+    })
+  });
+
+
 
   // Get all uploaded images
   app.get('/images', (req, res, next) => {
