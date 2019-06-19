@@ -130,6 +130,7 @@ module.exports = function(app) {
   app.post('/userupdateimages', upload.single('image'), (req, res, next) => {
     // Create a new image model and fill the properties
     let newUser = new UserImage();
+    newUser.isNew = false;
     newUser.filename = req.file.filename;
     newUser.originalName = req.file.originalname;
     newUser.email = req.body.email;
