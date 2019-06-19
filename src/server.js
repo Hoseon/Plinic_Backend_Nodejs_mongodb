@@ -135,8 +135,6 @@ module.exports = function(app) {
     newUser.originalName = req.file.originalname;
     newUser.email = req.body.email;
     newUser._id = req.body.id;
-    console.log("emailemailemail : " + req.body.email);
-    console.log("emailemailemail : " + req.body.id);
     newUser.save(err => {
       if (err) {
         console.log("error : " + err);
