@@ -13,10 +13,10 @@ var ejs = require('ejs');
 var User = require('./models/user');
 var Image = require('./models/image');
 var UserImage = require('./models/UserImage');
-var Banner     = require('./models/Banner');
-var Carezone     = require('./models/Carezone');
-var Beauty     = require('./models/Beauty');
-var Notice     = require('./models/Notice');
+var Banner = require('./models/Banner');
+var Carezone = require('./models/Carezone');
+var Beauty = require('./models/Beauty');
+var Notice = require('./models/Notice');
 const GoogleStrategy = require('passport-google-oauth20');
 var jwt = require('jsonwebtoken');
 var config = require('./config/config');
@@ -147,16 +147,27 @@ module.exports = function(app) {
 
   // Get one image by its ID
   app.get('/userimages/:id', (req, res, next) => {
-    let imgId = req.params.id;
 
-    UserImage.findById(imgId, (err, image) => {
+    UserImage.findOne({
+      email: req.params.id
+    }, function(err, image) {
       if (err) {
         res.sendStatus(400);
       }
-      // stream the image back by loading the file
       res.setHeader('Content-Type', 'image/jpeg');
       fs.createReadStream(path.join(__dirname, '../uploads/', image.filename)).pipe(res);
-    })
+      //res.json(docs);
+    });
+
+    // let imgId = req.params.id;
+    // UserImage.findone(imgId, (err, image) => {
+    //   if (err) {
+    //     res.sendStatus(400);
+    //   }
+    //   // stream the image back by loading the file
+    // res.setHeader('Content-Type', 'image/jpeg');
+    // fs.createReadStream(path.join(__dirname, '../uploads/', image.filename)).pipe(res);
+    // })
   });
 
 
