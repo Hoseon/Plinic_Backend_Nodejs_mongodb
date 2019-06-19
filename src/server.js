@@ -138,6 +138,7 @@ module.exports = function(app) {
     console.log("emailemailemail : " + req.body.id);
     newUser.save(err => {
       if (err) {
+        console.log("error : " + err);
         return res.sendStatus(402);
       }
       res.status(201).send({
