@@ -132,10 +132,11 @@ module.exports = function(app) {
     let newUser = new UserImage();
     newUser.filename = req.file.filename;
     newUser.originalName = req.file.originalname;
-    newUser.email = req.body.email
+    newUser.email = req.body.email;
+    newUser._id = req.body.id;
     console.log("emailemailemail : " + req.body.email);
     console.log("emailemailemail : " + req.body.id);
-    newUser.save({_id: ObjectId(req.body.id)},err => {
+    newUser.save(err => {
       if (err) {
         return res.sendStatus(402);
       }
