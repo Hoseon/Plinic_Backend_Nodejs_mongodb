@@ -133,6 +133,8 @@ module.exports = function(app) {
     newUser.filename = req.file.filename;
     newUser.originalName = req.file.originalname;
     newUser.email = req.body.email
+    console.log("emailemailemail : " + req.body.email);
+    console.log("emailemailemail : " + req.body.id);
     newUser.save({_id: ObjectId(req.body.id)},err => {
       if (err) {
         return res.sendStatus(402);
