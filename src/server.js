@@ -108,6 +108,23 @@ module.exports = function(app) {
     });
   });
 
+  //이미지 업로드
+  app.post('/userimages', upload.single('image'), (req, res, next) => {
+    // Create a new image model and fill the properties
+    let newImage = new User();
+    newImage.filename = req.file.filename;
+    newImage.originalName = req.file.originalname;
+    newImage.desc = req.body.desc
+    newImage.save(err => {
+      if (err) {
+        return res.sendStatus(402);
+      }
+      res.status(201).send({
+        newImage
+      });
+    });
+  });
+
   // Get all uploaded images
   app.get('/images', (req, res, next) => {
     // use lean() to get a plain JS object
