@@ -126,6 +126,23 @@ module.exports = function(app) {
     });
   });
 
+  //사용자 이미지 수정
+  app.post('/userupdateimages', upload.single('image'), (req, res, next) => {
+    // Create a new image model and fill the properties
+    let newUser = new UserImage();
+    newUser.filename = req.file.filename;
+    newUser.originalName = req.file.originalname;
+    newUser.email = req.body.email
+    newUser.save({_id: req.body.id},err => {
+      if (err) {
+        return res.sendStatus(402);
+      }
+      res.status(201).send({
+        newUser
+      });
+    });
+  });
+
   // Get all uploaded images
   app.get('/userimages', (req, res, next) => {
     // use lean() to get a plain JS object
@@ -156,6 +173,31 @@ module.exports = function(app) {
       }
       res.setHeader('Content-Type', 'image/jpeg');
       fs.createReadStream(path.join(__dirname, '../uploads/', image.filename)).pipe(res);
+      //res.json(docs);
+    });
+
+    // let imgId = req.params.id;
+    // UserImage.findone(imgId, (err, image) => {
+    //   if (err) {
+    //     res.sendStatus(400);
+    //   }
+    //   // stream the image back by loading the file
+    // res.setHeader('Content-Type', 'image/jpeg');
+    // fs.createReadStream(path.join(__dirname, '../uploads/', image.filename)).pipe(res);
+    // })
+  });
+
+  app.get('/userupdateimages/:id', (req, res, next) => {
+
+    UserImage.findOne({
+      email: req.params.id
+    }, function(err, image) {
+      if (err) {
+        res.sendStatus(400);
+      }
+      res.json(image);
+      // res.setHeader('Content-Type', 'image/jpeg');
+      // fs.createReadStream(path.join(__dirname, '../uploads/', image.filename)).pipe(res);
       //res.json(docs);
     });
 
