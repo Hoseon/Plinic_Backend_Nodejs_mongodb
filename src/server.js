@@ -118,6 +118,7 @@ module.exports = function(app) {
     newUser.email = req.body.desc
     newUser.save(err => {
       if (err) {
+        console.log("Image Error : " + err);
         return res.sendStatus(402);
       }
       res.status(201).send({
