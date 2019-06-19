@@ -12,6 +12,7 @@ var KakaoStrategy = require('passport-kakao').Strategy;
 var ejs = require('ejs');
 var User = require('./models/user');
 var Image = require('./models/image');
+var UserImage = require('./models/UserImage');
 var Banner     = require('./models/Banner');
 var Carezone     = require('./models/Carezone');
 var Beauty     = require('./models/Beauty');
@@ -111,16 +112,16 @@ module.exports = function(app) {
   //이미지 업로드
   app.post('/userimages', upload.single('image'), (req, res, next) => {
     // Create a new image model and fill the properties
-    let newImage = new User();
-    newImage.filename = req.file.filename;
-    newImage.originalName = req.file.originalname;
-    newImage.desc = req.body.desc
-    newImage.save(err => {
+    let newUser = new UserImage();
+    newUser.filename = req.file.filename;
+    newUser.originalName = req.file.originalname;
+    newUser.email = req.body.desc
+    newUser.save(err => {
       if (err) {
         return res.sendStatus(402);
       }
       res.status(201).send({
-        newImage
+        newUser
       });
     });
   });
