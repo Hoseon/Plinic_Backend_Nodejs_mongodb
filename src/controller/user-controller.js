@@ -56,12 +56,12 @@ exports.missionSave = (req, res) => {
 
 exports.registerUser = (req, res) => {
     if (!req.body.email || !req.body.password) {
-        return res.status(400).json({ 'msg': 'You need to send email and password' });
+        return res.status(400).json({ 'msg': '이메일, 패스워드를 입력해 주세요.' });
     }
 
     User.findOne({ email: req.body.email }, (err, user) => {
         if (err) {
-            return res.status(400).json({ 'msg': err });
+            return res.status(400).json({ 'msg': '사용자 정보를 찾을 수 없습니다.' });
         }
 
         if (user) {
@@ -72,7 +72,7 @@ exports.registerUser = (req, res) => {
         let newUser = User(req.body);
         newUser.save((err, user) => {
             if (err) {
-                return res.status(400).json({ 'msg': err });
+                return res.status(400).json({ 'msg': '회원가입이 되지 않습니다. <br/> 관리자에게 문의 해주세요.' });
             }
 
             // return res.status(201).json(user);
@@ -86,12 +86,12 @@ exports.registerUser = (req, res) => {
 
 exports.loginUser = (req, res) => {
     if (!req.body.email || !req.body.password) {
-        return res.status(400).send({ 'msg': 'You need to send email and password' });
+        return res.status(400).send({ 'msg': '이메일, 패스워드를 다시 입력 해 주세요.' });
     }
 
     User.findOne({ email: req.body.email }, (err, user) => {
         if (err) {
-            return res.status(400).send({ 'msg': err });
+            return res.status(400).send({ 'msg': '존재하지 않는 회원입니다.' });
         }
 
         if (!user) {
