@@ -106,7 +106,7 @@ exports.loginUser = (req, res) => {
                 });
             } else {
               // return res.status(400).json({ msg: 'The email and password don\'t match.' });
-                return res.status(400).json({ msg: '이메일 / 비밀번호가 일치하지 않습니다.' });
+                return res.status(400).json({ msg: '비밀번호가 일치하지 않습니다.' });
             }
         });
     });
