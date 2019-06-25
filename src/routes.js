@@ -1,6 +1,7 @@
 var express = require('express'),
     routes = express.Router();
 var userController = require('./controller/user-controller');
+var qnaController = require('./controller/qna-controller');
 var passport = require('passport');
 var mysql      = require('mysql');
 var dbconfig   = require('./config/database.js');
@@ -20,6 +21,9 @@ routes.post('/login', userController.loginUser);
 
 
 routes.post('/missionsave', userController.missionSave);
+
+//문의 하기 저장
+routes.post('/qnasave', qnaController.qnaSave);
 
 //routes.get('/auth/kakao', userController.loginUser_Kakao);
 

@@ -417,6 +417,7 @@ module.exports = function(app) {
   app.use('/carezone', require('./carezone'));
   app.use('/beauty', require('./beauty'));
   app.use('/notice', require('./notice'));
+  app.use('/qna', require('./qna'));
 
   app.get('/ejs', (req, res) => {
     res.render('home');
