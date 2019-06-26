@@ -24,6 +24,7 @@ routes.post('/missionsave', userController.missionSave);
 
 //문의 하기 저장
 routes.post('/qnasave', qnaController.qnaSave);
+routes.post('/qnaupdate', qnaController.qnaUpdate);
 
 //routes.get('/auth/kakao', userController.loginUser_Kakao);
 

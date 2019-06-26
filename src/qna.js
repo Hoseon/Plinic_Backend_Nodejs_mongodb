@@ -29,11 +29,19 @@ let upload = multer({
 })
 
 
-router.get('/list', function(req, res) {
+router.get('/list/:email', function(req, res) {
   async.waterfall([function(callback) {
-    Qna.find(function(err, docs) {
+    Qna.find({ email : req.params.email },function(err, docs) {
       res.json(docs);
     }).sort({"_id" : -1 });
+  }]);
+});
+
+router.get('/qna/:id', function(req, res) {
+  async.waterfall([function(callback) {
+    Qna.find({ _id : req.params.id },function(err, docs) {
+      res.json(docs);
+    });
   }]);
 });
 

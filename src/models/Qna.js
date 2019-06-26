@@ -6,6 +6,7 @@ var qnaSchema = mongoose.Schema({
   body: {type:String},
   author: {type:mongoose.Schema.Types.ObjectId, ref:'user_admin'},
   views: {type:Number, default: 0},
+  // comment: {type: String},
   // numId: {type:Number, required:true},
   comments: [{
     body: {type:String},
