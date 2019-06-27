@@ -13,6 +13,11 @@ router.get('/menus', function (req,res) {
   res.render('menus/menus', {postsMessage:req.flash("postsMessage")[0]});
 });
 
+router.get('/personal', function (req,res) {
+  //res.redirect('/posts');
+  res.render('menus/personal');
+});
+
 router.get('/login', function (req,res) {
   res.render('login/login',{email:req.flash("email")[0], loginError:req.flash('loginError'), loginMessage:req.flash('loginMessage')});
 });
@@ -26,6 +31,12 @@ router.get('/logout', function(req, res) {
     req.logout();
     req.flash("postsMessage", "Good-bye, have a nice day!");
     res.redirect('/home/login');
+});
+
+router.get('/personal', function(req, res) {
+    // req.logout();
+    // req.flash("postsMessage", "Good-bye, have a nice day!");
+    res.redirect('/personal/personal');
 });
 
 module.exports = router;
