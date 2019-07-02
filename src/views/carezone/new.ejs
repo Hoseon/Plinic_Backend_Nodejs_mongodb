@@ -20,7 +20,7 @@
   <form class="checkValidation" action="/carezone" method="post" enctype="multipart/form-data">
     <div class="inputs">
       <div class="floats">
-        <label>케어존 제목</label>
+        <label>미션 제목</label>
         <input class="cvRequired" maxlength="20" type="text" name="post[title]" cvRqErrMsg="제목을 입력 주세요." cvRqErrTo="#cvErrTitle" value="">
         <div id="cvErrTitle" class="message"></div>
       </div>
@@ -29,8 +29,8 @@
         <input disabled type="text" value="<%= user.nickname %>">
       </div>
       <div class="floats">
-        <label>케어존 설명</label>
-        <textarea class="cvRequired" name="post[body]" cvRqErrMsg="케어존 설명이 필요 합니다." cvRqErrTo="#cvErrBody"></textarea>
+        <label>미션 목표</label>
+        <input class="cvRequired" maxlength="20" name="post[body]" cvRqErrMsg="케어존 설명이 필요 합니다." cvRqErrTo="#cvErrBody">
         <div id="cvErrBody" class="message"></div>
       </div>
       <div class="floats">
@@ -44,16 +44,16 @@
       <br />
 
       <h3>미션</h3>
-      <div class="floats">
+      <!-- <div class="floats">
         <label>미션 제목</label>
         <input class="cvRequired" type="text" maxlength="20" name="post[missontitle]" cvRqErrMsg="미션 제목을 입력해주세요." cvRqErrTo="#cvErrBody" value="">
         <div id="cvErrTitle" class="message"></div>
-      </div>
-      <div class="floats">
+      </div> -->
+      <!-- <div class="floats">
         <label>미션 목표</label>
         <input class="cvRequired" type="text" maxlength="20" name="post[missonsubtitle]" cvRqErrMsg="미션명을 입력해주세요." cvRqErrTo="#cvErrBody" value="">
         <div id="cvErrTitle" class="message"></div>
-      </div>
+      </div> -->
       <div class="floats">
         <label>최대 참여인원</label>
         <input class="cvRequired" type="number" name="post[maxmember]" cvRqErrMsg="최대 인원을 입력해주세요." cvRqErrTo="#cvErrBody" value="">
@@ -64,11 +64,11 @@
         <input class="cvRequired" type="text" maxlength="20" name="post[product]" cvRqErrMsg="상품명을 입력해주세요." cvRqErrTo="#cvErrBody" value="">
         <div id="cvErrTitle" class="message"></div>
       </div>
-      <div class="floats">
+      <!-- <div class="floats">
         <label>하단 캡션</label>
         <input class="cvRequired" type="text" name="post[caption]" cvRqErrMsg="캡션명을 입력해주세요." cvRqErrTo="#cvErrBody" value="">
         <div id="cvErrTitle" class="message"></div>
-      </div>
+      </div> -->
       <div class="floats">
         <label>미션 공개일</label>
         <input class="cvRequired" type="date" name="post[exposure]" cvRqErrMsg="미션 공개 선택 필수" cvRqErrTo="#cvErrBody" value="">

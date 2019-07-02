@@ -84,7 +84,7 @@ router.get('/list', function(req, res) {
   async.waterfall([function(callback) {
     Carezone.find( {exposure: {$lte : new Date()}}, function(err, docs) {
       res.json(docs);
-    }).sort({"startmission" : -1 });
+    }).sort({"startmission" : 1 });
   }]);
 });
 
@@ -93,7 +93,7 @@ router.get('/main_list', function(req, res) {
   async.waterfall([function(callback) {
     Carezone.find( {exposure: {$lte : new Date()}}, function(err, docs) {
       res.json(docs);
-    }).sort({"startmission" : -1 }).limit(3);
+    }).sort({"startmission" : 1 }).limit(3);
   }]);
 });
 

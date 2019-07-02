@@ -3,8 +3,8 @@ var mongoose = require('mongoose');
 var missionSchema = mongoose.Schema({
   missionID : {type:mongoose.Schema.Types.ObjectId, ref:'carezone', required:true},
   email : { type:String },
-  // title: {type:String, required:true},
-  // body: {type:String, required:true},
+  title: {type:String},
+  body: {type:String},
   //author: {type:mongoose.Schema.Types.ObjectId, ref:'user_admin', required:true},
   // views: {type:Number, default: 0},
   // numId: {type:Number, required:true},
@@ -29,7 +29,7 @@ var missionSchema = mongoose.Schema({
   // prodfilename: String,
   // prodoriginalname: String,
   // proddesc: String,
-  // maxmember: {type:Number, required:true},
+  maxmember: {type:Number},
   // currentmember : {type: Number},
   // mission: [{
   //   memberId: {type:mongoose.Schema.Types.ObjectId, ref:'user', required:true},

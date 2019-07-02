@@ -20,7 +20,7 @@
   <form class="checkValidation" action="/carezone/<%=post._id%>?_method=put" method="post" enctype="multipart/form-data">
     <div class="inputs">
       <div class="floats">
-        <label>케어존 제목</label>
+        <label>미션 제목</label>
         <input class="cvRequired" maxlength="20" type="text" name="post[title]" cvRqErrMsg="Title is required." cvRqErrTo="#cvErrTitle" value="<%=post.title%>">
         <div id="cvErrTitle" class="message"></div>
       </div>
@@ -29,8 +29,8 @@
         <input disabled type="text" value="<%= user.nickname %>">
       </div>
       <div class="floats">
-        <label>케어존 설명</label>
-        <textarea class="cvRequired" name="post[body]" cvRqErrMsg="Body is required." cvRqErrTo="#cvErrBody"><%=post.body%></textarea>
+        <label>미션 목표</label>
+        <input class="cvRequired" name="post[body]" maxlength="20" cvRqErrMsg="Body is required." cvRqErrTo="#cvErrBody" value="<%=post.body%>">
         <div id="cvErrBody" class="message"></div>
       </div>
       <div class="floats">
@@ -50,16 +50,16 @@
       <br />
 
       <h3>미션 관리</h3>
-      <div class="floats">
+      <!-- <div class="floats">
         <label>미션제목</label>
         <textarea class="cvRequired" maxlength="20" name="post[missontitle]" cvRqErrMsg="Body is required." cvRqErrTo="#cvErrBody"><%=post.missontitle%></textarea>
         <div id="cvErrBody" class="message"></div>
-      </div>
-      <div class="floats">
+      </div> -->
+      <!-- <div class="floats">
         <label>미션목표</label>
         <textarea class="cvRequired" maxlength="20" name="post[missonsubtitle]" cvRqErrMsg="Body is required." cvRqErrTo="#cvErrBody"><%=post.missonsubtitle%></textarea>
         <div id="cvErrBody" class="message"></div>
-      </div>
+      </div> -->
       <div class="floats">
         <label>최대참여인원</label>
         <textarea class="cvRequired" name="post[maxmember]" cvRqErrMsg="Body is required." cvRqErrTo="#cvErrBody"><%=post.maxmember%></textarea>
@@ -70,11 +70,11 @@
         <textarea class="cvRequired" maxlength="20" name="post[product]" cvRqErrMsg="Body is required." cvRqErrTo="#cvErrBody"><%=post.product%></textarea>
         <div id="cvErrBody" class="message"></div>
       </div>
-      <div class="floats">
+      <!-- <div class="floats">
         <label>하단 캡션</label>
         <textarea class="cvRequired" name="post[caption]" cvRqErrMsg="Body is required." cvRqErrTo="#cvErrBody"><%=post.caption%></textarea>
         <div id="cvErrBody" class="message"></div>
-      </div>
+      </div> -->
       <div class="floats">
         <label>미션 공개</label>
         <textarea class="cvRequired" name="post[startmission]" cvRqErrMsg="Body is required." cvRqErrTo="#cvErrBody"><%=post.startmission%></textarea>
