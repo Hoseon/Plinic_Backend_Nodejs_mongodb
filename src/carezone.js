@@ -123,6 +123,32 @@ router.get('/thirdlist', function(req, res) {
   }]);
 });
 
+router.get('/moresecondlist', function(req, res) {
+  //var carezonelist = null;
+  async.waterfall([function(callback) {
+    var secondDay = new Date();
+    var secondDay2 = new Date();
+    secondDay.setDate(secondDay.getDate());
+    secondDay2.setDate(secondDay2.getDate()+3);
+    Carezone.find( {startmission: {$gte : secondDay, $lte: secondDay2}}, function(err, docs) {
+      res.json(docs);
+    }).sort({"startmission" : 1 }).limit(1);
+  }]);
+});
+
+router.get('/morethirdlist', function(req, res) {
+  //var carezonelist = null;
+  async.waterfall([function(callback) {
+    var thirdDay = new Date();
+    var thirdDay2 = new Date();
+    thirdDay.setDate(thirdDay.getDate() +3);
+    thirdDay2.setDate(thirdDay2.getDate() +10);
+    Carezone.find( {startmission: {$gte : thirdDay, $lt: thirdDay2}}, function(err, docs) {
+      res.json(docs);
+    }).sort({"startmission" : 1 }).limit(2);
+  }]);
+});
+
 router.get('/main_list', function(req, res) {
   //var carezonelist = null;
   async.waterfall([function(callback) {
