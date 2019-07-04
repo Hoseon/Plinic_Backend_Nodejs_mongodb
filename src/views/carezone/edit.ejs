@@ -62,12 +62,12 @@
       </div> -->
       <div class="floats">
         <label>최대참여인원</label>
-        <textarea class="cvRequired" name="post[maxmember]" cvRqErrMsg="Body is required." cvRqErrTo="#cvErrBody"><%=post.maxmember%></textarea>
+        <input class="cvRequired" type="number" name="post[maxmember]" cvRqErrMsg="Body is required." cvRqErrTo="#cvErrBody" value="<%=post.maxmember%>">
         <div id="cvErrBody" class="message"></div>
       </div>
       <div class="floats">
         <label>보상 상품명</label>
-        <textarea class="cvRequired" maxlength="20" name="post[product]" cvRqErrMsg="Body is required." cvRqErrTo="#cvErrBody"><%=post.product%></textarea>
+        <input class="cvRequired" maxlength="20" name="post[product]" cvRqErrMsg="Body is required." cvRqErrTo="#cvErrBody" value="<%=post.product%>">
         <div id="cvErrBody" class="message"></div>
       </div>
       <!-- <div class="floats">
@@ -77,17 +77,17 @@
       </div> -->
       <div class="floats">
         <label>미션 공개</label>
-        <textarea class="cvRequired" name="post[startmission]" cvRqErrMsg="Body is required." cvRqErrTo="#cvErrBody"><%=post.startmission%></textarea>
+        <input class="cvRequired" type="datetime-local" name="post[exposure]" cvRqErrMsg="Body is required." cvRqErrTo="#cvErrBody" value="<%=post.getFormattedDate(post.exposure) %>T<%=post.getFormattedTime(post.exposure) %>">
         <div id="cvErrBody" class="message"></div>
       </div>
       <div class="floats">
         <label>미션 시작일</label>
-        <textarea class="cvRequired" name="post[startmission]" cvRqErrMsg="Body is required." cvRqErrTo="#cvErrBody"><%=post.startmission%></textarea>
+        <input class="cvRequired" type="datetime-local" name="post[startmission]" cvRqErrMsg="Body is required." cvRqErrTo="#cvErrBody" value="<%=post.getFormattedDate(post.startmission) %>T<%=post.getFormattedTime(post.startmission) %>">
         <div id="cvErrBody" class="message"></div>
       </div>
       <div class="floats">
         <label>미션 종료일</label>
-        <textarea class="cvRequired" name="post[endmission]" cvRqErrMsg="Body is required." cvRqErrTo="#cvErrBody"><%=post.endmission%></textarea>
+        <input class="cvRequired" type="datetime-local" name="post[endmission]" cvRqErrMsg="Body is required." cvRqErrTo="#cvErrBody" value="<%=post.getFormattedDate(post.endmission) %>T<%=post.getFormattedTime(post.endmission) %>">
         <div id="cvErrBody" class="message"></div>
       </div>
       <div class="floats">
