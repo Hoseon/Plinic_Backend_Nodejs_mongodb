@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <% include ../partials/head %>
+</head>
+
+<body>
+  <header>
+    <% include ../partials/header %>
+  </header>
+  <div class="posts">
+    <% include partials/top %>
+    <!-- main start-->
+
+    <!-- views/skinqna/index.ejs -->
+    <div class="new">
+      <div class="buttons">
+        <button onclick="location.href='/skinqna'">Back</button>
+      </div>
+      <h3>문의하기 관리</h3>
+      <form class="checkValidation" action="/skinqna" method="post" enctype="multipart/form-data">
+        <div class="inputs">
+
+          <div class="floats">
+            <label>공지사항 분류 : </label>
+            <select class="cvRequired" id="volume" name="post[category]" cvRqErrMsg="제목을 입력 주세요." cvRqErrTo="#cvErrTitle">
+              <option value="[이벤트]">[이벤트]</option>
+              <option value="[공지]">[공지]</option>
+              <option value="[점검]">[점검]</option>
+              <option value="[장애]">[장애]</option>
+            </select>
+            <!-- <input class="cvRequired" type="text" name="post[title]" cvRqErrMsg="제목을 입력 주세요." cvRqErrTo="#cvErrTitle" value=""> -->
+            <div id="cvErrTitle" class="message"></div>
+          </div>
+
+
+
+          <div class="floats">
+            <label>공지사항 제목</label>
+            <input class="cvRequired" type="text" name="post[title]" cvRqErrMsg="제목을 입력 주세요." cvRqErrTo="#cvErrTitle" value="">
+            <div id="cvErrTitle" class="message"></div>
+          </div>
+          <div class="floats">
+            <label>Author</label>
+            <input disabled type="text" value="<%= user.nickname %>">
+          </div>
+          <div class="floats">
+            <label>공지사항 본문</label>
+            <textarea class="cvRequired" name="post[body]" cvRqErrMsg="공지사항 본문이 필요 합니다." cvRqErrTo="#cvErrBody"></textarea>
+            <div id="cvErrBody" class="message"></div>
+          </div>
+          <div class="floats">
+            <label>공지사항 보조 제목</label>
+            <input class="cvRequired" type="text" name="post[missontitle]" cvRqErrMsg="공지사항 보조 제목을 입력해주세요." cvRqErrTo="#cvErrBody" value="">
+            <div id="cvErrTitle" class="message"></div>
+          </div>
+          <div class="floats">
+            <label>공지사항 이미지</label>
+            <input class="cvRequired" type="file" name="image" cvRqErrMsg="공지사항 대표 이미지를 꼭 참조해주세요." cvRqErrTo="#cvErrBody" accept=".jpg, .jpeg, .png">
+            <div id="cvErrTitle" class="message"></div>
+          </div>
+          <div class="floats">
+            <label>공지사항 본문 이미지</label>
+            <input class="cvRequired" type="file" name="prodimage" cvRqErrMsg="공지사항 본문 이미지 필수로 등록 해 주세요" cvRqErrTo="#cvErrBody" accept=".jpg, .jpeg, .png">
+            <div id="cvErrTitle" class="message"></div>
+          </div>
+          <div class="floats">
+            <label>임시날짜</label>
+            <input class="cvRequired" type="date" name="post[endmission]" cvRqErrMsg="공지사항 종료일 선택 필수" cvRqErrTo="#cvErrBody" value="">
+            <div id="cvErrTitle" class="message"></div>
+          </div>
+
+        </div>
+        <div class="buttons">
+          <button type="submit">Submit</button>
+        </div>
+      </form>
+    </div>
+
+    <!-- main end -->
+  </div>
+  <!--skinqna end -->
+  <footer>
+    <% include ../partials/footer %>
+  </footer>
+</body>
+
+</html>

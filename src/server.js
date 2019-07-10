@@ -16,6 +16,10 @@ var UserImage = require('./models/UserImage');
 var Banner = require('./models/Banner');
 var Carezone = require('./models/Carezone');
 var Beauty = require('./models/Beauty');
+var CommuBeauty = require('./models/CommuBeauty');
+var BeautyNote = require('./models/BeautyNote');
+var SkinQna = require('./models/SkinQna');
+var SkinChart = require('./models/SkinChart');
 var Notice = require('./models/Notice');
 const GoogleStrategy = require('passport-google-oauth20');
 var jwt = require('jsonwebtoken');
@@ -279,6 +283,48 @@ module.exports = function(app) {
     })
   });
 
+  app.get('/commubeauty_images/:id', (req, res, next) => {
+    let imgId = req.params.id;
+
+    CommuBeauty.findById(imgId, (err, image) => {
+      if (err) {
+        res.sendStatus(400);
+      }
+      // stream the image back by loading the file
+      res.setHeader('Content-Type', 'image/jpeg');
+
+      fs.createReadStream(path.join(__dirname, '../uploads/', image.filename)).pipe(res);
+    })
+  });
+
+  app.get('/beautynote_images/:id', (req, res, next) => {
+    let imgId = req.params.id;
+
+    BeautyNote.findById(imgId, (err, image) => {
+      if (err) {
+        res.sendStatus(400);
+      }
+      // stream the image back by loading the file
+      res.setHeader('Content-Type', 'image/jpeg');
+
+      fs.createReadStream(path.join(__dirname, '../uploads/', image.filename)).pipe(res);
+    })
+  });
+
+  app.get('/skinqna_images/:id', (req, res, next) => {
+    let imgId = req.params.id;
+
+    BeautyNote.findById(imgId, (err, image) => {
+      if (err) {
+        res.sendStatus(400);
+      }
+      // stream the image back by loading the file
+      res.setHeader('Content-Type', 'image/jpeg');
+
+      fs.createReadStream(path.join(__dirname, '../uploads/', image.filename)).pipe(res);
+    })
+  });
+
   app.get('/carezone_images/:id', (req, res, next) => {
     let imgId = req.params.id;
 
@@ -390,6 +436,33 @@ module.exports = function(app) {
     })
   });
 
+  app.get('/userskinscore/:id', (req, res, next) => {
+
+    SkinChart.findOne({
+      email: req.params.id
+    }, function(err, score) {
+      if (err) { res.sendStatus(400);}
+      // res.setHeader('Content-Type', 'image/jpeg');
+      // fs.createReadStream(path.join(__dirname, '../uploads/', image.filename)).pipe(res);
+      res.json(score);
+    });
+  });
+
+  app.get('/userskinchart/:id/:month', (req, res, next) => {
+    console.log(req.params.id);
+    console.log(req.params.month);
+    var month = new Date(req.params.month);
+    console.log(month)
+    SkinChart.find(
+      {email: req.params.id},
+      {score : { $elemMatch: { saveDate : { $lte: month} } }}
+    , function(err, score) {
+      if (err) { res.sendStatus(400);}
+      // res.setHeader('Content-Type', 'image/jpeg');
+      // fs.createReadStream(path.join(__dirname, '../uploads/', image.filename)).pipe(res);
+      res.json(score);
+    });
+  });
 
 
   // Demo Route (GET http://localhost:8001)
@@ -418,6 +491,9 @@ module.exports = function(app) {
   app.use('/beauty', require('./beauty'));
   app.use('/notice', require('./notice'));
   app.use('/qna', require('./qna'));
+  app.use('/commubeauty', require('./commubeauty'));
+  app.use('/beautynote', require('./beautynote'));
+  app.use('/skinqna', require('./skinqna'));
 
   app.get('/ejs', (req, res) => {
     res.render('home');
