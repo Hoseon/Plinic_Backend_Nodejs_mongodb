@@ -26,6 +26,8 @@ var commubeautySchema = mongoose.Schema({
   prodoriginalname: String,
   proddesc: String,
   posturl: String,
+  editor: {type: Boolean, default: false},
+  editorUpdateAt: Date,
 });
 
 commubeautySchema.methods.getFormattedDate = function (date) {

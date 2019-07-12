@@ -142,6 +142,13 @@ table tbody td:first-child+td{
   margin: 3px 0;
   height: 100px;
 }
+
+.inputs checkbox{
+  float:left;
+  width: 180px;
+  height: 20px;
+  margin: 3px 0;
+}
 .inputs p{
   margin: 0;
 }
@@ -214,6 +221,15 @@ button[disabled]:hover{
 }
 .posts textarea{
   width: 480px;
+}
+.posts .checkbox{
+  /* width: 10px; */
+  margin-left: -225px;
+  float:left;
+  min-width: 70px;
+  padding: 0px 0;
+  line-height: 20px;
+  margin: 0px 0;
 }
 .posts .index .counter{
   padding-left: 10px;

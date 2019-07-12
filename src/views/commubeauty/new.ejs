@@ -22,6 +22,13 @@
       <form class="checkValidation" action="/commubeauty" method="post" enctype="multipart/form-data">
         <div class="inputs">
           <div class="floats">
+            <label>에디터 추천</label>
+            <div class="checkbox" style="margin-left: -225px;">
+            <input type="checkbox" name="post[editor]"  value="true">
+            </div>
+            <!-- <div id="cvErrTitle" class="message"></div> -->
+          </div>
+          <div class="floats">
             <label>뷰티팁 분류</label>
             <input class="cvRequired" type="text" name="post[title]" cvRqErrMsg="제목을 입력 주세요." cvRqErrTo="#cvErrTitle" value="">
             <div id="cvErrTitle" class="message"></div>

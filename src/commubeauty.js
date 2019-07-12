@@ -37,11 +37,20 @@ router.get('/list', function(req, res) {
   }]);
 });
 
+router.get('/editorlist', function(req, res) {
+  //var carezonelist = null;
+  async.waterfall([function(callback) {
+    CommuBeauty.find({ editor: true },function(err, docs) {
+      res.json(docs);
+    }).sort({"editorUpdateAt" : -1 });
+  }]);
+});
+
 router.get('/main_list', function(req, res) {
   async.waterfall([function(callback) {
-    CommuBeauty.find(function(err, docs) {
+    CommuBeauty.find({ editor: false },function(err, docs) {
       res.json(docs);
-    }).sort({"_id" : -1 }).limit(4);
+    }).sort({"_id" : -1 });
   }]);
 });
 
@@ -238,7 +247,7 @@ router.get('/:id/edit', isLoggedIn, function(req, res) {
       success: false,
       message: "Unauthrized Attempt"
     });
-    res.render("commubeautybeauty/edit", {
+    res.render("commubeauty/edit", {
       post: post,
       prefilename: prefilename,
       preoriginalName: preoriginalName,
@@ -258,9 +267,18 @@ router.get('/:id/edit', isLoggedIn, function(req, res) {
 router.put('/:id', upload.fields([{ name: 'image' }, { name: 'prodimage' }]), isLoggedIn, function(req, res, next) {
   //console.log("prefilename:"+ req.body.prefilename);
   //console.log("preoriginalName:" + req.body.preoriginalName);
-  req.body.post.updatedAt = Date.now();
+  req.body.post.editorUpdateAt = Date.now();
   req.body.post.filename = req.files['image'][0].filename;
   req.body.post.originalName = req.files['image'][0].originalname;
+  if(!req.body.post.editor){
+    req.body.post.editor = false;
+    req.body.post.updatedAt=Date.now();
+  }
+  if(req.body.post.editor){
+    req.body.post.editor = true;
+    req.body.post.updatedAt=Date.now();
+  }
+
   //req.body.post.prodfilename = req.files['prodimage'][0].filename;
   //req.body.post.prodoriginalname = req.files['prodimage'][0].originalname;
   del([path.join(__dirname, '../uploads/', req.body.prefilename)]).then(deleted => {

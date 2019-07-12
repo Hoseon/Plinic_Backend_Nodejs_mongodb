@@ -451,13 +451,19 @@ module.exports = function(app) {
   app.get('/userskinchart/:id/:month', (req, res, next) => {
     console.log(req.params.id);
     console.log(req.params.month);
-    var month = new Date(req.params.month);
-    console.log(month)
+
+    var start = new Date('2019-07-02');
+    var end = new Date('2019-07-05');
+    // var month = new Date(req.params.month);
+    // console.log(month)
     SkinChart.find(
       {email: req.params.id},
-      {score : { $elemMatch: { saveDate : { $lte: month} } }}
-    , function(err, score) {
-      if (err) { res.sendStatus(400);}
+      // {saveDate : { $gte: '2019-07', $lte: '20' }},
+      {score : {$elemMatch : { saveDate : { $gte: new Date('2019-07-10T00:00:00.000+00:00')} } } },
+      // { students: { $elemMatch: { school: 102, age: { $gt: 10} } } } )
+      // {'score.saveDate' : { $lte: new Date('2019-07-01') } },
+     function(err, score) {
+      if (err) { console.log(err),res.sendStatus(400);}
       // res.setHeader('Content-Type', 'image/jpeg');
       // fs.createReadStream(path.join(__dirname, '../uploads/', image.filename)).pipe(res);
       res.json(score);
