@@ -42,7 +42,7 @@ router.get('/main_list', function(req, res) {
   async.waterfall([function(callback) {
     BeautyNote.find(function(err, docs) {
       res.json(docs);
-    }).sort({"_id" : -1 }).limit(4);
+    }).sort({"_id" : -1 });
   }]);
 });
 

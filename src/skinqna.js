@@ -50,7 +50,7 @@ router.get('/main_list', function(req, res) {
   async.waterfall([function(callback) {
     SkinQna.find(function(err, docs) {
       res.json(docs);
-    }).sort({"_id" : -1 }).limit(3);
+    }).sort({"_id" : -1 });
   }]);
 });
 
