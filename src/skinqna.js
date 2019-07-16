@@ -2,6 +2,7 @@ var express = require('express');
 var router = express.Router();
 var mongoose = require('mongoose');
 var SkinQna = require('./models/SkinQna');
+var Tags = require('./models/Tags');
 var SkinQnaCounter = require('./models/SkinQnaCounter');
 var async = require('async');
 var User_admin = require('./models/User_admin');
@@ -139,7 +140,7 @@ router.get('/new', isLoggedIn, function(req, res) {
 
 
 
-router.post('/', upload.fields([{ name: 'image' }, { name: 'prodimage' }]), isLoggedIn, function(req, res, next) {
+router.post('/', upload.fields([{ name: 'image' }]), function(req, res, next) {
   async.waterfall([function(callback) {
     SkinQnaCounter.findOne({
       name: "skinqna"
@@ -161,21 +162,31 @@ router.post('/', upload.fields([{ name: 'image' }, { name: 'prodimage' }]), isLo
       }
     });
   }], function(callback, counter) {
-    var newPost = req.body.post;
-    newPost.author = req.user._id;
-    newPost.numId = counter.totalCount + 1;
-    req.body.post.filename = req.files['image'][0].filename;
-    req.body.post.originalName = req.files['image'][0].originalname;
-    req.body.post.prodfilename = req.files['prodimage'][0].filename;
-    req.body.post.prodoriginalname = req.files['prodimage'][0].originalname;
-    SkinQna.create(req.body.post, function(err, post) {
-      if (err) return res.json({
-        success: false,
-        message: err
-      });
-      counter.totalCount++;
-      counter.save();
-      res.redirect('/skinqna');
+    let newNote = SkinQna();
+    newNote.email = req.body.email;
+    newNote.select = req.body.select;
+    newNote.title = req.body.title;
+    newNote.contents = req.body.contents;
+    newNote.tags = JSON.stringify(req.body.tags).replace(/\"/g, "").replace(/\\/g, "").replace(/\[/g, "").replace(/\]/g, "");
+    newNote.numId = counter.totalCount + 1;
+    newNote.filename = req.files['image'][0].filename;
+    newNote.originalName = req.files['image'][0].originalname;
+    newNote.save((err, user) => {
+        if (err) {
+          console.log(err);
+            return res.status(400).json({ 'msg': '뷰티노트가 등록되지 않았습니다. <br /> Error : ' + err });
+        }
+        var newTags = req.body.tags
+        Tags.update({_id : '5d2c39cc9cc12aae489d2f08'},
+          { $push: { tags: newTags }
+        }, function(err, post2) {
+          if (err) {
+            console.log("tags error : " + err);
+          } else {
+            console.log("result tags : " + JSON.stringify(post2));
+          }
+        })
+        return res.status(201).json(user);
     });
   });
 }); // create
