@@ -55,8 +55,7 @@ router.get('/main_list', function(req, res) {
   }]);
 });
 
-router.get('/mission/:id', function(req, res) {
-  //var carezonelist = null;
+router.get('/list/:id', function(req, res) {
   async.waterfall([function(callback) {
     BeautyNote.findOne({
       _id: req.params.id

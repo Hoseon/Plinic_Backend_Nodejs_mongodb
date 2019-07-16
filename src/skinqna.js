@@ -30,11 +30,11 @@ let upload = multer({
 })
 
 
-router.get('/list/:email', function(req, res) {
+router.get('/list/:id', function(req, res) {
   async.waterfall([function(callback) {
-    SkinQna.find({ email : req.params.email },function(err, docs) {
+    SkinQna.findOne({ _id : req.params.id },function(err, docs) {
       res.json(docs);
-    }).sort({"_id" : -1 });
+    });
   }]);
 });
 

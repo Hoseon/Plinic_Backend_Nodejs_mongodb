@@ -501,6 +501,32 @@ module.exports = function(app) {
     });
   });
 
+  app.get('/beautynoteimage/:id', (req, res, next) => {
+    let imgId = req.params.id;
+
+    BeautyNote.findById(imgId, (err, image) => {
+      if (err) {
+        res.sendStatus(400);
+      }
+      // stream the image back by loading the file
+      res.setHeader('Content-Type', 'image/jpeg');
+      fs.createReadStream(path.join(__dirname, '../uploads/', image.filename)).pipe(res);
+    })
+  });
+
+  app.get('/skinqnaimage/:id', (req, res, next) => {
+    let imgId = req.params.id;
+
+    SkinQna.findById(imgId, (err, image) => {
+      if (err) {
+        res.sendStatus(400);
+      }
+      // stream the image back by loading the file
+      res.setHeader('Content-Type', 'image/jpeg');
+      fs.createReadStream(path.join(__dirname, '../uploads/', image.filename)).pipe(res);
+    })
+  });
+
 
   // Demo Route (GET http://localhost:8001)
   app.get('/', function(req, res) {
