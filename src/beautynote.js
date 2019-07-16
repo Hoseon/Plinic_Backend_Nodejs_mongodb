@@ -173,6 +173,7 @@ router.post('/', upload.fields([{ name: 'image' }]), function(req, res, next) {
     console.log("tags ------------------------- : " + req.body.tags);
     console.log("json tags -------------------- : " + JSON.stringify(req.body.tags).replace("\\", ""));
     newNote.tags = JSON.stringify(req.body.tags).replace("\\", "");
+    newNote.tags = req.body.tags;
     newNote.numId = counter.totalCount + 1;
     newNote.filename = req.files['image'][0].filename;
     newNote.originalName = req.files['image'][0].originalname;
