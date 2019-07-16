@@ -164,7 +164,13 @@ router.post('/', upload.fields([{ name: 'image' }]), function(req, res, next) {
       }
     });
   }], function(callback, counter) {
-    let newNote = BeautyNote(req.body.desc);
+    // let newNote = BeautyNote(req.body.desc);
+    let newNote = BeautyNote();
+    newNote.email = req.body.email;
+    newNote.select = req.body.select;
+    newNote.title = req.body.title;
+    newNote.contents = req.body.contents;
+    newNote.tags = req.body.tags;
     newNote.numId = counter.totalCount + 1;
     newNote.filename = req.files['image'][0].filename;
     newNote.originalName = req.files['image'][0].originalname;
