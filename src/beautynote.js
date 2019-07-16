@@ -42,9 +42,7 @@ router.get('/main_list', function(req, res) {
   async.waterfall([function(callback) {
     BeautyNote.find(function(err, docs) {
       res.json(docs);
-    }).sort({
-      "_id": -1
-    }).limit(4);
+    }).sort({"_id" : -1 }).limit(4);
   }]);
 });
 
@@ -53,9 +51,7 @@ router.get('/main_list', function(req, res) {
   async.waterfall([function(callback) {
     BeautyNote.find(function(err, docs) {
       res.json(docs);
-    }).sort({
-      "_id": -1
-    }).limit(3);
+    }).sort({"_id" : -1 }).limit(3);
   }]);
 });
 
@@ -146,9 +142,7 @@ router.get('/new', isLoggedIn, function(req, res) {
 
 
 
-router.post('/', upload.fields([{
-  name: 'image'
-}]), function(req, res, next) {
+router.post('/', upload.fields([{ name: 'image' }]), function(req, res, next) {
   async.waterfall([function(callback) {
     BeautyNoteCounter.findOne({
       name: "beautynote"
@@ -178,32 +172,26 @@ router.post('/', upload.fields([{
     newNote.contents = req.body.contents;
     console.log("tags ------------------------- : " + req.body.tags);
     console.log("json tags -------------------- : " + JSON.stringify(req.body));
-    newNote.tags = req.body.tags.replaceAll("\\\\", "");
+    newNote.tags = JSON.stringify(req.body.tags);
     newNote.numId = counter.totalCount + 1;
     newNote.filename = req.files['image'][0].filename;
     newNote.originalName = req.files['image'][0].originalname;
     newNote.save((err, user) => {
-      if (err) {
-        console.log(err);
-        return res.status(400).json({
-          'msg': '뷰티노트가 등록되지 않았습니다. <br /> Error : ' + err
-        });
-      }
-      var newTags = req.body.tags
-      Tags.update({
-        _id: '5d2c39cc9cc12aae489d2f08'
-      }, {
-        $push: {
-          tags: newTags
-        }
-      }, function(err, post2) {
         if (err) {
-          console.log("tags error : " + err);
-        } else {
-          console.log("result tags : " + JSON.stringify(post2));
+          console.log(err);
+            return res.status(400).json({ 'msg': '뷰티노트가 등록되지 않았습니다. <br /> Error : ' + err });
         }
-      })
-      return res.status(201).json(user);
+        var newTags = req.body.tags
+        Tags.update({_id : '5d2c39cc9cc12aae489d2f08'},
+          { $push: { tags: newTags }
+        }, function(err, post2) {
+          if (err) {
+            console.log("tags error : " + err);
+          } else {
+            console.log("result tags : " + JSON.stringify(post2));
+          }
+        })
+        return res.status(201).json(user);
     });
   });
 }); // create
@@ -281,11 +269,7 @@ router.get('/:id/edit', isLoggedIn, function(req, res) {
 
 
 
-router.put('/:id', upload.fields([{
-  name: 'image'
-}, {
-  name: 'prodimage'
-}]), isLoggedIn, function(req, res, next) {
+router.put('/:id', upload.fields([{ name: 'image' }, { name: 'prodimage' }]), isLoggedIn, function(req, res, next) {
   //console.log("prefilename:"+ req.body.prefilename);
   //console.log("preoriginalName:" + req.body.preoriginalName);
   req.body.post.updatedAt = Date.now();
