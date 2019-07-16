@@ -30,6 +30,10 @@ var skinqnaSchema = mongoose.Schema({
   email: String,
   select: String,
   qna: String,
+  tags: String,
+  editor: {type: Boolean, default: false},
+  editorUpdateAt: Date,
+  contents: String,
 });
 
 skinqnaSchema.methods.getFormattedDate = function (date) {

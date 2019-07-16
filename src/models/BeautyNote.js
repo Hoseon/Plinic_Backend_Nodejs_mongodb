@@ -1,11 +1,11 @@
 var mongoose = require('mongoose');
 
 var beautynoteSchema = mongoose.Schema({
-  title: {type:String, required:true},
-  body: {type:String, required:true},
-  author: {type:mongoose.Schema.Types.ObjectId, ref:'user_admin', required:true},
+  title: {type:String,},
+  body: {type:String},
+  // author: {type:mongoose.Schema.Types.ObjectId, ref:'user_admin', required:true},
   views: {type:Number, default: 0},
-  numId: {type:Number, required:true},
+  numId: {type:Number,},
   comments: [{
     body: {type:String, required:true},
     author: {type:mongoose.Schema.Types.ObjectId, ref:'user_admin', required:true},
@@ -26,6 +26,10 @@ var beautynoteSchema = mongoose.Schema({
   prodoriginalname: String,
   proddesc: String,
   posturl: String,
+  email: String,
+  select: String,
+  tags: String,
+  contents : String,
 });
 
 beautynoteSchema.methods.getFormattedDate = function (date) {

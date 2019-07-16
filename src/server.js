@@ -21,6 +21,7 @@ var BeautyNote = require('./models/BeautyNote');
 var SkinQna = require('./models/SkinQna');
 var SkinChart = require('./models/SkinChart');
 var Notice = require('./models/Notice');
+var Tags = require('./models/Tags');
 const GoogleStrategy = require('passport-google-oauth20');
 var jwt = require('jsonwebtoken');
 var config = require('./config/config');
@@ -95,6 +96,18 @@ module.exports = function(app) {
     done(null, user);
   });
 
+  //해쉬태그 모두 가져 오기
+  app.get('/gethashtags', function(req, res) {
+    Tags.find(function(err, docs) {
+      if (err) { res.sendStatus(400);}
+      // res.setHeader('Content-Type', 'image/jpeg');
+      // fs.createReadStream(path.join(__dirname, '../uploads/', image.filename)).pipe(res);
+      res.json(docs);
+    });
+  });
+
+
+
   //업로드 이미지 모듈 개발
   //이미지 업로드
   app.post('/images', upload.single('image'), (req, res, next) => {
@@ -109,6 +122,24 @@ module.exports = function(app) {
       }
       res.status(201).send({
         newImage
+      });
+    });
+  });
+
+  //뷰티 노트 이미지 업로드
+  app.post('/beautynoteimages', upload.single('image'), (req, res, next) => {
+    // Create a new image model and fill the properties
+    let newUser = new BeautyNote();
+    newUser.filename = req.file.filename;
+    newUser.originalName = req.file.originalname;
+    newUser.email = req.body.desc
+    newUser.save(err => {
+      if (err) {
+        console.log("Image Error : " + err);
+        return res.sendStatus(402);
+      }
+      res.status(201).send({
+        newUser
       });
     });
   });

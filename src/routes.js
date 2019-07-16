@@ -2,7 +2,9 @@ var express = require('express'),
     routes = express.Router();
 var userController = require('./controller/user-controller');
 var qnaController = require('./controller/qna-controller');
+var noteController = require('./controller/note-controller');
 var skinChartController = require('./controller/skinchart-controller');
+var skinQnaController = require('./controller/skinqna-controller');
 var passport = require('passport');
 var mysql      = require('mysql');
 var dbconfig   = require('./config/database.js');
@@ -26,6 +28,14 @@ routes.post('/missionsave', userController.missionSave);
 //문의 하기 저장
 routes.post('/qnasave', qnaController.qnaSave);
 routes.post('/qnaupdate', qnaController.qnaUpdate);
+
+//뷰티노트 저장
+routes.post('/notesave', noteController.noteSave);
+routes.post('/noteupdate', noteController.noteUpdate);
+
+//피부고민 저장
+routes.post('/skinqnasave', skinQnaController.skinQnaSave);
+routes.post('/skinqnaupdate', skinQnaController.skinQnaUpdate);
 
 //문진표 저장 및 업데이트 20190709
 routes.post('/skinchartsave', skinChartController.skinChartSave);

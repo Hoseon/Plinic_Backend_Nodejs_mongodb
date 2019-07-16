@@ -2,6 +2,7 @@ var express = require('express');
 var router = express.Router();
 var mongoose = require('mongoose');
 var BeautyNote = require('./models/BeautyNote');
+var Tags = require('./models/Tags');
 var BeautyNoteCounter = require('./models/BeautyNoteCounter');
 var async = require('async');
 var User_admin = require('./models/User_admin');
@@ -141,7 +142,7 @@ router.get('/new', isLoggedIn, function(req, res) {
 
 
 
-router.post('/', upload.fields([{ name: 'image' }]), isLoggedIn, function(req, res, next) {
+router.post('/', upload.fields([{ name: 'image' }]), function(req, res, next) {
   async.waterfall([function(callback) {
     BeautyNoteCounter.findOne({
       name: "beautynote"
@@ -163,21 +164,26 @@ router.post('/', upload.fields([{ name: 'image' }]), isLoggedIn, function(req, r
       }
     });
   }], function(callback, counter) {
-    var newPost = req.body.post;
-    newPost.author = req.user._id;
-    newPost.numId = counter.totalCount + 1;
-    req.body.post.filename = req.files['image'][0].filename;
-    req.body.post.originalName = req.files['image'][0].originalname;
-    //req.body.post.prodfilename = req.files['prodimage'][0].filename;
-    //req.body.post.prodoriginalname = req.files['prodimage'][0].originalname;
-    BeautyNote.create(req.body.post, function(err, post) {
-      if (err) return res.json({
-        success: false,
-        message: err
-      });
-      counter.totalCount++;
-      counter.save();
-      res.redirect('/beautynote');
+    let newNote = BeautyNote(req.body);
+    newNote.numId = counter.totalCount + 1;
+    newNote.filename = req.files['image'][0].filename;
+    newNote.originalName = req.files['image'][0].originalname;
+    newNote.save((err, user) => {
+        if (err) {
+          console.log(err);
+            return res.status(400).json({ 'msg': '뷰티노트가 등록되지 않았습니다. <br /> Error : ' + err });
+        }
+        var newTags = req.body.tags
+        Tags.update({_id : '5d2c39cc9cc12aae489d2f08'},
+          { $push: { tags: newTags }
+        }, function(err, post2) {
+          if (err) {
+            console.log("tags error : " + err);
+          } else {
+            console.log("result tags : " + JSON.stringify(post2));
+          }
+        })
+        return res.status(201).json(user);
     });
   });
 }); // create

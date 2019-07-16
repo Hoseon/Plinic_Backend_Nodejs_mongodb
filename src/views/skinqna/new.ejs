@@ -21,10 +21,16 @@
       <h3>문의하기 관리</h3>
       <form class="checkValidation" action="/skinqna" method="post" enctype="multipart/form-data">
         <div class="inputs">
-
           <div class="floats">
-            <label>공지사항 분류 : </label>
-            <select class="cvRequired" id="volume" name="post[category]" cvRqErrMsg="제목을 입력 주세요." cvRqErrTo="#cvErrTitle">
+            <label>에디터 추천</label>
+            <div class="checkbox" style="margin-left: -225px;">
+            <input type="checkbox" name="post[editor]"  value="true">
+            </div>
+            <!-- <div id="cvErrTitle" class="message"></div> -->
+          </div>
+          <div class="floats">
+            <label>피부고민 분류 : </label>
+            <select class="cvRequired" id="volume" name="post[select]" cvRqErrMsg="제목을 입력 주세요." cvRqErrTo="#cvErrTitle">
               <option value="[이벤트]">[이벤트]</option>
               <option value="[공지]">[공지]</option>
               <option value="[점검]">[점검]</option>
@@ -37,8 +43,8 @@
 
 
           <div class="floats">
-            <label>공지사항 제목</label>
-            <input class="cvRequired" type="text" name="post[title]" cvRqErrMsg="제목을 입력 주세요." cvRqErrTo="#cvErrTitle" value="">
+            <label>피부고민 제목</label>
+            <input class="cvRequired" type="text" name="post[body]" cvRqErrMsg="제목을 입력 주세요." cvRqErrTo="#cvErrTitle" value="">
             <div id="cvErrTitle" class="message"></div>
           </div>
           <div class="floats">

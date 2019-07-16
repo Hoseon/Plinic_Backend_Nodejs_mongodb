@@ -38,6 +38,7 @@
       <tr>
         <th>Num</th>
         <th>Title</th>
+        <th>베스트 고민</th>
         <th>Views</th>
         <th>Date</th>
         <th>작성자</th>
@@ -52,10 +53,11 @@
       <% skinqna.forEach(function(post){ %>
         <tr onclick="window.location = '/skinqna/<%= post._id %>?<%= urlQuery %>'">
           <td><%= post.numId %></td>
-          <td class="highlight" data-highlight="<%= search.highlight.title %>">
-            [<%= post.category %>] [<%= post.body %>]
+          <td style="width : 200px" class="highlight" data-highlight="<%= search.highlight.title %>">
+            [<%= post.select %>] [<%= post.title %>]
             <span class="comments">(<%= post.comments.length %>)</span>
           </td>
+          <td style="width : 100px"><%= post.editor ? "에디터 추천" : "" %></td>
           <td><%= post.views %></td>
           <td><%= post.getFormattedDate(post.createdAt) %></td>
           <td><%= post.email %></td>
