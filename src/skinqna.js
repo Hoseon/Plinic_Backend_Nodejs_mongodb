@@ -176,7 +176,7 @@ router.post('/', upload.fields([{ name: 'image' }]), function(req, res, next) {
           console.log(err);
             return res.status(400).json({ 'msg': '뷰티노트가 등록되지 않았습니다. <br /> Error : ' + err });
         }
-        var newTags = req.body.tags
+        var newTags = req.body.tags.replace(/\"/g, "").replace(/\\/g, "").replace(/\[/g, "").replace(/\]/g, "");
         Tags.update({_id : '5d2c39cc9cc12aae489d2f08'},
           { $push: { tags: newTags }
         }, function(err, post2) {
