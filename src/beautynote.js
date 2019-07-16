@@ -166,17 +166,13 @@ router.post('/', upload.fields([{ name: 'image' }]), function(req, res, next) {
   }], function(callback, counter) {
     // let newNote = BeautyNote(req.body.desc);
     let newNote = BeautyNote();
-    console.log("req.body.email" + req.body.email);
     newNote.email = req.body.email;
-    console.log("req.body.select" + req.body.select);
     newNote.select = req.body.select;
-    console.log("req.body.title" + req.body.title);
     newNote.title = req.body.title;
-    console.log("req.body.contents" + req.body.contents);
     newNote.contents = req.body.contents;
-    console.log("tags ------------------------- : " + req.body.tags);
-    console.log("json tags -------------------- : " + JSON.stringify(req.body.tags).replace("\\", ""));
     newNote.tags = JSON.stringify(req.body.tags).replace("\\", "");
+    newNote.tags = newNote.tags.replace("[", "");
+    newNote.tags = newNote.tags.replace("]", "");
     newNote.tags = req.body.tags;
     newNote.numId = counter.totalCount + 1;
     newNote.filename = req.files['image'][0].filename;
