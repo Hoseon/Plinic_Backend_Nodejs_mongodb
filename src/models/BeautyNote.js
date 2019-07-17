@@ -30,6 +30,8 @@ var beautynoteSchema = mongoose.Schema({
   select: String,
   tags: String,
   contents : String,
+  editor: {type: Boolean, default: false},
+  editorUpdateAt: Date,
 });
 
 beautynoteSchema.methods.getFormattedDate = function (date) {

@@ -16,33 +16,34 @@
   <div class="buttons">
     <button onclick="history.back()">Back</button>
   </div>
-  <h3>커뮤니티 뷰티 꿀팁 관리</h3>
+  <h3>커뮤니티 뷰티노트 관리</h3>
   <form class="checkValidation" action="/beautynote/<%=post._id%>?_method=put" method="post" enctype="multipart/form-data">
     <div class="inputs">
       <div class="floats">
-        <label>뷰티팁 분류</label>
-        <input class="cvRequired" type="text" name="post[title]" cvRqErrMsg="Title is required." cvRqErrTo="#cvErrTitle" value="<%=post.title%>">
+        <div class="floats">
+          <label>인기노트</label>
+          <div class="checkbox" style="margin-left: -225px;">
+          <input type="checkbox" name="post[editor]"  value="true" <%= post.editor ? "checked" : "value=false" %> />
+          </div>
+          <!-- <div id="cvErrTitle" class="message"></div> -->
+        </div>
+        <label>뷰티노트 분류</label>
+        <input class="cvRequired" type="text" name="post[select]" cvRqErrMsg="Title is required." cvRqErrTo="#cvErrTitle" value="<%=post.select%>">
         <div id="cvErrTitle" class="message"></div>
       </div>
       <div class="floats">
-        <label>Author</label>
-        <input disabled type="text" value="<%= user.nickname %>">
-      </div>
-      <div class="floats">
-        <label>뷰티팁 제목</label>
-        <textarea class="cvRequired" name="post[body]" cvRqErrMsg="Body is required." cvRqErrTo="#cvErrBody"><%=post.body%></textarea>
+        <label>뷰티노트 제목</label>
+        <input type="text" class="cvRequired" name="post[title]" cvRqErrMsg="Body is required." cvRqErrTo="#cvErrBody" value="<%=post.title%>">
         <div id="cvErrBody" class="message"></div>
       </div>
       <div class="floats">
-        <label>뷰티 URL</label>
-        <textarea class="cvRequired" name="post[posturl]" cvRqErrMsg="Body is required." cvRqErrTo="#cvErrBody"><%=post.posturl%></textarea>
+        <label>뷰티노트 내용</label>
+        <textarea class="cvRequired" name="post[contents]" cvRqErrMsg="Body is required." cvRqErrTo="#cvErrBody"><%=post.contents%></textarea>
         <div id="cvErrBody" class="message"></div>
       </div>
       <div class="floats">
-        <label>뷰티팁 이미지</label>
-        <input class="cvRequired" type="file" name="image" cvRqErrMsg="이미지 파일을 다시 업로드 해주세요." cvRqErrTo="#cvErrTitle" accept=".jpg, .jpeg, .png" value="">
-        </input>
-        <div id="cvErrTitle" class="message"></div>
+        <label>뷰티노트 이미지</label>
+        <img src="<%= url %>">
       </div>
       <span>이전 뷰티 팁 이미지 파일 다운로드 : <a href="<%= url %>" download><%=preoriginalName%></a> - 링크 클릭</span>
       <h2 style="color: red" >미션 제품 이미지 사이즈(px) : 300 X 300</h2>

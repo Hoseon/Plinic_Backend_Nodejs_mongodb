@@ -38,9 +38,9 @@
       <tr>
         <th>Num</th>
         <th>Title</th>
+        <th>인기노트</th>
         <th>Views</th>
         <th>Date</th>
-        <th>Author</th>
       </tr>
     </thead>
     <tbody>
@@ -52,13 +52,13 @@
       <% beautynote.forEach(function(post){ %>
         <tr onclick="window.location = '/beautynote/<%= post._id %>?<%= urlQuery %>'">
           <td><%= post.numId %></td>
-          <td class="highlight" data-highlight="<%= search.highlight.title %>">
+          <td class="highlight" style="width : 300px" data-highlight="<%= search.highlight.title %>">
             <%= post.title %>
             <span class="comments">(<%= post.comments.length %>)</span>
           </td>
+          <td style="width : 100px"><%= post.editor ? "인기노트" : "" %></td>
           <td><%= post.views %></td>
           <td><%= post.getFormattedDate(post.createdAt) %></td>
-          <td class="highlight" data-highlight="<%= search.highlight.author %>"><%= post.author.nickname %></td>
         </tr>
       <% }) %>
     </tbody>

@@ -46,6 +46,14 @@ router.get('/qna/:id', function(req, res) {
   }]);
 });
 
+router.get('/editorlist', function(req, res) {
+  async.waterfall([function(callback) {
+    SkinQna.find({ editor: true },function(err, docs) {
+      res.json(docs);
+    }).sort({"editorUpdateAt" : -1 }).limit(2);
+  }]);
+});
+
 router.get('/main_list', function(req, res) {
   async.waterfall([function(callback) {
     SkinQna.find(function(err, docs) {
@@ -208,13 +216,14 @@ router.get('/:id', function(req, res) {
 
       //배너 이미지 가져 오기 20190502
       //res.setHeader('Content-Type', 'image/jpeg');
-      var url = req.protocol + '://' + req.get('host') + '/skinqna_images/' + post._id;
-      var prod_url = req.protocol + '://' + req.get('host') + '/skinqna_prodimages/' + post._id;
+      var url = req.protocol + '://' + req.get('host') + '/skinqnaimage/' + post._id;
+      // var url = req.protocol + '://' + 'plinic.cafe24app.com' + '/skinqnaimage/' + post._id;
+      // var prod_url = req.protocol + '://' + req.get('host') + '/skinqna_prodimages/' + post._id;
       //fs.createReadStream(path.join(__dirname, '../uploads/', post.filename)).pipe(res);
       res.render("skinqna/show", {
         post: post,
         url: url,
-        prod_url: prod_url,
+        // prod_url: prod_url,
         urlQuery: req._parsedUrl.query,
         user: req.user,
         search: createSearch(req.query)
@@ -229,9 +238,10 @@ router.get('/:id', function(req, res) {
 
 router.get('/:id/edit', isLoggedIn, function(req, res) {
   SkinQna.findById(req.params.id, function(err, post) {
-    var url = req.protocol + '://' + req.get('host') + '/images/' + post._id;
+    var url = req.protocol + '://' + req.get('host') + '/skinqnaimage/' + post._id;
+    // var url = req.protocol + '://' + 'plinic.cafe24app.com' + '/skinqnaimage/' + post._id;
 
-    var prod_url = req.protocol + '://' + req.get('host') + '/prod_images/' + post._id;
+
 
 
     var prefilename = post.filename; //이전 파일들은 삭제
@@ -243,10 +253,7 @@ router.get('/:id/edit', isLoggedIn, function(req, res) {
       success: false,
       message: err
     });
-    if (!req.user._id.equals(post.author)) return res.json({
-      success: false,
-      message: "Unauthrized Attempt"
-    });
+
     res.render("skinqna/edit", {
       post: post,
       prefilename: prefilename,
@@ -254,7 +261,6 @@ router.get('/:id/edit', isLoggedIn, function(req, res) {
       preprodfilename: preprodfilename,
       preprodoriginalname: preprodoriginalname,
       url: url,
-      prod_url: prod_url,
       user: req.user
     });
   });
@@ -267,21 +273,18 @@ router.get('/:id/edit', isLoggedIn, function(req, res) {
 router.put('/:id', upload.fields([{ name: 'image' }, { name: 'prodimage' }]), isLoggedIn, function(req, res, next) {
   //console.log("prefilename:"+ req.body.prefilename);
   //console.log("preoriginalName:" + req.body.preoriginalName);
+  if(!req.body.post.editor){
+    req.body.post.editor = false;
+    req.body.post.updatedAt=Date.now();
+  }
+  if(req.body.post.editor){
+    req.body.post.editor = true;
+    req.body.post.updatedAt=Date.now();
+  }
   req.body.post.updatedAt = Date.now();
-  req.body.post.filename = req.files['image'][0].filename;
-  req.body.post.originalName = req.files['image'][0].originalname;
-  req.body.post.prodfilename = req.files['prodimage'][0].filename;
-  req.body.post.prodoriginalname = req.files['prodimage'][0].originalname;
-  del([path.join(__dirname, '../uploads/', req.body.prefilename)]).then(deleted => {
-    //res.sendStatus(200);
-  });
 
-  del([path.join(__dirname, '../uploads/', req.body.preprodfilename)]).then(deleted => {
-    //res.sendStatus(200);
-  });
   SkinQna.findOneAndUpdate({
     _id: req.params.id,
-    author: req.user._id
   }, req.body.post, function(err, post) {
     if (err) return res.json({
       success: false,

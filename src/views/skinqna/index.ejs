@@ -53,11 +53,11 @@
       <% skinqna.forEach(function(post){ %>
         <tr onclick="window.location = '/skinqna/<%= post._id %>?<%= urlQuery %>'">
           <td><%= post.numId %></td>
-          <td style="width : 200px" class="highlight" data-highlight="<%= search.highlight.title %>">
+          <td style="width : 450px" class="highlight" data-highlight="<%= search.highlight.title %>">
             [<%= post.select %>] [<%= post.title %>]
             <span class="comments">(<%= post.comments.length %>)</span>
           </td>
-          <td style="width : 100px"><%= post.editor ? "에디터 추천" : "" %></td>
+          <td style="width : 150px"><%= post.editor ? "베스트 고민" : "" %></td>
           <td><%= post.views %></td>
           <td><%= post.getFormattedDate(post.createdAt) %></td>
           <td><%= post.email %></td>

@@ -28,9 +28,6 @@
   </h3> -->
   <div class="content floats">
     <div class="info float_right">
-      <div class="highlight" data-highlight="<%= search.highlight.author %>">
-        Author: <%= post.email %>
-      </div>
       <div>
         <%= post.views %> views
       </div>
@@ -43,10 +40,16 @@
         </div>
       <% } %>
     </div>
-    <h3>공지사항 관리</h3>
-    <div class="body highlight" data-highlight="<%= search.highlight.body %>">문의하기 분류 : <%= post.category %></div>
+    <h3>피부고민 관리</h3>
+    <div class="body highlight" data-highlight="<%= search.highlight.body %>">베스트고민 여부 : <%= post.editor %></div>
 
-    <div class="body highlight" data-highlight="<%= search.highlight.body %>">문의하기 내용 : <%= post.body %></div>
+    <div class="body highlight" data-highlight="<%= search.highlight.body %>">피부고민 분류 : <%= post.select %></div>
+
+    <div class="body highlight" data-highlight="<%= search.highlight.body %>">피부고민 제목 : <%= post.title %></div>
+
+    <div class="body highlight" data-highlight="<%= search.highlight.body %>">피부고민 내용 : <%= post.contents %></div>
+
+    <div class="body highlight" data-highlight="<%= search.highlight.body %>"><img src="<%= url %>"></div>
 
     <div class="comments">
       <h4>Comments (<%= post.comments?post.comments.length:"0" %>)</h4>

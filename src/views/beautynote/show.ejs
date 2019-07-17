@@ -14,25 +14,15 @@
 <!-- views/beautynote/show.ejs -->
 <div class="show">
   <div class="buttons floats">
-    <% if(user && user.equals(post.author._id)) { %>
       <form class="float_right" action="/beautynote/<%=post._id%>?_method=delete" method="post">
         <button type="button" onclick="confirm('Your post will be deleted')?this.parentElement.submit():null;">Delete</button>
       </form>
-      <button class="float_right" onclick="location.href='/beautynote/<%=post._id%>/edit'">Edit</button>
-    <% } %>
+      <button class="float_right" onclick="location.href='/beautynote/<%=post._id%>/edit'"><%=post._id%> Edit</button>
     <button class="float_left" onclick="location.href='/beautynote?<%= urlQuery %>'">Back</button>
   </div>
-  <h3>
-    <%= post.numId %>.
-    <span class="highlight" data-highlight="<%= search.highlight.title %>">
-      <%= post.title %>
-    </span>
-  </h3>
+
   <div class="content floats">
     <div class="info float_right">
-      <div class="highlight" data-highlight="<%= search.highlight.author %>">
-        Author: <%= post.author.nickname %>
-      </div>
       <div>
         <%= post.views %> views
       </div>
@@ -45,11 +35,12 @@
         </div>
       <% } %>
     </div>
-    <h3>뷰티팁 관리</h3>
-    <div class="body highlight" data-highlight="<%= search.highlight.body %>">뷰티팁 분류 : <%= post.title %></div>
-    <div class="body highlight" data-highlight="<%= search.highlight.body %>">뷰티팁 제목 : <%= post.body %></div>
+    <h3>뷰티노트 관리</h3>
+    <div class="body highlight" data-highlight="<%= search.highlight.body %>">인기노트 여부 : <%= post.editor %></div>
+    <div class="body highlight" data-highlight="<%= search.highlight.body %>">뷰티노트 분류 : <%= post.select %></div>
+    <div class="body highlight" data-highlight="<%= search.highlight.body %>">뷰티노트 제목 : <%= post.title %></div>
+    <div class="body highlight" data-highlight="<%= search.highlight.body %>">뷰티노트 내용 : <%= post.title %></div>
     <div class="body highlight" data-highlight="<%= search.highlight.body %>"><img src="<%= url %>"></div>
-    <div class="body highlight" data-highlight="<%= search.highlight.body %>">뷰티팁 URL : <%= post.posturl %></div>
 
 
     <!-- <div class="body highlight" data-highlight="<%= search.highlight.body %>">뷰티 미션명 : <%= post.missonsubtitle %></div>

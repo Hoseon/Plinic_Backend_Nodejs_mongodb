@@ -20,60 +20,25 @@
   <form class="checkValidation" action="/skinqna/<%=post._id%>?_method=put" method="post" enctype="multipart/form-data">
     <div class="inputs">
       <div class="floats">
-        <label>공지사항 분류 : </label>
-        <select class="cvRequired" id="volume" name="post[category]" cvRqErrMsg="제목을 입력 주세요." cvRqErrTo="#cvErrTitle" >
-          <option value="[이벤트]" <% if(post.category === '[이벤트]') {%> selected <% } %> > [이벤트]</option>
-          <option value="[공지]" <% if(post.category === '[공지]') {%> selected <% } %> > [공지]</option>
-          <option value="[점검]" <% if(post.category === '[점검]') {%> selected <% } %> > [점검]</option>
-          <option value="[장애]" <% if(post.category === '[장애]') {%> selected <% } %> > [장애]</option>
-        </select>
-        <!-- <input class="cvRequired" type="text" name="post[title]" cvRqErrMsg="제목을 입력 주세요." cvRqErrTo="#cvErrTitle" value=""> -->
-        <div id="cvErrTitle" class="message"></div>
+        <label>베스트 고민</label>
+        <div class="checkbox" style="margin-left: -225px;">
+        <input type="checkbox" name="post[editor]"  value="true" <%= post.editor ? "checked" : "value=false" %> />
+        </div>
       </div>
-
       <div class="floats">
-        <label>공지사항 제목</label>
+        <label>피부고민 제목</label>
         <input class="cvRequired" type="text" name="post[title]" cvRqErrMsg="Title is required." cvRqErrTo="#cvErrTitle" value="<%=post.title%>">
         <div id="cvErrTitle" class="message"></div>
       </div>
       <div class="floats">
-        <label>Author</label>
-        <input disabled type="text" value="<%= user.nickname %>">
-      </div>
-      <div class="floats">
-        <label>공지사항 본문</label>
-        <textarea class="cvRequired" name="post[body]" cvRqErrMsg="Body is required." cvRqErrTo="#cvErrBody"><%=post.body%></textarea>
+        <label>피부고민 본문</label>
+        <textarea class="cvRequired" name="post[contents]" cvRqErrMsg="Body is required." cvRqErrTo="#cvErrBody"><%=post.contents%></textarea>
         <div id="cvErrBody" class="message"></div>
       </div>
       <div class="floats">
-        <label>공지사항 보조 제목</label>
-        <textarea class="cvRequired" name="post[missontitle]" cvRqErrMsg="Body is required." cvRqErrTo="#cvErrBody"><%=post.missontitle%></textarea>
-        <div id="cvErrBody" class="message"></div>
+        <label>피부고민 이미지</label>
+        <img src="<%= url %>">
       </div>
-      <div class="floats">
-        <label>공지사항 대표 이미지</label>
-        <input class="cvRequired" type="file" name="image" cvRqErrMsg="이미지 파일을 다시 업로드 해주세요." cvRqErrTo="#cvErrTitle" accept=".jpg, .jpeg, .png" value="">
-        </input>
-        <div id="cvErrTitle" class="message"></div>
-      </div>
-      <span>이전 이미지 파일 다운로드 : <a href="<%= url %>" download><%=preoriginalName%></a> - 링크 클릭</span>
-      <input type="hidden" name="prefilename" value="<%=prefilename%>" />
-      <input type="hidden" name="preoriginalName" value="<%=preoriginalName%>" />
-
-      <div class="floats">
-        <label>임시 날짜</label>
-        <textarea class="cvRequired" name="post[endmission]" cvRqErrMsg="Body is required." cvRqErrTo="#cvErrBody"><%=post.endmission%></textarea>
-        <div id="cvErrBody" class="message"></div>
-      </div>
-      <div class="floats">
-        <label>본문 이미지</label>
-        <input class="cvRequired" type="file" name="prodimage" cvRqErrMsg="이미지 파일을 다시 업로드 해주세요." cvRqErrTo="#cvErrTitle" accept=".jpg, .jpeg, .png" value="">
-        </input>
-        <div id="cvErrTitle" class="message"></div>
-      </div>
-      <span>이전 미션 상품 이미지 파일 다운로드 : <a href="<%= prod_url %>" download><%=preprodoriginalname%></a> - 링크 클릭</span>
-      <input type="hidden" name="preprodfilename" value="<%=preprodfilename%>" />
-      <input type="hidden" name="preprodoriginalname" value="<%=preprodoriginalname%>" />
 
 
     </div>

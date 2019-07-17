@@ -345,7 +345,7 @@ module.exports = function(app) {
   app.get('/skinqna_images/:id', (req, res, next) => {
     let imgId = req.params.id;
 
-    BeautyNote.findById(imgId, (err, image) => {
+    SkinQna.findById(imgId, (err, image) => {
       if (err) {
         res.sendStatus(400);
       }
