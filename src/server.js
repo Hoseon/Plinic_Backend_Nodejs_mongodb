@@ -322,9 +322,12 @@ module.exports = function(app) {
         res.sendStatus(400);
       }
       // stream the image back by loading the file
-      res.setHeader('Content-Type', 'image/jpeg');
-
-      fs.createReadStream(path.join(__dirname, '../uploads/', image.filename)).pipe(res);
+      if(image.filename){
+        res.setHeader('Content-Type', 'image/jpeg');
+        fs.createReadStream(path.join(__dirname, '../uploads/', image.filename)).pipe(res);
+      } else {
+        res.sendStatus(200);
+      }
     })
   });
 
@@ -337,7 +340,6 @@ module.exports = function(app) {
       }
       // stream the image back by loading the file
       res.setHeader('Content-Type', 'image/jpeg');
-
       fs.createReadStream(path.join(__dirname, '../uploads/', image.filename)).pipe(res);
     })
   });
@@ -351,7 +353,6 @@ module.exports = function(app) {
       }
       // stream the image back by loading the file
       res.setHeader('Content-Type', 'image/jpeg');
-
       fs.createReadStream(path.join(__dirname, '../uploads/', image.filename)).pipe(res);
     })
   });
@@ -508,9 +509,14 @@ module.exports = function(app) {
       if (err) {
         res.sendStatus(400);
       }
+
+      if(image.filename){
       // stream the image back by loading the file
-      res.setHeader('Content-Type', 'image/jpeg');
-      fs.createReadStream(path.join(__dirname, '../uploads/', image.filename)).pipe(res);
+        res.setHeader('Content-Type', 'image/jpeg');
+        fs.createReadStream(path.join(__dirname, '../uploads/', image.filename)).pipe(res);
+      } else {
+        res.sendStatus(200);
+      }
     })
   });
 
