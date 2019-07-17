@@ -522,11 +522,11 @@ module.exports = function(app) {
         res.sendStatus(400);
       }
       // stream the image back by loading the file
-      if(image.finename){
+      if(image.filename){
         res.setHeader('Content-Type', 'image/jpeg');
         fs.createReadStream(path.join(__dirname, '../uploads/', image.filename)).pipe(res);
       } else {
-        res.sendStatus(201);
+        res.sendStatus(200);
       }
     })
   });
