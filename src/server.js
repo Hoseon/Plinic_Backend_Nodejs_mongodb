@@ -522,8 +522,12 @@ module.exports = function(app) {
         res.sendStatus(400);
       }
       // stream the image back by loading the file
-      res.setHeader('Content-Type', 'image/jpeg');
-      fs.createReadStream(path.join(__dirname, '../uploads/', image.filename)).pipe(res);
+      if(image.finename){
+        res.setHeader('Content-Type', 'image/jpeg');
+        fs.createReadStream(path.join(__dirname, '../uploads/', image.filename)).pipe(res);
+      } else {
+        res.sendStatus(201);
+      }
     })
   });
 
