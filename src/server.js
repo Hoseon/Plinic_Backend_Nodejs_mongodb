@@ -18,6 +18,7 @@ var Carezone = require('./models/Carezone');
 var Beauty = require('./models/Beauty');
 var CommuBeauty = require('./models/CommuBeauty');
 var BeautyNote = require('./models/BeautyNote');
+var Exhibition = require('./models/Exhibition');
 var SkinQna = require('./models/SkinQna');
 var SkinChart = require('./models/SkinChart');
 var Notice = require('./models/Notice');
@@ -537,6 +538,23 @@ module.exports = function(app) {
     })
   });
 
+  app.get('/exhibition_images/:id', (req, res, next) => {
+    let imgId = req.params.id;
+
+    Exhibition.findById(imgId, (err, image) => {
+      if (err) {
+        res.sendStatus(400);
+      }
+      // stream the image back by loading the file
+      if(image.filename){
+        res.setHeader('Content-Type', 'image/jpeg');
+        fs.createReadStream(path.join(__dirname, '../uploads/', image.filename)).pipe(res);
+      } else {
+        res.sendStatus(200);
+      }
+    })
+  });
+
 
   // Demo Route (GET http://localhost:8001)
   app.get('/', function(req, res) {
@@ -567,6 +585,7 @@ module.exports = function(app) {
   app.use('/commubeauty', require('./commubeauty'));
   app.use('/beautynote', require('./beautynote'));
   app.use('/skinqna', require('./skinqna'));
+  app.use('/exhibition', require('./exhibition'));
 
   app.get('/ejs', (req, res) => {
     res.render('home');

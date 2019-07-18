@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <% include ../partials/head %>
+</head>
+
+<body>
+  <header>
+    <% include ../partials/header %>
+  </header>
+  <div class="posts">
+    <% include partials/top %>
+    <!-- main start-->
+
+    <!-- views/exhibition/index.ejs -->
+    <div class="new">
+      <div class="buttons">
+        <button onclick="location.href='/exhibition'">Back</button>
+      </div>
+      <h3>뷰티 팁 관리</h3>
+      <form class="checkValidation" action="/exhibition" method="post" enctype="multipart/form-data">
+        <div class="inputs">
+          <div class="floats">
+            <label>에디터 추천</label>
+            <div class="checkbox" style="margin-left: -225px;">
+            <input type="checkbox" name="post[editor]"  value="true">
+            </div>
+            <!-- <div id="cvErrTitle" class="message"></div> -->
+          </div>
+          <div class="floats">
+            <label>기획전 분류</label>
+            <input class="cvRequired" type="text" name="post[title]" cvRqErrMsg="제목을 입력 주세요." cvRqErrTo="#cvErrTitle" value="">
+            <div id="cvErrTitle" class="message"></div>
+          </div>
+          <div class="floats">
+            <label>Author</label>
+            <input disabled type="text" value="<%= user.nickname %>">
+          </div>
+          <div class="floats">
+            <label>기획전 제목</label>
+            <textarea class="cvRequired" name="post[body]" cvRqErrMsg="기획전 설명이 필요 합니다." cvRqErrTo="#cvErrBody"></textarea>
+            <div id="cvErrBody" class="message"></div>
+          </div>
+          <div class="floats">
+            <label>기획전 URL</label>
+            <input class="cvRequired" type="text" name="post[posturl]" cvRqErrMsg="뷰티 보조 미션 제목을 입력해주세요." cvRqErrTo="#cvErrBody" value="">
+            <div id="cvErrTitle" class="message"></div>
+          </div>
+          <div class="floats">
+            <label>기획전 이미지</label>
+            <input class="cvRequired" type="file" name="image" cvRqErrMsg="뷰티팁 이미지를 꼭 참조해주세요." cvRqErrTo="#cvErrBody" accept=".jpg, .jpeg, .png">
+            <div id="cvErrTitle" class="message"></div>
+          </div>
+          <h2 style="color: red" >기획전 이미지 사이즈(px) : 640 X 360</h2>
+
+        </div>
+        <div class="buttons">
+          <button type="submit">저장</button>
+        </div>
+      </form>
+    </div>
+
+    <!-- main end -->
+  </div>
+  <!--exhibition end -->
+  <footer>
+    <% include ../partials/footer %>
+  </footer>
+</body>
+
+</html>
