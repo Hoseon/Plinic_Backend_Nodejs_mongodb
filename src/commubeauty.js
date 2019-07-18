@@ -126,8 +126,9 @@ router.get('/beautylike/:id/:email', function(req, res) {
           if (err) {
             console.log("tags error : " + err);
           } else {
-            console.log("result tags : " + JSON.stringify(post2));
-            res.status(201).json(post2);
+            // console.log("result tags : " + JSON.stringify(post2));
+            // res.status(201).json(post2);
+            res.json(post2);
           }
         })
       }
