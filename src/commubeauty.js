@@ -127,10 +127,11 @@ router.get('/beautylike/:id/:email', function(req, res) {
             console.log("tags error : " + err);
           } else {
             console.log("result tags : " + JSON.stringify(post2));
+            res.status(201).json(post2);
           }
         })
       }
-      res.sendStatus(200);
+      // res.status(200).json(user);
     });
 }); // like
 
@@ -149,12 +150,13 @@ router.get('/beautydislike/:id/:email', function(req, res) {
         { $pull: { likeuser: req.params.email }
       }, function(err, post2) {
         if (err) {
-          console.log("tags error : " + err);
+          // console.log("tags error : " + err);
         } else {
-          console.log("result tags : " + JSON.stringify(post2));
+          // console.log("result tags : " + JSON.stringify(post2));
+          res.status(201).json(post2);
         }
       })
-      res.sendStatus(200);
+      // res.sendStatus(200);
     });
 }); // dislike
 
