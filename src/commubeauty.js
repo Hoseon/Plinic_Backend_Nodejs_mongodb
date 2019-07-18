@@ -40,17 +40,25 @@ router.get('/list', function(req, res) {
 router.get('/editorlist', function(req, res) {
   //var carezonelist = null;
   async.waterfall([function(callback) {
-    CommuBeauty.find({ editor: true },function(err, docs) {
+    CommuBeauty.find({
+      editor: true
+    }, function(err, docs) {
       res.json(docs);
-    }).sort({"editorUpdateAt" : -1 });
+    }).sort({
+      "editorUpdateAt": -1
+    });
   }]);
 });
 
 router.get('/main_list', function(req, res) {
   async.waterfall([function(callback) {
-    CommuBeauty.find({ editor: false },function(err, docs) {
+    CommuBeauty.find({
+      editor: false
+    }, function(err, docs) {
       res.json(docs);
-    }).sort({"_id" : -1 });
+    }).sort({
+      "_id": -1
+    });
   }]);
 });
 
@@ -59,7 +67,9 @@ router.get('/main_list', function(req, res) {
   async.waterfall([function(callback) {
     CommuBeauty.find(function(err, docs) {
       res.json(docs);
-    }).sort({"_id" : -1 }).limit(3);
+    }).sort({
+      "_id": -1
+    }).limit(3);
   }]);
 });
 
@@ -73,6 +83,83 @@ router.get('/mission/:id', function(req, res) {
     });
   }]);
 });
+
+
+// router.get('/beautylike/:id', function(req, res) {
+//   //var carezonelist = null;
+//   async.waterfall([function(callback) {
+//     CommuBeauty.findOneAndUpdate({
+//       _id: req.params.id,
+//     }, req.body.post, function(err, post) {
+//       if (err) return res.json({
+//         success: false,
+//         message: err
+//       });
+//       if (!post) return res.json({
+//         success: false,
+//         message: "No data found to update"
+//       });
+//       res.redirect('/banner/' + req.params.id);
+//     });;
+//   }]);
+// });
+
+router.get('/beautylike/:id/:email', function(req, res) {
+  CommuBeauty.findById(req.params.id)
+    .exec(function(err, post) {
+      if (err) return res.json({
+        success: false,
+        message: err
+      });
+      var k = 0;
+      for (let i = 0; i < post.likeuser.length; i++) {
+        if (post.likeuser[i] == req.params.email) {
+          k++;
+        }
+      }
+      if (k == 0) {
+        post.like++;
+        post.save();
+        CommuBeauty.update({_id : req.params.id},
+          { $push: { likeuser: req.params.email }
+        }, function(err, post2) {
+          if (err) {
+            console.log("tags error : " + err);
+          } else {
+            console.log("result tags : " + JSON.stringify(post2));
+          }
+        })
+      }
+      res.sendStatus(200);
+    });
+}); // like
+
+
+
+router.get('/beautydislike/:id/:email', function(req, res) {
+  CommuBeauty.findById(req.params.id)
+    .exec(function(err, post) {
+      if (err) return res.json({
+        success: false,
+        message: err
+      });
+      post.like--;
+      post.save();
+      CommuBeauty.update({_id : req.params.id},
+        { $pull: { likeuser: req.params.email }
+      }, function(err, post2) {
+        if (err) {
+          console.log("tags error : " + err);
+        } else {
+          console.log("result tags : " + JSON.stringify(post2));
+        }
+      })
+      res.sendStatus(200);
+    });
+}); // dislike
+
+
+
 
 router.get('/', function(req, res) {
   var vistorCounter = null;
@@ -150,7 +237,9 @@ router.get('/new', isLoggedIn, function(req, res) {
 
 
 
-router.post('/', upload.fields([{ name: 'image' }]), isLoggedIn, function(req, res, next) {
+router.post('/', upload.fields([{
+  name: 'image'
+}]), isLoggedIn, function(req, res, next) {
   async.waterfall([function(callback) {
     CommuBeautyCounter.findOne({
       name: "commubeauty"
@@ -264,19 +353,23 @@ router.get('/:id/edit', isLoggedIn, function(req, res) {
 
 
 
-router.put('/:id', upload.fields([{ name: 'image' }, { name: 'prodimage' }]), isLoggedIn, function(req, res, next) {
+router.put('/:id', upload.fields([{
+  name: 'image'
+}, {
+  name: 'prodimage'
+}]), isLoggedIn, function(req, res, next) {
   //console.log("prefilename:"+ req.body.prefilename);
   //console.log("preoriginalName:" + req.body.preoriginalName);
   req.body.post.editorUpdateAt = Date.now();
   req.body.post.filename = req.files['image'][0].filename;
   req.body.post.originalName = req.files['image'][0].originalname;
-  if(!req.body.post.editor){
+  if (!req.body.post.editor) {
     req.body.post.editor = false;
-    req.body.post.updatedAt=Date.now();
+    req.body.post.updatedAt = Date.now();
   }
-  if(req.body.post.editor){
+  if (req.body.post.editor) {
     req.body.post.editor = true;
-    req.body.post.updatedAt=Date.now();
+    req.body.post.updatedAt = Date.now();
   }
 
   //req.body.post.prodfilename = req.files['prodimage'][0].filename;

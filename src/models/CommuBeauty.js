@@ -28,6 +28,8 @@ var commubeautySchema = mongoose.Schema({
   posturl: String,
   editor: {type: Boolean, default: false},
   editorUpdateAt: Date,
+  like: {type:Number, default: 0},
+  likeuser: {type:Array, default: ''},
 });
 
 commubeautySchema.methods.getFormattedDate = function (date) {
