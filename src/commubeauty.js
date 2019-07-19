@@ -62,14 +62,14 @@ router.get('/main_list', function(req, res) {
   }]);
 });
 
-router.get('/main_list', function(req, res) {
+router.get('/home_list', function(req, res) {
   //var carezonelist = null;
   async.waterfall([function(callback) {
     CommuBeauty.find(function(err, docs) {
       res.json(docs);
     }).sort({
       "_id": -1
-    }).limit(3);
+    }).limit(4);
   }]);
 });
 
