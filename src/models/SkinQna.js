@@ -42,6 +42,8 @@ var skinqnaSchema = mongoose.Schema({
   editor: {type: Boolean, default: false},
   editorUpdateAt: Date,
   contents: String,
+  like: {type:Number, default: 0},
+  likeuser: {type:Array, default: ''},
 });
 
 skinqnaSchema.methods.getFormattedDate = function (date) {

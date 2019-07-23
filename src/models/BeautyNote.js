@@ -35,6 +35,8 @@ var beautynoteSchema = mongoose.Schema({
   contents : String,
   editor: {type: Boolean, default: false},
   editorUpdateAt: Date,
+  like: {type:Number, default: 0},
+  likeuser: {type:Array, default: ''},
 });
 
 beautynoteSchema.methods.getFormattedDate = function (date) {

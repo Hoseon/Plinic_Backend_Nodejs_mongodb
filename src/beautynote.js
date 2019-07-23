@@ -29,6 +29,62 @@ let upload = multer({
   storage: storage
 })
 
+router.get('/like/:id/:email', function(req, res) {
+  BeautyNote.findById(req.params.id)
+    .exec(function(err, post) {
+      if (err) return res.json({
+        success: false,
+        message: err
+      });
+      var k = 0;
+      for (let i = 0; i < post.likeuser.length; i++) {
+        if (post.likeuser[i] == req.params.email) {
+          k++;
+        }
+      }
+      if (k == 0) {
+        post.like++;
+        post.save();
+        BeautyNote.update({_id : req.params.id},
+          { $push: { likeuser: req.params.email }
+        }, function(err, post2) {
+          if (err) {
+            console.log("tags error : " + err);
+          } else {
+            // console.log("result tags : " + JSON.stringify(post2));
+            // res.status(201).json(post2);
+            res.json(post2);
+          }
+        })
+      }
+      // res.status(200).json(user);
+    });
+}); // like
+
+router.get('/dislike/:id/:email', function(req, res) {
+  BeautyNote.findById(req.params.id)
+    .exec(function(err, post) {
+      if (err) return res.json({
+        success: false,
+        message: err
+      });
+      post.like--;
+      post.save();
+      BeautyNote.update({_id : req.params.id},
+        { $pull: { likeuser: req.params.email }
+      }, function(err, post2) {
+        if (err) {
+          // console.log("tags error : " + err);
+        } else {
+          // console.log("result tags : " + JSON.stringify(post2));
+          res.status(201).json(post2);
+        }
+      })
+      // res.sendStatus(200);
+    });
+}); // dislike
+
+
 
 router.get('/list', function(req, res) {
   async.waterfall([function(callback) {
