@@ -191,7 +191,7 @@ router.post('/', upload.fields([{ name: 'image' }]), function(req, res, next) {
           if (err) {
             console.log("tags error : " + err);
           } else {
-            console.log("result tags : " + JSON.stringify(post2));
+            // console.log("result tags : " + JSON.stringify(post2));
           }
         })
         return res.status(201).json(user);

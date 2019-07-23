@@ -18,9 +18,9 @@ function createToken(user) {
 exports.noteSave = (req, res) => {
 
     // console.log("-------------------------------request-------------");
-    console.log("qna email -------------------------------- : " + req.body.email);
-    console.log("qna-------------------------------- : " + req.body.select);
-    console.log("qna-------------------------------- : " + req.body.tags);
+    // console.log("qna email -------------------------------- : " + req.body.email);
+    // console.log("qna-------------------------------- : " + req.body.select);
+    // console.log("qna-------------------------------- : " + req.body.tags);
     // console.log("qna-------------------------------- : " + JSON.stringify(req.body.qna));
     // //return res.status(400).json({ 'msg': '문의하기가 등록되었습니다. <br /><br /> 곧 관리자에게 Email로 답변을 받을 수 있습니다.' });
     //console.log("-------------------------------response-------------" + res.body.id);
@@ -63,7 +63,7 @@ exports.noteSave = (req, res) => {
               if (err) {
                 console.log("tags error : " + err);
               } else {
-                console.log("result tags : " + JSON.stringify(post2));
+                // console.log("result tags : " + JSON.stringify(post2));
               }
             })
             return res.status(201).json(user);
@@ -137,3 +137,24 @@ exports.noteUpdate = (req, res) => {
        // create
     }
 };
+
+
+exports.replySave = (req, res) => {
+  // console.log(req.body.email);
+  // console.log(req.body.id);
+  // console.log(req.body.comment);
+
+  var newReply = req.body
+  BeautyNote.update({_id : req.body.id},
+    { $push: { comments: newReply }
+  }, function(err, post2) {
+    if (err) {
+      console.log("tags error : " + err);
+      return res.status(400).json(err);
+    } else {
+      console.log("result tags : " + JSON.stringify(post2));
+      return res.status(201).json(post2);
+    }
+  })
+
+}

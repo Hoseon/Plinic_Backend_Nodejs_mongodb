@@ -7,9 +7,12 @@ var beautynoteSchema = mongoose.Schema({
   views: {type:Number, default: 0},
   numId: {type:Number,},
   comments: [{
-    body: {type:String, required:true},
-    author: {type:mongoose.Schema.Types.ObjectId, ref:'user_admin', required:true},
-    createdAt: {type:Date, default:Date.now}
+    email: String,
+    comment: String,
+    // body: {type:String, required:true},
+    // author: {type:mongoose.Schema.Types.ObjectId, ref:'user_admin', required:true},
+    createdAt: {type:Date, default:Date.now},
+    updatedAt: {type: Date},
   }],
   createdAt: {type:Date, default:Date.now},
   updatedAt: Date,

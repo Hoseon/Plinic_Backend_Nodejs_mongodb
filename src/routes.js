@@ -32,6 +32,7 @@ routes.post('/qnaupdate', qnaController.qnaUpdate);
 //뷰티노트 저장
 routes.post('/notesave', noteController.noteSave);
 routes.post('/noteupdate', noteController.noteUpdate);
+routes.post('/replysave', noteController.replySave);
 
 //피부고민 저장
 routes.post('/skinqnasave', skinQnaController.skinQnaSave);
