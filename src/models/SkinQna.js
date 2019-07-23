@@ -8,10 +8,18 @@ var skinqnaSchema = mongoose.Schema({
   views: {type:Number, default: 0},
   // comment: {type: String},
   // numId: {type:Number, required:true},
+  // comments: [{
+  //   body: {type:String},
+  //   author: {type:mongoose.Schema.Types.ObjectId, ref:'user_admin'},
+  //   createdAt: {type:Date, default:Date.now}
+  // }],
   comments: [{
-    body: {type:String},
-    author: {type:mongoose.Schema.Types.ObjectId, ref:'user_admin'},
-    createdAt: {type:Date, default:Date.now}
+    email: String,
+    comment: String,
+    // body: {type:String, required:true},
+    // author: {type:mongoose.Schema.Types.ObjectId, ref:'user_admin', required:true},
+    createdAt: {type:Date, default:Date.now},
+    updatedAt: {type: Date, default:Date.now},
   }],
   createdAt: {type:Date, default:Date.now},
   updatedAt: Date,

@@ -33,10 +33,15 @@ routes.post('/qnaupdate', qnaController.qnaUpdate);
 routes.post('/notesave', noteController.noteSave);
 routes.post('/noteupdate', noteController.noteUpdate);
 routes.post('/replysave', noteController.replySave);
+routes.post('/replyupdate', noteController.replyUpdate);
+routes.post('/replydelete', noteController.replyDelete);
 
 //피부고민 저장
 routes.post('/skinqnasave', skinQnaController.skinQnaSave);
 routes.post('/skinqnaupdate', skinQnaController.skinQnaUpdate);
+routes.post('/replyskinqnasave', skinQnaController.replySave);
+routes.post('/replyskinqnaupdate', skinQnaController.replyUpdate);
+routes.post('/replyskinqnadelete', skinQnaController.replyDelete);
 
 //문진표 저장 및 업데이트 20190709
 routes.post('/skinchartsave', skinChartController.skinChartSave);
