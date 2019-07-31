@@ -89,6 +89,8 @@ router.get('/dislike/:id/:email', function(req, res) {
 router.get('/list/:id', function(req, res) {
   async.waterfall([function(callback) {
     SkinQna.findOne({ _id : req.params.id },function(err, docs) {
+      docs.views++;
+      docs.save();
       res.json(docs);
     });
   }]);

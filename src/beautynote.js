@@ -126,6 +126,8 @@ router.get('/list/:id', function(req, res) {
     BeautyNote.findOne({
       _id: req.params.id
     }, function(err, docs) {
+      docs.views++;
+      docs.save();
       res.json(docs);
     });
   }]);

@@ -37,6 +37,16 @@ router.get('/list', function(req, res) {
   }]);
 });
 
+router.get('/list/:id', function(req, res) {
+  async.waterfall([function(callback) {
+    CommuBeauty.findOne({ _id : req.params.id },function(err, docs) {
+      docs.views++;
+      docs.save();
+      res.json(docs);
+    });
+  }]);
+});
+
 router.get('/editorlist', function(req, res) {
   //var carezonelist = null;
   async.waterfall([function(callback) {
