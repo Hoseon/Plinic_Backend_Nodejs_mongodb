@@ -300,6 +300,34 @@ router.post('/', upload.fields([{
 }); // create
 
 
+router.post('/noteUpdate/:id', upload.fields([{
+  name: 'image'
+}]), function(req, res, next) {
+
+  req.body.tags = JSON.stringify(req.body.tags).replace(/\"/g, "").replace(/\\/g, "").replace(/\[/g, "").replace(/\]/g, "");
+  req.body.filename = req.files['image'][0].filename;
+  req.body.originalName = req.files['image'][0].originalname;
+  async.waterfall([function(callback) {
+    BeautyNote.findOneAndUpdate({
+      _id: req.params.id,
+    }, req.body, function(err, post) {
+      if (err) return res.json({
+        success: false,
+        message: err
+      });
+      if (!post) return res.json({
+        success: false,
+        message: "No data found to update"
+      });
+      // res.redirect('/beautynote/' + req.params.id);
+      return res.status(201).json(post);
+    });
+  }], function(callback, result) {
+    // let newNote = BeautyNote(req.body.desc);
+  });
+}); //update
+
+
 
 
 
@@ -380,7 +408,7 @@ router.put('/:id', upload.fields([{
   name: 'image'
 }, {
   name: 'prodimage'
-}]), isLoggedIn, function(req, res, next) {
+}]), function(req, res, next) {
   //console.log("prefilename:"+ req.body.prefilename);
   //console.log("preoriginalName:" + req.body.preoriginalName);
   console.log(req.body.post.editor);
