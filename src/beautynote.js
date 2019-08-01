@@ -29,7 +29,7 @@ let upload = multer({
   storage: storage
 })
 
-router.delete('/:id', function(req, res, next) {
+router.get('/delete/:id', function(req, res, next) {
   BeautyNote.findOneAndRemove({
     _id: req.params.id,
   }, function(err, post) {
