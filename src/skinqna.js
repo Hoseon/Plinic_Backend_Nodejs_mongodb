@@ -300,6 +300,34 @@ router.post('/', upload.fields([{
 }); // create
 
 
+router.post('/qnaUpdate/:id', upload.fields([{
+  name: 'image'
+}]), function(req, res, next) {
+
+  req.body.tags = JSON.stringify(req.body.tags).replace(/\"/g, "").replace(/\\/g, "").replace(/\[/g, "").replace(/\]/g, "");
+  req.body.filename = req.files['image'][0].filename;
+  req.body.originalName = req.files['image'][0].originalname;
+  async.waterfall([function(callback) {
+    SkinQna.findOneAndUpdate({
+      _id: req.params.id,
+    }, req.body, function(err, post) {
+      if (err) return res.json({
+        success: false,
+        message: err
+      });
+      if (!post) return res.json({
+        success: false,
+        message: "No data found to update"
+      });
+      // res.redirect('/beautynote/' + req.params.id);
+      return res.status(201).json(post);
+    });
+  }], function(callback, result) {
+    // let newNote = BeautyNote(req.body.desc);
+  });
+}); //update
+
+
 
 
 
