@@ -30,7 +30,7 @@ let upload = multer({
 })
 
 
-router.delete('/:id', function(req, res, next) {
+router.get('/delete/:id', function(req, res, next) {
   SkinQna.findOneAndRemove({
     _id: req.params.id,
   }, function(err, post) {
@@ -38,7 +38,7 @@ router.delete('/:id', function(req, res, next) {
       success: false,
       message: err
     });
-    res.sendStatus(200);
+    res.status(201).json(post);
   });
 }); //destroy
 
