@@ -29,6 +29,20 @@ let upload = multer({
   storage: storage
 })
 
+router.delete('/:id', function(req, res, next) {
+  BeautyNote.findOneAndRemove({
+    _id: req.params.id,
+  }, function(err, post) {
+    if (err) return res.json({
+      success: false,
+      message: err
+    });
+    // res.sendStatus(200);
+    res.status(201).json(post);
+  });
+}); //destroy
+
+
 router.get('/like/:id/:email', function(req, res) {
   BeautyNote.findById(req.params.id)
     .exec(function(err, post) {
@@ -45,8 +59,12 @@ router.get('/like/:id/:email', function(req, res) {
       if (k == 0) {
         post.like++;
         post.save();
-        BeautyNote.update({_id : req.params.id},
-          { $push: { likeuser: req.params.email }
+        BeautyNote.update({
+          _id: req.params.id
+        }, {
+          $push: {
+            likeuser: req.params.email
+          }
         }, function(err, post2) {
           if (err) {
             console.log("tags error : " + err);
@@ -70,8 +88,12 @@ router.get('/dislike/:id/:email', function(req, res) {
       });
       post.like--;
       post.save();
-      BeautyNote.update({_id : req.params.id},
-        { $pull: { likeuser: req.params.email }
+      BeautyNote.update({
+        _id: req.params.id
+      }, {
+        $pull: {
+          likeuser: req.params.email
+        }
       }, function(err, post2) {
         if (err) {
           // console.log("tags error : " + err);
@@ -98,9 +120,13 @@ router.get('/list', function(req, res) {
 
 router.get('/editorlist', function(req, res) {
   async.waterfall([function(callback) {
-    BeautyNote.find({ editor: true },function(err, docs) {
+    BeautyNote.find({
+      editor: true
+    }, function(err, docs) {
       res.json(docs);
-    }).sort({"editorUpdateAt" : -1 }).limit(2);
+    }).sort({
+      "editorUpdateAt": -1
+    }).limit(2);
   }]);
 });
 
@@ -108,7 +134,9 @@ router.get('/main_list', function(req, res) {
   async.waterfall([function(callback) {
     BeautyNote.find(function(err, docs) {
       res.json(docs);
-    }).sort({"_id" : -1 });
+    }).sort({
+      "_id": -1
+    });
   }]);
 });
 
@@ -117,7 +145,9 @@ router.get('/main_list', function(req, res) {
   async.waterfall([function(callback) {
     BeautyNote.find(function(err, docs) {
       res.json(docs);
-    }).sort({"_id" : -1 }).limit(3);
+    }).sort({
+      "_id": -1
+    }).limit(3);
   }]);
 });
 
@@ -209,7 +239,9 @@ router.get('/new', isLoggedIn, function(req, res) {
 
 
 
-router.post('/', upload.fields([{ name: 'image' }]), function(req, res, next) {
+router.post('/', upload.fields([{
+  name: 'image'
+}]), function(req, res, next) {
   async.waterfall([function(callback) {
     BeautyNoteCounter.findOne({
       name: "beautynote"
@@ -242,21 +274,27 @@ router.post('/', upload.fields([{ name: 'image' }]), function(req, res, next) {
     newNote.filename = req.files['image'][0].filename;
     newNote.originalName = req.files['image'][0].originalname;
     newNote.save((err, user) => {
-        if (err) {
-          console.log(err);
-            return res.status(400).json({ 'msg': '뷰티노트가 등록되지 않았습니다. <br /> Error : ' + err });
+      if (err) {
+        console.log(err);
+        return res.status(400).json({
+          'msg': '뷰티노트가 등록되지 않았습니다. <br /> Error : ' + err
+        });
+      }
+      var newTags = req.body.tags.replace(/\"/g, "").replace(/\\/g, "").replace(/\[/g, "").replace(/\]/g, "");
+      Tags.update({
+        _id: '5d2c39cc9cc12aae489d2f08'
+      }, {
+        $push: {
+          tags: newTags
         }
-        var newTags = req.body.tags.replace(/\"/g, "").replace(/\\/g, "").replace(/\[/g, "").replace(/\]/g, "");
-        Tags.update({_id : '5d2c39cc9cc12aae489d2f08'},
-          { $push: { tags: newTags }
-        }, function(err, post2) {
-          if (err) {
-            console.log("tags error : " + err);
-          } else {
-            // console.log("result tags : " + JSON.stringify(post2));
-          }
-        })
-        return res.status(201).json(user);
+      }, function(err, post2) {
+        if (err) {
+          console.log("tags error : " + err);
+        } else {
+          // console.log("result tags : " + JSON.stringify(post2));
+        }
+      })
+      return res.status(201).json(user);
     });
   });
 }); // create
@@ -338,24 +376,28 @@ router.get('/:id/edit', isLoggedIn, function(req, res) {
 
 
 
-router.put('/:id', upload.fields([{ name: 'image' }, { name: 'prodimage' }]), isLoggedIn, function(req, res, next) {
+router.put('/:id', upload.fields([{
+  name: 'image'
+}, {
+  name: 'prodimage'
+}]), isLoggedIn, function(req, res, next) {
   //console.log("prefilename:"+ req.body.prefilename);
   //console.log("preoriginalName:" + req.body.preoriginalName);
   console.log(req.body.post.editor);
-  if(!req.body.post.editor){
+  if (!req.body.post.editor) {
     req.body.post.editor = false;
-    req.body.post.updatedAt=Date.now();
+    req.body.post.updatedAt = Date.now();
   }
-  if(req.body.post.editor){
+  if (req.body.post.editor) {
     req.body.post.editor = true;
-    req.body.post.updatedAt=Date.now();
+    req.body.post.updatedAt = Date.now();
   }
   // req.body.post.filename = req.files['image'][0].filename;
   // req.body.post.originalName = req.files['image'][0].originalname;
   //req.body.post.prodfilename = req.files['prodimage'][0].filename;
   //req.body.post.prodoriginalname = req.files['prodimage'][0].originalname;
   // del([path.join(__dirname, '../uploads/', req.body.prefilename)]).then(deleted => {
-    //res.sendStatus(200);
+  //res.sendStatus(200);
   // });
 
   // del([path.join(__dirname, '../uploads/', req.body.preprodfilename)]).then(deleted => {

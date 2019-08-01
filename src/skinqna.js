@@ -30,6 +30,22 @@ let upload = multer({
 })
 
 
+router.delete('/:id', function(req, res, next) {
+  SkinQna.findOneAndRemove({
+    _id: req.params.id,
+  }, function(err, post) {
+    if (err) return res.json({
+      success: false,
+      message: err
+    });
+    res.sendStatus(200);
+  });
+}); //destroy
+
+
+
+
+
 router.get('/like/:id/:email', function(req, res) {
   SkinQna.findById(req.params.id)
     .exec(function(err, post) {
@@ -46,8 +62,12 @@ router.get('/like/:id/:email', function(req, res) {
       if (k == 0) {
         post.like++;
         post.save();
-        SkinQna.update({_id : req.params.id},
-          { $push: { likeuser: req.params.email }
+        SkinQna.update({
+          _id: req.params.id
+        }, {
+          $push: {
+            likeuser: req.params.email
+          }
         }, function(err, post2) {
           if (err) {
             console.log("tags error : " + err);
@@ -71,8 +91,12 @@ router.get('/dislike/:id/:email', function(req, res) {
       });
       post.like--;
       post.save();
-      SkinQna.update({_id : req.params.id},
-        { $pull: { likeuser: req.params.email }
+      SkinQna.update({
+        _id: req.params.id
+      }, {
+        $pull: {
+          likeuser: req.params.email
+        }
       }, function(err, post2) {
         if (err) {
           // console.log("tags error : " + err);
@@ -88,7 +112,9 @@ router.get('/dislike/:id/:email', function(req, res) {
 
 router.get('/list/:id', function(req, res) {
   async.waterfall([function(callback) {
-    SkinQna.findOne({ _id : req.params.id },function(err, docs) {
+    SkinQna.findOne({
+      _id: req.params.id
+    }, function(err, docs) {
       docs.views++;
       docs.save();
       res.json(docs);
@@ -98,7 +124,9 @@ router.get('/list/:id', function(req, res) {
 
 router.get('/qna/:id', function(req, res) {
   async.waterfall([function(callback) {
-    SkinQna.find({ _id : req.params.id },function(err, docs) {
+    SkinQna.find({
+      _id: req.params.id
+    }, function(err, docs) {
       res.json(docs);
     });
   }]);
@@ -106,9 +134,13 @@ router.get('/qna/:id', function(req, res) {
 
 router.get('/editorlist', function(req, res) {
   async.waterfall([function(callback) {
-    SkinQna.find({ editor: true },function(err, docs) {
+    SkinQna.find({
+      editor: true
+    }, function(err, docs) {
       res.json(docs);
-    }).sort({"editorUpdateAt" : -1 }).limit(2);
+    }).sort({
+      "editorUpdateAt": -1
+    }).limit(2);
   }]);
 });
 
@@ -116,7 +148,9 @@ router.get('/main_list', function(req, res) {
   async.waterfall([function(callback) {
     SkinQna.find(function(err, docs) {
       res.json(docs);
-    }).sort({"_id" : -1 });
+    }).sort({
+      "_id": -1
+    });
   }]);
 });
 
@@ -206,7 +240,9 @@ router.get('/new', isLoggedIn, function(req, res) {
 
 
 
-router.post('/', upload.fields([{ name: 'image' }]), function(req, res, next) {
+router.post('/', upload.fields([{
+  name: 'image'
+}]), function(req, res, next) {
   async.waterfall([function(callback) {
     SkinQnaCounter.findOne({
       name: "skinqna"
@@ -238,21 +274,27 @@ router.post('/', upload.fields([{ name: 'image' }]), function(req, res, next) {
     newNote.filename = req.files['image'][0].filename;
     newNote.originalName = req.files['image'][0].originalname;
     newNote.save((err, user) => {
-        if (err) {
-          console.log(err);
-            return res.status(400).json({ 'msg': '뷰티노트가 등록되지 않았습니다. <br /> Error : ' + err });
+      if (err) {
+        console.log(err);
+        return res.status(400).json({
+          'msg': '뷰티노트가 등록되지 않았습니다. <br /> Error : ' + err
+        });
+      }
+      var newTags = req.body.tags.replace(/\"/g, "").replace(/\\/g, "").replace(/\[/g, "").replace(/\]/g, "");
+      Tags.update({
+        _id: '5d2c39cc9cc12aae489d2f08'
+      }, {
+        $push: {
+          tags: newTags
         }
-        var newTags = req.body.tags.replace(/\"/g, "").replace(/\\/g, "").replace(/\[/g, "").replace(/\]/g, "");
-        Tags.update({_id : '5d2c39cc9cc12aae489d2f08'},
-          { $push: { tags: newTags }
-        }, function(err, post2) {
-          if (err) {
-            console.log("tags error : " + err);
-          } else {
-            // console.log("result tags : " + JSON.stringify(post2));
-          }
-        })
-        return res.status(201).json(user);
+      }, function(err, post2) {
+        if (err) {
+          console.log("tags error : " + err);
+        } else {
+          // console.log("result tags : " + JSON.stringify(post2));
+        }
+      })
+      return res.status(201).json(user);
     });
   });
 }); // create
@@ -305,7 +347,7 @@ router.get('/:id/edit', isLoggedIn, function(req, res) {
     var prefilename = post.filename; //이전 파일들은 삭제
     var preoriginalName = post.originalName; //이전 파일들은 삭제
 
-    var preprodfilename  = post.prodfilename;
+    var preprodfilename = post.prodfilename;
     var preprodoriginalname = post.prodoriginalname;
     if (err) return res.json({
       success: false,
@@ -328,16 +370,20 @@ router.get('/:id/edit', isLoggedIn, function(req, res) {
 
 
 
-router.put('/:id', upload.fields([{ name: 'image' }, { name: 'prodimage' }]), isLoggedIn, function(req, res, next) {
+router.put('/:id', upload.fields([{
+  name: 'image'
+}, {
+  name: 'prodimage'
+}]), isLoggedIn, function(req, res, next) {
   //console.log("prefilename:"+ req.body.prefilename);
   //console.log("preoriginalName:" + req.body.preoriginalName);
-  if(!req.body.post.editor){
+  if (!req.body.post.editor) {
     req.body.post.editor = false;
-    req.body.post.updatedAt=Date.now();
+    req.body.post.updatedAt = Date.now();
   }
-  if(req.body.post.editor){
+  if (req.body.post.editor) {
     req.body.post.editor = true;
-    req.body.post.updatedAt=Date.now();
+    req.body.post.updatedAt = Date.now();
   }
   req.body.post.updatedAt = Date.now();
 
