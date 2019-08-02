@@ -122,10 +122,11 @@ exports.noteUpdate = (req, res) => {
         }
       });
     }], function(callback, counter) {
-      let newQna = Qna(req.body);
+      let newQna = BeautyNote(req.body);
       newQna.numId = counter.totalCount + 1;
+      console.log("note body :::::::::::::::::::: " + JSON.stringify(req.body));
 
-      Qna.findOneAndUpdate({
+      BeautyNote.findOneAndUpdate({
         _id: req.body.id
       }, req.body, function(err, post) {
         if (err) {

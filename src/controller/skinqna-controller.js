@@ -116,14 +116,14 @@ exports.skinQnaUpdate = (req, res) => {
     });
   } else {
     async.waterfall([function(callback) {
-      BeautyNoteCounter.findOne({
+      SkinQnaCounter.findOne({
         name: "qna"
       }, function(err, counter) {
         if (err) callback(err);
         if (counter) {
           callback(null, counter);
         } else {
-          BeautyNoteCounter.create({
+          SkinQnaCounter.create({
             name: "qna",
             totalCount: 0
           }, function(err, counter) {
@@ -136,10 +136,10 @@ exports.skinQnaUpdate = (req, res) => {
         }
       });
     }], function(callback, counter) {
-      let newQna = Qna(req.body);
+      let newQna = SkinQna(req.body);
       newQna.numId = counter.totalCount + 1;
 
-      Qna.findOneAndUpdate({
+      SkinQna.findOneAndUpdate({
         _id: req.body.id
       }, req.body, function(err, post) {
         if (err) {
