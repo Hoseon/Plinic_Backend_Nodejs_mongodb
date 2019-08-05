@@ -16,6 +16,7 @@ var skinqnaSchema = mongoose.Schema({
   comments: [{
     email: String,
     comment: String,
+    img_url: String,
     // body: {type:String, required:true},
     // author: {type:mongoose.Schema.Types.ObjectId, ref:'user_admin', required:true},
     createdAt: {type:Date, default:Date.now},
