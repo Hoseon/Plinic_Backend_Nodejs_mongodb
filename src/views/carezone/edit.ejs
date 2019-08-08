@@ -20,7 +20,7 @@
   <form class="checkValidation" action="/carezone/<%=post._id%>?_method=put" method="post" enctype="multipart/form-data">
     <div class="inputs">
       <div class="floats">
-        <label>미션 제목</label>
+        <label>케어챌린지 제목</label>
         <input class="cvRequired" maxlength="20" type="text" name="post[title]" cvRqErrMsg="Title is required." cvRqErrTo="#cvErrTitle" value="<%=post.title%>">
         <div id="cvErrTitle" class="message"></div>
       </div>
@@ -29,7 +29,7 @@
         <input disabled type="text" value="<%= user.nickname %>">
       </div>
       <div class="floats">
-        <label>미션 목표</label>
+        <label>케어챌린지 설명</label>
         <input class="cvRequired" name="post[body]" maxlength="20" cvRqErrMsg="Body is required." cvRqErrTo="#cvErrBody" value="<%=post.body%>">
         <div id="cvErrBody" class="message"></div>
       </div>
@@ -61,25 +61,36 @@
         <div id="cvErrBody" class="message"></div>
       </div> -->
       <div class="floats">
-        <label>최대참여인원</label>
-        <input class="cvRequired" type="number" name="post[maxmember]" cvRqErrMsg="Body is required." cvRqErrTo="#cvErrBody" value="<%=post.maxmember%>">
-        <div id="cvErrBody" class="message"></div>
-      </div>
-      <div class="floats">
         <label>보상 상품명</label>
         <input class="cvRequired" maxlength="20" name="post[product]" cvRqErrMsg="Body is required." cvRqErrTo="#cvErrBody" value="<%=post.product%>">
         <div id="cvErrBody" class="message"></div>
       </div>
+      <div class="floats">
+        <label>상품 수량</label>
+        <input class="cvRequired" type="number" name="post[productcount]" cvRqErrMsg="Body is required." cvRqErrTo="#cvErrBody" value="<%=post.productcount%>">
+        <div id="cvErrBody" class="message"></div>
+      </div>
+      <div class="floats">
+        <label>참여 방법</label>
+        <input class="cvRequired" type="text" name="post[howtojoin]" cvRqErrMsg="Body is required." cvRqErrTo="#cvErrBody" value="<%=post.howtojoin%>">
+        <div id="cvErrBody" class="message"></div>
+      </div>
+      <div class="floats">
+        <label>보상 조건(3줄)</label>
+        <textarea class="cvRequired" name="post[condition]" cvRqErrMsg="보상조건을 입력하세요." cvRqErrTo="#cvErrBody"><%=post.condition%></textarea>
+        <div id="cvErrBody" class="message"></div>
+      </div>
+
       <!-- <div class="floats">
         <label>하단 캡션</label>
         <textarea class="cvRequired" name="post[caption]" cvRqErrMsg="Body is required." cvRqErrTo="#cvErrBody"><%=post.caption%></textarea>
         <div id="cvErrBody" class="message"></div>
       </div> -->
-      <div class="floats">
+      <!-- <div class="floats">
         <label>미션 공개</label>
-        <input class="cvRequired" type="datetime-local" name="post[exposure]" cvRqErrMsg="Body is required." cvRqErrTo="#cvErrBody" value="<%=post.getFormattedDate(post.exposure) %>T<%=post.getFormattedTime(post.exposure) %>">
+        <input class="cvRequired" type="datetime-local" name="post[exposure]" cvRqErrMsg="Body is required." cvRqErrTo="#cvErrBody" >
         <div id="cvErrBody" class="message"></div>
-      </div>
+      </div> -->
       <div class="floats">
         <label>미션 시작일</label>
         <input class="cvRequired" type="datetime-local" name="post[startmission]" cvRqErrMsg="Body is required." cvRqErrTo="#cvErrBody" value="<%=post.getFormattedDate(post.startmission) %>T<%=post.getFormattedTime(post.startmission) %>">
@@ -96,11 +107,59 @@
         </input>
         <div id="cvErrTitle" class="message"></div>
       </div>
+      <div class="floats">
+        <label>보너스</label>
+        <textarea class="cvRequired" name="post[bonus]" cvRqErrMsg="보상조건을 입력하세요." cvRqErrTo="#cvErrBody" ><%=post.bonus%></textarea>
+        <div id="cvErrBody" class="message"></div>
+      </div>
+
       <span>이전 미션 상품 이미지 파일 다운로드 : <a href="<%= prod_url %>" download><%=preprodoriginalname%></a> - 링크 클릭</span>
       <h2 style="color: red" >미션 제품 이미지 사이즈(px) : 91 X 189</h2>
       <input type="hidden" name="preprodfilename" value="<%=preprodfilename%>" />
       <input type="hidden" name="preprodoriginalname" value="<%=preprodoriginalname%>" />
 
+      <div class="floats">
+        <label>챌린지 이미지1</label>
+        <input class="cvRequired" type="file" name="challenge_image1" cvRqErrMsg="이미지 파일을 다시 업로드 해주세요." cvRqErrTo="#cvErrTitle" accept=".jpg, .jpeg, .png" value="">
+        </input>
+        <div id="cvErrTitle" class="message"></div>
+      </div>
+      <div class="floats">
+        <label>챌린지 이미지2</label>
+        <input class="cvRequired" type="file" name="challenge_image2" cvRqErrMsg="이미지 파일을 다시 업로드 해주세요." cvRqErrTo="#cvErrTitle" accept=".jpg, .jpeg, .png" value="">
+        </input>
+        <div id="cvErrTitle" class="message"></div>
+      </div>
+      <div class="floats">
+        <label>챌린지 이미지3</label>
+        <input class="cvRequired" type="file" name="challenge_image3" cvRqErrMsg="이미지 파일을 다시 업로드 해주세요." cvRqErrTo="#cvErrTitle" accept=".jpg, .jpeg, .png" value="">
+        </input>
+        <div id="cvErrTitle" class="message"></div>
+      </div>
+      <div class="floats">
+        <label>챌린지 이미지4</label>
+        <input class="cvRequired" type="file" name="challenge_image4" cvRqErrMsg="이미지 파일을 다시 업로드 해주세요." cvRqErrTo="#cvErrTitle" accept=".jpg, .jpeg, .png" value="">
+        </input>
+        <div id="cvErrTitle" class="message"></div>
+      </div>
+      <div class="floats">
+        <label>챌린지 이미지5</label>
+        <input class="cvRequired" type="file" name="challenge_image5" cvRqErrMsg="이미지 파일을 다시 업로드 해주세요." cvRqErrTo="#cvErrTitle" accept=".jpg, .jpeg, .png" value="">
+        </input>
+        <div id="cvErrTitle" class="message"></div>
+      </div>
+      <input type="hidden" name="pre_challenge1_filename" value="<%=pre_challenge1_filename%>" />
+      <input type="hidden" name="pre_challenge2_filename" value="<%=pre_challenge2_filename%>" />
+      <input type="hidden" name="pre_challenge3_filename" value="<%=pre_challenge3_filename%>" />
+      <input type="hidden" name="pre_challenge4_filename" value="<%=pre_challenge4_filename%>" />
+      <input type="hidden" name="pre_challenge5_filename" value="<%=pre_challenge5_filename%>" />
+      <h2 style="color: red">케어챌린지 이미지 사이즈(px) : 720 X 405</h2>
+
+      <span>이전 챌린지 이미지1 파일 다운로드 : <a href="<%= challenge_url1 %>" download><%=pre_challenge1_originalname%></a> - 링크 클릭</span><br />
+      <span>이전 챌린지 이미지2 파일 다운로드 : <a href="<%= challenge_url2 %>" download><%=pre_challenge2_originalname%></a> - 링크 클릭</span><br />
+      <span>이전 챌린지 이미지3 파일 다운로드 : <a href="<%= challenge_url3 %>" download><%=pre_challenge3_originalname%></a> - 링크 클릭</span><br />
+      <span>이전 챌린지 이미지4 파일 다운로드 : <a href="<%= challenge_url4 %>" download><%=pre_challenge4_originalname%></a> - 링크 클릭</span><br />
+      <span>이전 챌린지 이미지5 파일 다운로드 : <a href="<%= challenge_url5 %>" download><%=pre_challenge5_originalname%></a> - 링크 클릭</span><br />
 
     </div>
 

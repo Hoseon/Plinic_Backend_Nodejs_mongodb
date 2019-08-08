@@ -1,106 +1,167 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <% include ../partials/head %>
-  </head>
-  <body>
-    <header>
-      <% include ../partials/header %>
-    </header>
-    <div class="posts">
+
+<head>
+  <% include ../partials/head %>
+</head>
+
+<body>
+  <header>
+    <% include ../partials/header %>
+  </header>
+  <div class="posts">
     <% include partials/top %>
-<!-- main start-->
+    <!-- main start-->
 
-<!-- views/carezone/index.ejs -->
-<div class="new">
-  <div class="buttons">
-    <button onclick="location.href='/carezone'">Back</button>
-  </div>
-  <h3>케어존</h3>
-  <form class="checkValidation" action="/carezone" method="post" enctype="multipart/form-data">
-    <div class="inputs">
-      <div class="floats">
-        <label>미션 제목</label>
-        <input class="cvRequired" maxlength="20" type="text" name="post[title]" cvRqErrMsg="제목을 입력 주세요." cvRqErrTo="#cvErrTitle" value="">
-        <div id="cvErrTitle" class="message"></div>
+    <!-- views/carezone/index.ejs -->
+    <div class="new">
+      <div class="buttons">
+        <button onclick="location.href='/carezone'">Back</button>
       </div>
-      <div class="floats">
-        <label>Author</label>
-        <input disabled type="text" value="<%= user.nickname %>">
-      </div>
-      <div class="floats">
-        <label>미션 목표</label>
-        <input class="cvRequired" maxlength="20" name="post[body]" cvRqErrMsg="케어존 설명이 필요 합니다." cvRqErrTo="#cvErrBody">
-        <div id="cvErrBody" class="message"></div>
-      </div>
-      <div class="floats">
-        <label>케어존 이미지</label>
-        <input class="cvRequired" type="file" name="image" cvRqErrMsg="케어존 이미지를 꼭 참조해주세요." cvRqErrTo="#cvErrBody" accept=".jpg, .jpeg, .png" >
-        <div id="cvErrTitle" class="message"></div>
-      </div>
-      <h2 style="color: red" >케어존 메인 이미지 사이즈(px) : 640 X 360</h2>
-      <br />
-      <br />
-      <br />
+      <h3>케어존 챌린지</h3>
+      <form class="checkValidation" action="/carezone" method="post" enctype="multipart/form-data">
+        <div class="inputs">
+          <div class="floats">
+            <label>케어챌린지 제목</label>
+            <input class="cvRequired" maxlength="10" type="text" name="post[title]" cvRqErrMsg="케어 첼린지 제목을 입력 주세요." cvRqErrTo="#cvErrTitle" value="">
+            <div id="cvErrTitle" class="message"></div>
+          </div>
+          <div class="floats">
+            <label>Author</label>
+            <input disabled type="text" value="<%= user.nickname %>">
+          </div>
+          <div class="floats">
+            <label>케어챌린지 설명</label>
+            <input class="cvRequired" maxlength="20" name="post[body]" cvRqErrMsg="케어 첼린지 설명이 필요 합니다." cvRqErrTo="#cvErrBody">
+            <div id="cvErrBody" class="message"></div>
+          </div>
+          <div class="floats">
+            <label>케어존 이미지</label>
+            <input class="cvRequired" type="file" name="image" cvRqErrMsg="케어존 이미지를 꼭 참조해주세요." cvRqErrTo="#cvErrBody" accept=".jpg, .jpeg, .png">
+            <div id="cvErrTitle" class="message"></div>
+          </div>
+          <h2 style="color: red">챌린지 메인 이미지 사이즈(px) : 640 X 360</h2>
+          <br />
+          <br />
+          <br />
 
-      <h3>미션</h3>
-      <!-- <div class="floats">
+          <h3>미션</h3>
+          <!-- <div class="floats">
         <label>미션 제목</label>
         <input class="cvRequired" type="text" maxlength="20" name="post[missontitle]" cvRqErrMsg="미션 제목을 입력해주세요." cvRqErrTo="#cvErrBody" value="">
         <div id="cvErrTitle" class="message"></div>
       </div> -->
-      <!-- <div class="floats">
+          <!-- <div class="floats">
         <label>미션 목표</label>
         <input class="cvRequired" type="text" maxlength="20" name="post[missonsubtitle]" cvRqErrMsg="미션명을 입력해주세요." cvRqErrTo="#cvErrBody" value="">
         <div id="cvErrTitle" class="message"></div>
       </div> -->
-      <div class="floats">
-        <label>최대 참여인원</label>
-        <input class="cvRequired" type="number" name="post[maxmember]" cvRqErrMsg="최대 인원을 입력해주세요." cvRqErrTo="#cvErrBody" value="">
-        <div id="cvErrTitle" class="message"></div>
-      </div>
-      <div class="floats">
-        <label>보상 상품명</label>
-        <input class="cvRequired" type="text" maxlength="20" name="post[product]" cvRqErrMsg="상품명을 입력해주세요." cvRqErrTo="#cvErrBody" value="">
-        <div id="cvErrTitle" class="message"></div>
-      </div>
-      <!-- <div class="floats">
+          <!-- <div class="floats">
+            <label>최대 참여인원</label>
+            <input class="cvRequired" type="number" name="post[maxmember]" cvRqErrMsg="최대 인원을 입력해주세요." cvRqErrTo="#cvErrBody" value="">
+            <div id="cvErrTitle" class="message"></div>
+          </div> -->
+          <div class="floats">
+            <label>보상 상품명</label>
+            <input class="cvRequired" type="text" maxlength="20" name="post[product]" cvRqErrMsg="상품명을 입력해주세요." cvRqErrTo="#cvErrBody" value="">
+            <div id="cvErrTitle" class="message"></div>
+          </div>
+          <div class="floats">
+            <label>상품 수량</label>
+            <input class="cvRequired" type="number" name="post[productcount]" cvRqErrMsg="상품 갯수를 입력해주세요." cvRqErrTo="#cvErrBody" value="">
+            <div id="cvErrTitle" class="message"></div>
+          </div>
+          <div class="floats">
+            <label>참여 방법</label>
+            <input class="cvRequired" type="text" maxlength="20" name="post[howtojoin]" cvRqErrMsg="상품명을 입력해주세요." cvRqErrTo="#cvErrBody" value="">
+            <div id="cvErrTitle" class="message"></div>
+          </div>
+          <div class="floats">
+            <label>보상 조건(3줄)</label>
+            <textarea class="cvRequired" name="post[condition]" cvRqErrMsg="보상조건을 입력하세요." cvRqErrTo="#cvErrBody"></textarea>
+            <div id="cvErrBody" class="message"></div>
+          </div>
+
+          <!-- <div class="floats">
         <label>하단 캡션</label>
         <input class="cvRequired" type="text" name="post[caption]" cvRqErrMsg="캡션명을 입력해주세요." cvRqErrTo="#cvErrBody" value="">
         <div id="cvErrTitle" class="message"></div>
       </div> -->
-      <div class="floats">
-        <label>미션 공개일</label>
-        <input class="cvRequired" type="datetime-local" name="post[exposure]" cvRqErrMsg="미션 공개 선택 필수" cvRqErrTo="#cvErrBody" value="">
-        <div id="cvErrTitle" class="message"></div>
-      </div>
-      <div class="floats">
-        <label>미션 시작일</label>
-        <input class="cvRequired" type="datetime-local" name="post[startmission]" cvRqErrMsg="미션 종료일 선택 필수" cvRqErrTo="#cvErrBody" value="">
-        <div id="cvErrTitle" class="message"></div>
-      </div>
-      <div class="floats">
-        <label>미션 종료일</label>
-        <input class="cvRequired" type="datetime-local" name="post[endmission]" cvRqErrMsg="미션 종료일 선택 필수" cvRqErrTo="#cvErrBody" value="">
-        <div id="cvErrTitle" class="message"></div>
-      </div>
-      <div class="floats">
-        <label>미션 제품 이미지</label>
-        <input class="cvRequired" type="file" name="prodimage" cvRqErrMsg="제품 이미지 필수로 등록 해 주세요" cvRqErrTo="#cvErrBody" accept=".jpg, .jpeg, .png" >
-        <div id="cvErrTitle" class="message"></div>
-      </div>
-      <h2 style="color: red" >미션 제품 이미지 사이즈(px) : 91 X 189</h2>
-    </div>
-    <div class="buttons">
-      <button type="submit">Submit</button>
-    </div>
-  </form>
-</div>
+          <!-- <div class="floats">
+            <label>미션 공개일</label>
+            <input class="cvRequired" type="datetime-local" name="post[exposure]" cvRqErrMsg="미션 공개 선택 필수" cvRqErrTo="#cvErrBody" value="">
+            <div id="cvErrTitle" class="message"></div>
+          </div> -->
+          <div class="floats">
+            <label>미션 시작일</label>
+            <input class="cvRequired" type="datetime-local" name="post[startmission]" cvRqErrMsg="미션 시작일 선택 필수" cvRqErrTo="#cvErrBody" value="">
+            <div id="cvErrTitle" class="message"></div>
+          </div>
+          <div class="floats">
+            <label>미션 종료일</label>
+            <input class="cvRequired" type="datetime-local" name="post[endmission]" cvRqErrMsg="미션 종료일 선택 필수" cvRqErrTo="#cvErrBody" value="">
+            <div id="cvErrTitle" class="message"></div>
+          </div>
+          <div class="floats">
+            <label>보너스</label>
+            <textarea class="cvRequired" name="post[bonus]" cvRqErrMsg="보상조건을 입력하세요." cvRqErrTo="#cvErrBody"></textarea>
+            <div id="cvErrBody" class="message"></div>
+          </div>
+          <!-- <div class="floats">
+            <label>미션 시작일</label>
+            <input class="cvRequired" type="datetime-local" name="post[startmission]" cvRqErrMsg="미션 시작일 선택 필수" cvRqErrTo="#cvErrBody" value="">
+            <div id="cvErrTitle" class="message"></div>
+          </div>
+          <div class="floats">
+            <label>미션 종료일</label>
+            <input class="cvRequired" type="datetime-local" name="post[endmission]" cvRqErrMsg="미션 종료일 선택 필수" cvRqErrTo="#cvErrBody" value="">
+            <div id="cvErrTitle" class="message"></div>
+          </div> -->
+          <div class="floats">
+            <label>미션 제품 이미지</label>
+            <input class="cvRequired" type="file" name="prodimage" cvRqErrMsg="제품 이미지 필수로 등록 해 주세요" cvRqErrTo="#cvErrBody" accept=".jpg, .jpeg, .png">
+            <div id="cvErrTitle" class="message"></div>
+          </div>
+          <div class="floats">
+            <label>케어챌린지 이미지 1</label>
+            <input class="cvRequired" type="file" name="challenge_image1" cvRqErrMsg="케어챌린지 이미지 필수로 등록 해 주세요" cvRqErrTo="#cvErrBody" accept=".jpg, .jpeg, .png">
+            <div id="cvErrTitle" class="message"></div>
+          </div>
+          <div class="floats">
+            <label>케어챌린지 이미지 2</label>
+            <input class="cvRequired" type="file" name="challenge_image2" cvRqErrMsg="케어챌린지 이미지 필수로 등록 해 주세요" cvRqErrTo="#cvErrBody" accept=".jpg, .jpeg, .png">
+            <div id="cvErrTitle" class="message"></div>
+          </div>
+          <div class="floats">
+            <label>케어챌린지 이미지 3</label>
+            <input class="cvRequired" type="file" name="challenge_image3" cvRqErrMsg="케어챌린지 이미지 필수로 등록 해 주세요" cvRqErrTo="#cvErrBody" accept=".jpg, .jpeg, .png">
+            <div id="cvErrTitle" class="message"></div>
+          </div>
+          <div class="floats">
+            <label>케어챌린지 이미지 4</label>
+            <input class="cvRequired" type="file" name="challenge_image4" cvRqErrMsg="케어챌린지 이미지 필수로 등록 해 주세요" cvRqErrTo="#cvErrBody" accept=".jpg, .jpeg, .png">
+            <div id="cvErrTitle" class="message"></div>
+          </div>
+          <div class="floats">
+            <label>케어챌린지 이미지 5</label>
+            <input class="cvRequired" type="file" name="challenge_image5" cvRqErrMsg="케어챌린지 이미지 필수로 등록 해 주세요" cvRqErrTo="#cvErrBody" accept=".jpg, .jpeg, .png">
+            <div id="cvErrTitle" class="message"></div>
+          </div>
 
-<!-- main end -->
-    </div><!--carezone end -->
-    <footer>
-      <% include ../partials/footer %>
-    </footer>
-  </body>
+          <h2 style="color: red">케어챌린지 이미지 사이즈(px) : 720 X 405</h2>
+        </div>
+        <div class="buttons">
+          <button type="submit">Submit</button>
+        </div>
+      </form>
+    </div>
+
+    <!-- main end -->
+  </div>
+  <!--carezone end -->
+  <footer>
+    <% include ../partials/footer %>
+  </footer>
+</body>
+
 </html>

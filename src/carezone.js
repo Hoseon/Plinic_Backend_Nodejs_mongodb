@@ -247,7 +247,7 @@ router.get('/new', isLoggedIn, function(req, res) {
 
 
 
-router.post('/', upload.fields([{ name: 'image' }, { name: 'prodimage' }]), isLoggedIn, function(req, res, next) {
+router.post('/', upload.fields([{ name: 'image' }, { name: 'prodimage' }, { name: 'challenge_image1' }, { name: 'challenge_image2' }, { name: 'challenge_image3' }, { name: 'challenge_image4' }, { name: 'challenge_image5' }]), isLoggedIn, function(req, res, next) {
   async.waterfall([function(callback) {
     CarezoneCounter.findOne({
       name: "carezone"
@@ -276,6 +276,16 @@ router.post('/', upload.fields([{ name: 'image' }, { name: 'prodimage' }]), isLo
     req.body.post.originalName = req.files['image'][0].originalname;
     req.body.post.prodfilename = req.files['prodimage'][0].filename;
     req.body.post.prodoriginalname = req.files['prodimage'][0].originalname;
+    req.body.post.challenge_image1_filename = req.files['challenge_image1'][0].filename;
+    req.body.post.challenge_image1_originalname = req.files['challenge_image1'][0].originalname;
+    req.body.post.challenge_image2_filename = req.files['challenge_image2'][0].filename;
+    req.body.post.challenge_image2_originalname = req.files['challenge_image2'][0].originalname;
+    req.body.post.challenge_image3_filename = req.files['challenge_image3'][0].filename;
+    req.body.post.challenge_image3_originalname = req.files['challenge_image3'][0].originalname;
+    req.body.post.challenge_image4_filename = req.files['challenge_image4'][0].filename;
+    req.body.post.challenge_image4_originalname = req.files['challenge_image4'][0].originalname;
+    req.body.post.challenge_image5_filename = req.files['challenge_image5'][0].filename;
+    req.body.post.challenge_image5_originalname = req.files['challenge_image5'][0].originalname;
     Carezone.create(req.body.post, function(err, post) {
       if (err) return res.json({
         success: false,
@@ -307,11 +317,21 @@ router.get('/:id', function(req, res) {
       //res.setHeader('Content-Type', 'image/jpeg');
       var url = req.protocol + '://' + req.get('host') + '/carezone_images/' + post._id;
       var prod_url = req.protocol + '://' + req.get('host') + '/carezone_prodimages/' + post._id;
+      var challenge_url1 = req.protocol + '://' + req.get('host') + '/challenge_image1/' + post._id;
+      var challenge_url2 = req.protocol + '://' + req.get('host') + '/challenge_image2/' + post._id;
+      var challenge_url3 = req.protocol + '://' + req.get('host') + '/challenge_image3/' + post._id;
+      var challenge_url4 = req.protocol + '://' + req.get('host') + '/challenge_image4/' + post._id;
+      var challenge_url5 = req.protocol + '://' + req.get('host') + '/challenge_image5/' + post._id;
       //fs.createReadStream(path.join(__dirname, '../uploads/', post.filename)).pipe(res);
       res.render("carezone/show", {
         post: post,
         url: url,
         prod_url: prod_url,
+        challenge_url1: challenge_url1,
+        challenge_url2: challenge_url2,
+        challenge_url3: challenge_url3,
+        challenge_url4: challenge_url4,
+        challenge_url5: challenge_url5,
         urlQuery: req._parsedUrl.query,
         user: req.user,
         search: createSearch(req.query)
@@ -320,22 +340,39 @@ router.get('/:id', function(req, res) {
 }); // show
 
 
-
-
-
-
 router.get('/:id/edit', isLoggedIn, function(req, res) {
   Carezone.findById(req.params.id, function(err, post) {
-    var url = req.protocol + '://' + req.get('host') + '/images/' + post._id;
+    var url = req.protocol + '://' + req.get('host') + '/carezone_images/' + post._id;
 
     var prod_url = req.protocol + '://' + req.get('host') + '/prod_images/' + post._id;
 
+    var challenge_url1 = req.protocol + '://' + req.get('host') + '/challenge_image1/' + post._id;
+    var challenge_url2 = req.protocol + '://' + req.get('host') + '/challenge_image2/' + post._id;
+    var challenge_url3 = req.protocol + '://' + req.get('host') + '/challenge_image3/' + post._id;
+    var challenge_url4 = req.protocol + '://' + req.get('host') + '/challenge_image4/' + post._id;
+    var challenge_url5 = req.protocol + '://' + req.get('host') + '/challenge_image5/' + post._id;
 
     var prefilename = post.filename; //이전 파일들은 삭제
     var preoriginalName = post.originalName; //이전 파일들은 삭제
 
     var preprodfilename  = post.prodfilename;
     var preprodoriginalname = post.prodoriginalname;
+
+    var pre_challenge1_filename  = post.challenge_image1_filename;
+    var pre_challenge1_originalfilename = post.challenge_image1_originalname;
+
+    var pre_challenge2_filename  = post.challenge_image2_filename;
+    var pre_challenge2_originalfilename = post.challenge_image2_originalname;
+
+    var pre_challenge3_filename  = post.challenge_image3_filename;
+    var pre_challenge3_originalfilename = post.challenge_image3_originalname;
+
+    var pre_challenge4_filename  = post.challenge_image4_filename;
+    var pre_challenge4_originalfilename = post.challenge_image4_originalname;
+
+    var pre_challenge5_filename  = post.challenge_image5_filename;
+    var pre_challenge5_originalfilename = post.challenge_image5_originalname;
+
     if (err) return res.json({
       success: false,
       message: err
@@ -350,8 +387,23 @@ router.get('/:id/edit', isLoggedIn, function(req, res) {
       preoriginalName: preoriginalName,
       preprodfilename: preprodfilename,
       preprodoriginalname: preprodoriginalname,
+      pre_challenge1_filename: pre_challenge1_filename,
+      pre_challenge1_originalname: pre_challenge1_originalfilename,
+      pre_challenge2_filename: pre_challenge2_filename,
+      pre_challenge2_originalname: pre_challenge2_originalfilename,
+      pre_challenge3_filename: pre_challenge3_filename,
+      pre_challenge3_originalname: pre_challenge3_originalfilename,
+      pre_challenge4_filename: pre_challenge4_filename,
+      pre_challenge4_originalname: pre_challenge4_originalfilename,
+      pre_challenge5_filename: pre_challenge5_filename,
+      pre_challenge5_originalname: pre_challenge5_originalfilename,
       url: url,
       prod_url: prod_url,
+      challenge_url1: challenge_url1,
+      challenge_url2: challenge_url2,
+      challenge_url3: challenge_url3,
+      challenge_url4: challenge_url4,
+      challenge_url5: challenge_url5,
       user: req.user
     });
   });
@@ -361,7 +413,7 @@ router.get('/:id/edit', isLoggedIn, function(req, res) {
 
 
 
-router.put('/:id', upload.fields([{ name: 'image' }, { name: 'prodimage' }]), isLoggedIn, function(req, res, next) {
+router.put('/:id', upload.fields([{ name: 'image' }, { name: 'prodimage' },  { name: 'challenge_image1' }, { name: 'challenge_image2' }, { name: 'challenge_image3' }, { name: 'challenge_image4' }, { name: 'challenge_image5' }]), isLoggedIn, function(req, res, next) {
   //console.log("prefilename:"+ req.body.prefilename);
   //console.log("preoriginalName:" + req.body.preoriginalName);
   req.body.post.updatedAt = Date.now();
@@ -369,13 +421,25 @@ router.put('/:id', upload.fields([{ name: 'image' }, { name: 'prodimage' }]), is
   req.body.post.originalName = req.files['image'][0].originalname;
   req.body.post.prodfilename = req.files['prodimage'][0].filename;
   req.body.post.prodoriginalname = req.files['prodimage'][0].originalname;
-  del([path.join(__dirname, '../uploads/', req.body.prefilename)]).then(deleted => {
-    //res.sendStatus(200);
-  });
+  req.body.post.challenge_image1_filename = req.files['challenge_image1'][0].filename;
+  req.body.post.challenge_image1_originalname = req.files['challenge_image1'][0].originalname;
+  req.body.post.challenge_image2_filename = req.files['challenge_image2'][0].filename;
+  req.body.post.challenge_image2_originalname = req.files['challenge_image2'][0].originalname;
+  req.body.post.challenge_image3_filename = req.files['challenge_image3'][0].filename;
+  req.body.post.challenge_image3_originalname = req.files['challenge_image3'][0].originalname;
+  req.body.post.challenge_image4_filename = req.files['challenge_image4'][0].filename;
+  req.body.post.challenge_image4_originalname = req.files['challenge_image4'][0].originalname;
+  req.body.post.challenge_image5_filename = req.files['challenge_image5'][0].filename;
+  req.body.post.challenge_image5_originalname = req.files['challenge_image5'][0].originalname;
 
-  del([path.join(__dirname, '../uploads/', req.body.preprodfilename)]).then(deleted => {
-    //res.sendStatus(200);
-  });
+  del([path.join(__dirname, '../uploads/', req.body.prefilename)]).then(deleted => {});
+  del([path.join(__dirname, '../uploads/', req.body.preprodfilename)]).then(deleted => {});
+  del([path.join(__dirname, '../uploads/', req.body.pre_challenge1_filename)]).then(deleted => {});
+  del([path.join(__dirname, '../uploads/', req.body.pre_challenge2_filename)]).then(deleted => {});
+  del([path.join(__dirname, '../uploads/', req.body.pre_challenge3_filename)]).then(deleted => {});
+  del([path.join(__dirname, '../uploads/', req.body.pre_challenge4_filename)]).then(deleted => {});
+  del([path.join(__dirname, '../uploads/', req.body.pre_challenge5_filename)]).then(deleted => {});
+
   Carezone.findOneAndUpdate({
     _id: req.params.id,
     author: req.user._id

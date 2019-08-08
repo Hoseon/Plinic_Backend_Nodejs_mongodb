@@ -426,6 +426,71 @@ module.exports = function(app) {
     })
   });
 
+  app.get('/challenge_image1/:id', (req, res, next) => {
+    let imgId = req.params.id;
+
+    Carezone.findById(imgId, (err, image) => {
+      if (err) {
+        res.sendStatus(400);
+      }
+      // stream the image back by loading the file
+      res.setHeader('Content-Type', 'image/jpeg');
+      fs.createReadStream(path.join(__dirname, '../uploads/', image.challenge_image1_filename)).pipe(res);
+    })
+  });
+
+  app.get('/challenge_image2/:id', (req, res, next) => {
+    let imgId = req.params.id;
+
+    Carezone.findById(imgId, (err, image) => {
+      if (err) {
+        res.sendStatus(400);
+      }
+      // stream the image back by loading the file
+      res.setHeader('Content-Type', 'image/jpeg');
+      fs.createReadStream(path.join(__dirname, '../uploads/', image.challenge_image2_filename)).pipe(res);
+    })
+  });
+
+  app.get('/challenge_image3/:id', (req, res, next) => {
+    let imgId = req.params.id;
+
+    Carezone.findById(imgId, (err, image) => {
+      if (err) {
+        res.sendStatus(400);
+      }
+      // stream the image back by loading the file
+      res.setHeader('Content-Type', 'image/jpeg');
+      fs.createReadStream(path.join(__dirname, '../uploads/', image.challenge_image3_filename)).pipe(res);
+    })
+  });
+
+  app.get('/challenge_image4/:id', (req, res, next) => {
+    let imgId = req.params.id;
+
+    Carezone.findById(imgId, (err, image) => {
+      if (err) {
+        res.sendStatus(400);
+      }
+      // stream the image back by loading the file
+      res.setHeader('Content-Type', 'image/jpeg');
+      fs.createReadStream(path.join(__dirname, '../uploads/', image.challenge_image4_filename)).pipe(res);
+    })
+  });
+
+  app.get('/challenge_image5/:id', (req, res, next) => {
+    let imgId = req.params.id;
+
+    Carezone.findById(imgId, (err, image) => {
+      if (err) {
+        res.sendStatus(400);
+      }
+      // stream the image back by loading the file
+      res.setHeader('Content-Type', 'image/jpeg');
+      fs.createReadStream(path.join(__dirname, '../uploads/', image.challenge_image5_filename)).pipe(res);
+    })
+  });
+
   // Get one image by its ID
   app.get('/beauty_images/:id', (req, res, next) => {
     let imgId = req.params.id;

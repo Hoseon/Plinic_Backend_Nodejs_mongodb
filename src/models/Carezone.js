@@ -29,9 +29,10 @@ var carezoneSchema = mongoose.Schema({
   // exposure : String,
   prodfilename: String,
   prodoriginalname: String,
+
   proddesc: String,
   caption: String,
-  maxmember: {type:Number, required:true},
+  maxmember: {type:Number},
   currentmember : {type: Number},
   mission: [{
     memberId: {type:mongoose.Schema.Types.ObjectId, ref:'user', required:true},
@@ -41,6 +42,23 @@ var carezoneSchema = mongoose.Schema({
     status: {type:String},
     //author: {type:mongoose.Schema.Types.ObjectId, ref:'user', required:true}
   }],
+  challenge_image1_filename: String,
+  challenge_image1_originalname: String,
+  challenge_image2_filename: String,
+  challenge_image2_originalname: String,
+  challenge_image3_filename: String,
+  challenge_image3_originalname: String,
+  challenge_image4_filename: String,
+  challenge_image4_originalname: String,
+  challenge_image5_filename: String,
+  challenge_image5_originalname: String,
+  productcount: {type:Number},
+  howtojoin: String,
+  condition: String,
+  challengestart : Date,
+  challengeend : Date,
+  bonus: String,
+
 });
 
 carezoneSchema.methods.getFormattedDate = function (date) {
