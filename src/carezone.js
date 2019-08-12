@@ -78,7 +78,6 @@ router.get('/missioncount/:id', function(req, res) {
     });
   }]);
 });
-
 router.get('/list', function(req, res) {
   //var carezonelist = null;
   async.waterfall([function(callback) {
@@ -270,6 +269,7 @@ router.post('/', upload.fields([{ name: 'image' }, { name: 'prodimage' }, { name
     });
   }], function(callback, counter) {
     var newPost = req.body.post;
+    newPost.condition = JSON.stringify(req.body.post.condition);
     newPost.author = req.user._id;
     newPost.numId = counter.totalCount + 1;
     req.body.post.filename = req.files['image'][0].filename;
@@ -416,6 +416,8 @@ router.get('/:id/edit', isLoggedIn, function(req, res) {
 router.put('/:id', upload.fields([{ name: 'image' }, { name: 'prodimage' },  { name: 'challenge_image1' }, { name: 'challenge_image2' }, { name: 'challenge_image3' }, { name: 'challenge_image4' }, { name: 'challenge_image5' }]), isLoggedIn, function(req, res, next) {
   //console.log("prefilename:"+ req.body.prefilename);
   //console.log("preoriginalName:" + req.body.preoriginalName);
+
+  req.body.post.condition = JSON.stringify(req.body.post.condition);
   req.body.post.updatedAt = Date.now();
   req.body.post.filename = req.files['image'][0].filename;
   req.body.post.originalName = req.files['image'][0].originalname;
