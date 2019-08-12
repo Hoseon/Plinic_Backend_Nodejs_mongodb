@@ -32,6 +32,7 @@ exports.missionSave = (req, res) => {
           //이미 미션을 등록 한 상태
           // return res.status(400).json({ 'msg': 'The user already exists' });
             return res.status(400).json({ 'msg': '이미 다른 미션을 등록 한 상태입니다. <br> (미션은 1인 1개만 등록 할 수 있습니다.)' });
+
         } else {
           //등록 한 미션이 없을 때
           let newMission = Mission(req.body);

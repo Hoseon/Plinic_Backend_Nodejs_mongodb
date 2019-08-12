@@ -30,6 +30,7 @@ var missionSchema = mongoose.Schema({
   // prodoriginalname: String,
   // proddesc: String,
   maxmember: {type:Number},
+  usetime: {type:Number, default:0},
   // currentmember : {type: Number},
   // mission: [{
   //   memberId: {type:mongoose.Schema.Types.ObjectId, ref:'user', required:true},

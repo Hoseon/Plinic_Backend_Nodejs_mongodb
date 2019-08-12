@@ -78,6 +78,20 @@ router.get('/missioncount/:id', function(req, res) {
     });
   }]);
 });
+
+router.get('/missionusetime/:id/:email', function(req, res) {
+  //var carezonelist = null;
+  // console.log("chkmission" +req.params.id);
+  async.waterfall([function(callback) {
+    Mission.findOne({
+      missionID: req.params.id,
+      email : req.params.email
+    }, function(err, docs) {
+      res.json(docs);
+    });
+  }]);
+});
+
 router.get('/list', function(req, res) {
   //var carezonelist = null;
   async.waterfall([function(callback) {
