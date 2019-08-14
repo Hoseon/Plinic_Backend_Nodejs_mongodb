@@ -21,6 +21,7 @@ routes.get('/', (req, res) => {
 
 routes.post('/register', userController.registerUser);
 routes.post('/login', userController.loginUser);
+routes.post('/pointupdate', userController.pointUpdate);
 
 
 routes.post('/missionsave', userController.missionSave);

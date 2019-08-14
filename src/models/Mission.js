@@ -32,14 +32,14 @@ var missionSchema = mongoose.Schema({
   maxmember: {type:Number},
   usetime: {type:Number, default:0},
   // currentmember : {type: Number},
-  // mission: [{
-  //   memberId: {type:mongoose.Schema.Types.ObjectId, ref:'user', required:true},
-  //   name: {type: String},
-  //   body: {type:String, required:true},
-  //   createdAt: {type:Date, default:Date.now},
-  //   status: {type:String},
-  //   //author: {type:mongoose.Schema.Types.ObjectId, ref:'user', required:true}
-  // }],
+  usedmission: [{
+    // memberId: {type:mongoose.Schema.Types.ObjectId, ref:'user', required:true},
+    // name: {type: String},
+    points: {type:Number},
+    updatedAt: {type:Date},
+    status: {type:String},
+    //author: {type:mongoose.Schema.Types.ObjectId, ref:'user', required:true}
+  }],
 });
 
 missionSchema.methods.getFormattedDate = function (date) {

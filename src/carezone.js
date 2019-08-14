@@ -33,7 +33,7 @@ let upload = multer({
 router.get('/getmissionmember/:id', function(req, res) {
   async.waterfall([function(callback) {
     Mission.find({
-      missionID : req.params.id
+      missionID: req.params.id
     }, function(err, docs) {
       res.json(docs);
     });
@@ -85,28 +85,92 @@ router.get('/missionusetime/:id/:email', function(req, res) {
   async.waterfall([function(callback) {
     Mission.findOne({
       missionID: req.params.id,
-      email : req.params.email
+      email: req.params.email
     }, function(err, docs) {
       res.json(docs);
     });
   }]);
 });
 
+router.get('/getmissionpoint/:id/:email', function(req, res) {
+  //var carezonelist = null;
+  // console.log("chkmission" +req.params.id);
+  async.waterfall([function(callback) {
+    Mission.findOne({
+      missionID: req.params.id,
+      email: req.params.email
+    }, function(err, docs) {
+      res.json(docs);
+    });
+  }]);
+});
+
+
+router.get('/missionpointupdate/:id/:email/:points', function(req, res) {
+
+
+  console.log("email " + req.params.email);
+  console.log("id " + req.params.id);
+  console.log("point " + req.params.points)
+
+  var newPoint = req.params.points;
+  newPoint.updatedAt += new Date();
+  console.log("-------------- : " + newPoint);
+  //var carezonelist = null;
+  // console.log("chkmission" +req.params.id);
+
+  // let mission = Mission();
+  // mission.usedmission.points = 100;
+
+
+  async.waterfall([function(callback) {
+    Mission.findOneAndUpdate({
+        missionID: req.params.id,
+        email: req.params.email
+      },
+      { $push: { usedmission:  newPoint },
+        $inc: { "usetime": req.params.points}
+      },
+      function(err, docs) {
+        if(docs){
+        res.json(docs);
+        }
+        if(err)
+        console.log(err);
+      });
+  }]);
+});
+
+
+
+
 router.get('/list', function(req, res) {
   //var carezonelist = null;
   async.waterfall([function(callback) {
-    Carezone.find( {exposure: {$lte : new Date()}}, function(err, docs) {
+    Carezone.find({
+      exposure: {
+        $lte: new Date()
+      }
+    }, function(err, docs) {
       res.json(docs);
-    }).sort({"startmission" : 1 });
+    }).sort({
+      "startmission": 1
+    });
   }]);
 });
 
 router.get('/firstlist', function(req, res) {
   //var carezonelist = null;
   async.waterfall([function(callback) {
-    Carezone.find( {startmission: {$lte : new Date()}}, function(err, docs) {
+    Carezone.find({
+      startmission: {
+        $lte: new Date()
+      }
+    }, function(err, docs) {
       res.json(docs);
-    }).sort({"startmission" : -1 }).limit(1);
+    }).sort({
+      "startmission": -1
+    }).limit(1);
   }]);
 });
 
@@ -116,10 +180,17 @@ router.get('/secondlist', function(req, res) {
     var secondDay = new Date();
     var secondDay2 = new Date();
     secondDay.setDate(secondDay.getDate());
-    secondDay2.setDate(secondDay2.getDate()+3);
-    Carezone.find( {startmission: {$gte : secondDay, $lte: secondDay2}}, function(err, docs) {
+    secondDay2.setDate(secondDay2.getDate() + 3);
+    Carezone.find({
+      startmission: {
+        $gte: secondDay,
+        $lte: secondDay2
+      }
+    }, function(err, docs) {
       res.json(docs);
-    }).sort({"startmission" : 1 }).limit(2);
+    }).sort({
+      "startmission": 1
+    }).limit(2);
   }]);
 });
 
@@ -128,11 +199,18 @@ router.get('/thirdlist', function(req, res) {
   async.waterfall([function(callback) {
     var thirdDay = new Date();
     var thirdDay2 = new Date();
-    thirdDay.setDate(thirdDay.getDate() +3);
-    thirdDay2.setDate(thirdDay2.getDate() +10);
-    Carezone.find( {startmission: {$gte : thirdDay, $lt: thirdDay2}}, function(err, docs) {
+    thirdDay.setDate(thirdDay.getDate() + 3);
+    thirdDay2.setDate(thirdDay2.getDate() + 10);
+    Carezone.find({
+      startmission: {
+        $gte: thirdDay,
+        $lt: thirdDay2
+      }
+    }, function(err, docs) {
       res.json(docs);
-    }).sort({"startmission" : 1 }).limit(1);
+    }).sort({
+      "startmission": 1
+    }).limit(1);
   }]);
 });
 
@@ -142,10 +220,17 @@ router.get('/moresecondlist', function(req, res) {
     var secondDay = new Date();
     var secondDay2 = new Date();
     secondDay.setDate(secondDay.getDate());
-    secondDay2.setDate(secondDay2.getDate()+3);
-    Carezone.find( {startmission: {$gte : secondDay, $lte: secondDay2}}, function(err, docs) {
+    secondDay2.setDate(secondDay2.getDate() + 3);
+    Carezone.find({
+      startmission: {
+        $gte: secondDay,
+        $lte: secondDay2
+      }
+    }, function(err, docs) {
       res.json(docs);
-    }).sort({"startmission" : 1 }).limit(1);
+    }).sort({
+      "startmission": 1
+    }).limit(1);
   }]);
 });
 
@@ -154,20 +239,33 @@ router.get('/morethirdlist', function(req, res) {
   async.waterfall([function(callback) {
     var thirdDay = new Date();
     var thirdDay2 = new Date();
-    thirdDay.setDate(thirdDay.getDate() +3);
-    thirdDay2.setDate(thirdDay2.getDate() +10);
-    Carezone.find( {startmission: {$gte : thirdDay, $lt: thirdDay2}}, function(err, docs) {
+    thirdDay.setDate(thirdDay.getDate() + 3);
+    thirdDay2.setDate(thirdDay2.getDate() + 10);
+    Carezone.find({
+      startmission: {
+        $gte: thirdDay,
+        $lt: thirdDay2
+      }
+    }, function(err, docs) {
       res.json(docs);
-    }).sort({"startmission" : 1 }).limit(2);
+    }).sort({
+      "startmission": 1
+    }).limit(2);
   }]);
 });
 
 router.get('/main_list', function(req, res) {
   //var carezonelist = null;
   async.waterfall([function(callback) {
-    Carezone.find( {exposure: {$lte : new Date()}}, function(err, docs) {
+    Carezone.find({
+      exposure: {
+        $lte: new Date()
+      }
+    }, function(err, docs) {
       res.json(docs);
-    }).sort({"startmission" : 1 }).limit(3);
+    }).sort({
+      "startmission": 1
+    }).limit(3);
   }]);
 });
 
@@ -260,7 +358,21 @@ router.get('/new', isLoggedIn, function(req, res) {
 
 
 
-router.post('/', upload.fields([{ name: 'image' }, { name: 'prodimage' }, { name: 'challenge_image1' }, { name: 'challenge_image2' }, { name: 'challenge_image3' }, { name: 'challenge_image4' }, { name: 'challenge_image5' }]), isLoggedIn, function(req, res, next) {
+router.post('/', upload.fields([{
+  name: 'image'
+}, {
+  name: 'prodimage'
+}, {
+  name: 'challenge_image1'
+}, {
+  name: 'challenge_image2'
+}, {
+  name: 'challenge_image3'
+}, {
+  name: 'challenge_image4'
+}, {
+  name: 'challenge_image5'
+}]), isLoggedIn, function(req, res, next) {
   async.waterfall([function(callback) {
     CarezoneCounter.findOne({
       name: "carezone"
@@ -368,22 +480,22 @@ router.get('/:id/edit', isLoggedIn, function(req, res) {
     var prefilename = post.filename; //이전 파일들은 삭제
     var preoriginalName = post.originalName; //이전 파일들은 삭제
 
-    var preprodfilename  = post.prodfilename;
+    var preprodfilename = post.prodfilename;
     var preprodoriginalname = post.prodoriginalname;
 
-    var pre_challenge1_filename  = post.challenge_image1_filename;
+    var pre_challenge1_filename = post.challenge_image1_filename;
     var pre_challenge1_originalfilename = post.challenge_image1_originalname;
 
-    var pre_challenge2_filename  = post.challenge_image2_filename;
+    var pre_challenge2_filename = post.challenge_image2_filename;
     var pre_challenge2_originalfilename = post.challenge_image2_originalname;
 
-    var pre_challenge3_filename  = post.challenge_image3_filename;
+    var pre_challenge3_filename = post.challenge_image3_filename;
     var pre_challenge3_originalfilename = post.challenge_image3_originalname;
 
-    var pre_challenge4_filename  = post.challenge_image4_filename;
+    var pre_challenge4_filename = post.challenge_image4_filename;
     var pre_challenge4_originalfilename = post.challenge_image4_originalname;
 
-    var pre_challenge5_filename  = post.challenge_image5_filename;
+    var pre_challenge5_filename = post.challenge_image5_filename;
     var pre_challenge5_originalfilename = post.challenge_image5_originalname;
 
     if (err) return res.json({
@@ -426,7 +538,21 @@ router.get('/:id/edit', isLoggedIn, function(req, res) {
 
 
 
-router.put('/:id', upload.fields([{ name: 'image' }, { name: 'prodimage' },  { name: 'challenge_image1' }, { name: 'challenge_image2' }, { name: 'challenge_image3' }, { name: 'challenge_image4' }, { name: 'challenge_image5' }]), isLoggedIn, function(req, res, next) {
+router.put('/:id', upload.fields([{
+  name: 'image'
+}, {
+  name: 'prodimage'
+}, {
+  name: 'challenge_image1'
+}, {
+  name: 'challenge_image2'
+}, {
+  name: 'challenge_image3'
+}, {
+  name: 'challenge_image4'
+}, {
+  name: 'challenge_image5'
+}]), isLoggedIn, function(req, res, next) {
   //console.log("prefilename:"+ req.body.prefilename);
   //console.log("preoriginalName:" + req.body.preoriginalName);
   req.body.post.updatedAt = Date.now();
