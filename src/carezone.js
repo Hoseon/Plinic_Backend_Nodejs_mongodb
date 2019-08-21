@@ -34,8 +34,11 @@ router.get('/getmissionmember/:id', function(req, res) {
   async.waterfall([function(callback) {
     Mission.find({
       missionID: req.params.id
-    }, function(err, docs) {
+    },
+    function(err, docs) {
       res.json(docs);
+    }).sort({
+      "usetime" : -1
     });
   }]);
 });
@@ -154,7 +157,7 @@ router.get('/list', function(req, res) {
     }, function(err, docs) {
       res.json(docs);
     }).sort({
-      "startmission": 1
+      "startmission": -1
     });
   }]);
 });
