@@ -5,6 +5,7 @@ var qnaController = require('./controller/qna-controller');
 var noteController = require('./controller/note-controller');
 var skinChartController = require('./controller/skinchart-controller');
 var skinQnaController = require('./controller/skinqna-controller');
+var careZoneController = require('./controller/carezone-controller');
 var passport = require('passport');
 var mysql      = require('mysql');
 var dbconfig   = require('./config/database.js');
@@ -43,6 +44,12 @@ routes.post('/skinqnaupdate', skinQnaController.skinQnaUpdate);
 routes.post('/replyskinqnasave', skinQnaController.replySave);
 routes.post('/replyskinqnaupdate', skinQnaController.replyUpdate);
 routes.post('/replyskinqnadelete', skinQnaController.replyDelete);
+
+//챌린지 댓글 저장/수정/삭제 20190822
+routes.post('/replycarezonesave', careZoneController.replySave);
+routes.post('/replycarezoneupdate', careZoneController.replyUpdate);
+routes.post('/replycarezonedelete', careZoneController.replyDelete);
+
 
 //문진표 저장 및 업데이트 20190709
 routes.post('/skinchartsave', skinChartController.skinChartSave);
