@@ -100,7 +100,9 @@ module.exports = function(app) {
   //해쉬태그 모두 가져 오기
   app.get('/gethashtags', function(req, res) {
     Tags.find(function(err, docs) {
-      if (err) { res.sendStatus(400);}
+      if (err) {
+        res.sendStatus(400);
+      }
       // res.setHeader('Content-Type', 'image/jpeg');
       // fs.createReadStream(path.join(__dirname, '../uploads/', image.filename)).pipe(res);
       res.json(docs);
@@ -211,8 +213,11 @@ module.exports = function(app) {
       if (err) {
         res.sendStatus(400);
       }
-      res.setHeader('Content-Type', 'image/jpeg');
-      fs.createReadStream(path.join(__dirname, '../uploads/', image.filename)).pipe(res);
+
+      if (image) {
+        res.setHeader('Content-Type', 'image/jpeg');
+        fs.createReadStream(path.join(__dirname, '../uploads/', image.filename)).pipe(res);
+      }
       //res.json(docs);
     });
 
@@ -323,7 +328,7 @@ module.exports = function(app) {
         res.sendStatus(400);
       }
       // stream the image back by loading the file
-      if(image.filename){
+      if (image.filename) {
         res.setHeader('Content-Type', 'image/jpeg');
         fs.createReadStream(path.join(__dirname, '../uploads/', image.filename)).pipe(res);
       } else {
@@ -539,7 +544,9 @@ module.exports = function(app) {
     SkinChart.findOne({
       email: req.params.id
     }, function(err, score) {
-      if (err) { res.sendStatus(400);}
+      if (err) {
+        res.sendStatus(400);
+      }
       // res.setHeader('Content-Type', 'image/jpeg');
       // fs.createReadStream(path.join(__dirname, '../uploads/', image.filename)).pipe(res);
       res.json(score);
@@ -554,18 +561,29 @@ module.exports = function(app) {
     var end = new Date('2019-07-05');
     // var month = new Date(req.params.month);
     // console.log(month)
-    SkinChart.find(
-      {email: req.params.id},
+    SkinChart.find({
+        email: req.params.id
+      },
       // {saveDate : { $gte: '2019-07', $lte: '20' }},
-      {score : {$elemMatch : { saveDate : { $gte: new Date('2019-07-10T00:00:00.000+00:00')} } } },
+      {
+        score: {
+          $elemMatch: {
+            saveDate: {
+              $gte: new Date('2019-07-10T00:00:00.000+00:00')
+            }
+          }
+        }
+      },
       // { students: { $elemMatch: { school: 102, age: { $gt: 10} } } } )
       // {'score.saveDate' : { $lte: new Date('2019-07-01') } },
-     function(err, score) {
-      if (err) { console.log(err),res.sendStatus(400);}
-      // res.setHeader('Content-Type', 'image/jpeg');
-      // fs.createReadStream(path.join(__dirname, '../uploads/', image.filename)).pipe(res);
-      res.json(score);
-    });
+      function(err, score) {
+        if (err) {
+          console.log(err), res.sendStatus(400);
+        }
+        // res.setHeader('Content-Type', 'image/jpeg');
+        // fs.createReadStream(path.join(__dirname, '../uploads/', image.filename)).pipe(res);
+        res.json(score);
+      });
   });
 
   app.get('/beautynoteimage/:id', (req, res, next) => {
@@ -576,8 +594,8 @@ module.exports = function(app) {
         res.sendStatus(400);
       }
 
-      if(image.filename){
-      // stream the image back by loading the file
+      if (image.filename) {
+        // stream the image back by loading the file
         res.setHeader('Content-Type', 'image/jpeg');
         fs.createReadStream(path.join(__dirname, '../uploads/', image.filename)).pipe(res);
       } else {
@@ -594,7 +612,7 @@ module.exports = function(app) {
         res.sendStatus(400);
       }
       // stream the image back by loading the file
-      if(image.filename){
+      if (image.filename) {
         res.setHeader('Content-Type', 'image/jpeg');
         fs.createReadStream(path.join(__dirname, '../uploads/', image.filename)).pipe(res);
       } else {
@@ -611,7 +629,7 @@ module.exports = function(app) {
         res.sendStatus(400);
       }
       // stream the image back by loading the file
-      if(image.filename){
+      if (image.filename) {
         res.setHeader('Content-Type', 'image/jpeg');
         fs.createReadStream(path.join(__dirname, '../uploads/', image.filename)).pipe(res);
       } else {
