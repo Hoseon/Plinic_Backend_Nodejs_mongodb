@@ -29,16 +29,39 @@ let upload = multer({
   storage: storage
 })
 
+//20190829 사용자 플리닉 블루투스 총 사용시간 Get!
+router.get('/totalusetime/:id/:date', function(req, res) {
+  console.log(req.params.id);
+  console.log(req.params.date);
+  var month = req.params.date
+  var startdate =  month + "-01T00:00:00.000Z";
+  var enddate =   month + "-31T00:00:00.000Z";
+
+  async.waterfall([function(callback) {
+  Mission.aggregate([
+    { $unwind : "$usedmission" },
+    { $match: { email :  req.params.id, 'usedmission.updatedAt' : {"$gte": new Date(startdate) , "$lte" : new Date(enddate) }},
+        // { "$usedmission.updatedAt" : {$gte: new Date("2019-08-29")} }
+
+   },
+    { $group: { _id : null, sum : { $sum: "$usedmission.points"}}}
+  ],function(error, docs){
+    res.json(docs)
+  }
+)
+  }]);
+});
+
 //20190617 미션 참여자 확인
 router.get('/getmissionmember/:id', function(req, res) {
   async.waterfall([function(callback) {
     Mission.find({
-      missionID: req.params.id
-    },
-    function(err, docs) {
-      res.json(docs);
-    }).sort({
-      "usetime" : -1
+        missionID: req.params.id
+      },
+      function(err, docs) {
+        res.json(docs);
+      }).sort({
+      "usetime": -1
     });
   }]);
 });
@@ -130,16 +153,20 @@ router.get('/missionpointupdate/:id/:email/:points', function(req, res) {
     Mission.findOneAndUpdate({
         missionID: req.params.id,
         email: req.params.email
-      },
-      { $push: { usedmission:  newPoint },
-        $inc: { "usetime": req.params.points}
+      }, {
+        $push: {
+          usedmission: newPoint
+        },
+        $inc: {
+          "usetime": req.params.points
+        }
       },
       function(err, docs) {
-        if(docs){
-        res.json(docs);
+        if (docs) {
+          res.json(docs);
         }
-        if(err)
-        console.log(err);
+        if (err)
+          console.log(err);
       });
   }]);
 });
