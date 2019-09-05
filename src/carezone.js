@@ -52,7 +52,7 @@ router.get('/totalusetime/:id/:date', function(req, res) {
   }]);
 });
 
-//20190905 사용자 플리닉 블루투스 월 사용시간 Get!
+//20190905 사용자 플리닉 블루투스 총 사용시간 Get!
 router.get('/totalallusetime/:id', function(req, res) {
   // console.log(req.params.id);
   // console.log(req.params.date);
@@ -68,6 +68,31 @@ router.get('/totalallusetime/:id', function(req, res) {
 
    },
     { $group: { _id : null, sum : { $sum: "$usedmission.points"}}}
+  ],function(error, docs){
+    res.json(docs)
+  }
+)
+  }]);
+});
+
+
+//20190905 사용자 플리닉 블루투스 월별 사용시간 랭킹 Get!
+router.get('/ranktotalusetime/:date', function(req, res) {
+  // console.log(req.params.id);
+  // console.log(req.params.date);
+  var month = req.params.date
+  var startdate =  month + "-01T00:00:00.000Z";
+  var enddate =   month + "-31T00:00:00.000Z";
+
+  async.waterfall([function(callback) {
+  Mission.aggregate([
+    { $unwind : "$usedmission"},
+    { $match: { 'usedmission.updatedAt' : {"$gte": new Date(startdate) , "$lte" : new Date(enddate) }},
+        // { "$usedmission.updatedAt" : {$gte: new Date("2019-08-29")} }
+
+   },
+    { $group: { _id : '$email', sum : { $sum: "$usedmission.points"}}},
+    { $sort : { sum : -1 } }
   ],function(error, docs){
     res.json(docs)
   }
