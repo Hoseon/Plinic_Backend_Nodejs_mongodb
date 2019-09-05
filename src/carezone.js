@@ -29,10 +29,10 @@ let upload = multer({
   storage: storage
 })
 
-//20190829 사용자 플리닉 블루투스 총 사용시간 Get!
+//20190829 사용자 플리닉 블루투스 월 사용시간 Get!
 router.get('/totalusetime/:id/:date', function(req, res) {
-  console.log(req.params.id);
-  console.log(req.params.date);
+  // console.log(req.params.id);
+  // console.log(req.params.date);
   var month = req.params.date
   var startdate =  month + "-01T00:00:00.000Z";
   var enddate =   month + "-31T00:00:00.000Z";
@@ -51,6 +51,30 @@ router.get('/totalusetime/:id/:date', function(req, res) {
 )
   }]);
 });
+
+//20190905 사용자 플리닉 블루투스 월 사용시간 Get!
+router.get('/totalallusetime/:id', function(req, res) {
+  // console.log(req.params.id);
+  // console.log(req.params.date);
+  // var month = req.params.date
+  // var startdate =  month + "-01T00:00:00.000Z";
+  // var enddate =   month + "-31T00:00:00.000Z";
+
+  async.waterfall([function(callback) {
+  Mission.aggregate([
+    { $unwind : "$usedmission" },
+    { $match: { email :  req.params.id},
+        // { "$usedmission.updatedAt" : {$gte: new Date("2019-08-29")} }
+
+   },
+    { $group: { _id : null, sum : { $sum: "$usedmission.points"}}}
+  ],function(error, docs){
+    res.json(docs)
+  }
+)
+  }]);
+});
+
 
 //20190617 미션 참여자 확인
 router.get('/getmissionmember/:id', function(req, res) {
