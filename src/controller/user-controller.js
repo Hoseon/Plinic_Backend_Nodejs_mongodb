@@ -110,6 +110,47 @@ exports.registerUser = (req, res) => {
   });
 };
 
+exports.registerUserSnS = (req, res) => {
+  console.log("Register ::::::: " + req);
+  // if (!req.body.email || !req.body.password) {
+  //   return res.status(400).json({
+  //     'msg': '이메일, 패스워드를 입력해 주세요.'
+  //   });
+  // }
+  //
+  // User.findOne({
+  //   email: req.body.email
+  // }, (err, user) => {
+  //   if (err) {
+  //     return res.status(400).json({
+  //       'msg': '사용자 정보를 찾을 수 없습니다.'
+  //     });
+  //   }
+  //
+  //   if (user) {
+  //     // return res.status(400).json({ 'msg': 'The user already exists' });
+  //     return res.status(400).json({
+  //       'msg': '이미 등록된 회원입니다.'
+  //     });
+  //   }
+  //
+  //   let newUser = User(req.body);
+  //   newUser.save((err, user) => {
+  //     if (err) {
+  //       return res.status(400).json({
+  //         'msg': '회원가입이 되지 않습니다. <br/> 관리자에게 문의 해주세요.'
+  //       });
+  //     }
+  //
+  //     // return res.status(201).json(user);
+  //     return res.status(201).json({
+  //       token: createToken(user)
+  //     });
+  //
+  //   });
+  // });
+};
+
 exports.loginUser = (req, res) => {
   if (!req.body.email || !req.body.password) {
     return res.status(400).send({
