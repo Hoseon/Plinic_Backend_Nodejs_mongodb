@@ -70,7 +70,7 @@ exports.missionSave = (req, res) => {
 
 
 exports.registerUser = (req, res) => {
-  console.log("Register ::::::: " + JSON.stringify(req));
+  console.log("Register ::::::: " + req);
   if (!req.body.email || !req.body.password) {
     return res.status(400).json({
       'msg': '이메일, 패스워드를 입력해 주세요.'
