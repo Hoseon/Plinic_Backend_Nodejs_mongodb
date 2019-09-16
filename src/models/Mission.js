@@ -31,6 +31,7 @@ var missionSchema = mongoose.Schema({
   // proddesc: String,
   maxmember: {type:Number},
   usetime: {type:Number, default:0},
+  missioncomplete: {type:Boolean, default:false},
   // currentmember : {type: Number},
   usedmission: [{
     // memberId: {type:mongoose.Schema.Types.ObjectId, ref:'user', required:true},

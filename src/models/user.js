@@ -49,6 +49,7 @@ var UserSchema = new mongoose.Schema({
   filename: String,
   originalName: String,
   desc: String,
+  pushtoken: String,
   created: { type: Date, default: Date.now }
 });
 
