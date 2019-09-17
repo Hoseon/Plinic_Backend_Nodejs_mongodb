@@ -111,10 +111,15 @@ exports.registerUser = (req, res) => {
 };
 
 exports.registerUserSnS = (req, res) => {
-  console.log("Register ::::::: " + req);
-  // if (!req.body.email || !req.body.password) {
+  console.log(":::::::::::::::::::::::" + JSON.stringify(req.body));
+  return res.status(400).json({
+    'msg': '이메일정보가 명확하지 않습니다.'
+  });
+
+
+  // if (!req.body.email) {
   //   return res.status(400).json({
-  //     'msg': '이메일, 패스워드를 입력해 주세요.'
+  //     'msg': '이메일정보가 명확하지 않습니다.'
   //   });
   // }
   //
@@ -129,7 +134,7 @@ exports.registerUserSnS = (req, res) => {
   //
   //   if (user) {
   //     // return res.status(400).json({ 'msg': 'The user already exists' });
-  //     return res.status(400).json({
+  //     return res.status(201).json({
   //       'msg': '이미 등록된 회원입니다.'
   //     });
   //   }
@@ -144,7 +149,7 @@ exports.registerUserSnS = (req, res) => {
   //
   //     // return res.status(201).json(user);
   //     return res.status(201).json({
-  //       token: createToken(user)
+  //       'user' : user
   //     });
   //
   //   });
