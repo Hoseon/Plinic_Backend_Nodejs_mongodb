@@ -50,6 +50,7 @@ var UserSchema = new mongoose.Schema({
   originalName: String,
   desc: String,
   pushtoken: String,
+  from: String,
   created: { type: Date, default: Date.now }
 });
 
