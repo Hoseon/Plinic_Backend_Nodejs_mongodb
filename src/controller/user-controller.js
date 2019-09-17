@@ -9,7 +9,8 @@ function createToken(user) {
   return jwt.sign({
     id: user.id,
     email: user.email,
-    name: user.name
+    name: user.name,
+    pushtoken : user.pushtoken
   }, config.jwtSecret, {
     //expiresIn: 200 // 86400 expires in 24 hours
     expiresIn: 86400 // 86400 expires in 24 hours
