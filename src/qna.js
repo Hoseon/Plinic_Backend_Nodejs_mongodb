@@ -9,7 +9,10 @@ var multer = require('multer');
 var path = require('path');
 var fs = require('fs');
 var del = require('del');
-
+var http = require('http');
+var FCM = require('fcm-node');
+var serverKey = 'AIzaSyCAcTA318i_SVCMl94e8SFuXHhI5VtXdhU';
+var fcm = new FCM(serverKey);
 
 //let UPLOAD_PATH = "./uploads/"
 
@@ -31,15 +34,21 @@ let upload = multer({
 
 router.get('/list/:email', function(req, res) {
   async.waterfall([function(callback) {
-    Qna.find({ email : req.params.email },function(err, docs) {
+    Qna.find({
+      email: req.params.email
+    }, function(err, docs) {
       res.json(docs);
-    }).sort({"_id" : -1 });
+    }).sort({
+      "_id": -1
+    });
   }]);
 });
 
 router.get('/qna/:id', function(req, res) {
   async.waterfall([function(callback) {
-    Qna.find({ _id : req.params.id },function(err, docs) {
+    Qna.find({
+      _id: req.params.id
+    }, function(err, docs) {
       res.json(docs);
     });
   }]);
@@ -49,7 +58,9 @@ router.get('/main_list', function(req, res) {
   async.waterfall([function(callback) {
     Qna.find(function(err, docs) {
       res.json(docs);
-    }).sort({"_id" : -1 }).limit(3);
+    }).sort({
+      "_id": -1
+    }).limit(3);
   }]);
 });
 
@@ -139,7 +150,11 @@ router.get('/new', isLoggedIn, function(req, res) {
 
 
 
-router.post('/', upload.fields([{ name: 'image' }, { name: 'prodimage' }]), isLoggedIn, function(req, res, next) {
+router.post('/', upload.fields([{
+  name: 'image'
+}, {
+  name: 'prodimage'
+}]), isLoggedIn, function(req, res, next) {
   async.waterfall([function(callback) {
     QnaCounter.findOne({
       name: "qna"
@@ -226,7 +241,7 @@ router.get('/:id/edit', isLoggedIn, function(req, res) {
     var prefilename = post.filename; //이전 파일들은 삭제
     var preoriginalName = post.originalName; //이전 파일들은 삭제
 
-    var preprodfilename  = post.prodfilename;
+    var preprodfilename = post.prodfilename;
     var preprodoriginalname = post.prodoriginalname;
     if (err) return res.json({
       success: false,
@@ -253,7 +268,11 @@ router.get('/:id/edit', isLoggedIn, function(req, res) {
 
 
 
-router.put('/:id', upload.fields([{ name: 'image' }, { name: 'prodimage' }]), isLoggedIn, function(req, res, next) {
+router.put('/:id', upload.fields([{
+  name: 'image'
+}, {
+  name: 'prodimage'
+}]), isLoggedIn, function(req, res, next) {
   //console.log("prefilename:"+ req.body.prefilename);
   //console.log("preoriginalName:" + req.body.preoriginalName);
   req.body.post.updatedAt = Date.now();
@@ -313,6 +332,35 @@ router.delete('/:id', isLoggedIn, function(req, res, next) {
 
 
 router.post('/:id/comments', function(req, res) {
+  var message = { //this may vary according to the message type (single recipient, multicast, topic, et cetera)
+    to: req.body.pushtoken,
+    // collapse_key: 'your_collapse_key',
+
+    notification: {
+      // "title": this.beautyNoteOneLoadData.title,
+      // "body": this.registerReply.comment,
+      // "subtitle" : '댓글알림 subtitle',
+      // "badge": 1,
+      title: '문의하신 글에 댓글이 작성되었습니다.',
+      body: req.body.comment.body,
+      sound: "default",
+      click_action: "FCM_PLUGIN_ACTIVITY",
+    },
+
+    data: { //you can send only notification or only data(or include both)
+      mode: "myqna",
+      id: req.body.id
+    }
+  };
+
+  fcm.send(message, function(err, response) {
+    if (err) {
+      console.log("Something has gone wrong!");
+    } else {
+      console.log("Successfully sent with response: ", response);
+    }
+  });
+
   var newComment = req.body.comment;
   newComment.author = req.user._id;
   Qna.update({
