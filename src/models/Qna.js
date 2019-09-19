@@ -30,6 +30,7 @@ var qnaSchema = mongoose.Schema({
   email: String,
   select: String,
   qna: String,
+  pushtoken: String,
 });
 
 qnaSchema.methods.getFormattedDate = function (date) {
