@@ -206,12 +206,11 @@ module.exports = function(app) {
 
   // Get one image by its ID
   app.get('/userimages/:id', (req, res, next) => {
-
     UserImage.findOne({
       email: req.params.id
     }, function(err, image) {
-      if (err) {
-        res.sendStatus(400);
+      if (err || err == null) {
+        res.sendStatus(404);
       }
 
       if (image) {
