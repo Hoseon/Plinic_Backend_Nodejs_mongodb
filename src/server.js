@@ -210,10 +210,12 @@ module.exports = function(app) {
     UserImage.findOne({
       email: req.params.id
     }, function(err, image) {
-      if (err || err == null) {
+      if (err) {
         res.sendStatus(404);
       }
-
+      if(!image){
+        res.sendStatus(404);
+      }
       if (image) {
         res.setHeader('Content-Type', 'image/jpeg');
         fs.createReadStream(path.join(__dirname, '../uploads/', image.filename)).pipe(res);
