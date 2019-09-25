@@ -210,7 +210,7 @@ module.exports = function(app) {
     UserImage.findOne({
       email: req.params.id
     }, function(err, image) {
-      if (err) {
+      if (err || err == null) {
         res.sendStatus(404);
       }
 
