@@ -45,59 +45,34 @@
         </div>
       <% } %>
     </div>
-    <h3>케어존 관리</h3>
-    <div class="body highlight" data-highlight="<%= search.highlight.body %>"><%= post.body %></div>
+    <h3>케어 챌린지</h3>
+    <div class="body highlight" data-highlight="<%= search.highlight.body %>">케어 챌린지 제목 : <%= post.title %></div>
+    <div class="body highlight" data-highlight="<%= search.highlight.body %>">케어 챌린지 설명 : <%= post.body %></div>
+    <h3>챌린지 메인 이미지</h3>
     <div class="body highlight" data-highlight="<%= search.highlight.body %>"><img src="<%= url %>"></div>
+    <h3>챌린지 보상상품 이미지</h3>
+    <div class="body highlight" data-highlight="<%= search.highlight.body %>"><img src="<%= prod_url %>"></div>
 
-    <h3>미션 관리</h3>
+    <h3>챌린지</h3>
     <!-- <div class="body highlight" data-highlight="<%= search.highlight.body %>">미션제목 : <%= post.missontitle %></div>
     <div class="body highlight" data-highlight="<%= search.highlight.body %>">미션목표 : <%= post.missonsubtitle %></div> -->
-    <div class="body highlight" data-highlight="<%= search.highlight.body %>">최대참여인원 : <%= post.maxmember %></div>
     <div class="body highlight" data-highlight="<%= search.highlight.body %>">보상 상품명 : <%= post.product %></div>
-    <!-- <div class="body highlight" data-highlight="<%= search.highlight.body %>">하단 캡션 : <%= post.caption %></div> -->
-    <div class="body highlight" data-highlight="<%= search.highlight.body %>">미션 시작일 : <%=post.getFormattedDate(post.startmission) %> : <%=post.getFormattedTime(post.startmission) %> </div>
-    <div class="body highlight" data-highlight="<%= search.highlight.body %>">미션 종료일 : <%=post.getFormattedDate(post.endmission) %> : <%=post.getFormattedTime(post.endmission) %> </div>
-    <div class="body highlight" data-highlight="<%= search.highlight.body %>"><img src="<%= prod_url %>"></div>
+    <div class="body highlight" data-highlight="<%= search.highlight.body %>">상품 수량 : <%= post.productcount %></div>
+    <div class="body highlight" data-highlight="<%= search.highlight.body %>">참여 방법 : <%= post.howtojoin %></div>
+    보상 조건 :  <textarea rows="3" readonly class="body highlight" data-highlight="<%= search.highlight.body %>"><%= post.condition %></textarea>
+    <div class="body highlight" data-highlight="<%= search.highlight.body %>">미션 시작일 : <%= post.startmission %></div>
+    <div class="body highlight" data-highlight="<%= search.highlight.body %>">미션 종료일 : <%= post.endmission %></div>
+    보너스 : <textarea rows="3" readonly class="body highlight" data-highlight="<%= search.highlight.body %>"><%= post.bonus %></textarea>
+    <h3>챌린지 슬라이드 이미지1</h3>
     <div class="body highlight" data-highlight="<%= search.highlight.body %>"><img src="<%= challenge_url1 %>"></div>
+    <h3>챌린지 슬라이드 이미지2</h3>
     <div class="body highlight" data-highlight="<%= search.highlight.body %>"><img src="<%= challenge_url2 %>"></div>
+    <h3>챌린지 슬라이드 이미지3</h3>
     <div class="body highlight" data-highlight="<%= search.highlight.body %>"><img src="<%= challenge_url3 %>"></div>
+    <h3>챌린지 슬라이드 이미지4</h3>
     <div class="body highlight" data-highlight="<%= search.highlight.body %>"><img src="<%= challenge_url4 %>"></div>
+    <h3>챌린지 슬라이드 이미지5</h3>
     <div class="body highlight" data-highlight="<%= search.highlight.body %>"><img src="<%= challenge_url5 %>"></div>
-
-    <div class="comments">
-      <h4>Comments (<%= post.comments?post.comments.length:"0" %>)</h4>
-      <% if(post.comments) { %>
-        <% post.comments.forEach(function(comment){ %>
-          <div class="comment">
-            <div class="top">
-              <b><%= comment.author.nickname %></b>
-              (<%= post.getFormattedTime(comment.createdAt) %>,
-              <%= post.getFormattedDate(comment.createdAt) %>)
-              <% if(user && user.equals(comment.author._id)) { %>
-                <form class="delete"  method="post"
-                  action="/carezone/<%=post._id%>/comments/<%=comment._id%>?_method=delete&<%= urlQuery %>">
-                  <button type="button"
-                    onclick="confirm('Your comment will be deleted')?this.parentElement.submit():null;">
-                    x
-                  </button>
-                </form>
-              <% } %>
-            </div>
-            <div class="body"><%= comment.body %></div>
-          </div>
-        <% }) %>
-      <% } %>
-      <form class="addComment checkValidation"
-        action="/carezone/<%=post._id%>/comments?<%= urlQuery %>" method="post">
-        <textarea class="cvRequired" type="text" name="comment[body]"
-          cvRqErrMsg="comments is empty." cvRqErrTo="#cvErrTitle" <%= user?"":"disabled" %>
-          placeholder="<%= user?"Add comment here":"Please login to make a comment" %>"></textarea>
-        <button type="submit" <%= user?"":"disabled" %>>Comment</button>
-        <div id="cvErrTitle" class="message"></div>
-      </form>
-    </div>
-  </div>
-</div>
 
 <!-- main end -->
     </div><!--carezone end -->
