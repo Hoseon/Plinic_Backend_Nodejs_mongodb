@@ -744,6 +744,18 @@ router.delete('/:postId/comments/:commentId', function(req, res) {
 
 
 
+//20191002 사용자가 참여한 미션 이력 구하기
+router.get('/historymission/:id', function(req, res) {
+  //var carezonelist = null;
+  // console.log("chkmission" +req.params.id);
+  async.waterfall([function(callback) {
+    Mission.find({
+      email: req.params.id
+    }, function(err, docs) {
+      res.json(docs);
+    });
+  }]);
+});
 
 
 function isLoggedIn(req, res, next) {
