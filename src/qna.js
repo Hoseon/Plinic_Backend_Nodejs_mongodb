@@ -6,6 +6,9 @@ var QnaCounter = require('./models/QnaCounter');
 var async = require('async');
 var User_admin = require('./models/User_admin');
 var multer = require('multer');
+// var FTPStorage = require('multer-ftp');
+var sftpStorage = require('multer-sftp');
+let Client = require('ssh2-sftp-client');
 var path = require('path');
 var fs = require('fs');
 var del = require('del');
@@ -29,7 +32,33 @@ var storage = multer.diskStorage({
 
 let upload = multer({
   storage: storage
-})
+});
+
+var sftpUpload = multer({
+  storage: new sftpStorage({
+    sftp: {
+      host: 'g1partners1.cafe24.com',
+      // secure: true, // enables FTPS/FTP with TLS
+      port: 3822,
+      user: 'g1partners1',
+      password: 'g100210!!',
+    },
+    // basepath: '/www/plinic',
+    destination: function(req, file, cb) {
+      cb(null, '/www/plinic')
+    },
+    filename: function(req, file, cb) {
+      cb(null, file.fieldname + '-' + Date.now())
+    }
+  })
+});
+
+const sftpconfig = {
+  host: 'g1partners1.cafe24.com',
+  port: 3822,
+  user: 'g1partners1',
+  password: 'g100210!!'
+};
 
 
 router.get('/list/:email', function(req, res) {
@@ -212,8 +241,10 @@ router.get('/:id', function(req, res) {
 
       //배너 이미지 가져 오기 20190502
       //res.setHeader('Content-Type', 'image/jpeg');
-      var url = req.protocol + '://' + req.get('host') + '/qna/' + post._id;
-      var prod_url = req.protocol + '://' + req.get('host') + '/qna_prodimages/' + post._id;
+      // var url = req.protocol + '://' + req.get('host') + '/qna/' + post._id;
+      var url = 'https://plinic.s3.ap-northeast-2.amazonaws.com/' + post.filename;
+      // var prod_url = req.protocol + '://' + req.get('host') + '/qna_prodimages/' + post._id;
+      var prod_url = 'https://plinic.s3.ap-northeast-2.amazonaws.com/' + post.prodfilename;
       //fs.createReadStream(path.join(__dirname, '../uploads/', post.filename)).pipe(res);
       res.render("qna/show", {
         post: post,

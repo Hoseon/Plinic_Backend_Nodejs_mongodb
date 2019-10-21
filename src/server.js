@@ -12,6 +12,7 @@ var KakaoStrategy = require('passport-kakao').Strategy;
 var ejs = require('ejs');
 var User = require('./models/user');
 var Image = require('./models/image');
+var FtpImage = require('./models/FtpImage');
 var UserImage = require('./models/UserImage');
 var Banner = require('./models/Banner');
 var Carezone = require('./models/Carezone');
@@ -28,6 +29,10 @@ var jwt = require('jsonwebtoken');
 var config = require('./config/config');
 var userController = require('./controller/user-controller');
 var multer = require('multer');
+// var FTPStorage = require('multer-ftp');
+var sftpStorage = require('multer-sftp');
+let Client = require('ssh2-sftp-client');
+// let sftp = new Client();
 var path = require('path');
 var fs = require('fs');
 var del = require('del');
@@ -40,6 +45,27 @@ var methodOverride = require('method-override');
 
 let UPLOAD_PATH = "./uploads/"
 //let PORT = 3000;
+
+// sftp.connect({
+//   host: 'g1partners1.cafe24.com',
+//   port: 3822,
+//   username: 'g1partners1',
+//   password: 'g100210!!'
+// }).then(() => {
+//   return sftp.list('/www/plinic');
+// }).then(data => {
+//   console.log(data, 'the data info');
+// }).catch(err => {
+//   console.log(err, 'catch error');
+// });
+
+const sftpconfig = {
+  host: 'g1partners1.cafe24.com',
+  port: 3822,
+  user: 'g1partners1',
+  password: 'g100210!!',
+  keepalive : true
+}
 
 //multer 선언 이미지 rest api 개발 20190425
 var storage = multer.diskStorage({
@@ -56,14 +82,37 @@ let upload = multer({
   storage: storage
 })
 
+var sftpUpload = multer({
+  storage: new sftpStorage({
+    sftp: {
+      host: 'g1partners1.cafe24.com',
+      // secure: true, // enables FTPS/FTP with TLS
+      port: 3822,
+      user: 'g1partners1',
+      password: 'g100210!!',
+    },
+    // basepath: '/www/plinic',
+    destination: function(req, file, cb) {
+      cb(null, '/www/plinic')
+    },
+    filename: function(req, file, cb) {
+      cb(null, file.fieldname + '-' + Date.now())
+    }
+  })
+});
+
 module.exports = function(app) {
   var app = express();
   app.use(cors());
 
   // get our request parameters
   app.use(express.static(path.join(__dirname, 'public')));
-  app.use(bodyParser.json());
+  app.use(bodyParser.json({
+    limit: '100mb'
+  }));
   app.use(bodyParser.urlencoded({
+    limit: '100mb',
+    parameterLimit: 1000000,
     extended: true
   }));
   app.use(cookieParser());
@@ -148,7 +197,7 @@ module.exports = function(app) {
   });
 
   //사용자 이미지 업로드
-  app.post('/userimages', upload.single('image'), (req, res, next) => {
+  app.post('/userimages', sftpUpload.single('image'), (req, res, next) => {
     // Create a new image model and fill the properties
     let newUser = new UserImage();
     newUser.filename = req.file.filename;
@@ -166,7 +215,7 @@ module.exports = function(app) {
   });
 
   //사용자 이미지 수정
-  app.post('/userupdateimages', upload.single('image'), (req, res, next) => {
+  app.post('/userupdateimages', sftpUpload.single('image'), (req, res, next) => {
     // Create a new image model and fill the properties
     let newUser = new UserImage();
     newUser.isNew = false;
@@ -213,10 +262,42 @@ module.exports = function(app) {
       if (err) {
         res.sendStatus(404);
       }
-      if(!image){
+      if (!image) {
         res.sendStatus(404);
       }
       if (image) {
+        res.json(image);
+        // res.setHeader('Content-Type', 'image/jpeg');
+        // fs.createReadStream(path.join(__dirname, '../uploads/', image.filename)).pipe(res);
+      }
+      //res.json(docs);
+    });
+
+    // let imgId = req.params.id;
+    // UserImage.findone(imgId, (err, image) => {
+    //   if (err) {
+    //     res.sendStatus(400);
+    //   }
+    //   // stream the image back by loading the file
+    // res.setHeader('Content-Type', 'image/jpeg');
+    // fs.createReadStream(path.join(__dirname, '../uploads/', image.filename)).pipe(res);
+    // })
+  });
+
+  // Get one image by its ID
+  app.get('/userimagesdown/:id', (req, res, next) => {
+
+    UserImage.findOne({
+      email: req.params.id
+    }, function(err, image) {
+      if (err) {
+        res.sendStatus(404);
+      }
+      if (!image) {
+        res.sendStatus(404);
+      }
+      if (image) {
+        // res.json(image);
         res.setHeader('Content-Type', 'image/jpeg');
         fs.createReadStream(path.join(__dirname, '../uploads/', image.filename)).pipe(res);
       }
@@ -241,7 +322,7 @@ module.exports = function(app) {
       email: req.params.id
     }, function(err, image) {
       if (err) {
-        res.sendStatus(400);
+        res.sendStatus(404);
       }
       res.json(image);
       // res.setHeader('Content-Type', 'image/jpeg');
@@ -268,7 +349,7 @@ module.exports = function(app) {
     // remove the version key from the response
     Image.find({}, '-__v').lean().exec((err, images) => {
       if (err) {
-        res.sendStatus(400);
+        res.sendStatus(404);
       }
 
       // Manually set the correct URL to each image
@@ -287,7 +368,7 @@ module.exports = function(app) {
 
     Banner.findById(imgId, (err, image) => {
       if (err) {
-        res.sendStatus(400);
+        res.sendStatus(404);
       }
       // stream the image back by loading the file
       res.setHeader('Content-Type', 'image/jpeg');
@@ -301,7 +382,7 @@ module.exports = function(app) {
 
     Carezone.findById(imgId, (err, image) => {
       if (err) {
-        res.sendStatus(400);
+        res.sendStatus(404);
       }
       // stream the image back by loading the file
       res.setHeader('Content-Type', 'image/jpeg');
@@ -314,7 +395,7 @@ module.exports = function(app) {
 
     Beauty.findById(imgId, (err, image) => {
       if (err) {
-        res.sendStatus(400);
+        res.sendStatus(404);
       }
       // stream the image back by loading the file
       res.setHeader('Content-Type', 'image/jpeg');
@@ -327,7 +408,7 @@ module.exports = function(app) {
 
     CommuBeauty.findById(imgId, (err, image) => {
       if (err) {
-        res.sendStatus(400);
+        res.sendStatus(404);
       }
       // stream the image back by loading the file
       if (image.filename) {
@@ -344,7 +425,7 @@ module.exports = function(app) {
 
     BeautyNote.findById(imgId, (err, image) => {
       if (err) {
-        res.sendStatus(400);
+        res.sendStatus(404);
       }
       // stream the image back by loading the file
       res.setHeader('Content-Type', 'image/jpeg');
@@ -357,7 +438,7 @@ module.exports = function(app) {
 
     SkinQna.findById(imgId, (err, image) => {
       if (err) {
-        res.sendStatus(400);
+        res.sendStatus(404);
       }
       // stream the image back by loading the file
       res.setHeader('Content-Type', 'image/jpeg');
@@ -370,7 +451,7 @@ module.exports = function(app) {
 
     Carezone.findById(imgId, (err, image) => {
       if (err) {
-        res.sendStatus(400);
+        res.sendStatus(404);
       }
       // stream the image back by loading the file
       res.setHeader('Content-Type', 'image/jpeg');
@@ -385,7 +466,7 @@ module.exports = function(app) {
 
     Notice.findById(imgId, (err, image) => {
       if (err) {
-        res.sendStatus(400);
+        res.sendStatus(404);
       }
       // stream the image back by loading the file
       res.setHeader('Content-Type', 'image/jpeg');
@@ -398,7 +479,7 @@ module.exports = function(app) {
 
     Notice.findById(imgId, (err, image) => {
       if (err) {
-        res.sendStatus(400);
+        res.sendStatus(404);
       }
       // stream the image back by loading the file
       res.setHeader('Content-Type', 'image/jpeg');
@@ -425,7 +506,7 @@ module.exports = function(app) {
 
     Carezone.findById(imgId, (err, image) => {
       if (err) {
-        res.sendStatus(400);
+        res.sendStatus(404);
       }
       // stream the image back by loading the file
       res.setHeader('Content-Type', 'image/jpeg');
@@ -438,7 +519,7 @@ module.exports = function(app) {
 
     Carezone.findById(imgId, (err, image) => {
       if (err) {
-        res.sendStatus(400);
+        res.sendStatus(404);
       }
       // stream the image back by loading the file
       res.setHeader('Content-Type', 'image/jpeg');
@@ -451,7 +532,7 @@ module.exports = function(app) {
 
     Carezone.findById(imgId, (err, image) => {
       if (err) {
-        res.sendStatus(400);
+        res.sendStatus(404);
       }
       // stream the image back by loading the file
       res.setHeader('Content-Type', 'image/jpeg');
@@ -464,7 +545,7 @@ module.exports = function(app) {
 
     Carezone.findById(imgId, (err, image) => {
       if (err) {
-        res.sendStatus(400);
+        res.sendStatus(404);
       }
       // stream the image back by loading the file
       res.setHeader('Content-Type', 'image/jpeg');
@@ -477,7 +558,7 @@ module.exports = function(app) {
 
     Carezone.findById(imgId, (err, image) => {
       if (err) {
-        res.sendStatus(400);
+        res.sendStatus(404);
       }
       // stream the image back by loading the file
       res.setHeader('Content-Type', 'image/jpeg');
@@ -490,7 +571,7 @@ module.exports = function(app) {
 
     Carezone.findById(imgId, (err, image) => {
       if (err) {
-        res.sendStatus(400);
+        res.sendStatus(404);
       }
       // stream the image back by loading the file
       res.setHeader('Content-Type', 'image/jpeg');
@@ -504,7 +585,7 @@ module.exports = function(app) {
 
     Beauty.findById(imgId, (err, image) => {
       if (err) {
-        res.sendStatus(400);
+        res.sendStatus(404);
       }
       // stream the image back by loading the file
       res.setHeader('Content-Type', 'image/jpeg');
@@ -517,7 +598,7 @@ module.exports = function(app) {
 
     Beauty.findById(imgId, (err, image) => {
       if (err) {
-        res.sendStatus(400);
+        res.sendStatus(404);
       }
       // stream the image back by loading the file
       res.setHeader('Content-Type', 'image/jpeg');
@@ -532,12 +613,14 @@ module.exports = function(app) {
 
     Image.findByIdAndRemove(imgId, (err, image) => {
       if (err && image) {
-        res.sendStatus(400);
+        res.sendStatus(404);
       }
 
       del([path.join(__dirname, '../uploads/', image.filename)]).then(deleted => {
         res.sendStatus(200);
       })
+
+      del([path.join('', '')])
     })
   });
 
@@ -593,7 +676,7 @@ module.exports = function(app) {
 
     BeautyNote.findById(imgId, (err, image) => {
       if (err) {
-        res.sendStatus(400);
+        res.sendStatus(404);
       }
 
       if (image.filename) {
@@ -611,7 +694,7 @@ module.exports = function(app) {
 
     SkinQna.findById(imgId, (err, image) => {
       if (err) {
-        res.sendStatus(400);
+        res.sendStatus(404);
       }
       // stream the image back by loading the file
       if (image.filename) {
@@ -628,7 +711,7 @@ module.exports = function(app) {
 
     Exhibition.findById(imgId, (err, image) => {
       if (err) {
-        res.sendStatus(400);
+        res.sendStatus(404);
       }
       // stream the image back by loading the file
       if (image.filename) {
@@ -807,6 +890,67 @@ module.exports = function(app) {
     successRedirect: '/api',
     failureRedirect: '#!/login'
   }));
+
+  app.post('/ftpimages', sftpUpload.single('image'), (req, res, next) => {
+    // Create a new image model and fill the properties
+    let newImage = new FtpImage();
+    newImage.filename = req.file.filename;
+    newImage.originalName = req.file.originalname;
+    newImage.desc = req.body.desc
+    newImage.save(err => {
+      if (err) {
+        return res.sendStatus(402);
+      }
+      res.status(201).send({
+        newImage
+      });
+    });
+  });
+
+
+  // Get all uploaded images
+  app.get('/ftpimages', (req, res, next) => {
+    // use lean() to get a plain JS object
+    // remove the version key from the response
+    FtpImage.find({}, '-__v').lean().exec((err, images) => {
+      if (err) {
+        res.sendStatus(404);
+      }
+
+      // Manually set the correct URL to each image
+      for (let i = 0; i < images.length; i++) {
+        var img = images[i];
+        img.url = 'http://g1partners1.cafe24.com/plinic/' + img.filename;
+      }
+      res.json(images);
+    })
+  });
+
+  // Delete one image by its ID
+  app.delete('/ftpimages/:id', (req, res, next) => {
+    let imgId = req.params.id;
+
+    FtpImage.findByIdAndRemove(imgId, (err, image) => {
+      if (err && image) {
+        res.sendStatus(400);
+      }
+      let client = new Client();
+      let remotefile = '/www/plinic/'
+      remotefile = remotefile.concat(image.filename);
+      client.connect(sftpconfig).then(() => {
+          return client.delete(remotefile);
+        })
+        .then(() => {
+          res.sendStatus(200);
+          return client.end();
+        }).catch(err => {
+          console.error(err.message);
+          res.sendStatus(400);
+        });
+    });
+  });
+
+
 
   /*
   const uri = "mongodb+srv://plinic:1234@cluster0-hgfgd.mongodb.net/plinic?retryWrites=true";

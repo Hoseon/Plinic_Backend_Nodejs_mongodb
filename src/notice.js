@@ -6,28 +6,160 @@ var NoticeCounter = require('./models/NoticeCounter');
 var async = require('async');
 var User_admin = require('./models/User_admin');
 var multer = require('multer');
+var multerS3 = require('multer-s3');
+const AWS = require("aws-sdk");
+var FTPStorage = require('multer-ftp');
+var sftpStorage = require('multer-sftp');
+let Client = require('ssh2-sftp-client');
 var path = require('path');
 var fs = require('fs');
 var del = require('del');
+var FTP = require('ftp')
+var ftp = new FTP();
+
+AWS.config.loadFromPath(__dirname + "/config/awsconfig.json");
+// AWS.config.update({
+//     accessKeyId: 'AKIAJJFZV2B6S6HFMTHQ',
+//     secretAccessKey: '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',
+//     region : 'ap-northeast-2'
+// });
+
+let s3 = new AWS.S3();
+
+let s3upload = multer({
+  storage: multerS3({
+    s3: s3,
+    bucket: 'chs1025',
+    metadata: function(req, file, cb) {
+      cb(null, {
+        fieldName: file.fieldname,
+        filename: file.fieldname + '-' + Date.now()
+      });
+    },
+    key: function(req, file, cb) {
+      cb(null, file.fieldname + '-' + Date.now())
+    },
+    acl: 'public-read'
+  })
+});
 
 
 //let UPLOAD_PATH = "./uploads/"
 
 //multer 선언 이미지 rest api 개발 20190425
-var storage = multer.diskStorage({
-  destination: function(req, file, cb) {
-    cb(null, path.join(__dirname, '../uploads/'));
-    //cb(null, UPLOAD_PATH)
-  },
-  filename: function(req, file, cb) {
-    cb(null, file.fieldname + '-' + Date.now())
+// var storage = multer.diskStorage({
+//   destination: function(req, file, cb) {
+//     cb(null, path.join(__dirname, '../uploads/'));
+//     //cb(null, UPLOAD_PATH)
+//   },
+//   filename: function(req, file, cb) {
+//     cb(null, file.fieldname + '-' + Date.now())
+//   }
+// })
+//
+// let upload = multer({
+//   storage: storage
+// });
+
+// ftp.connect({
+//   host: 'g1partners1.cafe24.com',
+//   user: 'g1partners1',
+//   port: 21,
+//   password: 'g100210!!',
+//   keepalive: 0,
+// })
+
+// let upload2 = multer({
+//   storage: new FTPStorage({
+//     basepath: '/www/plinic',
+//     destination: function(req, file, options, callback) {
+//       callback(null, path.join(options.basepath, file.fieldname + '-' + Date.now()))
+//     },
+//     // connection: ftp
+//     ftp: {
+//       host: 'g1partners1.cafe24.com',
+//       // secure: true, // enables FTPS/FTP with TLS
+//       user: 'g1partners1',
+//       password: 'g100210!!'
+//     }
+//   })
+// });
+
+// var sftpUpload = multer({
+//   storage: new sftpStorage({
+//     sftp: {
+//       host: 'g1partners1.cafe24.com',
+//       // secure: true, // enables FTPS/FTP with TLS
+//       port: 3822,
+//       user: 'g1partners1',
+//       password: 'g100210!!',
+//     },
+//     // basepath: '/www/plinic',
+//     destination: function(req, file, cb) {
+//       cb(null, '/www/plinic')
+//     },
+//     filename: function(req, file, cb) {
+//       cb(null, file.fieldname + '-' + Date.now())
+//     }
+//   })
+// });
+
+
+
+const sftpconfig = {
+  host: 'g1partners1.cafe24.com',
+  port: 3822,
+  user: 'g1partners1',
+  password: 'g100210!!'
+};
+
+
+router.post('/img', s3upload.fields([{
+  name: 'image'
+}, {
+  name: 'prodimage'
+}]), (req, res) => {
+  try {
+    console.log("req.files: ", req.files); // 테스트 => req.file.location에 이미지 링크(s3-server)가 담겨있음
+    console.log(req.files['prodimage'][0].metadata.filename);
+    // let payLoad = { url: req.file.location };
+    res.json("ok");
+    console.log("111");
+    // re(res, 200, payLoad);
+  } catch (err) {
+    console.log(err);
+    res.status(500);
+    // response(res, 500, "서버 에러")
   }
-})
+});
 
-let upload = multer({
-  storage: storage
-})
+var params = {
+  Bucket: 'chs1025',
+  Delete: { // required
+    Objects: [ // required
+      {
+        Key: 'cafe24 nodejs.png' // required
+      },
+      // {
+      //   Key: 'sample-image--10.jpg'
+      // }
+    ],
+  },
+};
 
+
+router.delete('/s3delete', (req, res) => {
+  try {
+    s3.deleteObjects(params, function(err, data) {
+      if (err) console.log(err, err.stack); // an error occurred
+      else console.log("Data 삭제 완료" + JSON.stringify(data)); // successful response
+    });
+  } catch (err) {
+    console.log(err);
+    res.status(500);
+    // response(res, 500, "서버 에러")
+  }
+});
 
 router.get('/list', function(req, res) {
   async.waterfall([function(callback) {
@@ -41,7 +173,9 @@ router.get('/main_list', function(req, res) {
   async.waterfall([function(callback) {
     Notice.find(function(err, docs) {
       res.json(docs);
-    }).sort({"_id" : -1 }).limit(3);
+    }).sort({
+      "_id": -1
+    }).limit(3);
   }]);
 });
 
@@ -131,7 +265,11 @@ router.get('/new', isLoggedIn, function(req, res) {
 
 
 
-router.post('/', upload.fields([{ name: 'image' }, { name: 'prodimage' }]), isLoggedIn, function(req, res, next) {
+router.post('/', s3upload.fields([{
+  name: 'image'
+}, {
+  name: 'prodimage'
+}]), isLoggedIn, function(req, res, next) {
   async.waterfall([function(callback) {
     NoticeCounter.findOne({
       name: "notice"
@@ -156,10 +294,15 @@ router.post('/', upload.fields([{ name: 'image' }, { name: 'prodimage' }]), isLo
     var newPost = req.body.post;
     newPost.author = req.user._id;
     newPost.numId = counter.totalCount + 1;
+
     req.body.post.filename = req.files['image'][0].filename;
+    // req.body.post.filename = req.files['image'][0].path.substr(12);
     req.body.post.originalName = req.files['image'][0].originalname;
+
     req.body.post.prodfilename = req.files['prodimage'][0].filename;
+    // req.body.post.prodfilename = req.files['prodimage'][0].path.substr(12);
     req.body.post.prodoriginalname = req.files['prodimage'][0].originalname;
+
     Notice.create(req.body.post, function(err, post) {
       if (err) return res.json({
         success: false,
@@ -168,6 +311,7 @@ router.post('/', upload.fields([{ name: 'image' }, { name: 'prodimage' }]), isLo
       counter.totalCount++;
       counter.save();
       res.redirect('/notice');
+      res.end();
     });
   });
 }); // create
@@ -187,10 +331,11 @@ router.get('/:id', function(req, res) {
       post.views++;
       post.save();
 
-      //배너 이미지 가져 오기 20190502
       //res.setHeader('Content-Type', 'image/jpeg');
-      var url = req.protocol + '://' + req.get('host') + '/notice_images/' + post._id;
-      var prod_url = req.protocol + '://' + req.get('host') + '/notice_prodimages/' + post._id;
+      // var url = 'http://g1partners1.cafe24.com/plinic/' + post.filename;
+      var url = 'https://plinic.s3.ap-northeast-2.amazonaws.com/' + post.filename;
+      // var prod_url = 'http://g1partners1.cafe24.com/plinic/' + post.prodfilename;
+      var prod_url = 'https://plinic.s3.ap-northeast-2.amazonaws.com/' + post.prodfilename;
       //fs.createReadStream(path.join(__dirname, '../uploads/', post.filename)).pipe(res);
       res.render("notice/show", {
         post: post,
@@ -210,15 +355,15 @@ router.get('/:id', function(req, res) {
 
 router.get('/:id/edit', isLoggedIn, function(req, res) {
   Notice.findById(req.params.id, function(err, post) {
-    var url = req.protocol + '://' + req.get('host') + '/images/' + post._id;
+    var url = 'http://g1partners1.cafe24.com/plinic/' + post.filename;
 
-    var prod_url = req.protocol + '://' + req.get('host') + '/prod_images/' + post._id;
+    var prod_url = 'http://g1partners1.cafe24.com/plinic/' + post.prodfilename;
 
 
     var prefilename = post.filename; //이전 파일들은 삭제
     var preoriginalName = post.originalName; //이전 파일들은 삭제
 
-    var preprodfilename  = post.prodfilename;
+    var preprodfilename = post.prodfilename;
     var preprodoriginalname = post.prodoriginalname;
     if (err) return res.json({
       success: false,
@@ -245,37 +390,58 @@ router.get('/:id/edit', isLoggedIn, function(req, res) {
 
 
 
-router.put('/:id', upload.fields([{ name: 'image' }, { name: 'prodimage' }]), isLoggedIn, function(req, res, next) {
-  //console.log("prefilename:"+ req.body.prefilename);
-  //console.log("preoriginalName:" + req.body.preoriginalName);
-  req.body.post.updatedAt = Date.now();
-  req.body.post.filename = req.files['image'][0].filename;
-  req.body.post.originalName = req.files['image'][0].originalname;
-  req.body.post.prodfilename = req.files['prodimage'][0].filename;
-  req.body.post.prodoriginalname = req.files['prodimage'][0].originalname;
-  del([path.join(__dirname, '../uploads/', req.body.prefilename)]).then(deleted => {
-    //res.sendStatus(200);
-  });
-
-  del([path.join(__dirname, '../uploads/', req.body.preprodfilename)]).then(deleted => {
-    //res.sendStatus(200);
-  });
-  Notice.findOneAndUpdate({
-    _id: req.params.id,
-    author: req.user._id
-  }, req.body.post, function(err, post) {
-    if (err) return res.json({
-      success: false,
-      message: err
-    });
-    if (!post) return res.json({
-      success: false,
-      message: "No data found to update"
-    });
-    res.redirect('/notice/' + req.params.id);
-  });
-}); //update
-
+// router.put('/:id', sftpUpload.fields([{ name: 'image', maxCount: 5 }, { name: 'prodimage', maxCount: 5 }]), isLoggedIn, function(req, res, next) {
+//   //console.log("prefilename:"+ req.body.prefilename);
+//   //console.log("preoriginalName:" + req.body.preoriginalName);
+//   req.body.post.updatedAt = Date.now();
+//   // req.body.post.filename = req.files['image'][0].filename;
+//   req.body.post.filename = req.files['image'][0].path.substr(12);
+//   req.body.post.originalName = req.files['image'][0].originalname;
+//   // req.body.post.prodfilename = req.files['prodimage'][0].filename;
+//   req.body.post.prodfilename = req.files['prodimage'][0].path.substr(12);
+//   req.body.post.prodoriginalname = req.files['prodimage'][0].originalname;
+//
+//   // del([path.join(__dirname, '../uploads/', req.body.prefilename)]).then(deleted => {
+//   //   //res.sendStatus(200);
+//   // });
+//
+//   // del([path.join(__dirname, '../uploads/', req.body.preprodfilename)]).then(deleted => {
+//   //   //res.sendStatus(200);
+//   // });
+//
+//   let client = new Client();
+//   let remotefile = '/www/plinic/'
+//   let remotefile2 = '/www/plinic/'
+//   remotefile = remotefile.concat(req.body.prefilename);
+//   remotefile2 = remotefile2.concat(req.body.preprodfilename);
+//   client.connect(sftpconfig).then(() => {
+//       return client.delete(remotefile);
+//     }).then(() =>{
+//       return client.delete(remotefile2);
+//     })
+//     .then(() => {
+//       Notice.findOneAndUpdate({
+//         _id: req.params.id,
+//         author: req.user._id
+//       }, req.body.post, function(err, post) {
+//         if (err) return res.json({
+//           success: false,
+//           message: err
+//         });
+//         if (!post) return res.json({
+//           success: false,
+//           message: "No data found to update"
+//         });
+//         res.redirect('/notice/' + req.params.id);
+//         return client.end();
+//       });
+//       // res.sendStatus(200);
+//       return client.end();
+//     }).catch(err => {
+//       console.error(err.message);
+//       res.sendStatus(400);
+//     });
+// }); //update
 
 
 router.delete('/:id', isLoggedIn, function(req, res, next) {
@@ -287,18 +453,39 @@ router.delete('/:id', isLoggedIn, function(req, res, next) {
       success: false,
       message: err
     });
-    del([path.join(__dirname, '../uploads/', post.filename)]).then(deleted => {
-      //res.sendStatus(200);
-    });
 
-    del([path.join(__dirname, '../uploads/', post.prodfilename)]).then(deleted => {
-      //res.sendStatus(200);
-    });
+    upload
+    // del([path.join(__dirname, '../uploads/', post.filename)]).then(deleted => {
+    //   //res.sendStatus(200);
+    // });
+    //
+    // del([path.join(__dirname, '../uploads/', post.prodfilename)]).then(deleted => {
+    //   //res.sendStatus(200);
+    // });
+    let client = new Client();
+    let remotefile = '/www/plinic/'
+    let remotefile2 = '/www/plinic/'
+    remotefile = remotefile.concat(post.filename);
+    remotefile2 = remotefile2.concat(post.prodfilename);
+    client.connect(sftpconfig).then(() => {
+        return client.delete(remotefile);
+      }).then(() => {
+        return client.delete(remotefile2);
+      })
+      .then(() => {
+        // res.sendStatus(200);
+        client.end();
+        res.redirect('/notice');
+      }).catch(err => {
+        console.error(err.message);
+        res.sendStatus(400);
+      });
+
     if (!post) return res.json({
       success: false,
       message: "No data found to delete"
     });
-    res.redirect('/notice');
+    // res.redirect('/notice');
   });
 }); //destroy
 

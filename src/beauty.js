@@ -6,6 +6,9 @@ var BeautyCounter = require('./models/BeautyCounter');
 var async = require('async');
 var User_admin = require('./models/User_admin');
 var multer = require('multer');
+// var FTPStorage = require('multer-ftp');
+var sftpStorage = require('multer-sftp');
+let Client = require('ssh2-sftp-client');
 var path = require('path');
 var fs = require('fs');
 var del = require('del');
@@ -27,6 +30,32 @@ var storage = multer.diskStorage({
 let upload = multer({
   storage: storage
 })
+
+var sftpUpload = multer({
+  storage: new sftpStorage({
+    sftp: {
+      host: 'g1partners1.cafe24.com',
+      // secure: true, // enables FTPS/FTP with TLS
+      port: 3822,
+      user: 'g1partners1',
+      password: 'g100210!!',
+    },
+    // basepath: '/www/plinic',
+    destination: function(req, file, cb) {
+      cb(null, '/www/plinic')
+    },
+    filename: function(req, file, cb) {
+      cb(null, file.fieldname + '-' + Date.now())
+    }
+  })
+});
+
+const sftpconfig = {
+  host: 'g1partners1.cafe24.com',
+  port: 3822,
+  user: 'g1partners1',
+  password: 'g100210!!'
+}
 
 
 router.get('/list', function(req, res) {
@@ -141,7 +170,7 @@ router.get('/new', isLoggedIn, function(req, res) {
 
 
 
-router.post('/', upload.fields([{ name: 'image' }, { name: 'prodimage' }]), isLoggedIn, function(req, res, next) {
+router.post('/', sftpUpload.fields([{ name: 'image' }, { name: 'prodimage' }]), isLoggedIn, function(req, res, next) {
   async.waterfall([function(callback) {
     BeautyCounter.findOne({
       name: "beauty"
@@ -199,8 +228,10 @@ router.get('/:id', function(req, res) {
 
       //배너 이미지 가져 오기 20190502
       //res.setHeader('Content-Type', 'image/jpeg');
-      var url = req.protocol + '://' + req.get('host') + '/beauty_images/' + post._id;
-      var prod_url = req.protocol + '://' + req.get('host') + '/beauty_prodimages/' + post._id;
+      // var url = req.protocol + '://' + req.get('host') + '/beauty_images/' + post._id;
+      // var url = 'http://g1partners1.cafe24.com/plinic/' + post.filename;
+      var url = 'https://plinic.s3.ap-northeast-2.amazonaws.com/' + post.filename;
+      var prod_url = 'https://plinic.s3.ap-northeast-2.amazonaws.com/' + post.prodfilename;
       //fs.createReadStream(path.join(__dirname, '../uploads/', post.filename)).pipe(res);
       res.render("beauty/show", {
         post: post,
@@ -220,7 +251,8 @@ router.get('/:id', function(req, res) {
 
 router.get('/:id/edit', isLoggedIn, function(req, res) {
   Beauty.findById(req.params.id, function(err, post) {
-    var url = req.protocol + '://' + req.get('host') + '/images/' + post._id;
+    // var url = req.protocol + '://' + req.get('host') + '/images/' + post._id;
+    var url = 'http://g1partners1.cafe24.com/plinic/'+ post.filename;
 
     // var prod_url = req.protocol + '://' + req.get('host') + '/prod_images/' + post._id;
 
@@ -255,7 +287,7 @@ router.get('/:id/edit', isLoggedIn, function(req, res) {
 
 
 
-router.put('/:id', upload.fields([{ name: 'image' }, { name: 'prodimage' }]), isLoggedIn, function(req, res, next) {
+router.put('/:id', sftpUpload.fields([{ name: 'image' }, { name: 'prodimage' }]), isLoggedIn, function(req, res, next) {
   //console.log("prefilename:"+ req.body.prefilename);
   //console.log("preoriginalName:" + req.body.preoriginalName);
   req.body.post.updatedAt = Date.now();
@@ -263,27 +295,41 @@ router.put('/:id', upload.fields([{ name: 'image' }, { name: 'prodimage' }]), is
   req.body.post.originalName = req.files['image'][0].originalname;
   //req.body.post.prodfilename = req.files['prodimage'][0].filename;
   //req.body.post.prodoriginalname = req.files['prodimage'][0].originalname;
-  del([path.join(__dirname, '../uploads/', req.body.prefilename)]).then(deleted => {
-    //res.sendStatus(200);
-  });
+  // del([path.join(__dirname, '../uploads/', req.body.prefilename)]).then(deleted => {
+  //   //res.sendStatus(200);
+  // });
+
+  let client = new Client();
+  let remotefile = '/www/plinic/'
+  remotefile = remotefile.concat(req.body.prefilename);
+  client.connect(sftpconfig).then(() => {
+      return client.delete(remotefile);
+    })
+    .then(() => {
+      Beauty.findOneAndUpdate({
+        _id: req.params.id,
+        author: req.user._id
+      }, req.body.post, function(err, post) {
+        if (err) return res.json({
+          success: false,
+          message: err
+        });
+        if (!post) return res.json({
+          success: false,
+          message: "No data found to update"
+        });
+        res.redirect('/beauty/' + req.params.id);
+      });
+      return client.end();
+    }).catch(err => {
+      console.error(err.message);
+      res.sendStatus(400);
+    });
 
   // del([path.join(__dirname, '../uploads/', req.body.preprodfilename)]).then(deleted => {
   //   //res.sendStatus(200);
   // });
-  Beauty.findOneAndUpdate({
-    _id: req.params.id,
-    author: req.user._id
-  }, req.body.post, function(err, post) {
-    if (err) return res.json({
-      success: false,
-      message: err
-    });
-    if (!post) return res.json({
-      success: false,
-      message: "No data found to update"
-    });
-    res.redirect('/beauty/' + req.params.id);
-  });
+
 }); //update
 
 
@@ -297,9 +343,24 @@ router.delete('/:id', isLoggedIn, function(req, res, next) {
       success: false,
       message: err
     });
-    del([path.join(__dirname, '../uploads/', post.filename)]).then(deleted => {
-      //res.sendStatus(200);
-    });
+
+    let client = new Client();
+    let remotefile = '/www/plinic/'
+    remotefile = remotefile.concat(post.filename);
+    client.connect(sftpconfig).then(() => {
+        return client.delete(remotefile);
+      })
+      .then(() => {
+        // res.sendStatus(200);
+        return client.end();
+      }).catch(err => {
+        console.error(err.message);
+        res.sendStatus(400);
+        return client.end();
+      });
+    // del([path.join(__dirname, '../uploads/', post.filename)]).then(deleted => {
+    //   //res.sendStatus(200);
+    // });
 
     // del([path.join(__dirname, '../uploads/', post.prodfilename)]).then(deleted => {
     //   //res.sendStatus(200);

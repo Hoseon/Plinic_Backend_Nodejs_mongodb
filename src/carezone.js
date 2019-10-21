@@ -7,9 +7,13 @@ var Mission = require('./models/Mission');
 var async = require('async');
 var User_admin = require('./models/User_admin');
 var multer = require('multer');
+// var FTPStorage = require('multer-ftp');
+var sftpStorage = require('multer-sftp');
+let Client = require('ssh2-sftp-client');
 var path = require('path');
 var fs = require('fs');
 var del = require('del');
+
 
 
 //let UPLOAD_PATH = "./uploads/"
@@ -27,7 +31,34 @@ var storage = multer.diskStorage({
 
 let upload = multer({
   storage: storage
-})
+});
+
+var sftpUpload = multer({
+  storage: new sftpStorage({
+    sftp: {
+      host: 'g1partners1.cafe24.com',
+      // secure: true, // enables FTPS/FTP with TLS
+      port: 3822,
+      user: 'g1partners1',
+      password: 'g100210!!',
+    },
+    // basepath: '/www/plinic',
+    destination: function(req, file, cb) {
+      cb(null, '/www/plinic')
+    },
+    filename: function(req, file, cb) {
+      cb(null, file.fieldname + '-' + Date.now())
+    }
+  })
+});
+
+const sftpconfig = {
+  host: 'g1partners1.cafe24.com',
+  port: 3822,
+  user: 'g1partners1',
+  password: 'g100210!!'
+};
+
 
 //20190829 사용자 플리닉 블루투스 월 사용시간 Get!
 router.get('/totalusetime/:id/:date', function(req, res) {
@@ -519,13 +550,13 @@ router.get('/:id', function(req, res) {
 
       //배너 이미지 가져 오기 20190502
       //res.setHeader('Content-Type', 'image/jpeg');
-      var url = req.protocol + '://' + req.get('host') + '/carezone_images/' + post._id;
-      var prod_url = req.protocol + '://' + req.get('host') + '/carezone_prodimages/' + post._id;
-      var challenge_url1 = req.protocol + '://' + req.get('host') + '/challenge_image1/' + post._id;
-      var challenge_url2 = req.protocol + '://' + req.get('host') + '/challenge_image2/' + post._id;
-      var challenge_url3 = req.protocol + '://' + req.get('host') + '/challenge_image3/' + post._id;
-      var challenge_url4 = req.protocol + '://' + req.get('host') + '/challenge_image4/' + post._id;
-      var challenge_url5 = req.protocol + '://' + req.get('host') + '/challenge_image5/' + post._id;
+      var url = 'https://plinic.s3.ap-northeast-2.amazonaws.com/' + post.filename;
+      var prod_url = 'https://plinic.s3.ap-northeast-2.amazonaws.com/' + post.prodfilename;
+      var challenge_url1 = 'https://plinic.s3.ap-northeast-2.amazonaws.com/' + post.challenge_image1_filename;
+      var challenge_url2 = 'https://plinic.s3.ap-northeast-2.amazonaws.com/' + post.challenge_image2_filename;
+      var challenge_url3 = 'https://plinic.s3.ap-northeast-2.amazonaws.com/' + post.challenge_image3_filename;
+      var challenge_url4 = 'https://plinic.s3.ap-northeast-2.amazonaws.com/' + post.challenge_image4_filename;
+      var challenge_url5 = 'https://plinic.s3.ap-northeast-2.amazonaws.com/' + post.challenge_image5_filename;
       //fs.createReadStream(path.join(__dirname, '../uploads/', post.filename)).pipe(res);
       res.render("carezone/show", {
         post: post,
