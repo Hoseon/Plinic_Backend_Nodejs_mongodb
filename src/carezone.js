@@ -22,7 +22,7 @@ let s3 = new AWS.S3();
 let s3upload = multer({
   storage: multerS3({
     s3: s3,
-    bucket: 'g1plinic',
+    bucket: 'plinic',
     metadata: function(req, file, cb) {
       cb(null, {
         fieldName: file.fieldname,
@@ -573,13 +573,13 @@ router.get('/:id', function(req, res) {
 
       //배너 이미지 가져 오기 20190502
       //res.setHeader('Content-Type', 'image/jpeg');
-      var url = 'https://g1plinic.s3.ap-northeast-2.amazonaws.com/' + post.filename;
-      var prod_url = 'https://g1plinic.s3.ap-northeast-2.amazonaws.com/' + post.prodfilename;
-      var challenge_url1 = 'https://g1plinic.s3.ap-northeast-2.amazonaws.com/' + post.challenge_image1_filename;
-      var challenge_url2 = 'https://g1plinic.s3.ap-northeast-2.amazonaws.com/' + post.challenge_image2_filename;
-      var challenge_url3 = 'https://g1plinic.s3.ap-northeast-2.amazonaws.com/' + post.challenge_image3_filename;
-      var challenge_url4 = 'https://g1plinic.s3.ap-northeast-2.amazonaws.com/' + post.challenge_image4_filename;
-      var challenge_url5 = 'https://g1plinic.s3.ap-northeast-2.amazonaws.com/' + post.challenge_image5_filename;
+      var url = 'https://plinic.s3.ap-northeast-2.amazonaws.com/' + post.filename;
+      var prod_url = 'https://plinic.s3.ap-northeast-2.amazonaws.com/' + post.prodfilename;
+      var challenge_url1 = 'https://plinic.s3.ap-northeast-2.amazonaws.com/' + post.challenge_image1_filename;
+      var challenge_url2 = 'https://plinic.s3.ap-northeast-2.amazonaws.com/' + post.challenge_image2_filename;
+      var challenge_url3 = 'https://plinic.s3.ap-northeast-2.amazonaws.com/' + post.challenge_image3_filename;
+      var challenge_url4 = 'https://plinic.s3.ap-northeast-2.amazonaws.com/' + post.challenge_image4_filename;
+      var challenge_url5 = 'https://plinic.s3.ap-northeast-2.amazonaws.com/' + post.challenge_image5_filename;
       //fs.createReadStream(path.join(__dirname, '../uploads/', post.filename)).pipe(res);
       res.render("carezone/show", {
         post: post,
@@ -601,19 +601,19 @@ router.get('/:id', function(req, res) {
 router.get('/:id/edit', isLoggedIn, function(req, res) {
   Carezone.findById(req.params.id, function(err, post) {
     // var url = req.protocol + '://' + req.get('host') + '/carezone_images/' + post._id;
-    var url = 'https://g1plinic.s3.ap-northeast-2.amazonaws.com/' + post.filename;
+    var url = 'https://plinic.s3.ap-northeast-2.amazonaws.com/' + post.filename;
     // var prod_url = req.protocol + '://' + req.get('host') + '/prod_images/' + post._id;
-    var prod_url = 'https://g1plinic.s3.ap-northeast-2.amazonaws.com/' + post.prodfilename;
+    var prod_url = 'https://plinic.s3.ap-northeast-2.amazonaws.com/' + post.prodfilename;
     // var challenge_url1 = req.protocol + '://' + req.get('host') + '/challenge_image1/' + post._id;
-    var challenge_url1 = 'https://g1plinic.s3.ap-northeast-2.amazonaws.com/' + post.challenge_image1_filename;
+    var challenge_url1 = 'https://plinic.s3.ap-northeast-2.amazonaws.com/' + post.challenge_image1_filename;
     // var challenge_url2 = req.protocol + '://' + req.get('host') + '/challenge_image2/' + post._id;
-    var challenge_url2 = 'https://g1plinic.s3.ap-northeast-2.amazonaws.com/' + post.challenge_image2_filename;
+    var challenge_url2 = 'https://plinic.s3.ap-northeast-2.amazonaws.com/' + post.challenge_image2_filename;
     // var challenge_url3 = req.protocol + '://' + req.get('host') + '/challenge_image3/' + post._id;
-    var challenge_url3 = 'https://g1plinic.s3.ap-northeast-2.amazonaws.com/' + post.challenge_image3_filename;
+    var challenge_url3 = 'https://plinic.s3.ap-northeast-2.amazonaws.com/' + post.challenge_image3_filename;
     // var challenge_url4 = req.protocol + '://' + req.get('host') + '/challenge_image4/' + post._id;
-    var challenge_url4 = 'https://g1plinic.s3.ap-northeast-2.amazonaws.com/' + post.challenge_image4_filename;
+    var challenge_url4 = 'https://plinic.s3.ap-northeast-2.amazonaws.com/' + post.challenge_image4_filename;
     // var challenge_url5 = req.protocol + '://' + req.get('host') + '/challenge_image5/' + post._id;
-    var challenge_url5 = 'https://g1plinic.s3.ap-northeast-2.amazonaws.com/' + post.challenge_image5_filename;
+    var challenge_url5 = 'https://plinic.s3.ap-northeast-2.amazonaws.com/' + post.challenge_image5_filename;
 
     var prefilename = post.filename; //이전 파일들은 삭제
     var preoriginalName = post.originalName; //이전 파일들은 삭제
@@ -710,7 +710,7 @@ router.put('/:id', s3upload.fields([{
   req.body.post.challenge_image5_originalname = req.files['challenge_image5'][0].originalname;
 
   // var s3parmas = {
-  //   Bucket: 'g1plinic',
+  //   Bucket: 'plinic',
   //   Key: req.body.prefilename,
   //   Key: req.body.preprodfilename,
   //   Key: req.body.pre_challenge1_filename,
@@ -721,7 +721,7 @@ router.put('/:id', s3upload.fields([{
   // };
 
   var params = {
-    Bucket: 'g1plinic',
+    Bucket: 'plinic',
     Delete: { // required
       Objects: [ // required
         {
@@ -795,7 +795,7 @@ router.delete('/:id', isLoggedIn, function(req, res, next) {
       message: "No data found to delete"
     });
     var params = {
-      Bucket: 'g1plinic',
+      Bucket: 'plinic',
       Delete: { // required
         Objects: [ // required
           { Key: post.filename },

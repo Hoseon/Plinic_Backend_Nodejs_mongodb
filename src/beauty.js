@@ -21,7 +21,7 @@ let s3 = new AWS.S3();
 let s3upload = multer({
   storage: multerS3({
     s3: s3,
-    bucket: 'g1plinic',
+    bucket: 'plinic',
     metadata: function(req, file, cb) {
       cb(null, {
         fieldName: file.fieldname,
@@ -253,8 +253,8 @@ router.get('/:id', function(req, res) {
       //res.setHeader('Content-Type', 'image/jpeg');
       // var url = req.protocol + '://' + req.get('host') + '/beauty_images/' + post._id;
       // var url = 'http://g1partners1.cafe24.com/plinic/' + post.filename;
-      var url = 'https://g1plinic.s3.ap-northeast-2.amazonaws.com/' + post.filename;
-      var prod_url = 'https://g1plinic.s3.ap-northeast-2.amazonaws.com/' + post.prodfilename;
+      var url = 'https://plinic.s3.ap-northeast-2.amazonaws.com/' + post.filename;
+      var prod_url = 'https://plinic.s3.ap-northeast-2.amazonaws.com/' + post.prodfilename;
       //fs.createReadStream(path.join(__dirname, '../uploads/', post.filename)).pipe(res);
       res.render("beauty/show", {
         post: post,
@@ -276,7 +276,7 @@ router.get('/:id/edit', isLoggedIn, function(req, res) {
   Beauty.findById(req.params.id, function(err, post) {
     // var url = req.protocol + '://' + req.get('host') + '/images/' + post._id;
     // var url = 'http://g1partners1.cafe24.com/plinic/'+ post.filename;
-    var url = 'https://g1plinic.s3.ap-northeast-2.amazonaws.com/' + post.filename;
+    var url = 'https://plinic.s3.ap-northeast-2.amazonaws.com/' + post.filename;
 
 
     // var prod_url = req.protocol + '://' + req.get('host') + '/prod_images/' + post._id;
@@ -337,7 +337,7 @@ router.put('/:id', s3upload.fields([{ name: 'image' }, { name: 'prodimage' }]), 
           message: "No data found to update"
         });
         var params = {
-          Bucket: 'g1plinic',
+          Bucket: 'plinic',
           Key: req.body.prefilename // required
         };
         s3.deleteObject(params, function(err, data){
@@ -370,7 +370,7 @@ router.delete('/:id', isLoggedIn, function(req, res, next) {
       message: "No data found to delete"
     });
     var params = {
-      Bucket: 'g1plinic',
+      Bucket: 'plinic',
       Key: post.filename
     };
     s3.deleteObject(params, function(err, data){

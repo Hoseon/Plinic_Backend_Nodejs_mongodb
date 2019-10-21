@@ -24,7 +24,7 @@ let s3 = new AWS.S3();
 let s3upload = multer({
   storage: multerS3({
     s3: s3,
-    bucket: 'g1plinic',
+    bucket: 'plinic',
     metadata: function(req, file, cb) {
       cb(null, {
         fieldName: file.fieldname,
@@ -284,9 +284,9 @@ router.get('/:id', function(req, res) {
 
       //res.setHeader('Content-Type', 'image/jpeg');
       // var url = 'http://g1partners1.cafe24.com/plinic/' + post.filename;
-      var url = 'https://g1plinic.s3.ap-northeast-2.amazonaws.com/' + post.filename;
+      var url = 'https://plinic.s3.ap-northeast-2.amazonaws.com/' + post.filename;
       // var prod_url = 'http://g1partners1.cafe24.com/plinic/' + post.prodfilename;
-      var prod_url = 'https://g1plinic.s3.ap-northeast-2.amazonaws.com/' + post.prodfilename;
+      var prod_url = 'https://plinic.s3.ap-northeast-2.amazonaws.com/' + post.prodfilename;
       //fs.createReadStream(path.join(__dirname, '../uploads/', post.filename)).pipe(res);
       res.render("notice/show", {
         post: post,
@@ -307,8 +307,8 @@ router.get('/:id', function(req, res) {
 router.get('/:id/edit', isLoggedIn, function(req, res) {
   Notice.findById(req.params.id, function(err, post) {
     // var url = 'http://g1partners1.cafe24.com/plinic/' + post.filename;
-    var url = 'https://g1plinic.s3.ap-northeast-2.amazonaws.com/' + post.filename;
-    var prod_url = 'https://g1plinic.s3.ap-northeast-2.amazonaws.com/' + post.prodfilename;
+    var url = 'https://plinic.s3.ap-northeast-2.amazonaws.com/' + post.filename;
+    var prod_url = 'https://plinic.s3.ap-northeast-2.amazonaws.com/' + post.prodfilename;
 
     // var prod_url = 'http://g1partners1.cafe24.com/plinic/' + post.prodfilename;
 
@@ -360,7 +360,7 @@ router.put('/:id', s3upload.fields([{
   // req.body.post.prodfilename = req.files['prodimage'][0].path.substr(12);
   req.body.post.prodoriginalname = req.files['prodimage'][0].originalname;
   var params = {
-    Bucket: 'g1plinic',
+    Bucket: 'plinic',
     Delete: { // required
       Objects: [ // required
         {
@@ -409,7 +409,7 @@ router.delete('/:id', isLoggedIn, function(req, res, next) {
       message: "No data found to delete"
     });
     var params = {
-      Bucket: 'g1plinic',
+      Bucket: 'plinic',
       Delete: { // required
         Objects: [ // required
           { Key: post.filename },

@@ -22,7 +22,7 @@ let s3 = new AWS.S3();
 let s3upload = multer({
   storage: multerS3({
     s3: s3,
-    bucket: 'g1plinic',
+    bucket: 'plinic',
     metadata: function(req, file, cb) {
       cb(null, {
         fieldName: file.fieldname,
@@ -42,45 +42,45 @@ let s3upload = multer({
 //let UPLOAD_PATH = "./uploads/"
 
 //multer 선언 이미지 rest api 개발 20190425
-var storage = multer.diskStorage({
-  destination: function(req, file, cb) {
-    cb(null, path.join(__dirname, '../uploads/'));
-    //cb(null, UPLOAD_PATH)
-  },
-  filename: function(req, file, cb) {
-    cb(null, file.fieldname + '-' + Date.now())
-  }
-})
+// var storage = multer.diskStorage({
+//   destination: function(req, file, cb) {
+//     cb(null, path.join(__dirname, '../uploads/'));
+//     //cb(null, UPLOAD_PATH)
+//   },
+//   filename: function(req, file, cb) {
+//     cb(null, file.fieldname + '-' + Date.now())
+//   }
+// })
 
-let upload = multer({
-  storage: storage
-});
+// let upload = multer({
+//   storage: storage
+// });
 
-var sftpUpload = multer({
-  storage: new sftpStorage({
-    sftp: {
-      host: 'g1partners1.cafe24.com',
-      // secure: true, // enables FTPS/FTP with TLS
-      port: 3822,
-      user: 'g1partners1',
-      password: 'g100210!!',
-    },
-    // basepath: '/www/plinic',
-    destination: function(req, file, cb) {
-      cb(null, '/www/plinic')
-    },
-    filename: function(req, file, cb) {
-      cb(null, file.fieldname + '-' + Date.now())
-    }
-  })
-});
+// var sftpUpload = multer({
+//   storage: new sftpStorage({
+//     sftp: {
+//       host: 'g1partners1.cafe24.com',
+//       // secure: true, // enables FTPS/FTP with TLS
+//       port: 3822,
+//       user: 'g1partners1',
+//       password: 'g100210!!',
+//     },
+//     // basepath: '/www/plinic',
+//     destination: function(req, file, cb) {
+//       cb(null, '/www/plinic')
+//     },
+//     filename: function(req, file, cb) {
+//       cb(null, file.fieldname + '-' + Date.now())
+//     }
+//   })
+// });
 
-const sftpconfig = {
-  host: 'g1partners1.cafe24.com',
-  port: 3822,
-  user: 'g1partners1',
-  password: 'g100210!!'
-};
+// const sftpconfig = {
+//   host: 'g1partners1.cafe24.com',
+//   port: 3822,
+//   user: 'g1partners1',
+//   password: 'g100210!!'
+// };
 
 router.get('/delete/:id', function(req, res, next) {
   BeautyNote.findOneAndRemove({
@@ -89,6 +89,16 @@ router.get('/delete/:id', function(req, res, next) {
     if (err) return res.json({
       success: false,
       message: err
+    });
+    var params = {
+      Bucket: 'plinic',
+      Key: post.filename
+    };
+    s3.deleteObject(params, function(err, data) {
+      if (err) {
+        console.log("피부고민 파일 삭제 에러 : " + post.filename + "err : " + err);
+        res.status(500);
+      } else console.log("피부고민 파일 삭제 완료 : ");
     });
     // res.sendStatus(200);
     res.status(201).json(post);
@@ -399,10 +409,10 @@ router.get('/:id', function(req, res) {
       //배너 이미지 가져 오기 20190502
       //res.setHeader('Content-Type', 'image/jpeg');
       // var url = req.protocol + '://' + req.get('host') + '/beautynoteimage/' + post._id;
-      var url = 'https://g1plinic.s3.ap-northeast-2.amazonaws.com/' + post.filename;
+      var url = 'https://plinic.s3.ap-northeast-2.amazonaws.com/' + post.filename;
       // var url = req.protocol + '://' + 'plinic.cafe24app.com' + '/beautynoteimage/' + post._id;
       // var prod_url = req.protocol + '://' + req.get('host') + '/beautynote_prodimages/' + post._id;
-      var prod_url = 'https://g1plinic.s3.ap-northeast-2.amazonaws.com/' + post.prodfilename;
+      var prod_url = 'https://plinic.s3.ap-northeast-2.amazonaws.com/' + post.prodfilename;
       //fs.createReadStream(path.join(__dirname, '../uploads/', post.filename)).pipe(res);
       res.render("beautynote/show", {
         post: post,
@@ -460,7 +470,7 @@ router.get('/:id/edit', isLoggedIn, function(req, res) {
 
 
 
-router.put('/:id', upload.fields([{
+router.put('/:id', s3upload.fields([{
   name: 'image'
 }, {
   name: 'prodimage'
@@ -509,13 +519,24 @@ router.delete('/:id', isLoggedIn, function(req, res, next) {
     _id: req.params.id,
     author: req.user._id
   }, function(err, post) {
+    var s3parmas = {
+      Bucket: 'plinic',
+      Key: post.filename,
+    };
+    s3.deleteObject(s3parmas, function(err, data){
+      if(err) {
+        console.log("뷰티노트 파일 삭제 에러 : " + post.filename + "err : " + err);
+        res.status(500);
+      }
+      else console.log("뷰티노트 파일 삭제 완료 : " + post.filename);
+    });
     if (err) return res.json({
       success: false,
       message: err
     });
-    del([path.join(__dirname, '../uploads/', post.filename)]).then(deleted => {
-      //res.sendStatus(200);
-    });
+    // del([path.join(__dirname, '../uploads/', post.filename)]).then(deleted => {
+    //   //res.sendStatus(200);
+    // });
 
     // del([path.join(__dirname, '../uploads/', post.prodfilename)]).then(deleted => {
     //   //res.sendStatus(200);

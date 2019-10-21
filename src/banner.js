@@ -21,7 +21,7 @@ let s3 = new AWS.S3();
 let s3upload = multer({
   storage: multerS3({
     s3: s3,
-    bucket: 'g1plinic',
+    bucket: 'plinic',
     metadata: function(req, file, cb) {
       cb(null, {
         fieldName: file.fieldname,
@@ -195,7 +195,7 @@ router.get('/:id', function(req,res){
     //배너 이미지 가져 오기 20190502
     //res.setHeader('Content-Type', 'image/jpeg');
     // var url = req.protocol + '://' + req.get('host') + '/images/' + post._id;
-    var url = 'https://g1plinic.s3.ap-northeast-2.amazonaws.com/' + post.filename;
+    var url = 'https://plinic.s3.ap-northeast-2.amazonaws.com/' + post.filename;
     //fs.createReadStream(path.join(__dirname, '../uploads/', post.filename)).pipe(res);
     res.render("banner/show", {post:post, url:url, urlQuery:req._parsedUrl.query,
       user:req.user, search:createSearch(req.query)});
@@ -210,7 +210,7 @@ router.get('/:id', function(req,res){
 router.get('/:id/edit', isLoggedIn, function(req,res){
   Banner.findById(req.params.id, function (err,post) {
     // var url = req.protocol + '://' + req.get('host') + '/images/' + post._id;
-    var url = 'https://g1plinic.s3.ap-northeast-2.amazonaws.com/' + post.filename;
+    var url = 'https://plinic.s3.ap-northeast-2.amazonaws.com/' + post.filename;
     // var url = 'http://g1partners1.cafe24.com/plinic/' + post.filename;
     var prefilename = post.filename; //이전 파일들은 삭제
     var preoriginalName = post.originalName; //이전 파일들은 삭제
@@ -232,7 +232,7 @@ router.put('/:id', s3upload.single('image'), isLoggedIn, function(req, res, next
 
 
     var s3parmas = {
-      Bucket: 'g1plinic',
+      Bucket: 'plinic',
       Key: req.body.prefilename,
     };
     s3.deleteObject(s3parmas, function(err, data){
@@ -260,7 +260,7 @@ router.delete('/:id', isLoggedIn, function(req,res, next){
     Banner.findOneAndRemove({_id:req.params.id, author:req.user._id}, function (err,post) {
       //아마존 s3의 데이터를 지우기 위해서는 key을 파라미터(JSON형태)로 던져 주어야 햔다.
       var s3parmas = {
-        Bucket: 'g1plinic',
+        Bucket: 'plinic',
         Key: post.filename,
       };
       s3.deleteObject(s3parmas, function(err, data){

@@ -21,7 +21,7 @@ let s3 = new AWS.S3();
 let s3upload = multer({
   storage: multerS3({
     s3: s3,
-    bucket: 'g1plinic',
+    bucket: 'plinic',
     metadata: function(req, file, cb) {
       cb(null, {
         fieldName: file.fieldname,
@@ -362,7 +362,7 @@ router.get('/:id', function(req, res) {
       //res.setHeader('Content-Type', 'image/jpeg');
       // var url = req.protocol + '://' + req.get('host') + '/commubeauty_images/' + post._id;
       // var url = 'http://g1partners1.cafe24.com/plinic/' + post.filename;
-      var url = 'https://g1plinic.s3.ap-northeast-2.amazonaws.com/' + post.filename;
+      var url = 'https://plinic.s3.ap-northeast-2.amazonaws.com/' + post.filename;
       // var prod_url = req.protocol + '://' + req.get('host') + '/commubeauty_prodimages/' + post._id;
       //fs.createReadStream(path.join(__dirname, '../uploads/', post.filename)).pipe(res);
       res.render("commubeauty/show", {
@@ -434,7 +434,7 @@ router.put('/:id', s3upload.fields([{ name: 'image' }]), isLoggedIn, function(re
   }
 
   var s3parmas = {
-    Bucket: 'g1plinic',
+    Bucket: 'plinic',
     Key: req.body.prefilename,
   };
 
@@ -471,7 +471,7 @@ router.delete('/:id', isLoggedIn, function(req, res, next) {
   }, function(err, post) {
     //아마존 s3의 데이터를 지우기 위해서는 key을 파라미터(JSON형태)로 던져 주어야 햔다.
     var s3parmas = {
-      Bucket: 'g1plinic',
+      Bucket: 'plinic',
       Key: post.filename,
     };
 

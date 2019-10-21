@@ -22,7 +22,7 @@ let s3 = new AWS.S3();
 let s3upload = multer({
   storage: multerS3({
     s3: s3,
-    bucket: 'g1plinic',
+    bucket: 'plinic',
     metadata: function(req, file, cb) {
       cb(null, {
         fieldName: file.fieldname,
@@ -88,6 +88,20 @@ router.get('/delete/:id', function(req, res, next) {
       success: false,
       message: err
     });
+
+    var s3parmas = {
+      Bucket: 'plinic',
+      Key: post.filename,
+    };
+
+    s3.deleteObject(s3parmas, function(err, data){
+      if(err) {
+        console.log("피부고민 파일 삭제 에러 : " + post.filename + "err : " + err);
+        res.status(500);
+      }
+      else console.log("피부고민 파일 삭제 완료 : " + post.filename);
+    });
+
     res.status(201).json(post);
   });
 }); //destroy
@@ -351,12 +365,12 @@ router.post('/', s3upload.fields([{
 }); // create
 
 
-router.post('/qnaUpdate/:id', upload.fields([{
+router.post('/qnaUpdate/:id', s3upload.fields([{
   name: 'image'
 }]), function(req, res, next) {
 
   req.body.tags = JSON.stringify(req.body.tags).replace(/\"/g, "").replace(/\\/g, "").replace(/\[/g, "").replace(/\]/g, "");
-  req.body.filename = req.files['image'][0].filename;
+  req.body.filename = req.files['image'][0].key;
   req.body.originalName = req.files['image'][0].originalname;
   async.waterfall([function(callback) {
     SkinQna.findOneAndUpdate({
@@ -396,7 +410,7 @@ router.get('/:id', function(req, res) {
       //배너 이미지 가져 오기 20190502
       //res.setHeader('Content-Type', 'image/jpeg');
       // var url = req.protocol + '://' + req.get('host') + '/skinqnaimage/' + post._id;
-      var url = 'https://g1plinic.s3.ap-northeast-2.amazonaws.com/' + post.filename;
+      var url = 'https://plinic.s3.ap-northeast-2.amazonaws.com/' + post.filename;
       // var url = req.protocol + '://' + 'plinic.cafe24app.com' + '/skinqnaimage/' + post._id;
       // var prod_url = req.protocol + '://' + req.get('host') + '/skinqna_prodimages/' + post._id;
       //fs.createReadStream(path.join(__dirname, '../uploads/', post.filename)).pipe(res);
@@ -489,17 +503,30 @@ router.delete('/:id', isLoggedIn, function(req, res, next) {
     _id: req.params.id,
     author: req.user._id
   }, function(err, post) {
+    var s3parmas = {
+      Bucket: 'plinic',
+      Key: post.filename,
+    };
+    s3.deleteObject(s3parmas, function(err, data){
+      if(err) {
+        console.log("피부고민 파일 삭제 에러 : " + post.filename + "err : " + err);
+        res.status(500);
+      }
+      else console.log("피부고민 파일 삭제 완료 : " + post.filename);
+    });
     if (err) return res.json({
       success: false,
       message: err
     });
-    del([path.join(__dirname, '../uploads/', post.filename)]).then(deleted => {
-      //res.sendStatus(200);
-    });
 
-    del([path.join(__dirname, '../uploads/', post.prodfilename)]).then(deleted => {
-      //res.sendStatus(200);
-    });
+    // del([path.join(__dirname, '../uploads/', post.filename)]).then(deleted => {
+    //   //res.sendStatus(200);
+    // });
+    //
+    // del([path.join(__dirname, '../uploads/', post.prodfilename)]).then(deleted => {
+    //   //res.sendStatus(200);
+    // });
+
     if (!post) return res.json({
       success: false,
       message: "No data found to delete"
@@ -507,7 +534,6 @@ router.delete('/:id', isLoggedIn, function(req, res, next) {
     res.redirect('/skinqna');
   });
 }); //destroy
-
 
 
 router.post('/:id/comments', function(req, res) {

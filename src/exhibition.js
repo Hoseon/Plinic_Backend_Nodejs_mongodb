@@ -21,7 +21,7 @@ let s3 = new AWS.S3();
 let s3upload = multer({
   storage: multerS3({
     s3: s3,
-    bucket: 'g1plinic',
+    bucket: 'plinic',
     metadata: function(req, file, cb) {
       cb(null, {
         fieldName: file.fieldname,
@@ -259,7 +259,7 @@ router.get('/:id', function(req, res) {
       //배너 이미지 가져 오기 20190502
       //res.setHeader('Content-Type', 'image/jpeg');
       // var url = 'http://g1partners1.cafe24.com/plinic/' + post.filename;
-      var url = 'https://g1plinic.s3.ap-northeast-2.amazonaws.com/' + post.filename;
+      var url = 'https://plinic.s3.ap-northeast-2.amazonaws.com/' + post.filename;
       // var url = req.protocol + '://' + req.get('host') + '/exhibition_images/' + post._id;
       // var prod_url = req.protocol + '://' + req.get('host') + '/exhibition_images/' + post._id;
       //fs.createReadStream(path.join(__dirname, '../uploads/', post.filename)).pipe(res);
@@ -332,7 +332,7 @@ router.put('/:id', s3upload.fields([{ name: 'image' }]), isLoggedIn, function(re
   }
 
   var s3parmas = {
-    Bucket: 'g1plinic',
+    Bucket: 'plinic',
     Key: req.body.prefilename,
   };
 
@@ -367,7 +367,7 @@ router.delete('/:id', isLoggedIn, function(req, res, next) {
     author: req.user._id
   }, function(err, post) {
     var s3parmas = {
-      Bucket: 'g1plinic',
+      Bucket: 'plinic',
       Key: post.filename,
     };
     s3.deleteObject(s3parmas, function(err, data){
