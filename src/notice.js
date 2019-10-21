@@ -18,11 +18,6 @@ var FTP = require('ftp')
 var ftp = new FTP();
 
 AWS.config.loadFromPath(__dirname + "/config/awsconfig.json");
-// AWS.config.update({
-//     accessKeyId: 'AKIAJJFZV2B6S6HFMTHQ',
-//     secretAccessKey: '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',
-//     region : 'ap-northeast-2'
-// });
 
 let s3 = new AWS.S3();
 
