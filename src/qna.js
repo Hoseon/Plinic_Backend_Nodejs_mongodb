@@ -242,9 +242,9 @@ router.get('/:id', function(req, res) {
       //배너 이미지 가져 오기 20190502
       //res.setHeader('Content-Type', 'image/jpeg');
       // var url = req.protocol + '://' + req.get('host') + '/qna/' + post._id;
-      var url = 'https://plinic.s3.ap-northeast-2.amazonaws.com/' + post.filename;
+      var url = 'https://g1plinic.s3.ap-northeast-2.amazonaws.com/' + post.filename;
       // var prod_url = req.protocol + '://' + req.get('host') + '/qna_prodimages/' + post._id;
-      var prod_url = 'https://plinic.s3.ap-northeast-2.amazonaws.com/' + post.prodfilename;
+      var prod_url = 'https://g1plinic.s3.ap-northeast-2.amazonaws.com/' + post.prodfilename;
       //fs.createReadStream(path.join(__dirname, '../uploads/', post.filename)).pipe(res);
       res.render("qna/show", {
         post: post,

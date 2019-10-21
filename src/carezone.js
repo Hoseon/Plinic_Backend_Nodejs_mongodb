@@ -13,51 +13,74 @@ let Client = require('ssh2-sftp-client');
 var path = require('path');
 var fs = require('fs');
 var del = require('del');
+var multerS3 = require('multer-s3');
+const AWS = require("aws-sdk");
+AWS.config.loadFromPath(__dirname + "/config/awsconfig.json");
+
+let s3 = new AWS.S3();
+
+let s3upload = multer({
+  storage: multerS3({
+    s3: s3,
+    bucket: 'g1plinic',
+    metadata: function(req, file, cb) {
+      cb(null, {
+        fieldName: file.fieldname,
+        filename: file.fieldname + '-' + Date.now()
+      });
+    },
+    key: function(req, file, cb) {
+      cb(null, file.fieldname + '-' + Date.now())
+    },
+    acl: 'public-read'
+  })
+});
+
 
 
 
 //let UPLOAD_PATH = "./uploads/"
 
 //multer 선언 이미지 rest api 개발 20190425
-var storage = multer.diskStorage({
-  destination: function(req, file, cb) {
-    cb(null, path.join(__dirname, '../uploads/'));
-    //cb(null, UPLOAD_PATH)
-  },
-  filename: function(req, file, cb) {
-    cb(null, file.fieldname + '-' + Date.now())
-  }
-})
-
-let upload = multer({
-  storage: storage
-});
-
-var sftpUpload = multer({
-  storage: new sftpStorage({
-    sftp: {
-      host: 'g1partners1.cafe24.com',
-      // secure: true, // enables FTPS/FTP with TLS
-      port: 3822,
-      user: 'g1partners1',
-      password: 'g100210!!',
-    },
-    // basepath: '/www/plinic',
-    destination: function(req, file, cb) {
-      cb(null, '/www/plinic')
-    },
-    filename: function(req, file, cb) {
-      cb(null, file.fieldname + '-' + Date.now())
-    }
-  })
-});
-
-const sftpconfig = {
-  host: 'g1partners1.cafe24.com',
-  port: 3822,
-  user: 'g1partners1',
-  password: 'g100210!!'
-};
+// var storage = multer.diskStorage({
+//   destination: function(req, file, cb) {
+//     cb(null, path.join(__dirname, '../uploads/'));
+//     //cb(null, UPLOAD_PATH)
+//   },
+//   filename: function(req, file, cb) {
+//     cb(null, file.fieldname + '-' + Date.now())
+//   }
+// })
+//
+// let upload = multer({
+//   storage: storage
+// });
+//
+// var sftpUpload = multer({
+//   storage: new sftpStorage({
+//     sftp: {
+//       host: 'g1partners1.cafe24.com',
+//       // secure: true, // enables FTPS/FTP with TLS
+//       port: 3822,
+//       user: 'g1partners1',
+//       password: 'g100210!!',
+//     },
+//     // basepath: '/www/plinic',
+//     destination: function(req, file, cb) {
+//       cb(null, '/www/plinic')
+//     },
+//     filename: function(req, file, cb) {
+//       cb(null, file.fieldname + '-' + Date.now())
+//     }
+//   })
+// });
+//
+// const sftpconfig = {
+//   host: 'g1partners1.cafe24.com',
+//   port: 3822,
+//   user: 'g1partners1',
+//   password: 'g100210!!'
+// };
 
 
 //20190829 사용자 플리닉 블루투스 월 사용시간 Get!
@@ -468,7 +491,7 @@ router.get('/new', isLoggedIn, function(req, res) {
 
 
 
-router.post('/', upload.fields([{
+router.post('/', s3upload.fields([{
   name: 'image'
 }, {
   name: 'prodimage'
@@ -507,19 +530,19 @@ router.post('/', upload.fields([{
     var newPost = req.body.post;
     newPost.author = req.user._id;
     newPost.numId = counter.totalCount + 1;
-    req.body.post.filename = req.files['image'][0].filename;
+    req.body.post.filename = req.files['image'][0].key;
     req.body.post.originalName = req.files['image'][0].originalname;
-    req.body.post.prodfilename = req.files['prodimage'][0].filename;
+    req.body.post.prodfilename = req.files['prodimage'][0].key;
     req.body.post.prodoriginalname = req.files['prodimage'][0].originalname;
-    req.body.post.challenge_image1_filename = req.files['challenge_image1'][0].filename;
+    req.body.post.challenge_image1_filename = req.files['challenge_image1'][0].key;
     req.body.post.challenge_image1_originalname = req.files['challenge_image1'][0].originalname;
-    req.body.post.challenge_image2_filename = req.files['challenge_image2'][0].filename;
+    req.body.post.challenge_image2_filename = req.files['challenge_image2'][0].key;
     req.body.post.challenge_image2_originalname = req.files['challenge_image2'][0].originalname;
-    req.body.post.challenge_image3_filename = req.files['challenge_image3'][0].filename;
+    req.body.post.challenge_image3_filename = req.files['challenge_image3'][0].key;
     req.body.post.challenge_image3_originalname = req.files['challenge_image3'][0].originalname;
-    req.body.post.challenge_image4_filename = req.files['challenge_image4'][0].filename;
+    req.body.post.challenge_image4_filename = req.files['challenge_image4'][0].key;
     req.body.post.challenge_image4_originalname = req.files['challenge_image4'][0].originalname;
-    req.body.post.challenge_image5_filename = req.files['challenge_image5'][0].filename;
+    req.body.post.challenge_image5_filename = req.files['challenge_image5'][0].key;
     req.body.post.challenge_image5_originalname = req.files['challenge_image5'][0].originalname;
     Carezone.create(req.body.post, function(err, post) {
       if (err) return res.json({
@@ -550,13 +573,13 @@ router.get('/:id', function(req, res) {
 
       //배너 이미지 가져 오기 20190502
       //res.setHeader('Content-Type', 'image/jpeg');
-      var url = 'https://plinic.s3.ap-northeast-2.amazonaws.com/' + post.filename;
-      var prod_url = 'https://plinic.s3.ap-northeast-2.amazonaws.com/' + post.prodfilename;
-      var challenge_url1 = 'https://plinic.s3.ap-northeast-2.amazonaws.com/' + post.challenge_image1_filename;
-      var challenge_url2 = 'https://plinic.s3.ap-northeast-2.amazonaws.com/' + post.challenge_image2_filename;
-      var challenge_url3 = 'https://plinic.s3.ap-northeast-2.amazonaws.com/' + post.challenge_image3_filename;
-      var challenge_url4 = 'https://plinic.s3.ap-northeast-2.amazonaws.com/' + post.challenge_image4_filename;
-      var challenge_url5 = 'https://plinic.s3.ap-northeast-2.amazonaws.com/' + post.challenge_image5_filename;
+      var url = 'https://g1plinic.s3.ap-northeast-2.amazonaws.com/' + post.filename;
+      var prod_url = 'https://g1plinic.s3.ap-northeast-2.amazonaws.com/' + post.prodfilename;
+      var challenge_url1 = 'https://g1plinic.s3.ap-northeast-2.amazonaws.com/' + post.challenge_image1_filename;
+      var challenge_url2 = 'https://g1plinic.s3.ap-northeast-2.amazonaws.com/' + post.challenge_image2_filename;
+      var challenge_url3 = 'https://g1plinic.s3.ap-northeast-2.amazonaws.com/' + post.challenge_image3_filename;
+      var challenge_url4 = 'https://g1plinic.s3.ap-northeast-2.amazonaws.com/' + post.challenge_image4_filename;
+      var challenge_url5 = 'https://g1plinic.s3.ap-northeast-2.amazonaws.com/' + post.challenge_image5_filename;
       //fs.createReadStream(path.join(__dirname, '../uploads/', post.filename)).pipe(res);
       res.render("carezone/show", {
         post: post,
@@ -577,15 +600,20 @@ router.get('/:id', function(req, res) {
 
 router.get('/:id/edit', isLoggedIn, function(req, res) {
   Carezone.findById(req.params.id, function(err, post) {
-    var url = req.protocol + '://' + req.get('host') + '/carezone_images/' + post._id;
-
-    var prod_url = req.protocol + '://' + req.get('host') + '/prod_images/' + post._id;
-
-    var challenge_url1 = req.protocol + '://' + req.get('host') + '/challenge_image1/' + post._id;
-    var challenge_url2 = req.protocol + '://' + req.get('host') + '/challenge_image2/' + post._id;
-    var challenge_url3 = req.protocol + '://' + req.get('host') + '/challenge_image3/' + post._id;
-    var challenge_url4 = req.protocol + '://' + req.get('host') + '/challenge_image4/' + post._id;
-    var challenge_url5 = req.protocol + '://' + req.get('host') + '/challenge_image5/' + post._id;
+    // var url = req.protocol + '://' + req.get('host') + '/carezone_images/' + post._id;
+    var url = 'https://g1plinic.s3.ap-northeast-2.amazonaws.com/' + post.filename;
+    // var prod_url = req.protocol + '://' + req.get('host') + '/prod_images/' + post._id;
+    var prod_url = 'https://g1plinic.s3.ap-northeast-2.amazonaws.com/' + post.prodfilename;
+    // var challenge_url1 = req.protocol + '://' + req.get('host') + '/challenge_image1/' + post._id;
+    var challenge_url1 = 'https://g1plinic.s3.ap-northeast-2.amazonaws.com/' + post.challenge_image1_filename;
+    // var challenge_url2 = req.protocol + '://' + req.get('host') + '/challenge_image2/' + post._id;
+    var challenge_url2 = 'https://g1plinic.s3.ap-northeast-2.amazonaws.com/' + post.challenge_image2_filename;
+    // var challenge_url3 = req.protocol + '://' + req.get('host') + '/challenge_image3/' + post._id;
+    var challenge_url3 = 'https://g1plinic.s3.ap-northeast-2.amazonaws.com/' + post.challenge_image3_filename;
+    // var challenge_url4 = req.protocol + '://' + req.get('host') + '/challenge_image4/' + post._id;
+    var challenge_url4 = 'https://g1plinic.s3.ap-northeast-2.amazonaws.com/' + post.challenge_image4_filename;
+    // var challenge_url5 = req.protocol + '://' + req.get('host') + '/challenge_image5/' + post._id;
+    var challenge_url5 = 'https://g1plinic.s3.ap-northeast-2.amazonaws.com/' + post.challenge_image5_filename;
 
     var prefilename = post.filename; //이전 파일들은 삭제
     var preoriginalName = post.originalName; //이전 파일들은 삭제
@@ -648,7 +676,7 @@ router.get('/:id/edit', isLoggedIn, function(req, res) {
 
 
 
-router.put('/:id', upload.fields([{
+router.put('/:id', s3upload.fields([{
   name: 'image'
 }, {
   name: 'prodimage'
@@ -666,43 +694,89 @@ router.put('/:id', upload.fields([{
   //console.log("prefilename:"+ req.body.prefilename);
   //console.log("preoriginalName:" + req.body.preoriginalName);
   req.body.post.updatedAt = Date.now();
-  req.body.post.filename = req.files['image'][0].filename;
+  req.body.post.filename = req.files['image'][0].key;
   req.body.post.originalName = req.files['image'][0].originalname;
-  req.body.post.prodfilename = req.files['prodimage'][0].filename;
+  req.body.post.prodfilename = req.files['prodimage'][0].key;
   req.body.post.prodoriginalname = req.files['prodimage'][0].originalname;
-  req.body.post.challenge_image1_filename = req.files['challenge_image1'][0].filename;
+  req.body.post.challenge_image1_filename = req.files['challenge_image1'][0].key;
   req.body.post.challenge_image1_originalname = req.files['challenge_image1'][0].originalname;
-  req.body.post.challenge_image2_filename = req.files['challenge_image2'][0].filename;
+  req.body.post.challenge_image2_filename = req.files['challenge_image2'][0].key;
   req.body.post.challenge_image2_originalname = req.files['challenge_image2'][0].originalname;
-  req.body.post.challenge_image3_filename = req.files['challenge_image3'][0].filename;
+  req.body.post.challenge_image3_filename = req.files['challenge_image3'][0].key;
   req.body.post.challenge_image3_originalname = req.files['challenge_image3'][0].originalname;
-  req.body.post.challenge_image4_filename = req.files['challenge_image4'][0].filename;
+  req.body.post.challenge_image4_filename = req.files['challenge_image4'][0].key;
   req.body.post.challenge_image4_originalname = req.files['challenge_image4'][0].originalname;
-  req.body.post.challenge_image5_filename = req.files['challenge_image5'][0].filename;
+  req.body.post.challenge_image5_filename = req.files['challenge_image5'][0].key;
   req.body.post.challenge_image5_originalname = req.files['challenge_image5'][0].originalname;
 
-  del([path.join(__dirname, '../uploads/', req.body.prefilename)]).then(deleted => {});
-  del([path.join(__dirname, '../uploads/', req.body.preprodfilename)]).then(deleted => {});
-  del([path.join(__dirname, '../uploads/', req.body.pre_challenge1_filename)]).then(deleted => {});
-  del([path.join(__dirname, '../uploads/', req.body.pre_challenge2_filename)]).then(deleted => {});
-  del([path.join(__dirname, '../uploads/', req.body.pre_challenge3_filename)]).then(deleted => {});
-  del([path.join(__dirname, '../uploads/', req.body.pre_challenge4_filename)]).then(deleted => {});
-  del([path.join(__dirname, '../uploads/', req.body.pre_challenge5_filename)]).then(deleted => {});
+  // var s3parmas = {
+  //   Bucket: 'g1plinic',
+  //   Key: req.body.prefilename,
+  //   Key: req.body.preprodfilename,
+  //   Key: req.body.pre_challenge1_filename,
+  //   Key: req.body.pre_challenge2_filename,
+  //   Key: req.body.pre_challenge3_filename,
+  //   Key: req.body.pre_challenge4_filename,
+  //   Key: req.body.pre_challenge5_filename,
+  // };
 
-  Carezone.findOneAndUpdate({
-    _id: req.params.id,
-    author: req.user._id
-  }, req.body.post, function(err, post) {
-    if (err) return res.json({
-      success: false,
-      message: err
+  var params = {
+    Bucket: 'g1plinic',
+    Delete: { // required
+      Objects: [ // required
+        {
+          Key: req.body.prefilename // required
+        },
+        {
+          Key: req.body.preprodfilename // required
+        },
+        {
+          Key: req.body.pre_challenge1_filename // required
+        },
+        {
+          Key: req.body.pre_challenge2_filename // required
+        },
+        {
+          Key: req.body.pre_challenge3_filename // required
+        },
+        {
+          Key: req.body.pre_challenge4_filename // required
+        },
+        {
+          Key: req.body.pre_challenge5_filename // required
+        }
+      ]
+    }
+  };
+  s3.deleteObjects(params, function(err, data){
+    if(err) {
+      console.log("케어존 수정 아마존 파일 삭제 에러 : " + req.body.prefilename + "err : " + err);
+      res.status(500);
+    }
+    else console.log("케어존 수정 이전 파일 삭제 완료 : " + JSON.stringify(data));
+    Carezone.findOneAndUpdate({
+      _id: req.params.id,
+      author: req.user._id
+    }, req.body.post, function(err, post) {
+      if (err) return res.json({
+        success: false,
+        message: err
+      });
+      if (!post) return res.json({
+        success: false,
+        message: "No data found to update"
+      });
+      res.redirect('/carezone/' + req.params.id);
     });
-    if (!post) return res.json({
-      success: false,
-      message: "No data found to update"
-    });
-    res.redirect('/carezone/' + req.params.id);
   });
+
+  // del([path.join(__dirname, '../uploads/', req.body.prefilename)]).then(deleted => {});
+  // del([path.join(__dirname, '../uploads/', req.body.preprodfilename)]).then(deleted => {});
+  // del([path.join(__dirname, '../uploads/', req.body.pre_challenge1_filename)]).then(deleted => {});
+  // del([path.join(__dirname, '../uploads/', req.body.pre_challenge2_filename)]).then(deleted => {});
+  // del([path.join(__dirname, '../uploads/', req.body.pre_challenge3_filename)]).then(deleted => {});
+  // del([path.join(__dirname, '../uploads/', req.body.pre_challenge4_filename)]).then(deleted => {});
+  // del([path.join(__dirname, '../uploads/', req.body.pre_challenge5_filename)]).then(deleted => {});
 }); //update
 
 
@@ -716,16 +790,31 @@ router.delete('/:id', isLoggedIn, function(req, res, next) {
       success: false,
       message: err
     });
-    del([path.join(__dirname, '../uploads/', post.filename)]).then(deleted => {
-      //res.sendStatus(200);
-    });
-
-    del([path.join(__dirname, '../uploads/', post.prodfilename)]).then(deleted => {
-      //res.sendStatus(200);
-    });
     if (!post) return res.json({
       success: false,
       message: "No data found to delete"
+    });
+    var params = {
+      Bucket: 'g1plinic',
+      Delete: { // required
+        Objects: [ // required
+          { Key: post.filename },
+          { Key: post.prodfilename },
+          { Key: post.challenge_image1_filename },
+          { Key: post.challenge_image2_filename },
+          { Key: post.challenge_image3_filename },
+          { Key: post.challenge_image4_filename },
+          { Key: post.challenge_image5_filename }
+        ]
+      }
+    };
+    s3.deleteObjects(params, function(err, data){
+      console.log()
+      if(err) {
+        console.log("케어존 수정 아마존 파일 삭제 에러 : " + "err : " + err);
+        res.status(500);
+      }
+      else console.log("케어존 수정 이전 파일 삭제 완료 : " + JSON.stringify(data));
     });
     res.redirect('/carezone');
   });

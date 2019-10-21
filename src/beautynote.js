@@ -13,6 +13,30 @@ let Client = require('ssh2-sftp-client');
 var path = require('path');
 var fs = require('fs');
 var del = require('del');
+var multerS3 = require('multer-s3');
+const AWS = require("aws-sdk");
+AWS.config.loadFromPath(__dirname + "/config/awsconfig.json");
+
+let s3 = new AWS.S3();
+
+let s3upload = multer({
+  storage: multerS3({
+    s3: s3,
+    bucket: 'g1plinic',
+    metadata: function(req, file, cb) {
+      cb(null, {
+        fieldName: file.fieldname,
+        filename: file.fieldname + '-' + Date.now()
+      });
+    },
+    key: function(req, file, cb) {
+      cb(null, file.fieldname + '-' + Date.now())
+    },
+    acl: 'public-read'
+  })
+});
+
+
 
 
 //let UPLOAD_PATH = "./uploads/"
@@ -268,7 +292,7 @@ router.get('/new', isLoggedIn, function(req, res) {
 
 
 
-router.post('/', upload.fields([{
+router.post('/', s3upload.fields([{
   name: 'image'
 }]), function(req, res, next) {
   async.waterfall([function(callback) {
@@ -301,7 +325,7 @@ router.post('/', upload.fields([{
     newNote.pushtoken = req.body.pushtoken;
     newNote.tags = JSON.stringify(req.body.tags).replace(/\"/g, "").replace(/\\/g, "").replace(/\[/g, "").replace(/\]/g, "");
     newNote.numId = counter.totalCount + 1;
-    newNote.filename = req.files['image'][0].filename;
+    newNote.filename = req.files['image'][0].key;
     newNote.originalName = req.files['image'][0].originalname;
     newNote.save((err, user) => {
       if (err) {
@@ -375,10 +399,10 @@ router.get('/:id', function(req, res) {
       //배너 이미지 가져 오기 20190502
       //res.setHeader('Content-Type', 'image/jpeg');
       // var url = req.protocol + '://' + req.get('host') + '/beautynoteimage/' + post._id;
-      var url = 'https://plinic.s3.ap-northeast-2.amazonaws.com/' + post.filename;
+      var url = 'https://g1plinic.s3.ap-northeast-2.amazonaws.com/' + post.filename;
       // var url = req.protocol + '://' + 'plinic.cafe24app.com' + '/beautynoteimage/' + post._id;
       // var prod_url = req.protocol + '://' + req.get('host') + '/beautynote_prodimages/' + post._id;
-      var prod_url = 'https://plinic.s3.ap-northeast-2.amazonaws.com/' + post.prodfilename;
+      var prod_url = 'https://g1plinic.s3.ap-northeast-2.amazonaws.com/' + post.prodfilename;
       //fs.createReadStream(path.join(__dirname, '../uploads/', post.filename)).pipe(res);
       res.render("beautynote/show", {
         post: post,

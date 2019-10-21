@@ -1,6 +1,4 @@
 const express = require('express');
-
-
 var passport = require('passport');
 var mongoose = require('mongoose');
 const MongoClient = require("mongodb").MongoClient;
@@ -41,6 +39,30 @@ var flash = require('connect-flash');
 var bodyParser = require('body-parser');
 var cookieParser = require('cookie-parser');
 var methodOverride = require('method-override');
+
+var multerS3 = require('multer-s3');
+const AWS = require("aws-sdk");
+AWS.config.loadFromPath(__dirname + "/config/awsconfig.json");
+
+let s3 = new AWS.S3();
+
+let s3upload = multer({
+  storage: multerS3({
+    s3: s3,
+    bucket: 'g1plinic',
+    metadata: function(req, file, cb) {
+      cb(null, {
+        fieldName: file.fieldname,
+        filename: file.fieldname + '-' + Date.now()
+      });
+    },
+    key: function(req, file, cb) {
+      cb(null, file.fieldname + '-' + Date.now())
+    },
+    acl: 'public-read'
+  })
+});
+
 
 
 let UPLOAD_PATH = "./uploads/"
@@ -179,10 +201,10 @@ module.exports = function(app) {
   });
 
   //뷰티 노트 이미지 업로드
-  app.post('/beautynoteimages', upload.single('image'), (req, res, next) => {
+  app.post('/beautynoteimages', s3upload.single('image'), (req, res, next) => {
     // Create a new image model and fill the properties
     let newUser = new BeautyNote();
-    newUser.filename = req.file.filename;
+    newUser.filename = req.file.key;
     newUser.originalName = req.file.originalname;
     newUser.email = req.body.desc
     newUser.save(err => {
