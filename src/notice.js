@@ -15,7 +15,7 @@ var path = require('path');
 var fs = require('fs');
 var del = require('del');
 var FTP = require('ftp')
-var ftp = new FTP();
+var ftp = new FTP(); 
 
 AWS.config.loadFromPath(__dirname + "/config/awsconfig.json");
 
