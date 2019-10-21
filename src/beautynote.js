@@ -354,12 +354,12 @@ router.post('/', s3upload.fields([{
 }); // create
 
 
-router.post('/noteUpdate/:id', upload.fields([{
+router.post('/noteUpdate/:id', s3upload.fields([{
   name: 'image'
 }]), function(req, res, next) {
 
   req.body.tags = JSON.stringify(req.body.tags).replace(/\"/g, "").replace(/\\/g, "").replace(/\[/g, "").replace(/\]/g, "");
-  req.body.filename = req.files['image'][0].filename;
+  req.body.filename = req.files['image'][0].key;
   req.body.originalName = req.files['image'][0].originalname;
   async.waterfall([function(callback) {
     BeautyNote.findOneAndUpdate({

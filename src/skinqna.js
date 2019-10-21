@@ -13,6 +13,28 @@ let Client = require('ssh2-sftp-client');
 var path = require('path');
 var fs = require('fs');
 var del = require('del');
+var multerS3 = require('multer-s3');
+const AWS = require("aws-sdk");
+AWS.config.loadFromPath(__dirname + "/config/awsconfig.json");
+
+let s3 = new AWS.S3();
+
+let s3upload = multer({
+  storage: multerS3({
+    s3: s3,
+    bucket: 'g1plinic',
+    metadata: function(req, file, cb) {
+      cb(null, {
+        fieldName: file.fieldname,
+        filename: file.fieldname + '-' + Date.now()
+      });
+    },
+    key: function(req, file, cb) {
+      cb(null, file.fieldname + '-' + Date.now())
+    },
+    acl: 'public-read'
+  })
+});
 
 
 //let UPLOAD_PATH = "./uploads/"
@@ -268,7 +290,7 @@ router.get('/new', isLoggedIn, function(req, res) {
 
 
 
-router.post('/', upload.fields([{
+router.post('/', s3upload.fields([{
   name: 'image'
 }]), function(req, res, next) {
   async.waterfall([function(callback) {
@@ -300,7 +322,7 @@ router.post('/', upload.fields([{
     newNote.pushtoken = req.body.pushtoken;
     newNote.tags = JSON.stringify(req.body.tags).replace(/\"/g, "").replace(/\\/g, "").replace(/\[/g, "").replace(/\]/g, "");
     newNote.numId = counter.totalCount + 1;
-    newNote.filename = req.files['image'][0].filename;
+    newNote.filename = req.files['image'][0].key;
     newNote.originalName = req.files['image'][0].originalname;
     newNote.save((err, user) => {
       if (err) {
