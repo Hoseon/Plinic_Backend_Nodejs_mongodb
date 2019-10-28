@@ -6,6 +6,7 @@ var noteController = require('./controller/note-controller');
 var skinChartController = require('./controller/skinchart-controller');
 var skinQnaController = require('./controller/skinqna-controller');
 var careZoneController = require('./controller/carezone-controller');
+var rewardController = require('./controller/reward-controller');
 var passport = require('passport');
 var mysql      = require('mysql');
 var dbconfig   = require('./config/database.js');
@@ -56,6 +57,11 @@ routes.post('/replycarezonedelete', careZoneController.replyDelete);
 routes.post('/skinchartsave', skinChartController.skinChartSave);
 routes.post('/skinchartupdate', skinChartController.skinChartUpdate);
 
+
+//보상받기
+routes.post('/rewardsave', rewardController.rewardSave);
+
+
 //routes.get('/auth/kakao', userController.loginUser_Kakao);
 
 routes.get('/auth/kakao', passport.authenticate('kakao',{
@@ -70,5 +76,23 @@ routes.get('/auth/login/kakao/callback', passport.authenticate('kakao',{
 routes.get('/special', passport.authenticate('jwt', { session: false }), (req, res) => {
     return res.json({ msg: `Hey ${req.user.email}! I open at the close.` });
 });
+
+routes.get('/daumjuso', function(req,res){
+  res.sendfile(__dirname + '/commons/juso.html');
+});
+
+var juso = null;
+routes.post('/daumjuso', function(req,res) {
+	juso = null;
+	juso = req.body
+  // console.log("받은 데이터는? " + JSON.stringify(juso));
+})
+
+routes.get('/daumjuso/mobile', function(req,res) {
+	// console.log(juso);
+	res.send(juso);
+	juso = null;
+});
+
 
 module.exports = routes;

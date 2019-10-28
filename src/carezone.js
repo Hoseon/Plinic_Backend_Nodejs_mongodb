@@ -4,6 +4,7 @@ var mongoose = require('mongoose');
 var Carezone = require('./models/Carezone');
 var CarezoneCounter = require('./models/CarezoneCounter');
 var Mission = require('./models/Mission');
+var UserImage = require('./models/UserImage');
 var async = require('async');
 var User_admin = require('./models/User_admin');
 var multer = require('multer');
@@ -875,6 +876,31 @@ router.get('/historymission/:id', function(req, res) {
       res.json(docs);
     });
   }]);
+});
+
+
+//20191025 사용자 이미지 가져 오기
+
+router.get('/chkuserimage/:id', (req, res, next) => {
+
+  UserImage.findOne({
+    email: req.params.id
+  }, function(err, image) {
+    if (err) {
+      res.sendStatus(404);
+    }
+    if (!image) {
+      res.sendStatus(404);
+    }
+    if (image) {
+      var filename = image.filename;
+      console.log("값을 잘 전달하였는가?" + filename);
+      res.json(filename);
+      // res.setHeader('Content-Type', 'image/jpeg');
+      // fs.createReadStream(path.join(__dirname, '../uploads/', image.filename)).pipe(res);
+    }
+    //res.json(docs);
+  });
 });
 
 

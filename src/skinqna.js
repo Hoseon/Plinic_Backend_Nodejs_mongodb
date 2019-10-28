@@ -88,20 +88,17 @@ router.get('/delete/:id', function(req, res, next) {
       success: false,
       message: err
     });
-
-    var s3parmas = {
+    var params = {
       Bucket: 'plinic',
-      Key: post.filename,
+      Key: post.filename
     };
-
-    s3.deleteObject(s3parmas, function(err, data){
+    s3.deleteObject(params, function(err, data){
       if(err) {
         console.log("피부고민 파일 삭제 에러 : " + post.filename + "err : " + err);
         res.status(500);
       }
       else console.log("피부고민 파일 삭제 완료 : " + post.filename);
     });
-
     res.status(201).json(post);
   });
 }); //destroy

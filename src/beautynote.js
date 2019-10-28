@@ -96,9 +96,9 @@ router.get('/delete/:id', function(req, res, next) {
     };
     s3.deleteObject(params, function(err, data) {
       if (err) {
-        console.log("피부고민 파일 삭제 에러 : " + post.filename + "err : " + err);
+        console.log("뷰티노트 파일 삭제 에러 : " + post.filename + "err : " + err);
         res.status(500);
-      } else console.log("피부고민 파일 삭제 완료 : ");
+      } else console.log("뷰티노트 파일 삭제 완료 : ");
     });
     // res.sendStatus(200);
     res.status(201).json(post);

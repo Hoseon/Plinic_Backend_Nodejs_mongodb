@@ -41,6 +41,8 @@ var missionSchema = mongoose.Schema({
     status: {type:String},
     //author: {type:mongoose.Schema.Types.ObjectId, ref:'user', required:true}
   }],
+  reward: {type:Boolean, defalut:false},
+  userImageFilename: {type:String},
 });
 
 missionSchema.methods.getFormattedDate = function (date) {

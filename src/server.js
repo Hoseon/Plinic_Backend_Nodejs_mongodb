@@ -21,6 +21,7 @@ var Exhibition = require('./models/Exhibition');
 var SkinQna = require('./models/SkinQna');
 var SkinChart = require('./models/SkinChart');
 var Notice = require('./models/Notice');
+var Reward = require('./models/Reward');
 var Tags = require('./models/Tags');
 const GoogleStrategy = require('passport-google-oauth20');
 var jwt = require('jsonwebtoken');
@@ -776,6 +777,7 @@ module.exports = function(app) {
   app.use('/beautynote', require('./beautynote'));
   app.use('/skinqna', require('./skinqna'));
   app.use('/exhibition', require('./exhibition'));
+  app.use('/reward', require('./reward'));
 
   app.get('/ejs', (req, res) => {
     res.render('home');

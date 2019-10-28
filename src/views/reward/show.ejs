@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <% include ../partials/head %>
+  </head>
+  <body>
+    <header>
+      <% include ../partials/header %>
+    </header>
+    <div class="posts">
+    <% include partials/top %>
+<!-- main start-->
+
+<!-- views/reward/show.ejs -->
+<div class="show">
+  <div class="buttons floats">
+      <form class="float_right" action="/reward/<%=post._id%>?_method=delete" method="post">
+        <button type="button" onclick="confirm('Your post will be deleted')?this.parentElement.submit():null;">Delete</button>
+      </form>
+      <button class="float_right" onclick="location.href='/reward/<%=post._id%>/edit'">Edit</button>
+    <button class="float_left" onclick="location.href='/reward?<%= urlQuery %>'">Back</button>
+  </div>
+  <!-- <h3>
+    <%= post.numId %>
+    <span class="highlight" data-highlight="<%= search.highlight.title %>">
+      [<%= post.select %>]
+    </span>
+  </h3> -->
+  <div class="content floats">
+    <div class="info float_right">
+      <div class="highlight" data-highlight="<%= search.highlight.author %>">
+        Author: <%= post.email %>
+      </div>
+      <div>
+        <%= post.views %> views
+      </div>
+      <div class="timestamp"><span>Created:</span>
+        <%= post.getFormattedTime(post.createdAt) %>, <%= post.getFormattedDate(post.createdAt) %>
+      </div>
+      <% if(post.updatedAt) { %>
+        <div class="timestamp"><span>Updated:</span>
+          <%= post.getFormattedTime(post.updatedAt) %>, <%= post.getFormattedDate(post.updatedAt) %>
+        </div>
+      <% } %>
+    </div>
+    <h3>공지사항 관리</h3>
+
+    <div class="body highlight" data-highlight="<%= search.highlight.body %>">미션명 : <%= post.title %></div>
+    <div class="body highlight" data-highlight="<%= search.highlight.body %>">보상상품 : <%= post.product %></div>
+    <div class="body highlight" data-highlight="<%= search.highlight.body %>">받을 사람 : <%= post.name %></div>
+    <div class="body highlight" data-highlight="<%= search.highlight.body %>">받을 사람 : <%= post.phoneNumber %></div>
+    <div class="body highlight" data-highlight="<%= search.highlight.body %>">우편번호  : <%= post.zonecode %></div>
+    <div class="body highlight" data-highlight="<%= search.highlight.body %>">주소 : <%= post.address %> <%= post.detailAddress %> (<%= post.buildingName %>)</div>
+    <div class="body highlight" data-highlight="<%= search.highlight.body %>">배송 특이사항 : <%= post.desc %> </div>
+    <div class="body highlight" data-highlight="<%= search.highlight.body %>">미션 시작일 : <%= post.startmission %></div>
+    <div class="body highlight" data-highlight="<%= search.highlight.body %>">미션 종료일 : <%= post.endmission %></div>
+
+    <div class="comments">
+      <h4>Comments (<%= post.comments?post.comments.length:"0" %>)</h4>
+      <% if(post.comments) { %>
+        <% post.comments.forEach(function(comment){ %>
+          <div class="comment">
+            <div class="top">
+              <b><%= comment.author.nickname %></b>
+              (<%= post.getFormattedTime(comment.createdAt) %>,
+              <%= post.getFormattedDate(comment.createdAt) %>)
+              <% if(user && user.equals(comment.author._id)) { %>
+                <form class="delete"  method="post"
+                  action="/reward/<%=post._id%>/comments/<%=comment._id%>?_method=delete&<%= urlQuery %>">
+                  <button type="button"
+                    onclick="confirm('Your comment will be deleted')?this.parentElement.submit():null;">
+                    x
+                  </button>
+                </form>
+              <% } %>
+            </div>
+            <div class="body"><%= comment.body %></div>
+          </div>
+        <% }) %>
+      <% } %>
+      <form class="addComment checkValidation"
+        action="/reward/<%=post._id%>/comments?<%= urlQuery %>" method="post">
+        <input type="hidden" name="id" value="<%=post._id%>" /> <!-- 관리자가 댓글을 작성할시에 푸시 알림 클릭시 해당 창으로 이동 할 수 있도록 조치-->
+        <input type="hidden" name="pushtoken" value="<%=post.pushtoken%>" /> <!-- 관리자가 댓글을 작성할시에 푸시 알림이 가도록 설정 -->
+        <textarea class="cvRequired" type="text" name="comment[body]"
+          cvRqErrMsg="comments is empty." cvRqErrTo="#cvErrTitle" <%= user?"":"disabled" %>
+          placeholder="<%= user?"Add comment here":"로그인 한 후 상품보상 하기 댓글을 작성해주세요.." %>"></textarea>
+        <button type="submit" <%= user?"":"disabled" %>>Comment</button>
+        <div id="cvErrTitle" class="message"></div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<!-- main end -->
+    </div><!--reward end -->
+    <footer>
+      <% include ../partials/footer %>
+    </footer>
+  </body>
+</html>
