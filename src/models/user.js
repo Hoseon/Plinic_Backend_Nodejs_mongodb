@@ -51,7 +51,8 @@ var UserSchema = new mongoose.Schema({
   desc: String,
   pushtoken: String,
   from: String,
-  created: { type: Date, default: Date.now }
+  created: { type: Date, default: Date.now },
+  totalusetime: {type:Number, default:0},
 });
 
 UserSchema.pre('save', function(next) {
