@@ -87,7 +87,7 @@ const sftpconfig = {
   port: 3822,
   user: 'g1partners1',
   password: 'g100210!!',
-  keepalive : true
+  keepalive: true
 }
 
 //multer 선언 이미지 rest api 개발 20190425
@@ -972,6 +972,21 @@ module.exports = function(app) {
           res.sendStatus(400);
         });
     });
+  });
+
+
+
+  app.get('/totalusetime/:id', function(req, res, next) {
+    User.findOne({
+        email: req.params.id
+      },
+      function(err, docs) {
+        if(err){
+          res.sendStatus(400);
+        } else {
+          res.json(docs['totalusetime']);
+        }
+      });
   });
 
 

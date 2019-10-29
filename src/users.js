@@ -91,6 +91,8 @@ function isLoggedIn(req, res, next) {
   res.redirect('/');
 }
 
+
+
 function checkUserRegValidation(req, res, next) {
   var isValid = true;
 
