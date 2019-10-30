@@ -10,7 +10,7 @@ function createToken(user) {
     id: user.id,
     email: user.email,
     name: user.name,
-    pushtoken : user.pushtoken
+    pushtoken: user.pushtoken
   }, config.jwtSecret, {
     //expiresIn: 200 // 86400 expires in 24 hours
     expiresIn: 86400 // 86400 expires in 24 hours
@@ -150,7 +150,7 @@ exports.registerUserSnS = (req, res) => {
 
       // return res.status(201).json(user);
       return res.status(201).json({
-        'user' : user
+        'user': user
       });
 
     });
@@ -283,15 +283,20 @@ exports.pointUpdate = (req, res) => {
               // console.log("tags error : " + err);
               return res.status(400).json(err);
             } else {
-              User.findOneAndUpdate({ email: req.body.email }, { $inc: { totalusetime: req.body.points } },
+              User.findOneAndUpdate({
+                  email: req.body.email
+                }, {
+                  $inc: {
+                    totalusetime: req.body.points
+                  }
+                },
                 function(err, response) {
-                  if (err)
-                  {
+                  if (err) {
                     res.json(0);
                   } else {
-                  // res.json(response.credit);
-                }
-              });
+                    // res.json(response.credit);
+                  }
+                });
               // return res.status(201).json(post2);
               return res.status(201).json({
                 'msg': '플리닉 오늘 누적 사용시간이 9분을 초과하여 <br>' + getSecondsAsDigitalClock(usePoints) + ' 초만 누적되었습니다. <br> 내일 다시 사용해 주세요 <br> 감사합니다'
@@ -317,31 +322,41 @@ exports.pointUpdate = (req, res) => {
               // console.log("tags error : " + err);
               return res.status(400).json(err);
             } else {
-              User.findOneAndUpdate({ email: req.body.email }, { $inc: { totalusetime: req.body.points } },
+              User.findOneAndUpdate({
+                  email: req.body.email
+                }, {
+                  $inc: {
+                    totalusetime: req.body.points
+                  }
+                },
                 function(err, response) {
-                  if (err)
-                  {
+                  if (err) {
                     res.json(0);
                   } else {
-                  // res.json(response.credit);
-                }
-              });
+                    // res.json(response.credit);
+                  }
+                });
               return res.status(201).json({
-                'msg': '플리닉 사용시간 ' + getSecondsAsDigitalClock(req.body.points) + '초가 누적되었습니다. <br> 오늘 누적 사용시간 : ' +getSecondsAsDigitalClock(todayPoints + Number(req.body.points))
+                'msg': '플리닉 사용시간 ' + getSecondsAsDigitalClock(req.body.points) + '초가 누적되었습니다. <br> 오늘 누적 사용시간 : ' + getSecondsAsDigitalClock(todayPoints + Number(req.body.points))
               });
             }
           });
         }
       } else {
-        User.findOneAndUpdate({ email: req.body.email }, { $inc: { totalusetime: req.body.points } },
+        User.findOneAndUpdate({
+            email: req.body.email
+          }, {
+            $inc: {
+              totalusetime: req.body.points
+            }
+          },
           function(err, response) {
-            if (err)
-            {
+            if (err) {
               res.json(0);
             } else {
-            // res.json(response.credit);
-          }
-        });
+              // res.json(response.credit);
+            }
+          });
         return res.status(400).json({
           'msg': '오늘은 플리닉을 9분간 사용하여 <br> 누적이 되지 않습니다. <br> 내일 다시 사용해 주세요 <br> 감사합니다'
         });
@@ -383,16 +398,35 @@ exports.pointUpdate = (req, res) => {
     });
 
 
-    // User.findOneAndUpdate({ email : req.body.email }), { $inc: { "totalusetime": req.body.points } }, function(err, usetime){
-    //   console.log("222");
-    //   if(err){
-    //     console.log("error : " + err);
-    //     return res.status(400).json(err);
-    //   }
-    //   if(usetime) {
-    //     console.log("성공 " + usetime);
-    //   }
-    // }
+  // User.findOneAndUpdate({ email : req.body.email }), { $inc: { "totalusetime": req.body.points } }, function(err, usetime){
+  //   console.log("222");
+  //   if(err){
+  //     console.log("error : " + err);
+  //     return res.status(400).json(err);
+  //   }
+  //   if(usetime) {
+  //     console.log("성공 " + usetime);
+  //   }
+  // }
+}
+
+exports.useTimeUpdate = (req, res) => {
+  User.findOneAndUpdate({
+      email: req.body.email
+    }, {
+      $inc: {
+        totalusetime: req.body.points
+      }
+    },
+    function(err, response) {
+      if (err) {
+        res.json(0);
+      } else {
+        return res.status(201).json({
+          'msg': '플리닉 사용시간 ' + getSecondsAsDigitalClock(req.body.points) + '초가 누적되었습니다.'
+        });
+      }
+    });
 }
 
 function getFormattedDate(date) {
