@@ -77,6 +77,16 @@
             <div id="cvErrTitle" class="message"></div>
           </div>
           <div class="floats">
+            <label>보상 제품 상세정보 URL</label>
+            <input class="cvRequired" type="text" maxlength="20" name="post[product_url]" cvRqErrMsg="보상 제품 상세정보 링크를 입력해 주세요." cvRqErrTo="#cvErrproduct_url" value="">
+            <div id="cvErrproduct_url" class="message"></div>
+          </div>
+          <div class="floats">
+            <label>제품 즉시 구매하기 URL</label>
+            <input class="cvRequired" type="text" maxlength="20" name="post[purchase_url]" cvRqErrMsg="제품을 즉시 구매 할 수 있는 링크를 입력해 주세요." cvRqErrTo="#cvErrpurchase_urly" value="">
+            <div id="cvErrpurchase_url" class="message"></div>
+          </div>
+          <div class="floats">
             <label>보상 조건(3줄)</label>
             <textarea class="cvRequired" name="post[condition]" cvRqErrMsg="보상조건을 입력하세요." cvRqErrTo="#cvErrBody"></textarea>
             <div id="cvErrBody" class="message"></div>
@@ -124,28 +134,28 @@
           </div>
           <div class="floats">
             <label>케어챌린지 이미지 1</label>
-            <input class="cvRequired" type="file" name="challenge_image1" cvRqErrMsg="케어챌린지 이미지 필수로 등록 해 주세요" cvRqErrTo="#cvErrBody" accept=".jpg, .jpeg, .png">
-            <div id="cvErrTitle" class="message"></div>
+            <input class="cvRequired" type="file" name="challenge_image1" cvRqErrMsg="케어챌린지 이미지 필수로 등록 해 주세요" cvRqErrTo="#cvErrBody1" accept=".jpg, .jpeg, .png">
+            <div id="cvErrBody1" class="message"></div>
           </div>
           <div class="floats">
             <label>케어챌린지 이미지 2</label>
-            <input class="cvRequired" type="file" name="challenge_image2" cvRqErrMsg="케어챌린지 이미지 필수로 등록 해 주세요" cvRqErrTo="#cvErrBody" accept=".jpg, .jpeg, .png">
-            <div id="cvErrTitle" class="message"></div>
+            <input type="file" name="challenge_image2" cvRqErrMsg="케어챌린지 이미지 필수로 등록 해 주세요" cvRqErrTo="#cvErrBody2" accept=".jpg, .jpeg, .png">
+            <div id="cvErrBody2" class="message"></div>
           </div>
           <div class="floats">
             <label>케어챌린지 이미지 3</label>
-            <input class="cvRequired" type="file" name="challenge_image3" cvRqErrMsg="케어챌린지 이미지 필수로 등록 해 주세요" cvRqErrTo="#cvErrBody" accept=".jpg, .jpeg, .png">
-            <div id="cvErrTitle" class="message"></div>
+            <input type="file" name="challenge_image3" cvRqErrMsg="케어챌린지 이미지 필수로 등록 해 주세요" cvRqErrTo="#cvErrBody3" accept=".jpg, .jpeg, .png">
+            <div id="cvErrBody3" class="message"></div>
           </div>
           <div class="floats">
             <label>케어챌린지 이미지 4</label>
-            <input class="cvRequired" type="file" name="challenge_image4" cvRqErrMsg="케어챌린지 이미지 필수로 등록 해 주세요" cvRqErrTo="#cvErrBody" accept=".jpg, .jpeg, .png">
-            <div id="cvErrTitle" class="message"></div>
+            <input type="file" name="challenge_image4" cvRqErrMsg="케어챌린지 이미지 필수로 등록 해 주세요" cvRqErrTo="#cvErrBody4" accept=".jpg, .jpeg, .png">
+            <div id="cvErrBody4" class="message"></div>
           </div>
           <div class="floats">
             <label>케어챌린지 이미지 5</label>
-            <input class="cvRequired" type="file" name="challenge_image5" cvRqErrMsg="케어챌린지 이미지 필수로 등록 해 주세요" cvRqErrTo="#cvErrBody" accept=".jpg, .jpeg, .png">
-            <div id="cvErrTitle" class="message"></div>
+            <input type="file" name="challenge_image5" cvRqErrMsg="케어챌린지 이미지 필수로 등록 해 주세요" cvRqErrTo="#cvErrBody5" accept=".jpg, .jpeg, .png">
+            <div id="cvErrBody5" class="message"></div>
           </div>
 
           <h2 style="color: red">케어챌린지 이미지 사이즈(px) : 720 X 405</h2>

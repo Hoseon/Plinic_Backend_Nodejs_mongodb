@@ -31,7 +31,8 @@ exports.missionSave = (req, res) => {
   }
 
   Mission.findOne({
-    email: req.body.email
+    email: req.body.email,
+    missioncomplete: false
   }, (err, user) => {
     if (err) {
       return res.status(400).json({
@@ -47,7 +48,7 @@ exports.missionSave = (req, res) => {
       });
 
     } else {
-      //등록 한 미션이 없을 때
+      //등록 한 미션이 없거나 완료가 되었을 때
       let newMission = Mission(req.body);
       newMission.save((err, user) => {
         if (err) {

@@ -76,6 +76,16 @@
         <div id="cvErrBody" class="message"></div>
       </div>
       <div class="floats">
+        <label>보상 제품 상세정보 URL</label>
+        <input class="cvRequired" type="text" name="post[product_url]" cvRqErrMsg="Body is required." cvRqErrTo="#cvErrproduct_url" value="<%=post.product_url%>">
+        <div id="cvErrproduct_url" class="message"></div>
+      </div>
+      <div class="floats">
+        <label>제품 즉시 구매하기 URL</label>
+        <input class="cvRequired" type="text" name="post[purchase_url]" cvRqErrMsg="Body is required." cvRqErrTo="#cvErrpurchase_urly" value="<%=post.purchase_url%>">
+        <div id="cvErrpurchase_urly" class="message"></div>
+      </div>
+      <div class="floats">
         <label>보상 조건(3줄)</label>
         <textarea class="cvRequired" name="post[condition]" cvRqErrMsg="보상조건을 입력하세요." cvRqErrTo="#cvErrBody"><%=post.condition%></textarea>
         <div id="cvErrBody" class="message"></div>
@@ -120,33 +130,33 @@
 
       <div class="floats">
         <label>챌린지 이미지1</label>
-        <input class="cvRequired" type="file" name="challenge_image1" cvRqErrMsg="이미지 파일을 다시 업로드 해주세요." cvRqErrTo="#cvErrTitle" accept=".jpg, .jpeg, .png" value="">
+        <input class="cvRequired" type="file" name="challenge_image1" cvRqErrMsg="이미지 파일을 다시 업로드 해주세요." cvRqErrTo="#cvErrTitle1" accept=".jpg, .jpeg, .png" value="">
         </input>
-        <div id="cvErrTitle" class="message"></div>
+        <div id="cvErrTitle1" class="message"></div>
       </div>
       <div class="floats">
         <label>챌린지 이미지2</label>
-        <input class="cvRequired" type="file" name="challenge_image2" cvRqErrMsg="이미지 파일을 다시 업로드 해주세요." cvRqErrTo="#cvErrTitle" accept=".jpg, .jpeg, .png" value="">
+        <input type="file" name="challenge_image2" cvRqErrMsg="이미지 파일을 다시 업로드 해주세요." cvRqErrTo="#cvErrTitle2" accept=".jpg, .jpeg, .png" value="">
         </input>
-        <div id="cvErrTitle" class="message"></div>
+        <div id="cvErrTitle2" class="message"></div>
       </div>
       <div class="floats">
         <label>챌린지 이미지3</label>
-        <input class="cvRequired" type="file" name="challenge_image3" cvRqErrMsg="이미지 파일을 다시 업로드 해주세요." cvRqErrTo="#cvErrTitle" accept=".jpg, .jpeg, .png" value="">
+        <input type="file" name="challenge_image3" cvRqErrMsg="이미지 파일을 다시 업로드 해주세요." cvRqErrTo="#cvErrTitle3" accept=".jpg, .jpeg, .png" value="">
         </input>
-        <div id="cvErrTitle" class="message"></div>
+        <div id="cvErrTitle3" class="message"></div>
       </div>
       <div class="floats">
         <label>챌린지 이미지4</label>
-        <input class="cvRequired" type="file" name="challenge_image4" cvRqErrMsg="이미지 파일을 다시 업로드 해주세요." cvRqErrTo="#cvErrTitle" accept=".jpg, .jpeg, .png" value="">
+        <input type="file" name="challenge_image4" cvRqErrMsg="이미지 파일을 다시 업로드 해주세요." cvRqErrTo="#cvErrTitle4" accept=".jpg, .jpeg, .png" value="">
         </input>
-        <div id="cvErrTitle" class="message"></div>
+        <div id="cvErrTitle4" class="message"></div>
       </div>
       <div class="floats">
         <label>챌린지 이미지5</label>
-        <input class="cvRequired" type="file" name="challenge_image5" cvRqErrMsg="이미지 파일을 다시 업로드 해주세요." cvRqErrTo="#cvErrTitle" accept=".jpg, .jpeg, .png" value="">
+        <input type="file" name="challenge_image5" cvRqErrMsg="이미지 파일을 다시 업로드 해주세요." cvRqErrTo="#cvErrTitle5" accept=".jpg, .jpeg, .png" value="">
         </input>
-        <div id="cvErrTitle" class="message"></div>
+        <div id="cvErrTitle5" class="message"></div>
       </div>
       <input type="hidden" name="pre_challenge1_filename" value="<%=pre_challenge1_filename%>" />
       <input type="hidden" name="pre_challenge2_filename" value="<%=pre_challenge2_filename%>" />

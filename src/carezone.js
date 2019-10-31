@@ -177,7 +177,8 @@ router.get('/giveupmission/:id', function(req, res) {
   //console.log("chkmission" +req.params.id);
   async.waterfall([function(callback) {
     Mission.findOneAndRemove({
-      email: req.params.id
+      email: req.params.id,
+      missioncomplete: false
     }, function(err, docs) {
       res.json(docs);
     });
@@ -189,8 +190,9 @@ router.get('/chkmission/:id', function(req, res) {
   //var carezonelist = null;
   // console.log("chkmission" +req.params.id);
   async.waterfall([function(callback) {
-    Mission.findOne({
-      email: req.params.id
+    Mission.find({
+      email: req.params.id,
+      missioncomplete: false
     }, function(err, docs) {
       res.json(docs);
     });
@@ -537,14 +539,23 @@ router.post('/', s3upload.fields([{
     req.body.post.prodoriginalname = req.files['prodimage'][0].originalname;
     req.body.post.challenge_image1_filename = req.files['challenge_image1'][0].key;
     req.body.post.challenge_image1_originalname = req.files['challenge_image1'][0].originalname;
-    req.body.post.challenge_image2_filename = req.files['challenge_image2'][0].key;
-    req.body.post.challenge_image2_originalname = req.files['challenge_image2'][0].originalname;
-    req.body.post.challenge_image3_filename = req.files['challenge_image3'][0].key;
-    req.body.post.challenge_image3_originalname = req.files['challenge_image3'][0].originalname;
-    req.body.post.challenge_image4_filename = req.files['challenge_image4'][0].key;
-    req.body.post.challenge_image4_originalname = req.files['challenge_image4'][0].originalname;
-    req.body.post.challenge_image5_filename = req.files['challenge_image5'][0].key;
-    req.body.post.challenge_image5_originalname = req.files['challenge_image5'][0].originalname;
+
+    if(req.files['challenge_image2']){
+      req.body.post.challenge_image2_filename = req.files['challenge_image2'][0].key;
+      req.body.post.challenge_image2_originalname = req.files['challenge_image2'][0].originalname;
+    }
+    if(req.files['challenge_image3']){
+      req.body.post.challenge_image3_filename = req.files['challenge_image3'][0].key;
+      req.body.post.challenge_image3_originalname = req.files['challenge_image3'][0].originalname;
+    }
+    if(req.files['challenge_image4']){
+      req.body.post.challenge_image4_filename = req.files['challenge_image4'][0].key;
+      req.body.post.challenge_image4_originalname = req.files['challenge_image4'][0].originalname;
+    }
+    if(req.files['challenge_image5']){
+      req.body.post.challenge_image5_filename = req.files['challenge_image5'][0].key;
+      req.body.post.challenge_image5_originalname = req.files['challenge_image5'][0].originalname;
+    }
     Carezone.create(req.body.post, function(err, post) {
       if (err) return res.json({
         success: false,
@@ -701,14 +712,25 @@ router.put('/:id', s3upload.fields([{
   req.body.post.prodoriginalname = req.files['prodimage'][0].originalname;
   req.body.post.challenge_image1_filename = req.files['challenge_image1'][0].key;
   req.body.post.challenge_image1_originalname = req.files['challenge_image1'][0].originalname;
-  req.body.post.challenge_image2_filename = req.files['challenge_image2'][0].key;
-  req.body.post.challenge_image2_originalname = req.files['challenge_image2'][0].originalname;
-  req.body.post.challenge_image3_filename = req.files['challenge_image3'][0].key;
-  req.body.post.challenge_image3_originalname = req.files['challenge_image3'][0].originalname;
-  req.body.post.challenge_image4_filename = req.files['challenge_image4'][0].key;
-  req.body.post.challenge_image4_originalname = req.files['challenge_image4'][0].originalname;
-  req.body.post.challenge_image5_filename = req.files['challenge_image5'][0].key;
-  req.body.post.challenge_image5_originalname = req.files['challenge_image5'][0].originalname;
+
+  if(req.files['challenge_image2']){
+    req.body.post.challenge_image2_filename = req.files['challenge_image2'][0].key;
+    req.body.post.challenge_image2_originalname = req.files['challenge_image2'][0].originalname;
+  }
+  if(req.files['challenge_image3']){
+    req.body.post.challenge_image3_filename = req.files['challenge_image3'][0].key;
+    req.body.post.challenge_image3_originalname = req.files['challenge_image3'][0].originalname;
+  }
+
+  if(req.files['challenge_image4']){
+    req.body.post.challenge_image4_filename = req.files['challenge_image4'][0].key;
+    req.body.post.challenge_image4_originalname = req.files['challenge_image4'][0].originalname;
+  }
+
+  if(req.files['challenge_image5']){
+    req.body.post.challenge_image5_filename = req.files['challenge_image5'][0].key;
+    req.body.post.challenge_image5_originalname = req.files['challenge_image5'][0].originalname;
+  }
 
   // var s3parmas = {
   //   Bucket: 'plinic',
@@ -894,7 +916,6 @@ router.get('/chkuserimage/:id', (req, res, next) => {
     }
     if (image) {
       var filename = image.filename;
-      console.log("값을 잘 전달하였는가?" + filename);
       res.json(filename);
       // res.setHeader('Content-Type', 'image/jpeg');
       // fs.createReadStream(path.join(__dirname, '../uploads/', image.filename)).pipe(res);

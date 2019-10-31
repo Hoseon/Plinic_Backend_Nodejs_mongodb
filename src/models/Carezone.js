@@ -63,6 +63,8 @@ var carezoneSchema = mongoose.Schema({
   challengeend : Date,
   bonus: String,
   givecount : {type:Number},
+  product_url : {type:String},
+  purchase_url : {type:String},
 
 });
 
