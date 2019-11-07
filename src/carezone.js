@@ -306,7 +306,7 @@ router.get('/firstlist', function(req, res) {
       res.json(docs);
     }).sort({
       "startmission": -1
-    }).limit(1);
+    }).limit(2);
   }]);
 });
 

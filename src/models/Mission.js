@@ -16,7 +16,7 @@ var missionSchema = mongoose.Schema({
   createdAt: {type:Date, default:Date.now},
   updatedAt: Date,
   //이미지관리
-  // filename: String,
+  filename: String,
   // originalName: String,
   // desc: String,
   // created: { type: Date, default: Date.now },
