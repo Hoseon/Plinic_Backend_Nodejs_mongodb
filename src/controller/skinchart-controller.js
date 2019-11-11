@@ -13,7 +13,7 @@ function createToken(user) {
     email: user.email,
     name: user.name
   }, config.jwtSecret, {
-    //expiresIn: 200 // 86400 expires in 24 hours
+    //expiresIn: 200 // 86400 e xpires in 24 hours
     expiresIn: 86400 // 86400 expires in 24 hours
   });
 }
