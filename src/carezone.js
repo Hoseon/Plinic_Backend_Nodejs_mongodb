@@ -284,9 +284,9 @@ router.get('/list', function(req, res) {
   //var carezonelist = null;
   async.waterfall([function(callback) {
     Carezone.find({
-      exposure: {
-        $lte: new Date()
-      }
+      // exposure: {
+      //   $lte: new Date()
+      // }
     }, function(err, docs) {
       res.json(docs);
     }).sort({
