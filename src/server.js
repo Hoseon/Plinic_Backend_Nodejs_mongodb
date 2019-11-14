@@ -238,7 +238,7 @@ module.exports = function(app) {
   });
 
   //사용자 이미지 수정
-  app.post('/userupdateimages', sftpUpload.single('image'), (req, res, next) => {
+  app.post('/userupdateimages', s3upload.single('image'), (req, res, next) => {
     // Create a new image model and fill the properties
     let newUser = new UserImage();
     newUser.isNew = false;
