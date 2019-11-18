@@ -220,10 +220,10 @@ module.exports = function(app) {
   });
 
   //사용자 이미지 업로드
-  app.post('/userimages', sftpUpload.single('image'), (req, res, next) => {
+  app.post('/userimages', s3upload.single('image'), (req, res, next) => {
     // Create a new image model and fill the properties
     let newUser = new UserImage();
-    newUser.filename = req.file.filename;
+    newUser.filename = req.file.key;
     newUser.originalName = req.file.originalname;
     newUser.email = req.body.desc
     newUser.save(err => {
@@ -241,8 +241,8 @@ module.exports = function(app) {
   app.post('/userupdateimages', s3upload.single('image'), (req, res, next) => {
     // Create a new image model and fill the properties
     let newUser = new UserImage();
-    newUser.isNew = false;
-    newUser.filename = req.file.filename;
+    newUser.isNew = false;  // 기존에 등록한 프로필 이미지가 있으면 Update , 새로 등록한 이미지이면은 new로 간다.
+    newUser.filename = req.file.key;
     newUser.originalName = req.file.originalname;
     newUser.email = req.body.email;
     newUser._id = req.body.id;

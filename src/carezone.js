@@ -295,6 +295,8 @@ router.get('/list', function(req, res) {
   }]);
 });
 
+
+//////// 과거 미션 리스트 가져 오던 로직
 router.get('/firstlist', function(req, res) {
   //var carezonelist = null;
   async.waterfall([function(callback) {
@@ -307,6 +309,24 @@ router.get('/firstlist', function(req, res) {
     }).sort({
       "startmission": -1
     }).limit(2);
+  }]);
+});
+
+
+
+//////// 현재 케어챌린지 리스트 가져 오는 로직
+router.get('/challengefirstlist', function(req, res) {
+  //var carezonelist = null;
+  async.waterfall([function(callback) {
+    Carezone.find({
+      endmission: {     //종료일이 오늘 날짜/시간으로 지나지 않은것만 가져 온다.
+        $gt: new Date()
+      }
+    }, function(err, docs) {
+      res.json(docs);
+    }).sort({
+      "startmission": -1
+    }).limit(5);
   }]);
 });
 
