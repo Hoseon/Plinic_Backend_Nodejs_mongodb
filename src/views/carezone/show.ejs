@@ -64,7 +64,9 @@
     보상 조건 :  <textarea rows="3" readonly class="body highlight" data-highlight="<%= search.highlight.body %>"><%= post.condition %></textarea>
     <div class="body highlight" data-highlight="<%= search.highlight.body %>">미션 시작일 : <%= post.startmission %></div>
     <div class="body highlight" data-highlight="<%= search.highlight.body %>">미션 종료일 : <%= post.endmission %></div>
-    보너스 : <textarea rows="3" readonly class="body highlight" data-highlight="<%= search.highlight.body %>"><%= post.bonus %></textarea>
+    <div class="body highlight" data-highlight="<%= search.highlight.body %>">보너스 - 카카오 : <%= post.bonuskakao %> 초</div>
+    <div class="body highlight" data-highlight="<%= search.highlight.body %>">보너스 - 페이스북 : <%= post.bonusface %> 초</div>
+    <div class="body highlight" data-highlight="<%= search.highlight.body %>">보너스 - 인스타그램 : <%= post.bonusinstar %> 초</div>
     <h3>챌린지 슬라이드 이미지1</h3>
     <div class="body highlight" data-highlight="<%= search.highlight.body %>"><img src="<%= challenge_url1 %>"></div>
     <h3>챌린지 슬라이드 이미지2</h3>

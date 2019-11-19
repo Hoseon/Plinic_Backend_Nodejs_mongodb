@@ -118,9 +118,42 @@
         <div id="cvErrTitle" class="message"></div>
       </div>
       <div class="floats">
-        <label>보너스</label>
-        <textarea class="cvRequired" name="post[bonus]" cvRqErrMsg="보상조건을 입력하세요." cvRqErrTo="#cvErrBody" ><%=post.bonus%></textarea>
-        <div id="cvErrBody" class="message"></div>
+        <label>보너스 - 카카오</label>
+        <select class="cvRequired" id="volume" name="post[bonuskakao]" cvRqErrMsg="카카오 보너스를 입력하세요." cvRqErrTo="#cvErrBonus" >
+          <option value="10" <% if(post.bonuskakao === '10') {%> selected <% } %> > 10초</option>
+          <option value="20" <% if(post.bonuskakao === '20') {%> selected <% } %> > 20초</option>
+          <option value="30" <% if(post.bonuskakao === '30') {%> selected <% } %> > 30초</option>
+          <option value="40" <% if(post.bonuskakao === '40') {%> selected <% } %> > 40초</option>
+          <option value="50" <% if(post.bonuskakao === '50') {%> selected <% } %> > 50초</option>
+          <option value="60" <% if(post.bonuskakao === '60') {%> selected <% } %> > 60초</option>
+        </select>
+        <div id="cvErrBonus" class="message"></div>
+      </div>
+
+      <div class="floats">
+        <label>보너스 - 페이스북</label>
+        <select class="cvRequired" id="volume" name="post[bonusface]" cvRqErrMsg="페이스북 보너스를 입력하세요" cvRqErrTo="#cvErrFace" >
+          <option value="10" <% if(post.bonusface === '10') {%> selected <% } %> > 10초</option>
+          <option value="20" <% if(post.bonusface === '20') {%> selected <% } %> > 20초</option>
+          <option value="30" <% if(post.bonusface === '30') {%> selected <% } %> > 30초</option>
+          <option value="40" <% if(post.bonusface === '40') {%> selected <% } %> > 40초</option>
+          <option value="50" <% if(post.bonusface === '50') {%> selected <% } %> > 50초</option>
+          <option value="60" <% if(post.bonusface === '60') {%> selected <% } %> > 60초</option>
+        </select>
+        <div id="cvErrFace" class="message"></div>
+      </div>
+
+      <div class="floats">
+        <label>보너스 - 인스타그램</label>
+        <select class="cvRequired" id="volume" name="post[bonusinstar]" cvRqErrMsg="제목을 입력 주세요." cvRqErrTo="#cvErrInstar" >
+          <option value="10" <% if(post.bonusinstar === '10') {%> selected <% } %> > 10초</option>
+          <option value="20" <% if(post.bonusinstar === '20') {%> selected <% } %> > 20초</option>
+          <option value="30" <% if(post.bonusinstar === '30') {%> selected <% } %> > 30초</option>
+          <option value="40" <% if(post.bonusinstar === '40') {%> selected <% } %> > 40초</option>
+          <option value="50" <% if(post.bonusinstar === '50') {%> selected <% } %> > 50초</option>
+          <option value="60" <% if(post.bonusinstar === '60') {%> selected <% } %> > 60초</option>
+        </select>
+        <div id="cvErrInstar" class="message"></div>
       </div>
 
       <span>이전 미션 상품 이미지 파일 다운로드 : <a href="<%= prod_url %>" download><%=preprodoriginalname%></a> - 링크 클릭</span>

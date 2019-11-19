@@ -113,8 +113,42 @@
             <div id="cvErrTitle" class="message"></div>
           </div>
           <div class="floats">
-            <label>보너스</label>
-            <textarea class="cvRequired" name="post[bonus]" cvRqErrMsg="보상조건을 입력하세요." cvRqErrTo="#cvErrBody"></textarea>
+            <label>보너스 - 카카오 공지 시</label>
+            <select class="cvRequired" id="volume" name="post[bonuskakao]" cvRqErrMsg="제목을 입력 주세요." cvRqErrTo="#cvErrTitle">
+              <option value="10">10초</option>
+              <option value="20">20초</option>
+              <option value="30">30초</option>
+              <option value="40">40초</option>
+              <option value="50">50초</option>
+              <option value="60">60초</option>
+            </select>
+            <!-- <textarea class="cvRequired" name="post[bonus]" cvRqErrMsg="보상조건을 입력하세요." cvRqErrTo="#cvErrBody"></textarea> -->
+            <div id="cvErrBody" class="message"></div>
+          </div>
+          <div class="floats">
+            <label>보너스 - 페이스북 공지 시</label>
+            <select class="cvRequired" id="volume" name="post[bonusface]" cvRqErrMsg="제목을 입력 주세요." cvRqErrTo="#cvErrTitle">
+              <option value="10">10초</option>
+              <option value="20">20초</option>
+              <option value="30">30초</option>
+              <option value="40">40초</option>
+              <option value="50">50초</option>
+              <option value="60">60초</option>
+            </select>
+            <!-- <textarea class="cvRequired" name="post[bonus]" cvRqErrMsg="보상조건을 입력하세요." cvRqErrTo="#cvErrBody"></textarea> -->
+            <div id="cvErrBody" class="message"></div>
+          </div>
+          <div class="floats">
+            <label>보너스 - 인스타그램 공지 시</label>
+            <select class="cvRequired" id="volume" name="post[bonusinstar]" cvRqErrMsg="제목을 입력 주세요." cvRqErrTo="#cvErrTitle">
+              <option value="10">10초</option>
+              <option value="20">20초</option>
+              <option value="30">30초</option>
+              <option value="40">40초</option>
+              <option value="50">50초</option>
+              <option value="60">60초</option>
+            </select>
+            <!-- <textarea class="cvRequired" name="post[bonus]" cvRqErrMsg="보상조건을 입력하세요." cvRqErrTo="#cvErrBody"></textarea> -->
             <div id="cvErrBody" class="message"></div>
           </div>
           <!-- <div class="floats">
