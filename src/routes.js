@@ -23,6 +23,8 @@ routes.get('/', (req, res) => {
 
 routes.post('/register', userController.registerUser);
 routes.post('/registersns', userController.registerUserSnS);
+routes.post('/userupdatenickname', userController.updateUserNickname); //사용자 닉네임, 생년월, 비밀번호 변경 로직
+routes.post('/updateskincomplaint', userController.updateUserSkinComplaint); //사용자 피부타입 변경 로직
 routes.post('/login', userController.loginUser);
 routes.post('/pointupdate', userController.pointUpdate);
 routes.post('/usetimeupdate', userController.useTimeUpdate);

@@ -10,6 +10,10 @@ function createToken(user) {
     id: user.id,
     email: user.email,
     name: user.name,
+    skincomplaint: user.skincomplaint,
+    country: user.country,
+    gender: user.gender,
+    birthday: user.birthday,
     pushtoken: user.pushtoken
   }, config.jwtSecret, {
     //expiresIn: 200 // 86400 expires in 24 hours
@@ -20,7 +24,7 @@ function createToken(user) {
 exports.missionSave = (req, res) => {
 
   //console.log("-------------------------------request-------------");
-  console.log(req.body);
+  // console.log(req.body);
   //console.log("-------------------------------response-------------" + res.body.id);
 
 
@@ -72,7 +76,7 @@ exports.missionSave = (req, res) => {
 
 
 exports.registerUser = (req, res) => {
-  console.log("Register ::::::: " + req);
+  // console.log("Register ::::::: " + req);
   if (!req.body.email || !req.body.password) {
     return res.status(400).json({
       'msg': '이메일, 패스워드를 입력해 주세요.'
@@ -183,6 +187,7 @@ exports.loginUser = (req, res) => {
 
     user.comparePassword(req.body.password, (err, isMatch) => {
       if (isMatch && !err) {
+        // console.log(JSON.stringify(user));
         return res.status(200).json({
           token: createToken(user)
         });
@@ -429,6 +434,42 @@ exports.useTimeUpdate = (req, res) => {
       }
     });
 }
+
+exports.updateUserNickname = (req, res) => {
+  User.findOneAndUpdate({
+      email: req.body.email
+    }, {
+        name: req.body.nickname
+    },
+    function(err, response) {
+      if (err) {
+        res.json(0);
+      } else {
+        return res.status(201).json({
+          "msg": "회원님의 닉네임이 저장 되었습니다. \\n\\n 로그아웃 후 로그인 하시면 닉네임이 변경됩니다."
+        });
+      }
+    });
+}
+
+exports.updateUserSkinComplaint = (req, res) => {
+  User.findOneAndUpdate({
+      email: req.body.email
+    }, {
+        skincomplaint: req.body.skincomplaint
+    },
+    function(err, response) {
+      if (err) {
+        res.json(0);
+      } else {
+        return res.status(201).json({
+          "msg": "회원님의 닉네임이 저장 되었습니다. <br> 로그아웃 후 로그인 하시면 닉네임이 변경됩니다."
+        });
+      }
+    });
+}
+
+
 
 function getFormattedDate(date) {
   return date.getFullYear() + "-" + get2digits(date.getMonth() + 1) + "-" + get2digits(date.getDate());
