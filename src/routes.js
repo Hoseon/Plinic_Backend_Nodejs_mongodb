@@ -27,6 +27,7 @@ routes.post('/userupdatenickname', userController.updateUserNickname); //사용�
 routes.post('/updateskincomplaint', userController.updateUserSkinComplaint); //사용자 피부타입 변경 로직
 routes.post('/login', userController.loginUser);
 routes.post('/pointupdate', userController.pointUpdate);
+routes.post('/snspointupdate', userController.snsPointUpdate);
 routes.post('/usetimeupdate', userController.useTimeUpdate);
 
 routes.post('/missionsave', userController.missionSave);

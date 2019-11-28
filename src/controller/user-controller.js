@@ -232,6 +232,75 @@ exports.loginUser_Kakao = (req, res) => {
   ));
 };
 
+exports.snsPointUpdate = (req, res) => {
+  Mission.findOne({
+      missionID: req.body.id,
+      email: req.body.email
+    },
+    function(err, result) {
+      var todayPoints = 0;
+      var minusPoints = 0;
+      var usePoints = 0;
+      var snsPoint = Number(req.body.snsPoint);
+      // var totalUseTime = req.body.points;
+      // console.log("updatedAt : " + result.usedmission[0].updatedAt.getDate());
+
+      // 오늘 사용했던 시간 + 현재 사용한 시간이 9분(540초가 넘는지 확인 하는 로직)
+
+      // 날짜비교 로직 ----------------------------------------------------------------------------------------//
+      // for (var i = 0; i < result.usedmission.length; i++) {
+      //   // console.log(getFormattedDate(new Date()));
+      //   if (getFormattedDate(result.usedmission[i].updatedAt) == getFormattedDate(new Date())) {
+      //     // for (var k = 0; k < result.usedmission[k].points; k++){
+      //     // console.log("점수 : " + result.usedmission[i].points);
+      //     todayPoints = todayPoints + Number(result.usedmission[i].points);
+      //     // console.log(todayPoints);
+      //     // }
+      //   }
+      // }
+      //----------------------------------------------------------------------------------------//
+
+          // console.log("total points : " + todayPoints);
+          //총 사용시간과 현재 사용시간을 합쳐도 9분(540초)가 안넘어 갈때
+          // console.log("9분을 안넘어감");
+          var newPoint = req.body
+          newPoint.updatedAt = new Date();
+          Mission.update({
+            missionID: req.body.id,
+            email: req.body.email
+          }, {
+            // $push: {
+            //   usedmission: newPoint
+            // },
+            $inc: { //미션당 사용사긴 외에 일반적인 플리닉의 총 사용시간도 구해야 함 20191028
+              "usetime": snsPoint
+            }
+          }, function(err, post2) {
+            if (err) {
+              // console.log("tags error : " + err);
+              return res.status(400).json(err);
+            } else {
+              // User.findOneAndUpdate({
+              //     email: req.body.email
+              //   }, {
+              //     $inc: {
+              //       totalusetime: req.body.points
+              //     }
+              //   },
+              //   function(err, response) {
+              //     if (err) {
+              //       res.json(0);
+              //     } else {
+              //       // res.json(response.credit);
+              //     }
+              //   });
+              return res.status(201).json({
+                'msg': 'SNS 보너스 시간을 획득 하였습니다.'
+              });
+            }
+          });
+    });
+}
 
 exports.pointUpdate = (req, res) => {
   // console.log("start");
