@@ -9,7 +9,7 @@ var carezoneSchema = mongoose.Schema({
   comments: [{
     body: {type:String},
     // author: {type:mongoose.Schema.Types.ObjectId, ref:'user_admin', required:true},
-    createdAt: {type:Date, default:Date.now},
+    createdAt: {type:Date},
     updatedAt: {type: Date, default:Date.now},
     email: String,
     comment: String,
@@ -81,5 +81,6 @@ carezoneSchema.methods.getFormattedTime = function (date) {
 function get2digits(num){
   return ("0" + num).slice(-2);
 }
+
 var Carezone = mongoose.model('carezone',carezoneSchema);
 module.exports = Carezone;

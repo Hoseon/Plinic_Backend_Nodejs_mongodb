@@ -932,7 +932,7 @@ router.get('/chkuserimage/:id', (req, res, next) => {
       res.sendStatus(404);
     }
     if (!image) {
-      res.sendStatus(404);
+      res.json('NOTFOUND');
     }
     if (image) {
       var filename = image.filename;
