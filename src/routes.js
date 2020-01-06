@@ -80,6 +80,10 @@ routes.get('/special', passport.authenticate('jwt', { session: false }), (req, r
     return res.json({ msg: `Hey ${req.user.email}! I open at the close.` });
 });
 
+routes.get('/camera', function(req,res){
+  res.sendfile(__dirname + '/commons/camera.html');
+});
+
 routes.get('/daumjuso', function(req,res){
   res.sendfile(__dirname + '/commons/juso.html');
 });
