@@ -17,7 +17,8 @@ var bannerSchema = mongoose.Schema({
   filename: String,
   originalName: String,
   desc: String,
-  created: { type: Date, default: Date.now }
+  created: { type: Date, default: Date.now },
+  url: String, //스마트스토어 URL
 });
 
 bannerSchema.methods.getFormattedDate = function (date) {

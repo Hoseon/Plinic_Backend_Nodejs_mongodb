@@ -22,7 +22,10 @@ var SkinQna = require('./models/SkinQna');
 var SkinChart = require('./models/SkinChart');
 var Notice = require('./models/Notice');
 var Reward = require('./models/Reward');
+var Chulsuk = require('./models/Chulsuk');
 var Tags = require('./models/Tags');
+var AppReview = require('./models/AppReview');
+
 const GoogleStrategy = require('passport-google-oauth20');
 var jwt = require('jsonwebtoken');
 var config = require('./config/config');
@@ -40,10 +43,16 @@ var flash = require('connect-flash');
 var bodyParser = require('body-parser');
 var cookieParser = require('cookie-parser');
 var methodOverride = require('method-override');
+var UserSkin = require('./models/UserSkin');
 
 var multerS3 = require('multer-s3');
 const AWS = require("aws-sdk");
 AWS.config.loadFromPath(__dirname + "/config/awsconfig.json");
+
+var axios = require("axios");
+var cheerio = require("cheerio");
+
+const convert = require('xml-js');
 
 let s3 = new AWS.S3();
 
@@ -51,14 +60,31 @@ let s3upload = multer({
   storage: multerS3({
     s3: s3,
     bucket: 'plinic',
-    metadata: function(req, file, cb) {
+    metadata: function (req, file, cb) {
       cb(null, {
         fieldName: file.fieldname,
         filename: file.fieldname + '-' + Date.now()
       });
     },
-    key: function(req, file, cb) {
+    key: function (req, file, cb) {
       cb(null, file.fieldname + '-' + Date.now())
+    },
+    acl: 'public-read'
+  })
+});
+
+let s3skinupload = multer({
+  storage: multerS3({
+    s3: s3,
+    bucket: 'plinic',
+    metadata: function (req, file, cb) {
+      cb(null, {
+        fieldName: file.fieldname,
+        filename: file.fieldname + '-' + Date.now()
+      });
+    },
+    key: function (req, file, cb) {
+      cb(null, "skin/" + file.fieldname + '-' + Date.now())
     },
     acl: 'public-read'
   })
@@ -92,11 +118,11 @@ const sftpconfig = {
 
 //multer 선언 이미지 rest api 개발 20190425
 var storage = multer.diskStorage({
-  destination: function(req, file, cb) {
+  destination: function (req, file, cb) {
     cb(null, path.join(__dirname, '../uploads/'));
     //cb(null, UPLOAD_PATH)
   },
-  filename: function(req, file, cb) {
+  filename: function (req, file, cb) {
     cb(null, file.fieldname + '-' + Date.now())
   }
 })
@@ -115,16 +141,16 @@ var sftpUpload = multer({
       password: 'g100210!!',
     },
     // basepath: '/www/plinic',
-    destination: function(req, file, cb) {
+    destination: function (req, file, cb) {
       cb(null, '/www/plinic')
     },
-    filename: function(req, file, cb) {
+    filename: function (req, file, cb) {
       cb(null, file.fieldname + '-' + Date.now())
     }
   })
 });
 
-module.exports = function(app) {
+module.exports = function (app) {
   var app = express();
   app.use(cors());
 
@@ -161,17 +187,17 @@ module.exports = function(app) {
   passport.use(passportMiddleware);
 
 
-  passport.serializeUser(function(user, done) {
+  passport.serializeUser(function (user, done) {
     done(null, user);
   });
 
-  passport.deserializeUser(function(user, done) {
+  passport.deserializeUser(function (user, done) {
     done(null, user);
   });
 
   //해쉬태그 모두 가져 오기
-  app.get('/gethashtags', function(req, res) {
-    Tags.find(function(err, docs) {
+  app.get('/gethashtags', function (req, res) {
+    Tags.find(function (err, docs) {
       if (err) {
         res.sendStatus(400);
       }
@@ -241,7 +267,7 @@ module.exports = function(app) {
   app.post('/userupdateimages', s3upload.single('image'), (req, res, next) => {
     // Create a new image model and fill the properties
     let newUser = new UserImage();
-    newUser.isNew = false;  // 기존에 등록한 프로필 이미지가 있으면 Update , 새로 등록한 이미지이면은 new로 간다.
+    newUser.isNew = false; // 기존에 등록한 프로필 이미지가 있으면 Update , 새로 등록한 이미지이면은 new로 간다.
     newUser.filename = req.file.key;
     newUser.originalName = req.file.originalname;
     newUser.email = req.body.email;
@@ -281,7 +307,7 @@ module.exports = function(app) {
 
     UserImage.findOne({
       email: req.params.id
-    }, function(err, image) {
+    }, function (err, image) {
       if (err) {
         res.sendStatus(404);
       }
@@ -312,7 +338,7 @@ module.exports = function(app) {
 
     UserImage.findOne({
       email: req.params.id
-    }, function(err, image) {
+    }, function (err, image) {
       if (err) {
         res.sendStatus(404);
       }
@@ -343,7 +369,7 @@ module.exports = function(app) {
 
     UserImage.findOne({
       email: req.params.id
-    }, function(err, image) {
+    }, function (err, image) {
       if (err) {
         res.sendStatus(404);
       }
@@ -651,7 +677,7 @@ module.exports = function(app) {
 
     SkinChart.findOne({
       email: req.params.id
-    }, function(err, score) {
+    }, function (err, score) {
       if (err) {
         res.sendStatus(400);
       }
@@ -684,7 +710,7 @@ module.exports = function(app) {
       },
       // { students: { $elemMatch: { school: 102, age: { $gt: 10} } } } )
       // {'score.saveDate' : { $lte: new Date('2019-07-01') } },
-      function(err, score) {
+      function (err, score) {
         if (err) {
           console.log(err), res.sendStatus(400);
         }
@@ -748,7 +774,7 @@ module.exports = function(app) {
 
 
   // Demo Route (GET http://localhost:8001)
-  app.get('/', function(req, res) {
+  app.get('/', function (req, res) {
     return res.send('Hello! The API is at http://localhost:' + port + '/api');
   });
 
@@ -760,7 +786,7 @@ module.exports = function(app) {
   app.set('view engine', 'ejs');
   app.set('views', './src/views')
   //cafe24전용 ejs 경로 하드코딩으로 사용해야 성공했음
-  //app.set('views', '/home/hosting_users/g1partners4/apps/g1partners4_plinic/src/views')
+  // app.set('views', '/home/hosting_users/g1partners4/apps/g1partners4_plinic/src/views')
 
 
   //플리닉 관리자 페이지 라우터 개발 20190430 추호선
@@ -778,6 +804,7 @@ module.exports = function(app) {
   app.use('/skinqna', require('./skinqna'));
   app.use('/exhibition', require('./exhibition'));
   app.use('/reward', require('./reward'));
+  app.use('/product', require('./product'));
 
   app.get('/ejs', (req, res) => {
     res.render('home');
@@ -802,10 +829,10 @@ module.exports = function(app) {
       clientSecret: '13NCCqRqTNBCcrN8vVNuyupWrH3kv6qM', // clientSecret을 사용하지 않는다면 넘기지 말거나 빈 스트링을 넘길 것
       callbackURL: '/auth/login/kakao/callback'
     },
-    function(accessToken, refreshToken, profile, done) {
+    function (accessToken, refreshToken, profile, done) {
       User.findOne({
         'kakao.id': profile.id
-      }, function(err, user) {
+      }, function (err, user) {
         if (!user) {
           user = new User({
             name: profile.nickname,
@@ -814,7 +841,7 @@ module.exports = function(app) {
             provider: 'kakao',
             naver: profile._json
           });
-          user.save(function(err) {
+          user.save(function (err) {
             if (err) console.log('mongoDB error : ' + err);
             return done(err, user);
           });
@@ -840,10 +867,10 @@ module.exports = function(app) {
       clientSecret: 'joXW3wHq8s',
       callbackURL: '/auth/login/naver/callback'
     },
-    function(accessToken, refreshToken, profile, done) {
+    function (accessToken, refreshToken, profile, done) {
       User.findOne({
         'naver.id': profile.id
-      }, function(err, user) {
+      }, function (err, user) {
         if (!user) {
           user = new User({
             name: profile.displayName,
@@ -852,7 +879,7 @@ module.exports = function(app) {
             provider: 'naver',
             naver: profile._json
           });
-          user.save(function(err) {
+          user.save(function (err) {
             if (err) console.log('mongoDB error : ' + err);
             return done(err, user);
           });
@@ -882,10 +909,10 @@ module.exports = function(app) {
       clientID: '182510992437-ri45f5fdo8be7h193uvfohcugf9jh5fl.apps.googleusercontent.com',
       clientSecret: 'RsAmattHXCaNXID1JlnluzJi'
     },
-    function(accessToken, refreshToken, profile, done) {
+    function (accessToken, refreshToken, profile, done) {
       User.findOne({
         'google.id': profile.id
-      }, function(err, user) {
+      }, function (err, user) {
         if (!user) {
           user = new User({
             googleId: profile.googleId,
@@ -893,7 +920,7 @@ module.exports = function(app) {
             provider: 'google',
             naver: profile._json
           });
-          user.save(function(err) {
+          user.save(function (err) {
             if (err) console.log('mongoDB error : ' + err);
             return done(err, user);
           });
@@ -976,12 +1003,12 @@ module.exports = function(app) {
 
 
 
-  app.get('/totalusetime/:id', function(req, res, next) {
+  app.get('/totalusetime/:id', function (req, res, next) {
     User.findOne({
         email: req.params.id
       },
-      function(err, docs) {
-        if(err){
+      function (err, docs) {
+        if (err) {
           res.sendStatus(400);
         } else {
           res.json(docs['totalusetime']);
@@ -989,7 +1016,673 @@ module.exports = function(app) {
       });
   });
 
+  app.get('/scrab', function (req, res, next) {
+    console.log("웹 크롤링 시작");
 
+    function getHtml() {
+      try {
+        return axios.get("http://www.beautynury.com/news/lists/cat/10/k/200");
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
+    function getHtml2() {
+      try {
+        return axios.get("http://www.beautynury.com/news/lists/cat/10/k/200/page/15");
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
+    axios.all([getHtml(), getHtml2()]).then(axios.spread((get1, get2) => {
+
+      let ulList = [];
+      const $ = cheerio.load(get1.data += get2.data);
+      const $bodyList = $("div.sub_news_list ul.main_article").children("li");
+
+      $bodyList.each(function (i, elem) {
+        // console.log(i);
+        ulList[i] = {
+          title: $(this).find('a h2').text(),
+          sub_title: $(this).find('a h3').text(),
+          desc: $(this).find('a div.description').text(),
+          // url: $(this).find('strong.news-tl a').attr('href'),
+          image_url: $(this).find('div.thumbnail img').attr('src'),
+          image_alt: $(this).find('p.poto a img').attr('alt'),
+          // summary: $(this).find('p.lead').text().slice(0, -11),
+          date: $(this).find('div.rep_info').text()
+        };
+      });
+
+      const data = ulList.filter(n => n.title);
+      // console.log(data);
+      res.json(data);
+      return data;
+
+      // var reulst = Object.assign(get1.data, get2.data);
+      // console.log(reulst);
+      // console.log(get1.data);
+      // console.log(get2.data);
+      // res.sendStatus(200);
+    }))
+  });
+
+  app.get('/multiGet', async function (req, res, next) {
+    var result;
+    for (let i = 1; i <= 10; i++) {
+      var request = require('request');
+      console.log("멀티?");
+      await request({
+        url: 'http://localhost:8001/getCsmtcs/' + i,
+        method: 'GET'
+      }, function (error, response, body) {
+        result += body;
+        if (i = 10) {
+          res.send(result);
+        }
+      })
+    }
+  })
+
+  app.get('/getCsmtcs/:pageNo', function (req, res, next) {
+    console.log(req.params.pageNo);
+    var page = req.params.pageNo;
+    var request = require('request');
+
+    var url = 'http://apis.data.go.kr/1470000/CsmtcsMfcrtrInfoService/getCsmtcsMfcrtrInfoList';
+    var queryParams = '?' + encodeURIComponent('ServiceKey') + '=T5dLT4fW1bs5ht%2BVj9O4RRT6jXNlhj9nm1zTtpmee3RmA42ubtUTAHK4ZgnbHfCZwAHIU3YSiO9u1c2jPnb5fQ%3D%3D'; /* Service Key*/
+    // queryParams += '&' + encodeURIComponent('entp_name') + '=' + encodeURIComponent('(주)태후코스메틱'); /* 업체명 */
+    // queryParams += '&' + encodeURIComponent('entp_permit_date') + '=' + encodeURIComponent('20120302'); /* 허가일자 */
+    queryParams += '&' + encodeURIComponent('pageNo') + '=' + encodeURIComponent(page); /* 페이지번호 */
+    queryParams += '&' + encodeURIComponent('numOfRows') + '=' + encodeURIComponent('100'); /* 한 페이지 결과 수 */
+
+    request({
+      url: url + queryParams,
+      method: 'GET'
+    }, function (error, response, body) {
+      //console.log('Status', response.statusCode);
+      //console.log('Headers', JSON.stringify(response.headers));
+      //console.log('Reponse received', body);
+      res.send(body);
+    });
+  });
+
+  app.get('/getItem22', function (req, res, next) {
+
+    console.log("겟 아이템 11");
+    var request = require('request');
+    var fs = require('fs')
+
+    var url = 'http://apis.data.go.kr/1471057/FcssJdgmnPrdlstInforService/getEvaluationItemList';
+    var queryParams = '?' + encodeURIComponent('ServiceKey') + '=xuUpbB%2BmtX%2Fjia%2BmBNs%2BgkoI%2Bv2PMiT%2BL%2BDKhYC1KPJvue9SKKA%2BJSeFdTs69jERJODPLcZFqb4OG4ktBBbnTw%3D%3D'; /* Service Key*/
+    // queryParams += '&' + encodeURIComponent('pageNo') + '=' + encodeURIComponent('1'); /* 페이지 번호 */
+    // queryParams += '&' + encodeURIComponent('numOfRows') + '=' + encodeURIComponent('100'); /* 한 페이지 결과 수 */
+
+    request({
+      url: url + queryParams,
+      method: 'GET'
+    }, function (error, response, body) {
+      console.log('Status', response.statusCode);
+      console.log('Headers', JSON.stringify(response.headers));
+      console.log('Reponse received', body);
+      res.json({
+        Status: response.statusCode,
+        Headers: JSON.stringify(response.headers),
+        body: body
+      })
+    }).pipe(fs.WriteStream('notimeout.xml'))
+
+  });
+
+  app.get('/getItem11', function (req, res, next) {
+
+    var request = require('request');
+
+    var url = 'http://apis.data.go.kr/1471057/FcssJdgmnPrdlstInforService/getEvaluationItemList';
+    var queryParams = '?' + encodeURIComponent('ServiceKey') + '=xuUpbB%2BmtX%2Fjia%2BmBNs%2BgkoI%2Bv2PMiT%2BL%2BDKhYC1KPJvue9SKKA%2BJSeFdTs69jERJODPLcZFqb4OG4ktBBbnTw%3D%3D'; /* Service Key*/
+    queryParams += '&' + encodeURIComponent('pageNo') + '=' + encodeURIComponent('1'); /* 페이지 번호 */
+    queryParams += '&' + encodeURIComponent('numOfRows') + '=' + encodeURIComponent('100'); /* 한 페이지 결과 수 */
+
+    request({
+      url: url + queryParams,
+      method: 'GET'
+    }, function (error, response, body) {
+      console.log('Status', response.statusCode);
+      console.log('Headers', JSON.stringify(response.headers));
+      console.log('Reponse received', body);
+      res.json({
+        Status: response.statusCode,
+        Headers: JSON.stringify(response.headers),
+        body: body
+      })
+    });
+  });
+
+  //근접촬영(눈가) 이미지 업로드 S3 2020-04-16 
+  app.post('/eyeskin', s3skinupload.single('eyeimage'), (req, res, next) => {
+    // console.log(JSON.stringify(req.body));
+    // console.log(JSON.stringify(req.file));
+    if (!req.body || !req.file) {
+      return res.status(400).json({
+        'msg': '피부 촬영이 등록되지 않았습니다.'
+      });
+    }
+
+    UserSkin.findOne({
+      email: req.body.email
+    }, function (err, user) {
+      if (err) {
+        res.sendStatus(404);
+      }
+      if (!user) { //촬영한 이력이 없는 경우 새로운 데이터를 등록 시켜 줌
+        let newUserSkin = new UserSkin();
+        newUserSkin.filename = req.file.key;
+        newUserSkin.originalName = req.file.originalname;
+        newUserSkin.email = req.body.email;
+        newUserSkin.gender = req.body.gender;
+        newUserSkin.skincomplaint = req.body.skincomplaint;
+        newUserSkin.nickname = req.body.nickname;
+        newUserSkin.birthday = req.body.birthday;
+        newUserSkin.age = req.body.age;
+        let userImage = {
+          gnder: req.body.gender,
+          skintype: req.body.skincomplaint,
+          age: req.body.age,
+          skinregion: 'eye',
+          filename: req.file.key,
+          originalName: req.file.originalname
+        }
+        newUserSkin.userskinimage = userImage;
+        newUserSkin.save((err, result) => {
+          if (err) {
+            return res.status(400).json({
+              'msg': '저장이 안됬습니다.'
+            });
+          }
+          if (result) {
+            res.status(201).send({
+              ok: "ok 이마 사진 저장 완료" // newUser
+            });
+          }
+        });
+      }
+      if (user) { //촬영한 이력이 있는 경우 배열에 push 시켜 줌
+        let userImage = {
+          gnder: req.body.gender,
+          skintype: req.body.skincomplaint,
+          age: req.body.age,
+          skinregion: 'eye',
+          filename: req.file.key,
+          originalName: req.file.originalname
+        }
+        UserSkin.update({
+          email: req.body.email
+        }, {
+          $push: {
+            userskinimage: userImage
+          },
+        }, function(err, post2) {
+          if (err) {
+            // console.log("tags error : " + err);
+            return res.status(400).json(err);
+          } else {
+            return res.status(201).json({
+              'msg': '사용자 눈가 촬영정보 업데이트 됨'
+            });
+          }
+        });
+      }
+    });
+  });
+
+
+  //근접촬영(두피) 이미지 업로드 S3 2020-04-16 
+  app.post('/hairskin', s3skinupload.single('hairimage'), (req, res, next) => {
+    // console.log(JSON.stringify(req.body));
+    // console.log(JSON.stringify(req.file));
+    if (!req.body || !req.file) {
+      return res.status(400).json({
+        'msg': '피부 촬영이 등록되지 않았습니다.'
+      });
+    }
+
+    UserSkin.findOne({
+      email: req.body.email
+    }, function (err, user) {
+      if (err) {
+        res.sendStatus(404);
+      }
+      if (!user) { //촬영한 이력이 없는 경우 새로운 데이터를 등록 시켜 줌
+        let newUserSkin = new UserSkin();
+        newUserSkin.filename = req.file.key;
+        newUserSkin.originalName = req.file.originalname;
+        newUserSkin.email = req.body.email;
+        newUserSkin.gender = req.body.gender;
+        newUserSkin.skincomplaint = req.body.skincomplaint;
+        newUserSkin.nickname = req.body.nickname;
+        newUserSkin.birthday = req.body.birthday;
+        newUserSkin.age = req.body.age;
+        let userImage = {
+          gnder: req.body.gender,
+          skintype: req.body.skincomplaint,
+          age: req.body.age,
+          skinregion: 'hair',
+          filename: req.file.key,
+          originalName: req.file.originalname
+        }
+        newUserSkin.userskinimage = userImage;
+        newUserSkin.save((err, result) => {
+          if (err) {
+            return res.status(400).json({
+              'msg': '저장이 안됬습니다.'
+            });
+          }
+          if (result) {
+            res.status(201).send({
+              ok: "ok 이마 사진 저장 완료" // newUser
+            });
+          }
+        });
+      }
+      if (user) { //촬영한 이력이 있는 경우 배열에 push 시켜 줌
+        let userImage = {
+          gnder: req.body.gender,
+          skintype: req.body.skincomplaint,
+          age: req.body.age,
+          skinregion: 'hair',
+          filename: req.file.key,
+          originalName: req.file.originalname
+        }
+        UserSkin.update({
+          email: req.body.email
+        }, {
+          $push: {
+            userskinimage: userImage
+          },
+        }, function(err, post2) {
+          if (err) {
+            // console.log("tags error : " + err);
+            return res.status(400).json(err);
+          } else {
+            return res.status(201).json({
+              'msg': '사용자 눈가 촬영정보 업데이트 됨'
+            });
+          }
+        });
+      }
+    });
+  });
+
+
+
+  //근접촬영(이마) 이미지 업로드 S3
+  app.post('/foreheadskin', s3skinupload.single('foreheadimage'), (req, res, next) => {
+    // console.log(JSON.stringify(req.body));
+    // console.log(JSON.stringify(req.file));
+    if (!req.body || !req.file) {
+      return res.status(400).json({
+        'msg': '피부 촬영이 등록되지 않았습니다.'
+      });
+    }
+
+    UserSkin.findOne({
+      email: req.body.email
+    }, function (err, user) {
+      if (err) {
+        res.sendStatus(404);
+      }
+      if (!user) { //촬영한 이력이 없는 경우 새로운 데이터를 등록 시켜 줌
+        let newUserSkin = new UserSkin();
+        newUserSkin.filename = req.file.key;
+        newUserSkin.originalName = req.file.originalname;
+        newUserSkin.email = req.body.email;
+        newUserSkin.gender = req.body.gender;
+        newUserSkin.skincomplaint = req.body.skincomplaint;
+        newUserSkin.nickname = req.body.nickname;
+        newUserSkin.birthday = req.body.birthday;
+        newUserSkin.age = req.body.age;
+        let userImage = {
+          gnder: req.body.gender,
+          skintype: req.body.skincomplaint,
+          age: req.body.age,
+          skinregion: 'forehead',
+          filename: req.file.key,
+          originalName: req.file.originalname
+        }
+        newUserSkin.userskinimage = userImage;
+        newUserSkin.save((err, result) => {
+          if (err) {
+            return res.status(400).json({
+              'msg': '저장이 안됬습니다.'
+            });
+          }
+          if (result) {
+            res.status(201).send({
+              ok: "ok 이마 사진 저장 완료" // newUser
+            });
+          }
+        });
+      }
+      if (user) { //촬영한 이력이 있는 경우 배열에 push 시켜 줌
+        let userImage = {
+          gnder: req.body.gender,
+          skintype: req.body.skincomplaint,
+          age: req.body.age,
+          skinregion: 'forehead',
+          filename: req.file.key,
+          originalName: req.file.originalname
+        }
+        UserSkin.update({
+          email: req.body.email
+        }, {
+          $push: {
+            userskinimage: userImage
+          },
+        }, function(err, post2) {
+          if (err) {
+            // console.log("tags error : " + err);
+            return res.status(400).json(err);
+          } else {
+            return res.status(201).json({
+              'msg': '사용자 이마 촬영정보 업데이트 됨'
+            });
+          }
+        });
+      }
+    });
+  });
+
+  //근접촬영(볼) 이미지 업로드 S3
+  app.post('/cheekskin', s3skinupload.single('cheekimage'), (req, res, next) => {
+    // console.log(JSON.stringify(req.body));
+    // console.log(JSON.stringify(req.file));
+    if (!req.body || !req.file) {
+      return res.status(400).json({
+        'msg': '피부 촬영이 등록되지 않았습니다.'
+      });
+    }
+
+    UserSkin.findOne({
+      email: req.body.email
+    }, function (err, user) {
+      if (err) {
+        res.sendStatus(404);
+      }
+      if (!user) { //촬영한 이력이 없는 경우 새로운 데이터를 등록 시켜 줌
+        let newUserSkin = new UserSkin();
+        newUserSkin.filename = req.file.key;
+        newUserSkin.originalName = req.file.originalname;
+        newUserSkin.email = req.body.email;
+        newUserSkin.gender = req.body.gender;
+        newUserSkin.skincomplaint = req.body.skincomplaint;
+        newUserSkin.nickname = req.body.nickname;
+        newUserSkin.birthday = req.body.birthday;
+        newUserSkin.age = req.body.age;
+        let userImage = {
+          gnder: req.body.gender,
+          skintype: req.body.skincomplaint,
+          age: req.body.age,
+          skinregion: 'cheek',
+          filename: req.file.key,
+          originalName: req.file.originalname
+        }
+        newUserSkin.userskinimage = userImage;
+        newUserSkin.save((err, result) => {
+          if (err) {
+            return res.status(400).json({
+              'msg': '저장이 안됬습니다.'
+            });
+          }
+          if (result) {
+            res.status(201).send({
+              ok: "ok 볼 사진 저장 완료" // newUser
+            });
+          }
+        });
+      }
+      if (user) { //촬영한 이력이 있는 경우 배열에 push 시켜 줌
+        let userImage = {
+          gnder: req.body.gender,
+          skintype: req.body.skincomplaint,
+          age: req.body.age,
+          skinregion: 'cheek',
+          filename: req.file.key,
+          originalName: req.file.originalname
+        }
+        UserSkin.update({
+          email: req.body.email
+        }, {
+          $push: {
+            userskinimage: userImage
+          },
+        }, function(err, post2) {
+          if (err) {
+            // console.log("tags error : " + err);
+            return res.status(400).json(err);
+          } else {
+            return res.status(201).json({
+              'msg': '사용자 볼 촬영정보 업데이트 됨'
+            });
+          }
+        });
+      }
+    });
+  });
+
+
+  //근접촬영(볼) 이미지 업로드 S3
+  app.post('/cameratest', s3skinupload.array("test", 12), (req, res, next) => {
+      // console.log(JSON.stringify(req.body));
+      console.log(JSON.stringify(req.files));
+      if (!req.body || !req.file) {
+        return res.status(400).json({
+          'msg': '피부 촬영이 등록되지 않았습니다.'
+        });
+      }
+    });
+
+  //출석체크 데이터 불러 오기 2020-02-14
+  app.get('/loadchulsuk/:email', function (req, res, next) {
+    Chulsuk.findOne({
+        email: req.params.email
+      },
+      function (err, docs) {
+        if (err) {
+          res.sendStatus(400);
+        } else if(!docs){
+          res.json('');
+        } else {
+          res.json(docs['chulcheck']);
+        }
+      });
+  });
+
+  //사용자 포인트 다시 가져 오기 2020-02-18
+  app.get('/reloadUserPoint/:email', function (req, res, next) {
+    User.findOne({
+        email: req.params.email
+      },
+      function (err, docs) {
+        if (err) {
+          res.sendStatus(400);
+        } else {
+          res.json(docs.totaluserpoint);
+        }
+      });
+  });
+
+  //앱 심사 시, 개인정보 수집 위배에 걸리지 않도록 한다. 2020-03-18
+  app.get('/appreview/', function (req, res, next) {
+    AppReview.findOne({
+        target: 'ios'
+      },
+      function (err, docs) {
+        if (err) {
+          res.sendStatus(400);
+        } else {
+          console.log(JSON.stringify(docs));
+          res.json(docs);
+        }
+      });
+  });
+
+
+  app.get('/getweather/:date/:time', async function(req, res, next) {
+    var date = req.params.date;
+    var time = req.params.time;
+
+    var request1 = require('request');
+    // var url = 'http://apis.data.go.kr/1360000/VilageFcstInfoService/getVilageFcst' //동네예보조회
+    // var url = 'http://apis.data.go.kr/1360000/VilageFcstInfoService/getUltraSrtNcst' //초단기실황
+    var url = 'http://apis.data.go.kr/1360000/VilageFcstInfoService/getUltraSrtFcst' //초단기예보
+    var queryParams = '?' + encodeURIComponent('ServiceKey') + '=' + 'GS5nk4hqAxXBY%2BiVThUbynBs96y91ppEjtmg11%2BYNM1ySXziUlRbpqQgdpCld4%2BzhzKL9YvJVNGmXp0jI%2FgWow%3D%3D'; /* */
+        queryParams += '&' + encodeURIComponent('pageNo') + '=' + encodeURIComponent('1'); /* */
+        queryParams += '&' + encodeURIComponent('numOfRows') + '=' + encodeURIComponent('100'); /* */
+        queryParams += '&' + encodeURIComponent('dataType') + '=' + encodeURIComponent('JSON'); /* */
+        queryParams += '&' + encodeURIComponent('base_date') + '=' + encodeURIComponent(date); /* */
+        queryParams += '&' + encodeURIComponent('base_time') + '=' + encodeURIComponent(time); /* */
+        queryParams += '&' + encodeURIComponent('nx') + '=' + encodeURIComponent('62'); /* */
+        queryParams += '&' + encodeURIComponent('ny') + '=' + encodeURIComponent('126'); /* */
+        // console.log(queryParams);
+    await request1({
+      url: url + queryParams,
+      method: 'GET'
+    }, function (error, response, body) {
+      // console.log('Status', response.statusCode);
+      // console.log('Headers', JSON.stringify(response.headers));
+      // console.log('Reponse received', body);
+      res.send(body);
+    })
+  })
+
+  app.get('/getmise', async function(req, res, next) {
+    var date = req.params.date;
+    var time = req.params.time;
+
+    var request2 = require('request');
+    var url = 'http://openapi.airkorea.or.kr/openapi/services/rest/ArpltnInforInqireSvc/getCtprvnMesureLIst'; /*URL*/
+    var queryParams = '?' + encodeURIComponent('ServiceKey') + '='+'GS5nk4hqAxXBY%2BiVThUbynBs96y91ppEjtmg11%2BYNM1ySXziUlRbpqQgdpCld4%2BzhzKL9YvJVNGmXp0jI%2FgWow%3D%3D'; /*Service Key*/
+    queryParams += '&' + encodeURIComponent('numOfRows') + '=' + encodeURIComponent('100'); /**/
+    queryParams += '&' + encodeURIComponent('pageNo') + '=' + encodeURIComponent('1'); /**/
+    queryParams += '&' + encodeURIComponent('itemCode') + '=' + encodeURIComponent('PM10'); /**/
+    queryParams += '&' + encodeURIComponent('dataGubun') + '=' + encodeURIComponent('HOUR'); /**/
+    // queryParams += '&' + encodeURIComponent('dataTerm') + '=' + encodeURIComponent('DAILY'); /**/
+    // queryParams += '&' + encodeURIComponent('ver') + '=' + encodeURIComponent('1.3'); /**/
+    await request2({
+      url: url + queryParams,
+      method: 'GET'
+    }, function (error, response, body) {
+      // console.log('Status', response.statusCode);
+      // console.log('Headers', JSON.stringify(response.headers));
+      // console.log('Reponse received', body);
+      var xmlToJson = convert.xml2json(body, {compact: true, spaces: 4});
+      res.send(xmlToJson);
+
+    })
+  })
+
+  app.get('/getsun', async function(req, res, next) {
+    var date = req.params.date;
+    var time = req.params.time;
+
+    var request3 = require('request');
+    var url = 'http://apis.data.go.kr/1360000/LivingWthrIdxService/getUVIdx'; /*URL*/
+    var queryParams = '?' + encodeURIComponent('ServiceKey') + '='+'GS5nk4hqAxXBY%2BiVThUbynBs96y91ppEjtmg11%2BYNM1ySXziUlRbpqQgdpCld4%2BzhzKL9YvJVNGmXp0jI%2FgWow%3D%3D'; /*Service Key*/
+    queryParams += '&' + encodeURIComponent('numOfRows') + '=' + encodeURIComponent('100'); /**/
+    queryParams += '&' + encodeURIComponent('pageNo') + '=' + encodeURIComponent('1'); /**/
+    queryParams += '&' + encodeURIComponent('dataType') + '=' + encodeURIComponent('JSON'); /**/
+    queryParams += '&' + encodeURIComponent('areaNo') + '=' + encodeURIComponent('1100000000'); /**/
+    queryParams += '&' + encodeURIComponent('time') + '=' + encodeURIComponent('2020052110'); /**/
+    // queryParams += '&' + encodeURIComponent('itemCode') + '=' + encodeURIComponent('PM10'); /**/
+    // queryParams += '&' + encodeURIComponent('dataGubun') + '=' + encodeURIComponent('HOUR'); /**/
+    // queryParams += '&' + encodeURIComponent('dataTerm') + '=' + encodeURIComponent('DAILY'); /**/
+    // queryParams += '&' + encodeURIComponent('ver') + '=' + encodeURIComponent('1.3'); /**/
+
+    await request3({
+      url: url + queryParams,
+      method: 'GET'
+    }, function (error, response, body) {
+
+      // console.log(body);
+      // console.log('Status', response.statusCode);
+      // console.log('Headers', JSON.stringify(response.headers));
+      // console.log('Reponse received', body);
+      if(!body) {
+        return res.status(400).send({
+          'msg': '자외선 조회 실패'
+        });
+      } else{
+        res.send(body);
+      }
+    })
+  })
+
+
+  //사용자 포인트 다시 가져 오기 2020-02-18
+  app.get('/testskinqna/:email', function (req, res, next) {
+    User.findOne({
+      email: req.params.email
+    },
+    function(err, result) {
+      if (result) {
+        for(var i =0; i< result.userpoint.length; i++) {
+          if (getFormattedDate(new Date(result.userpoint[i].updatedAt)) == getFormattedDate(new Date())) {
+            if(result.userpoint[i].status=="skinqna") {
+              return res.status(400).json({
+                      'msg': '하루 한번만 포인트가 누적됩니다!!'
+              });
+            }
+          }
+        }
+        //커뮤니티 글 작성시 1회/일 50점을 쌓아 준다 2020-05-25
+        User.update({
+          email : req.params.email
+        }, {
+          $push: {
+            userpoint : {point: 50, updatedAt: new Date(), status: 'skinqna'}
+          }, $inc: { //미션당 사용사긴 외에 일반적인 플리닉의 총 사용시간도 구해야 함 20191028
+            "totaluserpoint": 50
+          }
+        }, function(err, result2){
+          if(err) {
+            return res.status(400).json(err);
+          } else {
+            return res.status(201).json({
+              'msg': '커뮤니티 작성 포인트가 누적되었습니다!!'
+            });
+          }
+        });
+      } else {
+        // //검색결과가 없으면 신규 등록
+        // User.update({
+        //   email : req.body.email
+        // }, {
+        //   $push: {
+        //     userpoint : {point: 50, updatedAt: new Date(), status: 'skinqna'}
+        //   }, $inc: { //미션당 사용사긴 외에 일반적인 플리닉의 총 사용시간도 구해야 함 20191028
+        //     "totaluserpoint": 50
+        //   }
+        // }, function(err, result2){
+        //   if(err) {
+        //     return res.status(400).json(err);
+        //   } else {
+        //     return res.status(201).json({
+        //       'msg': '커뮤니티 작성 포인트가 누적되었습니다222!!'
+        //     });
+        //   }
+        // });
+      }
+    });
+  });
+
+  function getFormattedDate(date) {
+    return date.getFullYear() + "-" + get2digits(date.getMonth() + 1) + "-" + get2digits(date.getDate());
+  };
+
+  function get2digits(num){
+    return ("0" + num).slice(-2);
+  }
 
   /*
   const uri = "mongodb+srv://plinic:1234@cluster0-hgfgd.mongodb.net/plinic?retryWrites=true";
@@ -1043,7 +1736,7 @@ module.exports = function(app) {
         var Counter = require('./models/Counter');
         Counter.findOne({
           name: "vistors"
-        }, function(err, counter) {
+        }, function (err, counter) {
           if (err) return next();
           if (counter === null) {
             Counter.create({
@@ -1067,4 +1760,6 @@ module.exports = function(app) {
     }
     return next();
   }
+
+
 }

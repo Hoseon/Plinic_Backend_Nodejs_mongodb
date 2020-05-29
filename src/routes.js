@@ -7,6 +7,7 @@ var skinChartController = require('./controller/skinchart-controller');
 var skinQnaController = require('./controller/skinqna-controller');
 var careZoneController = require('./controller/carezone-controller');
 var rewardController = require('./controller/reward-controller');
+var chulsukController = require('./controller/chulsuk-controller');
 var passport = require('passport');
 var mysql      = require('mysql');
 var dbconfig   = require('./config/database.js');
@@ -23,14 +24,24 @@ routes.get('/', (req, res) => {
 
 routes.post('/register', userController.registerUser);
 routes.post('/registersns', userController.registerUserSnS);
+routes.post('/registersnstoplinic', userController.registerUserSnStoPlinic);
 routes.post('/userupdatenickname', userController.updateUserNickname); //사용자 닉네임, 생년월, 비밀번호 변경 로직
 routes.post('/updateskincomplaint', userController.updateUserSkinComplaint); //사용자 피부타입 변경 로직
+routes.post('/savemymainproduct', userController.saveMyMainProduct); //사용자 주 화장품 저장
+routes.post('/savemysubproduct', userController.saveSubMainProduct); //사용자 보조 화장품 저장
+routes.post('/delsavemymainproduct', userController.delAndSaveMyMainProduct); //사용자 주 화장품 지우고 저장
+routes.post('/delsavemysubproduct', userController.delAndSaveSubMainProduct); //사용자 보조 화장품 지우고 저장
 routes.post('/login', userController.loginUser);
 routes.post('/pointupdate', userController.pointUpdate);
 routes.post('/snspointupdate', userController.snsPointUpdate);
 routes.post('/usetimeupdate', userController.useTimeUpdate);
+routes.post('/userpointupdate', userController.userPointUpdate);
 
 routes.post('/missionsave', userController.missionSave);
+
+routes.post('/challengeupdate', userController.challengeUpdate);//20200210 챌린지 3분 이상 사용시 14주 도전중 1주 추가
+routes.post('/challengeupdate2', userController.challengeUpdate2);//20200210 챌린지 3분 이상 사용시 14주 도전중 1주 추가
+routes.post('/challengesave', userController.challengeSave); //챌린지를 시작하면 기존 v2를 놔두고 새롭게 챌린지 collection(table)을 만들어서 사용한다.
 
 //문의 하기 저장
 routes.post('/qnasave', qnaController.qnaSave);
@@ -63,6 +74,19 @@ routes.post('/skinchartupdate', skinChartController.skinChartUpdate);
 
 //보상받기
 routes.post('/rewardsave', rewardController.rewardSave);
+
+//챌린지 보상받기 2020-02-11 챌린지 기능으로 추가
+routes.post('/rewardchallengesave', rewardController.rewardChallengeSave);
+
+//출석체크 2020-02-14
+routes.post('/chulsuk', chulsukController.chulsukSave);
+
+//사용자 포인트 업데이트(케어하기, 미션) 2020-02-18
+routes.post('/challengepointupdate', userController.challengePointUpdate); //챌린지 할 경우 포인트 누적
+routes.post('/usepointupdate', userController.usePointUpdate); //일반 케어 하기 할 경우 포인트 누적
+
+//포인트 누적후 사용자 정보 업데이트 해서 가져 오기.
+routes.post('/loaduser', userController.loadUser);
 
 
 //routes.get('/auth/kakao', userController.loginUser_Kakao);

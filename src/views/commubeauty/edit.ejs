@@ -41,6 +41,11 @@
         <div id="cvErrBody" class="message"></div>
       </div>
       <div class="floats">
+        <label>뷰티팁 내용</label>
+        <textarea class="cvRequired" name="post[body]" cvRqErrMsg="Body is required." cvRqErrTo="#cvErrBody"><%=post.midtext%></textarea>
+        <div id="cvErrBody" class="message"></div>
+      </div>
+      <div class="floats">
         <label>뷰티 URL</label>
         <textarea class="cvRequired" name="post[posturl]" cvRqErrMsg="Body is required." cvRqErrTo="#cvErrBody"><%=post.posturl%></textarea>
         <div id="cvErrBody" class="message"></div>

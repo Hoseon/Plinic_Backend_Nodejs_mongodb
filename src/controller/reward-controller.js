@@ -2,6 +2,7 @@ var User = require('../models/user');
 var SkinQna = require('../models/SkinQna');
 var Reward = require('../models/Reward');
 var Mission = require('../models/Mission');
+var Challenge = require('../models/Challenge');
 var Tags = require('../models/Tags');
 var SkinQnaCounter = require('../models/SkinQnaCounter');
 var jwt = require('jsonwebtoken');
@@ -50,6 +51,67 @@ exports.rewardSave = (req, res) => {
 
         req.body.reward = true;
         Mission.findOneAndUpdate({
+          missionID: req.body.missionID,
+          email: req.body.email
+        }, { $set: { "reward" : true, "missioncomplete": true } }, function(err, post) {
+          if (err) return res.json({
+            success: false,
+            message: err
+          });
+          if (!post) return res.json({
+            success: false,
+            message: "No data found to update"
+          });
+          // res.redirect('/banner/' + req.params.id);
+        });
+        return res.status(201).json(result);
+      });
+    }], function(callback, counter) {
+      // req.body.reward = true;
+      // let newMission = Mission(req.body.reward);
+      // // newReward.numId = counter.totalCount + 1;
+      // newMission.save((err, user) => {
+      //   if (err) {
+      //     console.log(err);
+      //     return res.status(400).json({
+      //       'msg': '발송정보가 저장되지 않았습니다. <br /> Error : ' + err
+      //     });
+      //   }
+      //   return res.status(201).json(user);
+      // });
+    });
+    // create
+  }
+};
+
+//2020-02-11 챌린지 보상 세이브
+exports.rewardChallengeSave = (req, res) => {
+  // console.log("-------------------------------request-------------");
+  // console.log("qna email -------------------------------- : " + req.body.email);
+  // console.log("qna-------------------------------- : " + req.body.select);
+  // console.log("qna-------------------------------- : " + req.body.tags);
+  // console.log("qna-------------------------------- : " + JSON.stringify(req.body.qna));
+  // //return res.status(400).json({ 'msg': '문의하기가 등록되었습니다. <br /><br /> 곧 관리자에게 Email로 답변을 받을 수 있습니다.' });
+  //console.log("-------------------------------response-------------" + res.body.id);
+
+  if (!req.body.email || !req.body.address) {
+    return res.status(400).json({
+      'msg': '정확한 정보를 입력해 주세요. <br / >. 관리자에게 문의 하세요.'
+    });
+  } else {
+    async.waterfall([function(callback) {
+      let newReward = Reward(req.body);
+
+      newReward.save((err, result) => {
+        if (err) {
+          console.log(err);
+          return res.status(400).json({
+            'msg': '발송정보가 저장되지 않았습니다. <br /> Error : ' + err
+          });
+        }
+
+        req.body.reward = true;
+        Challenge.findOneAndUpdate({
           missionID: req.body.missionID,
           email: req.body.email
         }, { $set: { "reward" : true, "missioncomplete": true } }, function(err, post) {

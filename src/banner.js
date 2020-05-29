@@ -183,7 +183,6 @@ router.post('/', s3upload.single('image'), isLoggedIn, function(req, res, next){
 
 
 
-
 router.get('/:id', function(req,res){
   Banner.findById(req.params.id)
   .populate(['author','comments.author'])

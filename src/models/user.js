@@ -53,6 +53,31 @@ var UserSchema = new mongoose.Schema({
   from: String,
   created: { type: Date, default: Date.now },
   totalusetime: {type:Number, default:0},
+  totaluserpoint: {type:Number, default:0}, //사용자 포인트 총 시간
+  userpoint: [{ //사용자 포인트 누적 이력
+    point: {type:Number},
+    updatedAt: {type:Date},
+    title: {type:String},
+    status: {type:String},
+  }],
+  mainproduct: [{ //사용자 포인트 누적 이력
+    title: {type:String, required:true}, //제품명
+    jejosa: {type:String, required:true},//제조사
+    brand: {type:String, required:true},//브랜드
+    body: {type:String, required:true},
+    filename: String,
+    originalName: String,
+  }],
+  subproduct: [{ //사용자 포인트 누적 이력
+    title: {type:String, required:true}, //제품명
+    jejosa: {type:String, required:true},//제조사
+    brand: {type:String, required:true},//브랜드
+    body: {type:String, required:true},
+    filename: String,
+    originalName: String,
+  }],
+  snsid: String,
+  phonenumber: String,
 });
 
 UserSchema.pre('save', function(next) {

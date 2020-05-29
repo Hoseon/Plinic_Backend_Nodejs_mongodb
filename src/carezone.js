@@ -4,6 +4,7 @@ var mongoose = require('mongoose');
 var Carezone = require('./models/Carezone');
 var CarezoneCounter = require('./models/CarezoneCounter');
 var Mission = require('./models/Mission');
+var Challenge = require('./models/Challenge'); //2020-02-10 챌린지 추가
 var UserImage = require('./models/UserImage');
 var async = require('async');
 var User_admin = require('./models/User_admin');
@@ -170,6 +171,20 @@ router.get('/getmissionmember/:id', function(req, res) {
   }]);
 });
 
+//20200413 챌린지 참여자 확인
+router.get('/getchallangemember/:id', function(req, res) {
+  async.waterfall([function(callback) {
+    Challenge.find({
+        missionID: req.params.id
+      },
+      function(err, docs) {
+        res.json(docs);
+      }).sort({
+      "usetime": -1
+    });
+  }]);
+});
+
 
 //20190617 미션 포기
 router.get('/giveupmission/:id', function(req, res) {
@@ -177,6 +192,20 @@ router.get('/giveupmission/:id', function(req, res) {
   //console.log("chkmission" +req.params.id);
   async.waterfall([function(callback) {
     Mission.findOneAndRemove({
+      email: req.params.id,
+      missioncomplete: false
+    }, function(err, docs) {
+      res.json(docs);
+    });
+  }]);
+});
+
+//2020-02-10 챌린지 포기
+router.get('/giveupchallenge/:id', function(req, res) {
+  //var carezonelist = null;
+  //console.log("chkmission" +req.params.id);
+  async.waterfall([function(callback) {
+    Challenge.findOneAndRemove({
       email: req.params.id,
       missioncomplete: false
     }, function(err, docs) {
@@ -199,12 +228,47 @@ router.get('/chkmission/:id', function(req, res) {
   }]);
 });
 
-router.get('/missioncount/:id', function(req, res) {
+//미션 참여중인지 체크 하는 내용
+router.get('/challengechkmission/:id', function(req, res) {
   //var carezonelist = null;
   // console.log("chkmission" +req.params.id);
   async.waterfall([function(callback) {
-    Mission.count({
-      missionID: req.params.id
+    Challenge.find({
+      email: req.params.id,
+      missioncomplete: false
+    }, function(err, docs) {
+      res.json(docs);
+    });
+  }]);
+});
+
+//미션 참여중인지 체크 하는 내용
+router.get('/challengechkstart/:id', function(req, res) {
+  //var carezonelist = null;
+  // console.log("chkmission" +req.params.id);
+  async.waterfall([function(callback) {
+    Challenge.find({
+      email: req.params.id,
+      // missioncomplete: false
+    }, function(err, docs) {
+      res.json(docs);
+    });
+  }]);
+});
+
+router.get('/challangecount/:id/:date', function(req, res) {
+  //var carezonelist = null;
+  // console.log("chkmission id " +req.params.id);
+  // console.log("chkmission date" +new Date(req.params.date).toISOString().substr(0,10));
+  var today = new Date(req.params.date).toISOString().substr(0,10)
+
+  async.waterfall([function(callback) {
+    Challenge.count({
+      missionID: req.params.id,
+      createdAt: {
+        $gte: new Date(today),
+        // $lte: new Date(req.params.date),
+      }
     }, function(err, docs) {
       res.json(docs);
     });
@@ -216,6 +280,34 @@ router.get('/missionusetime/:id/:email', function(req, res) {
   // console.log("chkmission" +req.params.id);
   async.waterfall([function(callback) {
     Mission.findOne({
+      missionID: req.params.id,
+      email: req.params.email
+    }, function(err, docs) {
+      res.json(docs);
+    });
+  }]);
+});
+
+//2020-02-10 챌린지 사용 횟수(배열의 갯수 구하기)
+router.get('/challengeusetime/:id/:email', function(req, res) {
+  //var carezonelist = null;
+  // console.log("chkmission" +req.params.id);
+  async.waterfall([function(callback) {
+    Challenge.findOne({
+      missionID: req.params.id,
+      email: req.params.email
+    }, function(err, docs) {
+      res.json(docs);
+    });
+  }]);
+});
+
+//2020-02-20 챌린지 성공 횟수(배열의 갯수 구하기)
+router.get('/challengeusetime2/:id/:email', function(req, res) {
+  //var carezonelist = null;
+  // console.log("chkmission" +req.params.id);
+  async.waterfall([function(callback) {
+    Challenge.findOne({
       missionID: req.params.id,
       email: req.params.email
     }, function(err, docs) {
@@ -672,10 +764,10 @@ router.get('/:id/edit', isLoggedIn, function(req, res) {
       success: false,
       message: err
     });
-    if (!req.user._id.equals(post.author)) return res.json({
-      success: false,
-      message: "Unauthrized Attempt"
-    });
+    // if (!req.user._id.equals(post.author)) return res.json({
+    //   success: false,
+    //   message: "Unauthrized Attempt"
+    // });
     res.render("carezone/edit", {
       post: post,
       prefilename: prefilename,

@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <% include ../partials/head %>
+  </head>
+  <body>
+    <header>
+      <% include ../partials/header %>
+    </header>
+    <div class="posts">
+    <% include partials/top %>
+<!-- main start-->
+
+<!-- views/product/index.ejs -->
+<div class="new">
+  <div class="buttons">
+    <button onclick="location.href='/product'">Back</button>
+  </div>
+  <h3>New Post</h3>
+  <form class="checkValidation" action="/product" method="post" enctype="multipart/form-data">
+    <div class="inputs">
+      <div class="floats">
+        <label>Title</label>
+        <input class="cvRequired" type="text" name="post[title]" cvRqErrMsg="Title is required." cvRqErrTo="#cvErrTitle" value="">
+        <div id="cvErrTitle" class="message"></div>
+      </div>
+      <div class="floats">
+        <label>제조사</label>
+        <input class="cvRequired" type="text" name="post[jejosa]" cvRqErrMsg="Title is required." cvRqErrTo="#cvErrTitle" value="">
+        <div id="cvErrTitle" class="message"></div>
+      </div>
+      <div class="floats">
+        <label>브랜드</label>
+        <input class="cvRequired" type="text" name="post[brand]" cvRqErrMsg="Title is required." cvRqErrTo="#cvErrTitle" value="">
+        <div id="cvErrTitle" class="message"></div>
+      </div>
+      <div class="floats">
+        <label>대분류</label>
+        <input class="cvRequired" type="text" name="post[daebunryu]" cvRqErrMsg="Title is required." cvRqErrTo="#cvErrTitle" value="">
+        <div id="cvErrTitle" class="message"></div>
+      </div>
+      <div class="floats">
+        <label>소분류</label>
+        <input class="cvRequired" type="text" name="post[sobunryu]" cvRqErrMsg="Title is required." cvRqErrTo="#cvErrTitle" value="">
+        <div id="cvErrTitle" class="message"></div>
+      </div>
+      <div class="floats">
+        <label>성분 No</label>
+        <input class="cvRequired" type="text" name="post[sungbunno]" cvRqErrMsg="Title is required." cvRqErrTo="#cvErrTitle" value="">
+        <div id="cvErrTitle" class="message"></div>
+      </div>
+      <div class="floats">
+        <label>주요 기능</label>
+        <input class="cvRequired" type="text" name="post[mainfunction]" cvRqErrMsg="Title is required." cvRqErrTo="#cvErrTitle" value="">
+        <div id="cvErrTitle" class="message"></div>
+      </div>
+      <div class="floats">
+        <label>성분</label>
+        <input class="cvRequired" type="text" name="post[sungbun]" cvRqErrMsg="Title is required." cvRqErrTo="#cvErrTitle" value="">
+        <div id="cvErrTitle" class="message"></div>
+      </div>
+      <div class="floats">
+        <label>성분(영문명)</label>
+        <input class="cvRequired" type="text" name="post[sungbuneng]" cvRqErrMsg="Title is required." cvRqErrTo="#cvErrTitle" value="">
+        <div id="cvErrTitle" class="message"></div>
+      </div>
+      <div class="floats">
+        <label>기능</label>
+        <input class="cvRequired" type="text" name="post[gineung]" cvRqErrMsg="Title is required." cvRqErrTo="#cvErrTitle" value="">
+        <div id="cvErrTitle" class="message"></div>
+      </div>
+      <div class="floats">
+        <label>상품 URL</label>
+        <input class="cvRequired" type="text" name="post[url]" cvRqErrMsg="Title is required." cvRqErrTo="#cvErrTitle" value="">
+        <div id="cvErrTitle" class="message"></div>
+      </div>
+      <div class="floats">
+        <label>Author</label>
+        <input disabled type="text" value="<%= user.nickname %>">
+      </div>
+      <div class="floats">
+        <label>Body</label>
+        <textarea class="cvRequired" name="post[body]" cvRqErrMsg="Body is required." cvRqErrTo="#cvErrBody"></textarea>
+        <div id="cvErrBody" class="message"></div>
+      </div>
+      <div class="floats">
+        <label>Image</label>
+        <input class="cvRequired" type="file" name="image" cvRqErrMsg="Image is required." cvRqErrTo="#cvErrTitle" accept=".jpg, .jpeg, .png" value="">
+        <div id="cvErrTitle" class="message"></div>
+      </div>
+      <h2 style="color: red" >상품 이미지 사이즈(px) : 720 X 286</h2>
+
+    </div>
+    <div class="buttons">
+      <button type="submit">Submit</button>
+    </div>
+  </form>
+</div>
+
+<!-- main end -->
+    </div><!--product end -->
+    <footer>
+      <% include ../partials/footer %>
+    </footer>
+  </body>
+</html>

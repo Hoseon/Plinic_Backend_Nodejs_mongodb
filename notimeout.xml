@@ -1,0 +1,737 @@
+<response>
+<header>
+<resultCode>00</resultCode>
+<resultMsg>NORMAL SERVICE.</resultMsg>
+</header>
+<body>
+<numOfRows>10</numOfRows>
+<pageNo>1</pageNo>
+<totalCount>263073</totalCount>
+<items>
+<item>
+<ITEM_SEQ>200300666</ITEM_SEQ>
+<ENTP_SEQ>19620008</ENTP_SEQ>
+<ENTP_NAME>영진약품(주)</ENTP_NAME>
+<COB_CLASS_CODE>A0</COB_CLASS_CODE>
+<COB_CLASS_NAME>의약품</COB_CLASS_NAME>
+<PERMIT_KIND_CODE>B</PERMIT_KIND_CODE>
+<PERMIT_KIND_NAME>신고</PERMIT_KIND_NAME>
+<ITEM_NO>4</ITEM_NO>
+<PERMIT_KFDA_CODE>00000</PERMIT_KFDA_CODE>
+<PERMIT_KFDA_NAME>식약처</PERMIT_KFDA_NAME>
+<ITEM_NAME>다넥스액</ITEM_NAME>
+<ITEM_ENG_NAME/>
+<PACK_UNIT>100ml</PACK_UNIT>
+<VALID_TERM>제조일로부터 24 개월</VALID_TERM>
+<PACK_TYPE_CODE/>
+<PACK_TYPE_NAME/>
+<ETC_OTC_CODE>01</ETC_OTC_CODE>
+<ETC_OTC_NAME>일반의약품</ETC_OTC_NAME>
+<MAKE_MATERIAL_FLAG>01</MAKE_MATERIAL_FLAG>
+<MAKE_MATERIAL_FLAG_NAME>완제의약품</MAKE_MATERIAL_FLAG_NAME>
+<NEWDRUG_CLASS_CODE/>
+<NEWDRUG_CLASS_NAME/>
+<ITEM_INGR_TYPE>2</ITEM_INGR_TYPE>
+<ITEM_INGR_TYPE_NAME/>
+<PACKAGE_YN>N</PACKAGE_YN>
+<NARCOTIC_KIND_CODE/>
+<NARCOTIC_KIND_NAME/>
+<STD_ITEM_YN>N</STD_ITEM_YN>
+<DRUGEXCEPT_CODE/>
+<DRUGEXCEPT_NAME/>
+<COSMETIC_NOTICE_CODE/>
+<COSMETIC_NOTICE_NAME/>
+<CLINIC_EXAM_YN>N</CLINIC_EXAM_YN>
+<BIOEQ_EXAM_YN>N</BIOEQ_EXAM_YN>
+<BIO_PRODT_YN>N</BIO_PRODT_YN>
+<BIO_PRODT_CLASS_CODE/>
+<BIO_PRODT_CLASS_NAME/>
+<EXPORT_YN>N</EXPORT_YN>
+<EFFQU_EXAM_YN>N</EFFQU_EXAM_YN>
+<HERB_PRODT_YN>N</HERB_PRODT_YN>
+<BIOEQ_COMP_DRUG_YN>N</BIOEQ_COMP_DRUG_YN>
+<ITEM_PERMIT_DATE/>
+<KFDA_MANAGE_CODE/>
+<KFDA_MANAGE_NAME/>
+<TRUST_MANUF_YN>20030306</TRUST_MANUF_YN>
+<VALID_TERM_DATE>00000</VALID_TERM_DATE>
+<EE_DOC_DATA/>
+<UD_DOC_DATA/>
+<NB_DOC_DATA/>
+</item>
+<item>
+<ITEM_SEQ>199200813</ITEM_SEQ>
+<ENTP_SEQ>20134532</ENTP_SEQ>
+<ENTP_NAME>해태에이치티비(주)</ENTP_NAME>
+<COB_CLASS_CODE>A0</COB_CLASS_CODE>
+<COB_CLASS_NAME>의약품</COB_CLASS_NAME>
+<PERMIT_KIND_CODE>B</PERMIT_KIND_CODE>
+<PERMIT_KIND_NAME>신고</PERMIT_KIND_NAME>
+<ITEM_NO>1</ITEM_NO>
+<PERMIT_KFDA_CODE>50000</PERMIT_KFDA_CODE>
+<PERMIT_KFDA_NAME>광주청</PERMIT_KFDA_NAME>
+<ITEM_NAME>1.영진구론산바몬드액2.영진구론산바몬드스파클링액</ITEM_NAME>
+<ITEM_ENG_NAME/>
+<PACK_UNIT>100ml/병×자사포장단위</PACK_UNIT>
+<VALID_TERM>제조일로부터 12 개월</VALID_TERM>
+<PACK_TYPE_CODE/>
+<PACK_TYPE_NAME/>
+<ETC_OTC_CODE>01</ETC_OTC_CODE>
+<ETC_OTC_NAME>일반의약품</ETC_OTC_NAME>
+<MAKE_MATERIAL_FLAG>01</MAKE_MATERIAL_FLAG>
+<MAKE_MATERIAL_FLAG_NAME>완제의약품</MAKE_MATERIAL_FLAG_NAME>
+<NEWDRUG_CLASS_CODE/>
+<NEWDRUG_CLASS_NAME/>
+<ITEM_INGR_TYPE>2</ITEM_INGR_TYPE>
+<ITEM_INGR_TYPE_NAME/>
+<PACKAGE_YN>N</PACKAGE_YN>
+<NARCOTIC_KIND_CODE/>
+<NARCOTIC_KIND_NAME/>
+<STD_ITEM_YN>N</STD_ITEM_YN>
+<DRUGEXCEPT_CODE/>
+<DRUGEXCEPT_NAME/>
+<COSMETIC_NOTICE_CODE/>
+<COSMETIC_NOTICE_NAME/>
+<CLINIC_EXAM_YN>N</CLINIC_EXAM_YN>
+<BIOEQ_EXAM_YN>N</BIOEQ_EXAM_YN>
+<BIO_PRODT_YN>N</BIO_PRODT_YN>
+<BIO_PRODT_CLASS_CODE/>
+<BIO_PRODT_CLASS_NAME/>
+<EXPORT_YN>N</EXPORT_YN>
+<EFFQU_EXAM_YN>N</EFFQU_EXAM_YN>
+<HERB_PRODT_YN>N</HERB_PRODT_YN>
+<BIOEQ_COMP_DRUG_YN>N</BIOEQ_COMP_DRUG_YN>
+<ITEM_PERMIT_DATE/>
+<KFDA_MANAGE_CODE/>
+<KFDA_MANAGE_NAME/>
+<TRUST_MANUF_YN>19920627</TRUST_MANUF_YN>
+<VALID_TERM_DATE>50000</VALID_TERM_DATE>
+<EE_DOC_DATA><DOC title="효능효과" type="EE">
+  <SECTION title="">
+    <ARTICLE title="">
+      <PARAGRAPH tagName="p" textIndent="" marginLeft=""><![CDATA[자양강장, 피로회복]]></PARAGRAPH>
+    </ARTICLE>
+  </SECTION>
+</DOC></EE_DOC_DATA>
+<UD_DOC_DATA><DOC title="용법용량" type="UD">
+  <SECTION title="">
+    <ARTICLE title="">
+      <PARAGRAPH tagName="p" textIndent="" marginLeft=""><![CDATA[15세 이상 성인 : 1일 1～2회, 1회 1병씩 복용한다.]]></PARAGRAPH>
+    </ARTICLE>
+  </SECTION>
+</DOC></UD_DOC_DATA>
+<NB_DOC_DATA><DOC title="사용상주의사항" type="NB">
+  <SECTION title="">
+    <ARTICLE title="1. 다음과 같은 사람은 이 약을 복용하지 말 것">
+      <PARAGRAPH tagName="p" textIndent="" marginLeft=""><![CDATA[이 약 및 이 약에 포함된 성분에의 과민반응 환자]]></PARAGRAPH>
+    </ARTICLE>
+    <ARTICLE title="2. 다음과 같은 사람은 이 약을 복용하기 전에 의사, 치과의사, 약사와 상의 할 것">
+      <PARAGRAPH tagName="p" textIndent="" marginLeft=""><![CDATA[의사의 치료를 받고 있는 환자]]></PARAGRAPH>
+    </ARTICLE>
+    <ARTICLE title="3. 다음과 같은 경우 이 약의 복용을 즉각 중지하고 의사, 치과의사, 약사와 상의 할 것. 상담 시 가능한 한 이 첨부문서를 소지 할 것">
+      <PARAGRAPH tagName="p" textIndent="" marginLeft=""><![CDATA[1) 피리독신을 1일 50 mg ~ 2 g 의 용량으로 장기간 복용하면 감각신경병 또는 신경병증(neuropathy : 말초신경계의 기능적 장애 또는 병적변화)이 나타날 수 있다.]]></PARAGRAPH>
+      <PARAGRAPH tagName="p" textIndent="" marginLeft=""><![CDATA[2) 고용량 투여에 의해 소화성 궤양을 촉진시키고 당내성 손상(glucose tolerance impairment : 신체의 포도당을 대사하는 능력 장애), 고요산혈증(hyperuricemia, 혈액중에 요산이 과잉으로 존재하는 상태), 간손상을 일으킬 수 있다.]]></PARAGRAPH>
+    </ARTICLE>
+    <ARTICLE title="4. 기타 이 약의 복용 시 주의할 사항">
+      <PARAGRAPH tagName="p" textIndent="" marginLeft=""><![CDATA[1) 정해진 용법ㆍ용량을 잘 지킨다.]]></PARAGRAPH>
+      <PARAGRAPH tagName="p" textIndent="" marginLeft=""><![CDATA[2) 1개월 정도 투여하여도 증상의 개선이 없거나 악화될 경우에는 의사 또는 약사와 상의한다.]]></PARAGRAPH>
+      <PARAGRAPH tagName="p" textIndent="" marginLeft=""><![CDATA[3) 이 약은 경구용으로만 사용하고 주사용으로는 사용하지 않는다.]]></PARAGRAPH>
+      <PARAGRAPH tagName="p" textIndent="" marginLeft=""><![CDATA[4) 요를 황색으로 변하게 하여 임상검사치에 영향을 줄 수 있다.]]></PARAGRAPH>
+    </ARTICLE>
+    <ARTICLE title="5. 저장상의 주의사항">
+      <PARAGRAPH tagName="p" textIndent="" marginLeft=""><![CDATA[1) 어린이의 손이 닿지 않는 곳에 보관한다.]]></PARAGRAPH>
+      <PARAGRAPH tagName="p" textIndent="" marginLeft=""><![CDATA[2) 직사광선을 피하고 될 수 있으면 습기가 적고 서늘한 곳에 밀전하여 보관한다.]]></PARAGRAPH>
+      <PARAGRAPH tagName="p" textIndent="" marginLeft=""><![CDATA[3) 오ㆍ남용을 피하고, 품질을 보호ㆍ유지하기 위해 다른 용기에 넣지 않는다.]]></PARAGRAPH>
+    </ARTICLE>
+  </SECTION>
+</DOC></NB_DOC_DATA>
+</item>
+<item>
+<ITEM_SEQ>199701073</ITEM_SEQ>
+<ENTP_SEQ>19620008</ENTP_SEQ>
+<ENTP_NAME>영진약품(주)</ENTP_NAME>
+<COB_CLASS_CODE>E0</COB_CLASS_CODE>
+<COB_CLASS_NAME>한약(생약)제제등</COB_CLASS_NAME>
+<PERMIT_KIND_CODE>B</PERMIT_KIND_CODE>
+<PERMIT_KIND_NAME>신고</PERMIT_KIND_NAME>
+<ITEM_NO>8</ITEM_NO>
+<PERMIT_KFDA_CODE>00000</PERMIT_KFDA_CODE>
+<PERMIT_KFDA_NAME>식약처</PERMIT_KFDA_NAME>
+<ITEM_NAME>영진인삼양영탕액</ITEM_NAME>
+<ITEM_ENG_NAME/>
+<PACK_UNIT>1병(100㎖)</PACK_UNIT>
+<VALID_TERM>제조일로부터 24 개월</VALID_TERM>
+<PACK_TYPE_CODE/>
+<PACK_TYPE_NAME/>
+<ETC_OTC_CODE>01</ETC_OTC_CODE>
+<ETC_OTC_NAME>일반의약품</ETC_OTC_NAME>
+<MAKE_MATERIAL_FLAG>01</MAKE_MATERIAL_FLAG>
+<MAKE_MATERIAL_FLAG_NAME>완제의약품</MAKE_MATERIAL_FLAG_NAME>
+<NEWDRUG_CLASS_CODE/>
+<NEWDRUG_CLASS_NAME/>
+<ITEM_INGR_TYPE>2</ITEM_INGR_TYPE>
+<ITEM_INGR_TYPE_NAME/>
+<PACKAGE_YN>N</PACKAGE_YN>
+<NARCOTIC_KIND_CODE/>
+<NARCOTIC_KIND_NAME/>
+<STD_ITEM_YN>N</STD_ITEM_YN>
+<DRUGEXCEPT_CODE/>
+<DRUGEXCEPT_NAME/>
+<COSMETIC_NOTICE_CODE/>
+<COSMETIC_NOTICE_NAME/>
+<CLINIC_EXAM_YN>N</CLINIC_EXAM_YN>
+<BIOEQ_EXAM_YN>N</BIOEQ_EXAM_YN>
+<BIO_PRODT_YN>N</BIO_PRODT_YN>
+<BIO_PRODT_CLASS_CODE/>
+<BIO_PRODT_CLASS_NAME/>
+<EXPORT_YN>N</EXPORT_YN>
+<EFFQU_EXAM_YN>N</EFFQU_EXAM_YN>
+<HERB_PRODT_YN>N</HERB_PRODT_YN>
+<BIOEQ_COMP_DRUG_YN>N</BIOEQ_COMP_DRUG_YN>
+<ITEM_PERMIT_DATE/>
+<KFDA_MANAGE_CODE/>
+<KFDA_MANAGE_NAME/>
+<TRUST_MANUF_YN>19970307</TRUST_MANUF_YN>
+<VALID_TERM_DATE>50000</VALID_TERM_DATE>
+<EE_DOC_DATA/>
+<UD_DOC_DATA/>
+<NB_DOC_DATA/>
+</item>
+<item>
+<ITEM_SEQ>200400938</ITEM_SEQ>
+<ENTP_SEQ>19620008</ENTP_SEQ>
+<ENTP_NAME>영진약품(주)</ENTP_NAME>
+<COB_CLASS_CODE>A0</COB_CLASS_CODE>
+<COB_CLASS_NAME>의약품</COB_CLASS_NAME>
+<PERMIT_KIND_CODE>B</PERMIT_KIND_CODE>
+<PERMIT_KIND_NAME>신고</PERMIT_KIND_NAME>
+<ITEM_NO>2001</ITEM_NO>
+<PERMIT_KFDA_CODE>50000</PERMIT_KFDA_CODE>
+<PERMIT_KFDA_NAME>광주청</PERMIT_KFDA_NAME>
+<ITEM_NAME>영진염산베니디핀(원료)</ITEM_NAME>
+<ITEM_ENG_NAME/>
+<PACK_UNIT>자사포장단위</PACK_UNIT>
+<VALID_TERM>제조일로부터 24 개월</VALID_TERM>
+<PACK_TYPE_CODE/>
+<PACK_TYPE_NAME/>
+<ETC_OTC_CODE>07</ETC_OTC_CODE>
+<ETC_OTC_NAME>원료의약품</ETC_OTC_NAME>
+<MAKE_MATERIAL_FLAG>03</MAKE_MATERIAL_FLAG>
+<MAKE_MATERIAL_FLAG_NAME>원료의약품</MAKE_MATERIAL_FLAG_NAME>
+<NEWDRUG_CLASS_CODE/>
+<NEWDRUG_CLASS_NAME/>
+<ITEM_INGR_TYPE>1</ITEM_INGR_TYPE>
+<ITEM_INGR_TYPE_NAME/>
+<PACKAGE_YN>N</PACKAGE_YN>
+<NARCOTIC_KIND_CODE/>
+<NARCOTIC_KIND_NAME/>
+<STD_ITEM_YN>N</STD_ITEM_YN>
+<DRUGEXCEPT_CODE/>
+<DRUGEXCEPT_NAME/>
+<COSMETIC_NOTICE_CODE/>
+<COSMETIC_NOTICE_NAME/>
+<CLINIC_EXAM_YN>N</CLINIC_EXAM_YN>
+<BIOEQ_EXAM_YN>N</BIOEQ_EXAM_YN>
+<BIO_PRODT_YN>N</BIO_PRODT_YN>
+<BIO_PRODT_CLASS_CODE/>
+<BIO_PRODT_CLASS_NAME/>
+<EXPORT_YN>N</EXPORT_YN>
+<EFFQU_EXAM_YN>N</EFFQU_EXAM_YN>
+<HERB_PRODT_YN>N</HERB_PRODT_YN>
+<BIOEQ_COMP_DRUG_YN>N</BIOEQ_COMP_DRUG_YN>
+<ITEM_PERMIT_DATE/>
+<KFDA_MANAGE_CODE/>
+<KFDA_MANAGE_NAME/>
+<TRUST_MANUF_YN>20040226</TRUST_MANUF_YN>
+<VALID_TERM_DATE>50000</VALID_TERM_DATE>
+<EE_DOC_DATA>
+ 
+
+<DOC title="효능효과" type="EE">
+ <SECTION title="">
+<ARTICLE title="">
+<PARAGRAPH tagName="p" textIndent="0" marginLeft="0"><![CDATA[의약품 조제 또는 제조용]]></PARAGRAPH>
+  </ARTICLE> 
+ </SECTION>
+</DOC>
+</EE_DOC_DATA>
+<UD_DOC_DATA>
+ 
+<DOC title="용법용량" type="UD">
+<SECTION title="">
+<ARTICLE title="">
+<PARAGRAPH tagName="p" textIndent="0" marginLeft="0"><![CDATA[의약품 조제 또는 제조용]]></PARAGRAPH>
+</ARTICLE>
+</SECTION>
+</DOC>
+</UD_DOC_DATA>
+<NB_DOC_DATA>
+ 
+
+<DOC title="사용상의 주의사항" type="NB">
+ <SECTION title="">
+<ARTICLE title="1. 의약품 조제 또는 제조용으로만 사용한다."></ARTICLE>
+<ARTICLE title="2. 단일제의 사용예가 있는 경우 단일제 &quot;사용상의 주의사항&quot;을 참조한다."></ARTICLE>
+<ARTICLE title="3. 보관 및 취급상의 주의사항">
+   <PARAGRAPH tagName="p" textIndent="1" marginLeft="0"><![CDATA[1) 온도, 햇볕, 습도 등에 관하여 주의하여 보관한다.]]></PARAGRAPH>
+<PARAGRAPH tagName="p" textIndent="1" marginLeft="0"><![CDATA[2) 원래 용기에서 꺼내어 다른 용기에 보관하는 것은 오용에 의한 사고발생이나 의약품 품질저하의 원인이 될 수 있으므로 원래 용기에 넣고 꼭 닫아 보관한다.]]></PARAGRAPH>
+</ARTICLE>
+ </SECTION>
+</DOC>
+</NB_DOC_DATA>
+</item>
+<item>
+<ITEM_SEQ>199300976</ITEM_SEQ>
+<ENTP_SEQ>19620008</ENTP_SEQ>
+<ENTP_NAME>영진약품(주)</ENTP_NAME>
+<COB_CLASS_CODE>A0</COB_CLASS_CODE>
+<COB_CLASS_NAME>의약품</COB_CLASS_NAME>
+<PERMIT_KIND_CODE>A</PERMIT_KIND_CODE>
+<PERMIT_KIND_NAME>허가</PERMIT_KIND_NAME>
+<ITEM_NO>4</ITEM_NO>
+<PERMIT_KFDA_CODE>00000</PERMIT_KFDA_CODE>
+<PERMIT_KFDA_NAME>식약처</PERMIT_KFDA_NAME>
+<ITEM_NAME>판액</ITEM_NAME>
+<ITEM_ENG_NAME/>
+<PACK_UNIT>75밀리리터</PACK_UNIT>
+<VALID_TERM>제조일로부터 24 개월</VALID_TERM>
+<PACK_TYPE_CODE/>
+<PACK_TYPE_NAME/>
+<ETC_OTC_CODE>01</ETC_OTC_CODE>
+<ETC_OTC_NAME>일반의약품</ETC_OTC_NAME>
+<MAKE_MATERIAL_FLAG>01</MAKE_MATERIAL_FLAG>
+<MAKE_MATERIAL_FLAG_NAME>완제의약품</MAKE_MATERIAL_FLAG_NAME>
+<NEWDRUG_CLASS_CODE/>
+<NEWDRUG_CLASS_NAME/>
+<ITEM_INGR_TYPE>2</ITEM_INGR_TYPE>
+<ITEM_INGR_TYPE_NAME/>
+<PACKAGE_YN>N</PACKAGE_YN>
+<NARCOTIC_KIND_CODE/>
+<NARCOTIC_KIND_NAME/>
+<STD_ITEM_YN>N</STD_ITEM_YN>
+<DRUGEXCEPT_CODE/>
+<DRUGEXCEPT_NAME/>
+<COSMETIC_NOTICE_CODE/>
+<COSMETIC_NOTICE_NAME/>
+<CLINIC_EXAM_YN>N</CLINIC_EXAM_YN>
+<BIOEQ_EXAM_YN>N</BIOEQ_EXAM_YN>
+<BIO_PRODT_YN>N</BIO_PRODT_YN>
+<BIO_PRODT_CLASS_CODE/>
+<BIO_PRODT_CLASS_NAME/>
+<EXPORT_YN>N</EXPORT_YN>
+<EFFQU_EXAM_YN>N</EFFQU_EXAM_YN>
+<HERB_PRODT_YN>N</HERB_PRODT_YN>
+<BIOEQ_COMP_DRUG_YN>N</BIOEQ_COMP_DRUG_YN>
+<ITEM_PERMIT_DATE/>
+<KFDA_MANAGE_CODE/>
+<KFDA_MANAGE_NAME/>
+<TRUST_MANUF_YN>19930208</TRUST_MANUF_YN>
+<VALID_TERM_DATE>00000</VALID_TERM_DATE>
+<EE_DOC_DATA/>
+<UD_DOC_DATA/>
+<NB_DOC_DATA/>
+</item>
+<item>
+<ITEM_SEQ>200400939</ITEM_SEQ>
+<ENTP_SEQ>20134532</ENTP_SEQ>
+<ENTP_NAME>해태에이치티비(주)</ENTP_NAME>
+<COB_CLASS_CODE>A0</COB_CLASS_CODE>
+<COB_CLASS_NAME>의약품</COB_CLASS_NAME>
+<PERMIT_KIND_CODE>B</PERMIT_KIND_CODE>
+<PERMIT_KIND_NAME>신고</PERMIT_KIND_NAME>
+<ITEM_NO>7</ITEM_NO>
+<PERMIT_KFDA_CODE>50000</PERMIT_KFDA_CODE>
+<PERMIT_KFDA_NAME>광주청</PERMIT_KFDA_NAME>
+<ITEM_NAME>유타임액</ITEM_NAME>
+<ITEM_ENG_NAME/>
+<PACK_UNIT>100밀리리터</PACK_UNIT>
+<VALID_TERM>제조일로부터 24 개월</VALID_TERM>
+<PACK_TYPE_CODE/>
+<PACK_TYPE_NAME/>
+<ETC_OTC_CODE>01</ETC_OTC_CODE>
+<ETC_OTC_NAME>일반의약품</ETC_OTC_NAME>
+<MAKE_MATERIAL_FLAG>01</MAKE_MATERIAL_FLAG>
+<MAKE_MATERIAL_FLAG_NAME>완제의약품</MAKE_MATERIAL_FLAG_NAME>
+<NEWDRUG_CLASS_CODE/>
+<NEWDRUG_CLASS_NAME/>
+<ITEM_INGR_TYPE>2</ITEM_INGR_TYPE>
+<ITEM_INGR_TYPE_NAME/>
+<PACKAGE_YN>N</PACKAGE_YN>
+<NARCOTIC_KIND_CODE/>
+<NARCOTIC_KIND_NAME/>
+<STD_ITEM_YN>N</STD_ITEM_YN>
+<DRUGEXCEPT_CODE/>
+<DRUGEXCEPT_NAME/>
+<COSMETIC_NOTICE_CODE/>
+<COSMETIC_NOTICE_NAME/>
+<CLINIC_EXAM_YN>N</CLINIC_EXAM_YN>
+<BIOEQ_EXAM_YN>N</BIOEQ_EXAM_YN>
+<BIO_PRODT_YN>N</BIO_PRODT_YN>
+<BIO_PRODT_CLASS_CODE/>
+<BIO_PRODT_CLASS_NAME/>
+<EXPORT_YN>N</EXPORT_YN>
+<EFFQU_EXAM_YN>N</EFFQU_EXAM_YN>
+<HERB_PRODT_YN>N</HERB_PRODT_YN>
+<BIOEQ_COMP_DRUG_YN>N</BIOEQ_COMP_DRUG_YN>
+<ITEM_PERMIT_DATE/>
+<KFDA_MANAGE_CODE/>
+<KFDA_MANAGE_NAME/>
+<TRUST_MANUF_YN>20041026</TRUST_MANUF_YN>
+<VALID_TERM_DATE>50000</VALID_TERM_DATE>
+<EE_DOC_DATA><DOC title="효능효과" type="EE">
+  <SECTION title="">
+    <ARTICLE title="">
+      <PARAGRAPH tagName="p" textIndent="" marginLeft=""><![CDATA[-다음 경우의 비타민 B2, B6의 보급 : 육체피로, 임신·수유기, 병중·병후의 체력저하시]]></PARAGRAPH>
+      <PARAGRAPH tagName="p" textIndent="" marginLeft=""><![CDATA[- 자양강장]]></PARAGRAPH>
+    </ARTICLE>
+  </SECTION>
+</DOC></EE_DOC_DATA>
+<UD_DOC_DATA><DOC title="용법용량" type="UD">
+  <SECTION title="">
+    <ARTICLE title="">
+      <PARAGRAPH tagName="p" textIndent="" marginLeft=""><![CDATA[성인 1회 1병, 1일 1회 복용]]></PARAGRAPH>
+    </ARTICLE>
+  </SECTION>
+</DOC></UD_DOC_DATA>
+<NB_DOC_DATA><DOC title="사용상주의사항" type="NB">
+  <SECTION title="">
+    <ARTICLE title="1. 다음 환자에는 투여하지 말 것">
+      <PARAGRAPH tagName="p" textIndent="" marginLeft=""><![CDATA[1) 이 약 및 이 약에 포함된 성분에 과민증이 있는 환자]]></PARAGRAPH>
+      <PARAGRAPH tagName="p" textIndent="" marginLeft=""><![CDATA[2) 3개월 미만이 영아]]></PARAGRAPH>
+    </ARTICLE>
+    <ARTICLE title="2. 다음 환자에게는 신중히 투여 할 것 (복용전 의사 또는 약사와 상의할 것)">
+      <PARAGRAPH tagName="p" textIndent="" marginLeft=""><![CDATA[1) 의사의 치료를 받고 있는 환자]]></PARAGRAPH>
+      <PARAGRAPH tagName="p" textIndent="" marginLeft=""><![CDATA[2) 임부, 수유부]]></PARAGRAPH>
+    </ARTICLE>
+    <ARTICLE title="3. 부작용">
+      <PARAGRAPH tagName="p" textIndent="" marginLeft=""><![CDATA[1) 피리독신을 1일 500mg~2g의 용량으로 장기간 복용하면 감각신경병 또는 신경병적 증상(neuropathy:말초신경계의 기능적 장애 또는 병적변화)이 나타날 수 있다.]]></PARAGRAPH>
+      <PARAGRAPH tagName="p" textIndent="" marginLeft=""><![CDATA[2) 고용량 투여에 의해 소화성 궤양을 촉진시키고 당내성 손상(glucose tolerance impairment:신체의 포도당을 대사하는 능력장애), 과요산혈증(hyperurisemia, 혈액중에 요산이 과잉으로 존재하는 상태), 간손상을 일으킬 수 있다.]]></PARAGRAPH>
+    </ARTICLE>
+    <ARTICLE title="4. 일반적 주의">
+      <PARAGRAPH tagName="p" textIndent="" marginLeft=""><![CDATA[1) 정해진 용법. 용량을 잘 지킨다.]]></PARAGRAPH>
+      <PARAGRAPH tagName="p" textIndent="" marginLeft=""><![CDATA[2) 1개월 정도 투여하여도 증상의 개선이 없을 경우에는 의사 또는 약사와 상의한다.]]></PARAGRAPH>
+      <PARAGRAPH tagName="p" textIndent="" marginLeft=""><![CDATA[3) 복용시 의사, 한의사, 약사와 상의하여 복용한다]]></PARAGRAPH>
+      <PARAGRAPH tagName="p" textIndent="" marginLeft=""><![CDATA[4) 이 약은 안식향산나트륨을 포함하고 있으며, 안식향산은 피부, 눈, 점막에 경미한 자극이 될 수 있다.]]></PARAGRAPH>
+    </ARTICLE>
+    <ARTICLE title="5. 상호작용">
+      <PARAGRAPH tagName="p" textIndent="" marginLeft=""><![CDATA[레보도파와 병용투여하지 않는다]]></PARAGRAPH>
+    </ARTICLE>
+    <ARTICLE title="6. 임상검사치에의 영향">
+      <PARAGRAPH tagName="p" textIndent="" marginLeft=""><![CDATA[뇨를 황색으로 변하게 하여 임상검사치에 영향을 줄 수 있다.]]></PARAGRAPH>
+    </ARTICLE>
+    <ARTICLE title="7. 저장상의 주의사항">
+      <PARAGRAPH tagName="p" textIndent="" marginLeft=""><![CDATA[1) 어린이의 손에 닿지 않는 곳에 보관한다]]></PARAGRAPH>
+      <PARAGRAPH tagName="p" textIndent="" marginLeft=""><![CDATA[2) 직사광선을 피하고 될 수 있으면 습기가 적고 서늘한 곳에 밀전하여 보관한다]]></PARAGRAPH>
+      <PARAGRAPH tagName="p" textIndent="" marginLeft=""><![CDATA[3) 오. 남용을 피하고, 품질을 보호. 유지하기 위해 다른 용기에 넣지 않는다]]></PARAGRAPH>
+    </ARTICLE>
+  </SECTION>
+</DOC></NB_DOC_DATA>
+</item>
+<item>
+<ITEM_SEQ>200500904</ITEM_SEQ>
+<ENTP_SEQ>20134532</ENTP_SEQ>
+<ENTP_NAME>해태에이치티비(주)</ENTP_NAME>
+<COB_CLASS_CODE>A0</COB_CLASS_CODE>
+<COB_CLASS_NAME>의약품</COB_CLASS_NAME>
+<PERMIT_KIND_CODE>B</PERMIT_KIND_CODE>
+<PERMIT_KIND_NAME>신고</PERMIT_KIND_NAME>
+<ITEM_NO>5</ITEM_NO>
+<PERMIT_KFDA_CODE>50000</PERMIT_KFDA_CODE>
+<PERMIT_KFDA_NAME>광주청</PERMIT_KFDA_NAME>
+<ITEM_NAME>영진큐텐액</ITEM_NAME>
+<ITEM_ENG_NAME>Queeten Soln</ITEM_ENG_NAME>
+<PACK_UNIT>100밀리리터</PACK_UNIT>
+<VALID_TERM>제조일로부터 12 개월</VALID_TERM>
+<PACK_TYPE_CODE/>
+<PACK_TYPE_NAME/>
+<ETC_OTC_CODE>01</ETC_OTC_CODE>
+<ETC_OTC_NAME>일반의약품</ETC_OTC_NAME>
+<MAKE_MATERIAL_FLAG>01</MAKE_MATERIAL_FLAG>
+<MAKE_MATERIAL_FLAG_NAME>완제의약품</MAKE_MATERIAL_FLAG_NAME>
+<NEWDRUG_CLASS_CODE/>
+<NEWDRUG_CLASS_NAME/>
+<ITEM_INGR_TYPE>2</ITEM_INGR_TYPE>
+<ITEM_INGR_TYPE_NAME/>
+<PACKAGE_YN>N</PACKAGE_YN>
+<NARCOTIC_KIND_CODE/>
+<NARCOTIC_KIND_NAME/>
+<STD_ITEM_YN>N</STD_ITEM_YN>
+<DRUGEXCEPT_CODE/>
+<DRUGEXCEPT_NAME/>
+<COSMETIC_NOTICE_CODE/>
+<COSMETIC_NOTICE_NAME/>
+<CLINIC_EXAM_YN>N</CLINIC_EXAM_YN>
+<BIOEQ_EXAM_YN>N</BIOEQ_EXAM_YN>
+<BIO_PRODT_YN>N</BIO_PRODT_YN>
+<BIO_PRODT_CLASS_CODE/>
+<BIO_PRODT_CLASS_NAME/>
+<EXPORT_YN>N</EXPORT_YN>
+<EFFQU_EXAM_YN>N</EFFQU_EXAM_YN>
+<HERB_PRODT_YN>N</HERB_PRODT_YN>
+<BIOEQ_COMP_DRUG_YN>N</BIOEQ_COMP_DRUG_YN>
+<ITEM_PERMIT_DATE/>
+<KFDA_MANAGE_CODE/>
+<KFDA_MANAGE_NAME/>
+<TRUST_MANUF_YN>20050307</TRUST_MANUF_YN>
+<VALID_TERM_DATE>50000</VALID_TERM_DATE>
+<EE_DOC_DATA><DOC title="효능효과" type="EE">
+  <SECTION title="">
+    <ARTICLE title="○ 다음경우의 비타민 E, B2, B6의 보급">
+      <PARAGRAPH tagName="p" textIndent="" marginLeft=""><![CDATA[- 육체피로]]></PARAGRAPH>
+      <PARAGRAPH tagName="p" textIndent="" marginLeft=""><![CDATA[- 임신ㆍ수유기]]></PARAGRAPH>
+      <PARAGRAPH tagName="p" textIndent="" marginLeft=""><![CDATA[- 병중ㆍ병후(병을 앓는 동안이나 회복 후)의 체력저하시]]></PARAGRAPH>
+      <PARAGRAPH tagName="p" textIndent="" marginLeft=""><![CDATA[- 노년기]]></PARAGRAPH>
+      <PARAGRAPH tagName="p" textIndent="" marginLeft=""><![CDATA[- 이 약에 함유된 비타민 등의 효능ㆍ효과는 다음과 같다.]]></PARAGRAPH>
+    </ARTICLE>
+    <ARTICLE title="○ 다음 증상의 완화: 구각염(입꼬리염), 구순염(입술염), 구내염(입안염), 설염(혀염), 습진, 피부염" />
+  </SECTION>
+</DOC></EE_DOC_DATA>
+<UD_DOC_DATA><DOC title="용법용량" type="UD">
+  <SECTION title="">
+    <ARTICLE title="">
+      <PARAGRAPH tagName="p" textIndent="" marginLeft=""><![CDATA[성인 1회 1병, 1일 1회 복용]]></PARAGRAPH>
+    </ARTICLE>
+  </SECTION>
+</DOC></UD_DOC_DATA>
+<NB_DOC_DATA><DOC title="사용상주의사항" type="NB">
+  <SECTION title="">
+    <ARTICLE title="1) 다음과 같은 사람은 이 약을 복용하지 말 것.">
+      <PARAGRAPH tagName="p" textIndent="" marginLeft=""><![CDATA[(1) 이 약 및 이 약에 포함된 성분에 과민반응이 있는 환자]]></PARAGRAPH>
+    </ARTICLE>
+    <ARTICLE title="2) 이 약을 복용하는 동안 다음의 약을 복용하지 말 것.">
+      <PARAGRAPH tagName="p" textIndent="" marginLeft=""><![CDATA[(1) 레보도파]]></PARAGRAPH>
+    </ARTICLE>
+    <ARTICLE title="3) 다음과 같은 사람(경우)은 이 약을 복용하기 전에 의사, 치과의사, 약사와 상의할 것.">
+      <PARAGRAPH tagName="p" textIndent="" marginLeft=""><![CDATA[(1) 의사의 치료를 받고 있는 환자]]></PARAGRAPH>
+    </ARTICLE>
+    <ARTICLE title="4) 다음과 같은 경우 이 약의 복용을 즉각 중지하고 의사, 치과의사, 약사와 상의할 것. 상담 시 가능한 한 이 첨부문서를 소지할 것.">
+      <PARAGRAPH tagName="p" textIndent="" marginLeft=""><![CDATA[(1) 이 약의 투여에 의하여 다음의 증상이 있을 경우]]></PARAGRAPH>
+      <PARAGRAPH tagName="p" textIndent="0" marginLeft="1"><![CDATA[위부불쾌감, 설사, 변비, 발진, 발적, 구역, 식욕부진, 복부팽만감]]></PARAGRAPH>
+      <PARAGRAPH tagName="p" textIndent="" marginLeft=""><![CDATA[(2) 이 약의 투여에 의하여 생리가 예정보다 빨라지거나 양이 점점 많아질 수 있으며, 출혈이 오래 지속될 수 있다]]></PARAGRAPH>
+      <PARAGRAPH tagName="p" textIndent="" marginLeft=""><![CDATA[(3) 에스트로겐을 포함한 경구용 피임제를 복용하는 여성 또는 혈전성 소인이 있는 환자가 비타민 E를 복용할 경우 혈전증의 위험이 증가될 수 있다]]></PARAGRAPH>
+      <PARAGRAPH tagName="p" textIndent="" marginLeft=""><![CDATA[(4) 피리독신을 1일 500 mg ~ 2 g의 용량으로 장기간 복용하면 감각신경병 또는 신경병적 증상(neuropathy : 말초신경계의 기능적 장애 또는 병적변화)이 나타날 수 있다]]></PARAGRAPH>
+      <PARAGRAPH tagName="p" textIndent="" marginLeft=""><![CDATA[(5) 고용량 투여에 의해 소화성 궤양을 촉진시키고 당내성(포도당내성) 손상(glucose tolerance impairment : 신체의 포도당을 대사하는 능력 장애), 고요산혈증(hyperurisemia, 혈액중에 요산이 과잉으로 존재하는 상태), 간손상을 일으킬 수 있다.]]></PARAGRAPH>
+      <PARAGRAPH tagName="p" textIndent="" marginLeft=""><![CDATA[(6) 우발적으로 과량복용 한 경우]]></PARAGRAPH>
+      <PARAGRAPH tagName="p" textIndent="" marginLeft=""><![CDATA[(7) 1개월 정도 복용하여도 증상의 개선이 없을 경우]]></PARAGRAPH>
+    </ARTICLE>
+    <ARTICLE title="5) 기타 이 약의 복용 시 주의사항">
+      <PARAGRAPH tagName="p" textIndent="" marginLeft=""><![CDATA[(1) 정해진 용법ㆍ용량을 잘 지킬 것]]></PARAGRAPH>
+      <PARAGRAPH tagName="p" textIndent="" marginLeft=""><![CDATA[(2) 요를 황색으로 변하게 하여 임상검사치에 영향을 줄 수 있다.]]></PARAGRAPH>
+    </ARTICLE>
+    <ARTICLE title="6) 저장상의 주의사항">
+      <PARAGRAPH tagName="p" textIndent="" marginLeft=""><![CDATA[(1) 어린이의 손에 닿지 않는 곳에 보관할 것.]]></PARAGRAPH>
+      <PARAGRAPH tagName="p" textIndent="" marginLeft=""><![CDATA[(2) 직사광선을 피하고 될 수 있는 한 습기가 적은 서늘한 곳에 (밀폐하여) 보관할 것]]></PARAGRAPH>
+      <PARAGRAPH tagName="p" textIndent="" marginLeft=""><![CDATA[(3) 오용(잘못 사용)을 막고 품질의 보존을 위하여 다른 용기에 바꾸어 넣지 말 것]]></PARAGRAPH>
+    </ARTICLE>
+  </SECTION>
+</DOC></NB_DOC_DATA>
+</item>
+<item>
+<ITEM_SEQ>199701074</ITEM_SEQ>
+<ENTP_SEQ>20134532</ENTP_SEQ>
+<ENTP_NAME>해태에이치티비(주)</ENTP_NAME>
+<COB_CLASS_CODE>E0</COB_CLASS_CODE>
+<COB_CLASS_NAME>한약(생약)제제등</COB_CLASS_NAME>
+<PERMIT_KIND_CODE>B</PERMIT_KIND_CODE>
+<PERMIT_KIND_NAME>신고</PERMIT_KIND_NAME>
+<ITEM_NO>3</ITEM_NO>
+<PERMIT_KFDA_CODE>50000</PERMIT_KFDA_CODE>
+<PERMIT_KFDA_NAME>광주청</PERMIT_KFDA_NAME>
+<ITEM_NAME>영진십전대보탕액(십전대보탕연조엑스)</ITEM_NAME>
+<ITEM_ENG_NAME/>
+<PACK_UNIT>100㎖</PACK_UNIT>
+<VALID_TERM>제조일로부터 24 개월</VALID_TERM>
+<PACK_TYPE_CODE/>
+<PACK_TYPE_NAME/>
+<ETC_OTC_CODE>01</ETC_OTC_CODE>
+<ETC_OTC_NAME>일반의약품</ETC_OTC_NAME>
+<MAKE_MATERIAL_FLAG>01</MAKE_MATERIAL_FLAG>
+<MAKE_MATERIAL_FLAG_NAME>완제의약품</MAKE_MATERIAL_FLAG_NAME>
+<NEWDRUG_CLASS_CODE/>
+<NEWDRUG_CLASS_NAME/>
+<ITEM_INGR_TYPE>1</ITEM_INGR_TYPE>
+<ITEM_INGR_TYPE_NAME/>
+<PACKAGE_YN>N</PACKAGE_YN>
+<NARCOTIC_KIND_CODE/>
+<NARCOTIC_KIND_NAME/>
+<STD_ITEM_YN>N</STD_ITEM_YN>
+<DRUGEXCEPT_CODE/>
+<DRUGEXCEPT_NAME/>
+<COSMETIC_NOTICE_CODE/>
+<COSMETIC_NOTICE_NAME/>
+<CLINIC_EXAM_YN>N</CLINIC_EXAM_YN>
+<BIOEQ_EXAM_YN>N</BIOEQ_EXAM_YN>
+<BIO_PRODT_YN>N</BIO_PRODT_YN>
+<BIO_PRODT_CLASS_CODE/>
+<BIO_PRODT_CLASS_NAME/>
+<EXPORT_YN>N</EXPORT_YN>
+<EFFQU_EXAM_YN>N</EFFQU_EXAM_YN>
+<HERB_PRODT_YN>N</HERB_PRODT_YN>
+<BIOEQ_COMP_DRUG_YN>N</BIOEQ_COMP_DRUG_YN>
+<ITEM_PERMIT_DATE/>
+<KFDA_MANAGE_CODE/>
+<KFDA_MANAGE_NAME/>
+<TRUST_MANUF_YN>19970515</TRUST_MANUF_YN>
+<VALID_TERM_DATE>50000</VALID_TERM_DATE>
+<EE_DOC_DATA><DOC title="효능효과" type="EE">
+  <SECTION title="">
+    <ARTICLE title="">
+      <PARAGRAPH tagName="p" textIndent="" marginLeft=""><![CDATA[병후 체력저하, 피로권태, 식욕감퇴(식욕부진), 도한(盜汗, 야간에 자는 동안 땀이 나지만 느끼지 못하고 깨어나면 땀이 그치는 증상), 손발이 차가움, 빈혈]]></PARAGRAPH>
+    </ARTICLE>
+  </SECTION>
+</DOC></EE_DOC_DATA>
+<UD_DOC_DATA><DOC title="용법용량" type="UD">
+  <SECTION title="">
+    <ARTICLE title="">
+      <PARAGRAPH tagName="p" textIndent="" marginLeft=""><![CDATA[1-1. 보통 성인 1회 1포(1회 용량)(1병)을 1일 3회 식전 또는 식간에 복용한다.]]></PARAGRAPH>
+    </ARTICLE>
+  </SECTION>
+</DOC></UD_DOC_DATA>
+<NB_DOC_DATA><DOC title="사용상의주의사항" type="NB">
+  <SECTION title="">
+    <ARTICLE title="1. 다음과 같은 사람은 이 약을 복용하지 말 것.">
+      <PARAGRAPH tagName="p" textIndent="" marginLeft=""><![CDATA[3개월 미만의 영아(시럽제에 한함)]]></PARAGRAPH>
+    </ARTICLE>
+    <ARTICLE title="2. 다음과 같은 사람은 이 약을 복용하기 전에 의사, 한의사, 치과의사, 약사, 한약사와 상의할 것.">
+      <PARAGRAPH tagName="p" textIndent="" marginLeft=""><![CDATA[1) 고혈압 환자]]></PARAGRAPH>
+      <PARAGRAPH tagName="p" textIndent="" marginLeft=""><![CDATA[2) 심장애 또는 신장애 환자]]></PARAGRAPH>
+      <PARAGRAPH tagName="p" textIndent="" marginLeft=""><![CDATA[3) 부종 환자]]></PARAGRAPH>
+      <PARAGRAPH tagName="p" textIndent="" marginLeft=""><![CDATA[4) 의사의 치료를 받고 있는 환자(다른 약물을 투여 받고 있는 환자)]]></PARAGRAPH>
+      <PARAGRAPH tagName="p" textIndent="" marginLeft=""><![CDATA[5) 고령자(일반적으로 고령자는 생리기능이 저하되어 있으므로 감량하는 등 주의할 것.)]]></PARAGRAPH>
+      <PARAGRAPH tagName="p" textIndent="" marginLeft=""><![CDATA[6) 임부 또는 임신하고 있을 가능성이 있는 여성]]></PARAGRAPH>
+      <PARAGRAPH tagName="p" textIndent="" marginLeft=""><![CDATA[7) 지금까지 약에 의해 발진·발적(충혈되어 붉어짐), 가려움 등을 일으킨 적이 있는 환자]]></PARAGRAPH>
+      <PARAGRAPH tagName="p" textIndent="" marginLeft=""><![CDATA[8) 위장이 허약한 환자(식욕부진, 위부불쾌감, 구역, 구토, 설사 등이 나타날 수 있다.)]]></PARAGRAPH>
+      <PARAGRAPH tagName="p" textIndent="" marginLeft=""><![CDATA[9) 식욕부진, 구역, 구토의 증상이 있는 환자(증상이 악화될 수 있다.)]]></PARAGRAPH>
+      <PARAGRAPH tagName="p" textIndent="" marginLeft=""><![CDATA[10) 1세 이하의 영아(의사의 진료를 받는 것을 우선으로 하며, 부득이한 경우를 제외하고는 복용시키지 말 것.)(시럽제에 한함)]]></PARAGRAPH>
+      <PARAGRAPH tagName="p" textIndent="" marginLeft=""><![CDATA[11) 어린이(어린이에 대한 안전성이 확립되어 있지 않다(사용경험이 적다.).)(소아 용법·용량이 있는 경우 제외)]]></PARAGRAPH>
+    </ARTICLE>
+    <ARTICLE title="3. 다음과 같은 경우 이 약의 복용을 즉각 중지하고 의사, 한의사, 치과의사, 약사, 한약사와 상의할 것. 상담시 가능한한 이 첨부문서를 소지할 것.">
+      <PARAGRAPH tagName="p" textIndent="" marginLeft=""><![CDATA[1) 이 약의 복용에 의해 다음의 증상이 나타난 경우]]></PARAGRAPH>
+      <PARAGRAPH tagName="p" textIndent="0" marginLeft="2"><![CDATA[(1) 위알도스테론증 : 요량이 감소하거나 얼굴과 손발이 붓고, 눈꺼풀이 무거워지고, 손이 굳어지고, 혈압이 높아지거나 두통 등(1일 최대 복용량이 감초로서 1g 이상인 제제는 장기간 계속하여 복용할 경우 저칼륨혈증, 혈압상승, 나트륨 체액의 저류, 부종, 체중증가 등의 위알도스테론증이 나타날 수 있으므로, 관찰(혈청칼륨치의 측정)을 충분히 하고 이상이 확인되는 경우 복용을 중지할 것.)]]></PARAGRAPH>
+      <PARAGRAPH tagName="p" textIndent="0" marginLeft="2"><![CDATA[(2) 근병증 : 저칼륨혈증의 결과로서 근병증이 나타날 수 있으므로, 관찰을 충분히 하고 무력감, 사지경련, 마비 등의 이상이 확인되는 경우 복용을 중지할 것.]]></PARAGRAPH>
+      <PARAGRAPH tagName="p" textIndent="0" marginLeft="2"><![CDATA[(3) 피부 : 발진·발적(충혈되어 붉어짐), 두드러기, 가려움 등]]></PARAGRAPH>
+      <PARAGRAPH tagName="p" textIndent="0" marginLeft="2"><![CDATA[(4) 소화기계 : 식욕부진, 위부불쾌감, 구역, 구토, 설사 등]]></PARAGRAPH>
+      <PARAGRAPH tagName="p" textIndent="0" marginLeft="2"><![CDATA[(5) 간기능장애 : 전신의 나른함, 황달(피부 또는 눈의 흰자위가 황색을 띄게 됨) 등]]></PARAGRAPH>
+      <PARAGRAPH tagName="p" textIndent="" marginLeft=""><![CDATA[2) 1개월 정도 복용하여도 증상의 개선이 없을 경우]]></PARAGRAPH>
+    </ARTICLE>
+    <ARTICLE title="4. 기타 이 약의 복용시 주의할 사항">
+      <PARAGRAPH tagName="p" textIndent="" marginLeft=""><![CDATA[1) 정해진 용법·용량을 잘 지킬 것.]]></PARAGRAPH>
+      <PARAGRAPH tagName="p" textIndent="" marginLeft=""><![CDATA[2) 장기간 계속하여 복용하지 않는 것이 원칙이나 부득이 장기간 계속하여 복용할 경우에는 의사, 한의사, 치과의사, 약사, 한약사와 상의할 것.]]></PARAGRAPH>
+      <PARAGRAPH tagName="p" textIndent="" marginLeft=""><![CDATA[3) 어린이에게 복용시킬 경우에는 보호자의 지도·감독하에 복용시킬 것.(소아에 대한 용법·용량이 있는 경우에 한함)]]></PARAGRAPH>
+      <PARAGRAPH tagName="p" textIndent="" marginLeft=""><![CDATA[4) 칼륨함유제제, 감초함유제제, 글리시리진산 또는 그 염류 함유제제, 루프계 이뇨제(푸로세미드, 에타크린산) 또는 티아지드계 이뇨제(트리클로르메티아지드)와 병용시 위알도스테론증이나 저칼륨혈증으로 인하여 근병증이 나타나기 쉬우므로 신중히 복용할 것.]]></PARAGRAPH>
+      <PARAGRAPH tagName="p" textIndent="" marginLeft=""><![CDATA[5) 다른 한약제제 등과 함께 복용할 경우에는 함유 생약의 중복에 주의할 것.]]></PARAGRAPH>
+    </ARTICLE>
+    <ARTICLE title="5. 저장상의 주의사항">
+      <PARAGRAPH tagName="p" textIndent="" marginLeft=""><![CDATA[1) 직사광선을 피하고 되도록 습기가 적은 서늘한 곳에 보관할 것(사용 후 반드시 밀폐 보관할 것.).]]></PARAGRAPH>
+      <PARAGRAPH tagName="p" textIndent="" marginLeft=""><![CDATA[2) 어린이의 손이 닿지 않는 곳에 보관할 것.]]></PARAGRAPH>
+      <PARAGRAPH tagName="p" textIndent="" marginLeft=""><![CDATA[3) 의약품을 원래 용기에서 꺼내어 다른 용기에 보관하는 것은 의약품 오용에 의한 사고 발생이나 의약품 품질 저하의 원인이 될 수 있으므로 원래의 용기에 넣고 꼭 닫아 보관할 것.]]></PARAGRAPH>
+    </ARTICLE>
+  </SECTION>
+</DOC></NB_DOC_DATA>
+</item>
+<item>
+<ITEM_SEQ>198801833</ITEM_SEQ>
+<ENTP_SEQ>19640003</ENTP_SEQ>
+<ENTP_NAME>미쓰비시다나베파마코리아주식회사</ENTP_NAME>
+<COB_CLASS_CODE>A0</COB_CLASS_CODE>
+<COB_CLASS_NAME>의약품</COB_CLASS_NAME>
+<PERMIT_KIND_CODE>A</PERMIT_KIND_CODE>
+<PERMIT_KIND_NAME>허가</PERMIT_KIND_NAME>
+<ITEM_NO>95</ITEM_NO>
+<PERMIT_KFDA_CODE>00000</PERMIT_KFDA_CODE>
+<PERMIT_KFDA_NAME>식약처</PERMIT_KFDA_NAME>
+<ITEM_NAME>치선액</ITEM_NAME>
+<ITEM_ENG_NAME/>
+<PACK_UNIT>20, 40밀리리터, 20밀리리터×10, 40밀리리터×10.</PACK_UNIT>
+<VALID_TERM>제조일로부터 36 개월</VALID_TERM>
+<PACK_TYPE_CODE/>
+<PACK_TYPE_NAME/>
+<ETC_OTC_CODE>01</ETC_OTC_CODE>
+<ETC_OTC_NAME>일반의약품</ETC_OTC_NAME>
+<MAKE_MATERIAL_FLAG>01</MAKE_MATERIAL_FLAG>
+<MAKE_MATERIAL_FLAG_NAME>완제의약품</MAKE_MATERIAL_FLAG_NAME>
+<NEWDRUG_CLASS_CODE/>
+<NEWDRUG_CLASS_NAME/>
+<ITEM_INGR_TYPE>2</ITEM_INGR_TYPE>
+<ITEM_INGR_TYPE_NAME/>
+<PACKAGE_YN>N</PACKAGE_YN>
+<NARCOTIC_KIND_CODE/>
+<NARCOTIC_KIND_NAME/>
+<STD_ITEM_YN>N</STD_ITEM_YN>
+<DRUGEXCEPT_CODE/>
+<DRUGEXCEPT_NAME/>
+<COSMETIC_NOTICE_CODE/>
+<COSMETIC_NOTICE_NAME/>
+<CLINIC_EXAM_YN>N</CLINIC_EXAM_YN>
+<BIOEQ_EXAM_YN>N</BIOEQ_EXAM_YN>
+<BIO_PRODT_YN>N</BIO_PRODT_YN>
+<BIO_PRODT_CLASS_CODE/>
+<BIO_PRODT_CLASS_NAME/>
+<EXPORT_YN>N</EXPORT_YN>
+<EFFQU_EXAM_YN>N</EFFQU_EXAM_YN>
+<HERB_PRODT_YN>N</HERB_PRODT_YN>
+<BIOEQ_COMP_DRUG_YN>N</BIOEQ_COMP_DRUG_YN>
+<ITEM_PERMIT_DATE/>
+<KFDA_MANAGE_CODE/>
+<KFDA_MANAGE_NAME/>
+<TRUST_MANUF_YN>19880304</TRUST_MANUF_YN>
+<VALID_TERM_DATE>00000</VALID_TERM_DATE>
+<EE_DOC_DATA/>
+<UD_DOC_DATA/>
+<NB_DOC_DATA/>
+</item>
+<item>
+<ITEM_SEQ>199001643</ITEM_SEQ>
+<ENTP_SEQ>19640003</ENTP_SEQ>
+<ENTP_NAME>미쓰비시다나베파마코리아주식회사</ENTP_NAME>
+<COB_CLASS_CODE>A0</COB_CLASS_CODE>
+<COB_CLASS_NAME>의약품</COB_CLASS_NAME>
+<PERMIT_KIND_CODE>A</PERMIT_KIND_CODE>
+<PERMIT_KIND_NAME>허가</PERMIT_KIND_NAME>
+<ITEM_NO>115</ITEM_NO>
+<PERMIT_KFDA_CODE>00000</PERMIT_KFDA_CODE>
+<PERMIT_KFDA_NAME>식약처</PERMIT_KFDA_NAME>
+<ITEM_NAME>폴리락톤캅셀</ITEM_NAME>
+<ITEM_ENG_NAME/>
+<PACK_UNIT>10, 20, 60, 180, 250, 500캅셀&#13;
+(수출용: 12500, 25000, 150000, 300000캅셀)</PACK_UNIT>
+<VALID_TERM>제조일로부터 24 개월</VALID_TERM>
+<PACK_TYPE_CODE/>
+<PACK_TYPE_NAME/>
+<ETC_OTC_CODE>01</ETC_OTC_CODE>
+<ETC_OTC_NAME>일반의약품</ETC_OTC_NAME>
+<MAKE_MATERIAL_FLAG>01</MAKE_MATERIAL_FLAG>
+<MAKE_MATERIAL_FLAG_NAME>완제의약품</MAKE_MATERIAL_FLAG_NAME>
+<NEWDRUG_CLASS_CODE/>
+<NEWDRUG_CLASS_NAME/>
+<ITEM_INGR_TYPE>1</ITEM_INGR_TYPE>
+<ITEM_INGR_TYPE_NAME/>
+<PACKAGE_YN>N</PACKAGE_YN>
+<NARCOTIC_KIND_CODE/>
+<NARCOTIC_KIND_NAME/>
+<STD_ITEM_YN>N</STD_ITEM_YN>
+<DRUGEXCEPT_CODE/>
+<DRUGEXCEPT_NAME/>
+<COSMETIC_NOTICE_CODE/>
+<COSMETIC_NOTICE_NAME/>
+<CLINIC_EXAM_YN>N</CLINIC_EXAM_YN>
+<BIOEQ_EXAM_YN>N</BIOEQ_EXAM_YN>
+<BIO_PRODT_YN>N</BIO_PRODT_YN>
+<BIO_PRODT_CLASS_CODE/>
+<BIO_PRODT_CLASS_NAME/>
+<EXPORT_YN>Y</EXPORT_YN>
+<EFFQU_EXAM_YN>N</EFFQU_EXAM_YN>
+<HERB_PRODT_YN>N</HERB_PRODT_YN>
+<BIOEQ_COMP_DRUG_YN>N</BIOEQ_COMP_DRUG_YN>
+<ITEM_PERMIT_DATE/>
+<KFDA_MANAGE_CODE/>
+<KFDA_MANAGE_NAME/>
+<TRUST_MANUF_YN>19900205</TRUST_MANUF_YN>
+<VALID_TERM_DATE>00000</VALID_TERM_DATE>
+<EE_DOC_DATA/>
+<UD_DOC_DATA/>
+<NB_DOC_DATA/>
+</item>
+</items>
+</body>
+</response>

@@ -6,6 +6,7 @@ var Tags = require('./models/Tags');
 var SkinQnaCounter = require('./models/SkinQnaCounter');
 var async = require('async');
 var User_admin = require('./models/User_admin');
+var User = require('./models/user');
 var multer = require('multer');
 // var FTPStorage = require('multer-ftp');
 var sftpStorage = require('multer-sftp');
@@ -215,6 +216,22 @@ router.get('/main_list', function(req, res) {
   }]);
 });
 
+router.get('/skinqna_list/:email', function(req, res) {
+  async.waterfall([function(callback) {
+    SkinQna.find({
+      email : req.params.email
+    },function(err, docs) {
+      if(docs) {
+        res.json(docs);
+      } else {
+        res.status(204);
+      }
+    }).sort({
+      "_id": -1
+    });
+  }]);
+});
+
 router.get('/mission/:id', function(req, res) {
   async.waterfall([function(callback) {
     SkinQna.findOne({
@@ -335,7 +352,7 @@ router.post('/', s3upload.fields([{
     newNote.numId = counter.totalCount + 1;
     newNote.filename = req.files['image'][0].key;
     newNote.originalName = req.files['image'][0].originalname;
-    newNote.save((err, user) => {
+    newNote.save((err, data) => {
       if (err) {
         console.log(err);
         return res.status(400).json({
@@ -353,10 +370,64 @@ router.post('/', s3upload.fields([{
         if (err) {
           console.log("tags error : " + err);
         } else {
-          // console.log("result tags : " + JSON.stringify(post2));
+          //2020-05-25 이부분에 글쓰기 포인트 적립 로직 추가
+          User.findOne({
+            email: req.body.email
+          },
+          function(err, result) {
+            if (result) {
+              for(var i =0; i< result.userpoint.length; i++) {
+                if (getFormattedDate(new Date(result.userpoint[i].updatedAt)) == getFormattedDate(new Date())) {
+                  if(result.userpoint[i].status=="skinqna") {
+                    return res.status(400);
+                    // return res.status(400).json({
+                            // 'msg': '하루 한번만 포인트가 누적됩니다!!'
+                    // });
+                  }
+                }
+              }
+              //커뮤니티 글 작성시 1회/일 50점을 쌓아 준다 2020-05-25
+              User.update({
+                email : req.body.email
+              }, {
+                $push: {
+                  userpoint : {point: 50, updatedAt: new Date(), status: 'skinqna'}
+                }, $inc: { //미션당 사용사긴 외에 일반적인 플리닉의 총 사용시간도 구해야 함 20191028
+                  "totaluserpoint": 50
+                }
+              }, function(err, result2){
+                if(err) {
+                  // return res.status(400).json(err);
+                } else {
+                  // return res.status(201).json({
+                    // 'msg': '커뮤니티 작성 포인트가 누적되었습니다111!!'
+                  // });
+                }
+              });
+            } else {
+              // //검색결과가 없으면 신규 등록
+              // User.update({
+              //   email : req.body.email
+              // }, {
+              //   $push: {
+              //     userpoint : {point: 50, updatedAt: new Date(), status: 'skinqna'}
+              //   }, $inc: { //미션당 사용사긴 외에 일반적인 플리닉의 총 사용시간도 구해야 함 20191028
+              //     "totaluserpoint": 50
+              //   }
+              // }, function(err, result2){
+              //   if(err) {
+              //     return res.status(400).json(err);
+              //   } else {
+              //     return res.status(201).json({
+              //       'msg': '커뮤니티 작성 포인트가 누적되었습니다222!!'
+              //     });
+              //   }
+              // });
+            }
+          });
         }
       })
-      return res.status(201).json(user);
+      return res.status(201).json(data);
     });
   });
 }); // create
@@ -429,15 +500,13 @@ router.get('/:id', function(req, res) {
 
 router.get('/:id/edit', isLoggedIn, function(req, res) {
   SkinQna.findById(req.params.id, function(err, post) {
-    var url = req.protocol + '://' + req.get('host') + '/skinqnaimage/' + post._id;
+    // var url = req.protocol + '://' + req.get('host') + '/skinqnaimage/' + post._id;
     // var url = req.protocol + '://' + 'plinic.cafe24app.com' + '/skinqnaimage/' + post._id;
 
-
-
+    var url = 'https://plinic.s3.ap-northeast-2.amazonaws.com/' + post.filename;
 
     var prefilename = post.filename; //이전 파일들은 삭제
     var preoriginalName = post.originalName; //이전 파일들은 삭제
-
     var preprodfilename = post.prodfilename;
     var preprodoriginalname = post.prodoriginalname;
     if (err) return res.json({
@@ -635,3 +704,15 @@ function createSearch(queries) {
     highlight: highlight
   };
 }
+
+
+function getFormattedDate(date) {
+  return date.getFullYear() + "-" + get2digits(date.getMonth() + 1) + "-" + get2digits(date.getDate());
+};
+
+function get2digits(num){
+  return ("0" + num).slice(-2);
+}
+
+
+

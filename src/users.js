@@ -2,6 +2,7 @@ var express  = require('express');
 var router   = express.Router();
 var mongoose = require('mongoose');
 var User     = require('./models/User_admin');
+var User2     = require('./models/user');
 var async    = require('async');
 
 router.get('/new', function(req,res){
@@ -15,6 +16,19 @@ router.get('/new', function(req,res){
 }); // new
 
 
+router.get('/snsexists/:email', function(req,res){
+  User2.findOne({email : req.params.email}, function (err,user) {
+    if(err) return res.json({success:false, message:err});
+    if(!user){
+      return res.sendStatus(204);
+    }
+    if(user){
+      return res.status(201).json({
+        'user': user
+      });
+    }
+  });
+}); // SNS사용자 가입 여부 체크
 
 
 
@@ -90,6 +104,28 @@ function isLoggedIn(req, res, next) {
   }
   res.redirect('/');
 }
+
+
+
+router.get('/mymainproductlist/:email', function(req,res){
+  async.waterfall([function(callback){
+    User2.find({
+      email : req.params.email
+    },function(err, docs){
+      res.json(docs[0].mainproduct);
+    }).sort({"_id" : -1});
+  }])
+});
+
+router.get('/mysubproductlist/:email', function(req,res){
+  async.waterfall([function(callback){
+    User2.find({
+      email : req.params.email
+    },function(err, docs){
+      res.json(docs[0].subproduct);
+    }).sort({"_id" : -1});
+  }])
+});
 
 
 

@@ -25,6 +25,11 @@
         <div id="cvErrTitle" class="message"></div>
       </div>
       <div class="floats">
+        <label>상품 URL</label>
+        <input class="cvRequired" type="text" name="post[url]" cvRqErrMsg="Title is required." cvRqErrTo="#cvErrTitle" value="">
+        <div id="cvErrTitle" class="message"></div>
+      </div>
+      <div class="floats">
         <label>Author</label>
         <input disabled type="text" value="<%= user.nickname %>">
       </div>

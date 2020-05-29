@@ -57,13 +57,70 @@ exports.skinQnaSave = (req, res) => {
     }], function(callback, counter) {
       let newSkinQna = SkinQna(req.body);
       newSkinQna.numId = counter.totalCount + 1;
-      newSkinQna.save((err, user) => {
+      newSkinQna.save((err, data) => {
         if (err) {
           console.log(err);
           return res.status(400).json({
             'msg': '피부고민이 등록되지 않았습니다. <br /> Error : ' + err
           });
         }
+
+
+        console.log("포인트 등록 시작 : " + req.body.email);
+        //포인트를 등록한다. 2020-05-25
+        User.findOne({
+          email: req.body.email
+        },
+        function(err, result) {
+          if (result) {
+            for(var i =0; i< result.userpoint.length; i++) {
+              if (getFormattedDate(new Date(result.userpoint[i].updatedAt)) == getFormattedDate(new Date())) {
+                if(result.userpoint[i].status=="skinqna") {
+                  return res.status(400);
+                  //         // 'msg': '하루 한번만 포인트가 누적됩니다!!'
+                }
+              }
+            }
+            //커뮤니티 글 작성시 1회/일 50점을 쌓아 준다 2020-05-25
+            User.update({
+              email : req.body.email
+            }, {
+              $push: {
+                userpoint : {point: 50, updatedAt: new Date(), status: 'skinqna'}
+              }, $inc: { //미션당 사용사긴 외에 일반적인 플리닉의 총 사용시간도 구해야 함 20191028
+                "totaluserpoint": 50
+              }
+            }, function(err, result2){
+              if(err) {
+                // return res.status(400).json(err);
+              } else {
+                // return res.status(201).json({
+                  // 'msg': '커뮤니티 작성 포인트가 누적되었습니다111!!'
+                // });
+              }
+            });
+          } else {
+            // //검색결과가 없으면 신규 등록
+            // User.update({
+            //   email : req.body.email
+            // }, {
+            //   $push: {
+            //     userpoint : {point: 50, updatedAt: new Date(), status: 'skinqna'}
+            //   }, $inc: { //미션당 사용사긴 외에 일반적인 플리닉의 총 사용시간도 구해야 함 20191028
+            //     "totaluserpoint": 50
+            //   }
+            // }, function(err, result2){
+            //   if(err) {
+            //     return res.status(400).json(err);
+            //   } else {
+            //     return res.status(201).json({
+            //       'msg': '커뮤니티 작성 포인트가 누적되었습니다222!!'
+            //     });
+            //   }
+            // });
+          }
+        });
+
         // let newTags = Tags();
         // newTags.tags = req.body.tags;
         // newTags.save((err, tags) =>{
@@ -88,7 +145,7 @@ exports.skinQnaSave = (req, res) => {
             // console.log("result tags : " + JSON.stringify(post2));
           }
         })
-        return res.status(201).json(user);
+        return res.status(201).json(data);
         // return res.status(201).json(user);
         // return res.status(201).json({
         //     token: createToken(user)
@@ -254,3 +311,12 @@ exports.replyDelete = (req, res) => {
     })
 
 }
+
+function getFormattedDate(date) {
+  return date.getFullYear() + "-" + get2digits(date.getMonth() + 1) + "-" + get2digits(date.getDate());
+};
+
+function get2digits(num){
+  return ("0" + num).slice(-2);
+}
+
