@@ -68,7 +68,10 @@ var carezoneSchema = mongoose.Schema({
   givecount : {type:Number},
   product_url : {type:String},
   purchase_url : {type:String},
-
+  gigan: String,
+  inwon: String,
+  chaljogun: String,
+  chalgigan: String,
 });
 
 carezoneSchema.methods.getFormattedDate = function (date) {

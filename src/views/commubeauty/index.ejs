@@ -53,8 +53,8 @@
       <% commubeauty.forEach(function(post){ %>
         <tr onclick="window.location = '/commubeauty/<%= post._id %>?<%= urlQuery %>'">
           <td><%= post.numId %></td>
-          <td class="highlight" style="width : 200px" data-highlight="<%= search.highlight.title %>">
-            <%= post.title %>
+          <td class="highlight" style="width : 400px" data-highlight="<%= search.highlight.title %>">
+            <%= post.title %> <%= post.body %>
             <span class="comments">(<%= post.comments.length %>)</span>
           </td>
           <td style="width : 100px"><%= post.editor ? "에디터 추천" : "" %></td>

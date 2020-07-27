@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <% include ../partials/head %>
+  </head>
+  <body>
+    <header>
+      <% include ../partials/header %>
+    </header>
+    <div class="posts">
+    <% include partials/top %>
+<!-- main start-->
+
+<!-- views/faq/index.ejs -->
+<div class="edit">
+  <div class="buttons">
+    <button onclick="history.back()">Back</button>
+  </div>
+  <h3>자주하는질문(FAQ) 관리</h3>
+  <form class="checkValidation" action="/faq/<%=post._id%>?_method=put" method="post" enctype="multipart/form-data">
+    <div class="inputs">
+      <div class="floats">
+        <label>자주하는질문(FAQ) 분류 : </label>
+        <select class="cvRequired" id="volume" name="post[category]" cvRqErrMsg="제목을 입력 주세요." cvRqErrTo="#cvErrTitle" >
+          <option value="[계정]" <% if(post.category === '[계정]') {%> selected <% } %> > [계정]</option>
+          <option value="[챌린지]" <% if(post.category === '[챌린지]') {%> selected <% } %> > [챌린지]</option>
+          <option value="[포인트]" <% if(post.category === '[포인트]') {%> selected <% } %> > [포인트]</option>
+          <option value="[플리닉]" <% if(post.category === '[플리닉]') {%> selected <% } %> > [플리닉]</option>
+          <option value="[이벤트]" <% if(post.category === '[이벤트]') {%> selected <% } %> > [이벤트]</option>
+          <option value="[상품]" <% if(post.category === '[상품]') {%> selected <% } %> > [상품]</option>
+        </select>
+        <!-- <input class="cvRequired" type="text" name="post[title]" cvRqErrMsg="제목을 입력 주세요." cvRqErrTo="#cvErrTitle" value=""> -->
+        <div id="cvErrTitle" class="message"></div>
+      </div>
+
+      <div class="floats">
+        <label>FAQ 제목</label>
+        <input class="cvRequired" type="text" name="post[title]" cvRqErrMsg="Title is required." cvRqErrTo="#cvErrTitle" value="<%=post.title%>">
+        <div id="cvErrTitle" class="message"></div>
+      </div>
+      <div class="floats">
+        <label>Author</label>
+        <input disabled type="text" value="<%= user.nickname %>">
+      </div>
+      <div class="floats">
+        <label>FAQ 본문</label>
+        <textarea class="cvRequired" name="post[body]" cvRqErrMsg="Body is required." cvRqErrTo="#cvErrBody"><%=post.body%></textarea>
+        <div id="cvErrBody" class="message"></div>
+      </div>
+      <div class="floats">
+        <label>FAQ 보조 제목</label>
+        <textarea class="cvRequired" name="post[missontitle]" cvRqErrMsg="Body is required." cvRqErrTo="#cvErrBody"><%=post.missontitle%></textarea>
+        <div id="cvErrBody" class="message"></div>
+      </div>
+    </div>
+
+
+    <div class="buttons">
+      <button type="submit">Submit</button>
+    </div>
+  </form>
+</div>
+
+<!-- main end -->
+    </div><!--faq end -->
+    <footer>
+      <% include ../partials/footer %>
+    </footer>
+  </body>
+</html>

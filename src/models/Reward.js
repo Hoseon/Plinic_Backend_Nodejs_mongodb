@@ -31,6 +31,7 @@ var rewardSchema = mongoose.Schema({
   buildingName: {type:String},
   phoneNumber: {type:String},
   postemail: {type:String},
+  review: {type:String},
   name: {type:String},
   comments: [{
     body: {type:String},

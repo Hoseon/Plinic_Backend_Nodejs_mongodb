@@ -25,6 +25,9 @@ routes.get('/', (req, res) => {
 routes.post('/register', userController.registerUser);
 routes.post('/registersns', userController.registerUserSnS);
 routes.post('/registersnstoplinic', userController.registerUserSnStoPlinic);
+routes.post('/checkUser', userController.checkUser);
+routes.post('/changepush', userController.changePush); // 사용자 정보 푸쉬 알림 변경
+routes.post('/updatepushtoken', userController.updatePushToken); // 사용자 정보 푸쉬 알림 변경
 routes.post('/userupdatenickname', userController.updateUserNickname); //사용자 닉네임, 생년월, 비밀번호 변경 로직
 routes.post('/updateskincomplaint', userController.updateUserSkinComplaint); //사용자 피부타입 변경 로직
 routes.post('/savemymainproduct', userController.saveMyMainProduct); //사용자 주 화장품 저장
@@ -87,6 +90,12 @@ routes.post('/usepointupdate', userController.usePointUpdate); //일반 케어 �
 
 //포인트 누적후 사용자 정보 업데이트 해서 가져 오기.
 routes.post('/loaduser', userController.loadUser);
+
+
+//사용자 ID찾기,패스워드 리셋 2020-06-04
+routes.post('/findId', userController.findId);
+routes.post('/validIdandSendemail', userController.validSendEmail);
+routes.post('/changePassword', userController.changePassword);
 
 
 //routes.get('/auth/kakao', userController.loginUser_Kakao);

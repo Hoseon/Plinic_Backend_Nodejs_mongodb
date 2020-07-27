@@ -61,23 +61,67 @@ var UserSchema = new mongoose.Schema({
     status: {type:String},
   }],
   mainproduct: [{ //사용자 포인트 누적 이력
-    title: {type:String, required:true}, //제품명
-    jejosa: {type:String, required:true},//제조사
-    brand: {type:String, required:true},//브랜드
-    body: {type:String, required:true},
-    filename: String,
-    originalName: String,
+    product_num: {type:String, required:true},
+    brand_name: String,
+    big_category: String,
+    small_category: String,
+    product_name: String,
+    seller: String,
+    color_type: String,
+    function: String,
+    ingredient: [{
+      korean_name: {type:String},
+      english_name: {type:String},
+      ewg_level: {type:String},
+      purpose: {type:String},
+    }],
+    image_url: String,
+    weight: String,
+    price: String,
+    
+    // title: {type:String, required:true}, //제품명
+    // jejosa: {type:String, required:true},//제조사
+    // brand: {type:String, required:true},//브랜드
+    // body: {type:String, required:true},
+    // filename: String,
+    // originalName: String,
   }],
-  subproduct: [{ //사용자 포인트 누적 이력
-    title: {type:String, required:true}, //제품명
-    jejosa: {type:String, required:true},//제조사
-    brand: {type:String, required:true},//브랜드
-    body: {type:String, required:true},
-    filename: String,
-    originalName: String,
+  subproduct: [{ //
+    product_num: {type:String, required:true},
+    brand_name: String,
+    big_category: String,
+    small_category: String,
+    product_name: String,
+    seller: String,
+    color_type: String,
+    function: String,
+    ingredient: [{
+      korean_name: {type:String},
+      english_name: {type:String},
+      ewg_level: {type:String},
+      purpose: {type:String},
+    }],
+    image_url: String,
+    weight: String,
+    price: String,
+    // title: {type:String, required:true}, //제품명
+    // jejosa: {type:String, required:true},//제조사
+    // brand: {type:String, required:true},//브랜드
+    // body: {type:String, required:true},
+    // filename: String,
+    // originalName: String,
   }],
   snsid: String,
   phonenumber: String,
+  pwreset: {
+    type: Boolean,
+    default: false
+  },
+  pwresetvalue: String,
+  ispush: {
+    type: Boolean,
+    default: false
+  },
 });
 
 UserSchema.pre('save', function(next) {
@@ -96,6 +140,19 @@ UserSchema.pre('save', function(next) {
     });
   });
 });
+
+// UserSchema.pre('findOneAndUpdate', function(next) {
+//   var user = this;
+//   if (!user._update.isModified('password')) return next();
+//   bcrypt.genSalt(10, function(err, salt) {
+//     if (err) return next(err);
+//     bcrypt.hash(user._update.password, salt, null, function(err, hash) {
+//       if (err) return next(err);
+//       user._update.password = hash;
+//       next();
+//     });
+//   });
+// });
 
 UserSchema.methods.comparePassword = function(candidatePassword, cb) {
   bcrypt.compare(candidatePassword, this.password, (err, isMatch) => {

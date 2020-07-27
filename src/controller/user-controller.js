@@ -2,12 +2,14 @@ var User = require('../models/user');
 var Mission = require('../models/Mission');
 var Challenge = require('../models/Challenge');
 var jwt = require('jsonwebtoken');
+var bcrypt = require('bcrypt-nodejs');
 var config = require('../config/config');
 var passport = require('passport');
 var KakaoStrategy = require('passport-kakao').Strategy;
 var http = require('http');
 var request = require('request');
-
+const AWS = require("aws-sdk");
+AWS.config.loadFromPath(__dirname + "/config/awsconfig.json");
 
 function createToken(user) {
   return jwt.sign({
@@ -20,6 +22,7 @@ function createToken(user) {
     birthday: user.birthday,
     pushtoken: user.pushtoken,
     totaluserpoint : user.totaluserpoint,
+    ispush : user.ispush,
   }, config.jwtSecret, {
     //expiresIn: 200 // 86400 expires in 24 hours
     expiresIn: 86400 // 86400 expires in 24 hours
@@ -213,11 +216,11 @@ exports.registerUserSnS = (req, res) => {
           'msg': '회원가입이 되지 않습니다. <br/> 관리자에게 문의 해주세요.'
         });
       }
-      //플리닉샵 회원가입
+      //플리닉샵 회원가입1
       request.post({
         headers: { 'Content-Type' : 'application/x-www-form-urlencoded' },
         // url : 'http://localhost/Point/PlinicAddPoint',
-        url : 'https://plinicshop.com/Users/PlinicSNSSignup',
+        url : 'https://plinicshop.com/Users/PlinicSNSSignup', 
         body : "id=" + req.body.snsid +
                "&usrName=" + req.body.name + 
                "&usrPhone=" + req.phonenumber + 
@@ -236,8 +239,6 @@ exports.registerUserSnS = (req, res) => {
         if(response) {
         }
       });
-
-
       // return res.status(201).json(user);
       return res.status(201).json({
         'user': user
@@ -246,6 +247,31 @@ exports.registerUserSnS = (req, res) => {
     });
   });
 };
+
+exports.checkUser = (req, res) => {
+  if(!req.body.email && !req.body.password) {
+    return res.status(400).json({
+      'msg' : "아이디, 비밀번호가 부정확합니다."
+    });
+  }
+  User.findOne({
+    email : req.body.email
+  }, (err, user) => {
+    if(err) {
+      return res.status(400).json({
+        'msg' : "사용자 정보 찾기 에러<br>관리자에게 문의해주세요"
+      });
+    }
+    if(user) {
+      return res.status(400).json({
+        'msg' : "이미 가입되어 있는 사용자 입니다"
+      });
+    }
+    return res.status(200).json({
+      'msg' : "회원가입 가능"
+    });
+  })
+}
 
 
 exports.registerUserSnStoPlinic = (req, res) => {
@@ -317,6 +343,12 @@ exports.loginUser = (req, res) => {
       // return res.status(400).json({ 'msg': 'The user does not exist' });
       return res.status(400).json({
         'msg': '존재하지 않는 회원입니다.'
+      });
+    }
+
+    if(user.pwreset) {
+      return res.status(400).json({
+        msg: '임시 비밀번호를 메일로 발급했습니다<br>비밀번호 초기화 후 사용해주세요'
       });
     }
 
@@ -1334,6 +1366,7 @@ exports.usePointUpdate = (req, res) => {
               url : 'http://plinicshop.com:50082/Point/PlinicAddPoint',
               body : 'id=' + req.body.email +
                      "&point=" +  usePoints +
+                     "&reason=" +  "플리닉사용" +
                      "&expire=" + 1096,
               json : false, //헤더 값을 JSON으로 변경한다
             }, function(error, response, body){
@@ -1377,6 +1410,7 @@ exports.usePointUpdate = (req, res) => {
               url : 'http://plinicshop.com:50082/Point/PlinicAddPoint',
               body : 'id=' + req.body.email +
                      "&point=" +  req.body.points +
+                     "&reason=" +  "플리닉사용" +
                      "&expire=" + 1096,
               json : false, //헤더 값을 JSON으로 변경한다
             }, function(error, response, body){
@@ -1486,7 +1520,7 @@ exports.loadUser = (req, res) => {
 
 
 exports.saveMyMainProduct = (req, res) => { 
-  console.log("main" + JSON.stringify(req.body.product));
+  // console.log("main" + JSON.stringify(req.body.product));
   User.update({
     email : req.body.email
   }, {
@@ -1505,7 +1539,7 @@ exports.saveMyMainProduct = (req, res) => {
 };
 
 exports.saveSubMainProduct = (req, res) => { 
-  console.log("sub" + JSON.stringify(req.body.product));
+  // console.log("sub" + JSON.stringify(req.body.product));
   User.update({
     email : req.body.email
   }, {
@@ -1524,7 +1558,7 @@ exports.saveSubMainProduct = (req, res) => {
 };
 
 exports.delAndSaveMyMainProduct = (req, res) => { 
-  console.log("main" + JSON.stringify(req.body.product));
+  // console.log("main" + JSON.stringify(req.body.product));
   User.update({
     email : req.body.email
   }, {
@@ -1555,7 +1589,7 @@ exports.delAndSaveMyMainProduct = (req, res) => {
 };
 
 exports.delAndSaveSubMainProduct = (req, res) => { 
-  console.log("sub" + JSON.stringify(req.body.product));
+  // console.log("sub" + JSON.stringify(req.body.product));
   User.update({
     email : req.body.email
   }, {
@@ -1584,4 +1618,233 @@ exports.delAndSaveSubMainProduct = (req, res) => {
     }
   });
 };
+
+exports.findId = (req, res) => {
+  if (!req.body.name && !req.body.birthday) {
+    return res.status(400).json({
+      'msg': '이름, 생년월을를 입력해 주세요.'
+    });
+  }
+
+  User.findOne({
+    name: req.body.name,
+    birthday : req.body.birthday
+  }, (err, user) => {
+    if (err) {
+      return res.status(400).json({
+        'msg': '사용자 정보를 찾을 수 없습니다.'
+      });
+    }
+    if (user) {
+      // return res.status(400).json({ 'msg': 'The user already exists' });
+      return res.status(201).json({
+        'id': user.email
+      });
+    }
+    if (!user) {
+      return res.status(400).json({
+        'msg' : '사용자 정보를 찾을 수 없습니다.'
+      })
+    }
+  });
+};
+
+
+exports.validSendEmail = (req, res) => {
+  if (!req.body.email && !req.body.name && !req.body.birthday) {
+    return res.status(400).json({
+      'msg': "이메일, 이름, 생년월을를 입력해 주세요."
+    });
+  }
+
+  User.findOne({
+    email: req.body.email,
+    name: req.body.name,
+    birthday : req.body.birthday
+  }, (err, user) => {
+    if (err) {
+      return res.status(400).json({
+        'msg': "사용자 정보를 찾을 수 없습니다."
+      });
+    }
+    if (user) {
+      AWS.config.update({region: "us-west-2"});
+      var ses = new AWS.SES();
+      var temp_pw = makeRandomStr();
+      let params = {
+        Destination: {
+            ToAddresses: [user.email],  // 받는 사람 이메일 주소
+            CcAddresses: [],    // 참조
+            BccAddresses: []    // 숨은 참조
+        },
+        Message: {
+            Body: {
+                Text: {
+                    Data: "안녕하세요 플리닉 입니다. \n 회원님의 임시 비밀번호는 " + temp_pw + " 입니다. \n플리닉 앱에서 비밀번호 초기화를 진행해주세요.\n감사합니다.",      // 본문 내용
+                    Charset: "utf-8"            // 인코딩 타입
+                }
+            },
+            Subject: {
+                Data: "플리닉 임시 비밀번호 발송",   // 제목 내용
+                Charset: "utf-8"              // 인코딩 타입
+            }
+        },
+        Source: "no-reply@g1p.co.kr",          // 보낸 사람 주소
+        ReplyToAddresses: ["no-reply@g1p.co.kr"] // 답장 받을 이메일 주소
+      }
+      ses.sendEmail(params, function(err, data){
+        if(err) {
+          console.log(err);
+        }
+
+        if(data) { //임시비밀번호 전송이 성공되면 USER에 패스워드 상태가 리셋상태, 그리고 임시 비밀번호를 db에 저장한다.
+          req.body.pwreset = true;
+          req.body.pwresetvalue =  temp_pw;
+          User.findOneAndUpdate({
+            email: req.body.email,
+            name: req.body.name,
+            birthday : req.body.birthday
+          }, req.body, (err, result) => {
+            if(err) {
+              return res.status(400).json({
+                'msg': "비밀번호를 초기화 할 수 없습니다."
+              });
+            }
+            if(result) {
+              return res.status(201).json({
+                'msg': "회원님의 Email로<br>임시 비밀번호를 발송했습니다<br>임시 비밀번호로 패스워드 변경해주세요"
+              });
+            }
+          });
+        }
+      })
+      AWS.config.update({region: "ap-northeast-2"});
+
+      // return res.status(400).json({ 'msg': 'The user already exists' });
+      // return res.status(201).json({
+      //   'id': user.email
+      // });
+    }
+    if (!user) {
+      return res.status(400).json({
+        'msg' : "사용자 정보를 찾을 수 없습니다."
+      })
+    }
+  });
+};
+
+exports.updatePushToken = (req, res) => { //로그인 시 마다 사용자의 푸쉬토큰을 업데이트 한다 2020-06-16
+  if (!req.body.email && !! req.body.pushtoken) {
+    return res.status(400).json({ 'msg' : "시스템 오류 관리자에게 문의하세요" });
+  }
+  User.findOneAndUpdate({
+    email : req.body.email
+  }, req.body, (err, user) => {
+   
+   if(err) {
+    return res.status(400).json({ 'msg' : "푸쉬 토큰을 변경 할 수 없습니다" });
+   }
+   
+   if(user) {
+     return res.status(201).json({'msg' : "푸쉬토큰 변경 완료"});
+   } else {
+     return res.status(400).json({ 'msg' : "시스템 오류 관리자에게 문의하세요" });
+   }
+   
+  });
+ }
+
+exports.changePush = (req, res) => {
+ if (!req.body.email && !! req.body.ispush) {
+   return res.status(400).json({ 'msg' : "시스템 오류 관리자에게 문의하세요" });
+ }
+ User.findOneAndUpdate({
+   email : req.body.email
+ }, req.body, (err, user) => {
+  
+  if(err) {
+   return res.status(400).json({ 'msg' : "푸쉬 허용을 변경 할 수 없습니다" });
+  }
+  
+  if(user) {
+    return res.status(201).json({'msg' : "푸쉬허용 변경"});
+  } else {
+    return res.status(400).json({ 'msg' : "시스템 오류 관리자에게 문의하세요" });
+  }
+  
+ });
+}
+
+exports.changePassword = (req, res) => {
+  if (!req.body.temp && !req.body.birthday && !req.body.email && !req.body.name && !req.body.password && !req.body.passwordconfirm) {
+    return res.status(400).json({
+      'msg': "사용자 정보가 정확하지 않습니다."
+    });
+  }
+
+
+  User.findOne({
+    email: req.body.email,
+    name: req.body.name,
+    birthday: req.body.birthday,
+    pwresetvalue: req.body.temp,
+  }, (err, user) => {
+    if (err) {
+      return res.status(400).json({
+        'msg': "사용자 정보를 찾을 수 없습니다."
+      });
+    }
+    if (user) {
+      if(user.pwresetvalue != req.body.temp) { 
+        return res.status(400).json({
+          'msg': "임시 비밀번호가 틀립니다!!"
+        });
+      }
+      //비밀번호 암호화로 저장
+      bcrypt.genSalt(10, async function(err, salt) {
+        if (err) return next(err);
+        await bcrypt.hash(req.body.password, salt, null, function(err, hash) {
+          if (err) return next(err);
+          req.body.password = hash; // 암호화로 만들고
+          req.body.pwreset = false;
+          User.findOneAndUpdate({ // 저장한다.
+            email: req.body.email,
+            name: req.body.name,
+            birthday : req.body.birthday
+          }, req.body, (err, result) => {
+            if(err) {
+              return res.status(400).json({
+                'msg': "비밀번호를 초기화 할 수 없습니다."
+              });
+            }
+            if(result) {
+              return res.status(201).json({
+                'msg': "회원님의 비밀번호가<br>정상적으로 변경되었습니다."
+              });
+            }
+          });
+        });
+      });
+    }
+    if (!user) {
+      return res.status(400).json({
+        'msg' : "사용자 정보를 찾을 수 없습니다."
+      })
+    }
+  });
+};
+
+
+
+
+function makeRandomStr(){
+  var randomStr = "";
+  var possible = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+
+  for( let i = 0; i < 8; i++ ){
+      randomStr += possible.charAt(Math.floor(Math.random() * possible.length));
+  }
+  return randomStr;
+}
+
 

@@ -28,6 +28,25 @@ var productSchema = mongoose.Schema({
   desc: String,
   created: { type: Date, default: Date.now },
   url: String, //스마트스토어 URL
+
+  // ---- 20200707 크롤링 데이터 활용
+  product_num: {type:String, required:true},
+  brand_name: String,
+  big_category: String,
+  small_category: String,
+  product_name: String,
+  seller: String,
+  color_type: String,
+  function: String,
+  ingredient: [{
+    korean_name: {type:String, required:true},
+    english_name: {type:String, required:true},
+    ewg_level: {type:String, required:true},
+    purpose: {type:String, required:true},
+  }],
+  image_url: String,
+  weight: String,
+  price: String,
 });
 
 productSchema.methods.getFormattedDate = function (date) {

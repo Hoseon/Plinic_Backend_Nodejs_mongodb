@@ -90,9 +90,17 @@ router.get('/list', function(req, res) {
 router.get('/list/:id', function(req, res) {
   async.waterfall([function(callback) {
     CommuBeauty.findOne({ _id : req.params.id },function(err, docs) {
-      docs.views++;
-      docs.save();
-      res.json(docs);
+      if(err) {
+        return res.json({
+          success: false,
+          message: err
+        });
+      }
+      if(docs) {
+        docs.views++;
+        docs.save();
+        res.json(docs);
+      }
     });
   }]);
 });
@@ -397,10 +405,10 @@ router.get('/:id/edit', isLoggedIn, function(req, res) {
       success: false,
       message: err
     });
-    if (!req.user._id.equals(post.author)) return res.json({
-      success: false,
-      message: "Unauthrized Attempt"
-    });
+    // if (!req.user._id.equals(post.author)) return res.json({
+    //   success: false,
+    //   message: "Unauthrized Attempt"
+    // });
     res.render("commubeauty/edit", {
       post: post,
       prefilename: prefilename,
@@ -446,7 +454,7 @@ router.put('/:id', s3upload.fields([{ name: 'image' }]), isLoggedIn, function(re
     else console.log("배너 수정 이전 파일 삭제 완료 : " + req.body.prefilename);
     CommuBeauty.findOneAndUpdate({
       _id: req.params.id,
-      author: req.user._id
+      // author: req.user._id
     }, req.body.post, function(err, post) {
       if (err) return res.json({
         success: false,

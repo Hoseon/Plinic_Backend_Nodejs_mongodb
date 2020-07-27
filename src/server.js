@@ -13,6 +13,7 @@ var Image = require('./models/image');
 var FtpImage = require('./models/FtpImage');
 var UserImage = require('./models/UserImage');
 var Banner = require('./models/Banner');
+var TopBanner = require('./models/TopBanner');
 var Carezone = require('./models/Carezone');
 var Beauty = require('./models/Beauty');
 var CommuBeauty = require('./models/CommuBeauty');
@@ -25,6 +26,7 @@ var Reward = require('./models/Reward');
 var Chulsuk = require('./models/Chulsuk');
 var Tags = require('./models/Tags');
 var AppReview = require('./models/AppReview');
+var Product = require('./models/Product');
 
 const GoogleStrategy = require('passport-google-oauth20');
 var jwt = require('jsonwebtoken');
@@ -48,6 +50,7 @@ var UserSkin = require('./models/UserSkin');
 var multerS3 = require('multer-s3');
 const AWS = require("aws-sdk");
 AWS.config.loadFromPath(__dirname + "/config/awsconfig.json");
+
 
 var axios = require("axios");
 var cheerio = require("cheerio");
@@ -772,6 +775,24 @@ module.exports = function (app) {
     })
   });
 
+  app.get('/userpush/:email', function(req, res) {
+    User.findOne({
+      email : req.params.email
+    }, (err, user) => {
+      if(err) {
+        res.status(400).json({'msg':'사용자 정보를 찾을 수 없습니다'})
+      }
+
+      if(user) {
+        res.status(201).json(
+          user.ispush
+        )
+      } else  {
+        res.status(400).json({'msg':'사용자 정보를 찾을 수 없습니다'})
+      }
+    })
+  });
+
 
   // Demo Route (GET http://localhost:8001)
   app.get('/', function (req, res) {
@@ -795,10 +816,12 @@ module.exports = function (app) {
   app.use('/posts', require('./posts'));
   app.use('/menus', require('./menus'));
   app.use('/banner', require('./banner'));
+  app.use('/topbanner', require('./topbanner'));
   app.use('/carezone', require('./carezone'));
   app.use('/beauty', require('./beauty'));
   app.use('/notice', require('./notice'));
   app.use('/qna', require('./qna'));
+  app.use('/faq', require('./faq'));
   app.use('/commubeauty', require('./commubeauty'));
   app.use('/beautynote', require('./beautynote'));
   app.use('/skinqna', require('./skinqna'));
@@ -1521,11 +1544,93 @@ module.exports = function (app) {
         if (err) {
           res.sendStatus(400);
         } else {
-          console.log(JSON.stringify(docs));
+          // console.log(JSON.stringify(docs));
           res.json(docs);
         }
       });
   });
+
+  //앱 심사 시, 개인정보 수집 위배에 걸리지 않도록 한다. 2020-03-18
+  app.get('/appversion/', function (req, res, next) {
+    AppReview.findOne({
+        target: 'ios'
+      },
+      function (err, docs) {
+        if (err) {
+          res.sendStatus(400);
+        } else {
+          // console.log(JSON.stringify(docs));
+          res.json(docs);
+        }
+      });
+  });
+
+  app.get('/Point/getPlinicPoint/', async function(req, res, next) {
+    var request1 = require('request');
+    var url = 'http://plinicshop.com:50082/Point/getPointList' 
+    await request1({
+      url: url,
+      method: 'GET'
+    }, function (error, response, body) {
+      if(error) {
+        return res.status(400).send({
+          'msg': '플리닉샵 포인트 조회 에러'
+        });
+      }
+      if(body) {
+        res.send(JSON.parse(body));
+      }
+    })
+  })
+
+  app.get('/Point/getUserPlinicPoint/:email', async function(req, res, next) {
+    if(!req.params.email) {
+      return res.status(400).send({
+        'msg': '사용자 정보가 존재하지 않음 플리닉샵 포인트 가져오기'
+      });
+    }
+    var email = req.params.email
+    var request10 = require('request');
+    var url = 'http://plinicshop.com:50082/Point/getUserPoint?id=' + email 
+    await request10({
+      url: url,
+      method: 'GET'
+    }, function (error, response, body) {
+      if(error) {
+        return res.status(400).send({
+          'msg': '플리닉샵 사용자 전체 포인트 조회 에러'
+        });
+      }
+      if(body) {
+        res.send(JSON.parse(body));
+      }
+    })
+  })
+
+  app.get('/Point/getUserOrder/:email', async function(req, res, next) {
+    if(!req.params.email) {
+      return res.status(400).send({
+        'msg': '사용자 정보가 존재하지 않음 플리닉샵 포인트 가져오기'
+      });
+    }
+    var email = req.params.email
+    var dateTime = req.params.dateTime
+    var request10 = require('request');
+    var url = 'http://plinicshop.com:50082/Point/getUserOrder?id=' + email + '&dateTime=' + dateTime
+    await request10({
+      url: url,
+      method: 'GET'
+    }, function (error, response, body) {
+      if(error) {
+        return res.status(400).send({
+          'msg': '플리닉샵 사용자 전체 포인트 조회 에러'
+        });
+      }
+      if(body) {
+        res.send(JSON.parse(body));
+      }
+    })
+  })
 
 
   app.get('/getweather/:date/:time', async function(req, res, next) {
@@ -1676,6 +1781,77 @@ module.exports = function (app) {
     });
   });
 
+  app.post("/pwdSearch", function(req, res, next){
+
+    AWS.config.update({region: "us-west-2"});
+
+    var ses = new AWS.SES();
+
+    let params = {
+      Destination: {
+          ToAddresses: ["cnghtjs@naver.com"],  // 받는 사람 이메일 주소
+          CcAddresses: [],    // 참조
+          BccAddresses: []    // 숨은 참조
+      },
+      Message: {
+          Body: {
+              Text: {
+                    Data: "안녕하세요 플리닉 입니다. \n 회원님의 임시 비밀번호는 " + makeRandomStr() + " 입니다. \n플리닉 앱에서 비밀번호 초기화를 진행해주세요.\n감사합니다.",      // 본문 내용
+                  Charset: "utf-8"            // 인코딩 타입
+              }
+          },
+          Subject: {
+              Data: "플리닉 임시비밀번호 입니다.",   // 제목 내용
+              Charset: "utf-8"              // 인코딩 타입
+          }
+      },
+      Source: "no-reply@g1p.co.kr",          // 보낸 사람 주소
+      ReplyToAddresses: ["no-reply@g1p.co.kr"] // 답장 받을 이메일 주소
+    }
+
+
+    ses.sendEmail(params, function(err, data){
+        if(err) {
+          console.log(err);
+        }
+        res.send(data)
+    })
+    AWS.config.update({region: "ap-northeast-2"});
+  });
+
+  app.get('/getProductList/:search/:page', function(req, res) {
+    var page = Number(req.params.page);
+    Product.find({
+      $text : { $search : new RegExp(req.params.search, "i")}
+      // product_name : new RegExp(req.params.product_name),
+      // brand_name : new RegExp(req.params.product_name)
+    },{ score: { $meta: "textScore" } },function(error, data){
+      if(error) {
+        return res.status(400).json(error);
+      }
+      if(data) {
+        res.send(data);
+      }
+    }).sort( { score: { $meta: "textScore" } } ).skip((page-1)*20).limit(20);
+  });
+
+  app.get('/getProductFindOne/:product_num/', function(req, res) {
+    // var page = Number(req.params.page);
+    Product.findOne({
+      product_num : req.params.product_num
+      // $text : { $search : new RegExp(req.params.search)}
+      // product_name : new RegExp(req.params.product_name),
+      // brand_name : new RegExp(req.params.product_name)
+    },function(error, data){
+      if(error) {
+        return res.status(400).json(err);
+      }
+      if(data) {
+        res.status(201).json(data);
+      }
+    })
+  });
+
   function getFormattedDate(date) {
     return date.getFullYear() + "-" + get2digits(date.getMonth() + 1) + "-" + get2digits(date.getDate());
   };
@@ -1683,6 +1859,8 @@ module.exports = function (app) {
   function get2digits(num){
     return ("0" + num).slice(-2);
   }
+
+
 
   /*
   const uri = "mongodb+srv://plinic:1234@cluster0-hgfgd.mongodb.net/plinic?retryWrites=true";
@@ -1760,6 +1938,23 @@ module.exports = function (app) {
     }
     return next();
   }
+
+
+  function makeRandomStr(){
+    var randomStr = "";
+    var possible = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+
+    for( let i = 0; i < 8; i++ ){
+        randomStr += possible.charAt(Math.floor(Math.random() * possible.length));
+    }
+    return randomStr;
+  }
+
+
+
+
+
+
 
 
 }

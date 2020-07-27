@@ -61,20 +61,40 @@
         <div id="cvErrBody" class="message"></div>
       </div> -->
       <div class="floats">
+        <label>참여기간</label>
+        <input class="cvRequired" type="text" name="post[gigan]" cvRqErrMsg="Body is required." cvRqErrTo="#cvErrBody" value="<%=post.gigan%>">
+        <div id="cvErrBody" class="message"></div>
+      </div>
+      <div class="floats">
+        <label>참여인원</label>
+        <input class="cvRequired" type="text" name="post[inwon]" cvRqErrMsg="Body is required." cvRqErrTo="#cvErrBody" value="<%=post.inwon%>">
+        <div id="cvErrBody" class="message"></div>
+      </div>
+      <div class="floats">
+        <label>챌린지조건</label>
+        <input class="cvRequired" type="text" name="post[chaljogun]" cvRqErrMsg="Body is required." cvRqErrTo="#cvErrBody" value="<%=post.chaljogun%>">
+        <div id="cvErrBody" class="message"></div>
+      </div>
+      <div class="floats">
+        <label>챌린지기간</label>
+        <input class="cvRequired" type="text" name="post[chalgigan]" cvRqErrMsg="Body is required." cvRqErrTo="#cvErrBody" value="<%=post.chalgigan%>">
+        <div id="cvErrBody" class="message"></div>
+      </div>
+      <div class="floats">
         <label>보상 상품명</label>
         <input class="cvRequired" maxlength="20" name="post[product]" cvRqErrMsg="Body is required." cvRqErrTo="#cvErrBody" value="<%=post.product%>">
         <div id="cvErrBody" class="message"></div>
       </div>
-      <div class="floats">
+      <!-- <div class="floats">
         <label>상품 수량</label>
         <input class="cvRequired" type="number" name="post[productcount]" cvRqErrMsg="Body is required." cvRqErrTo="#cvErrBody" value="<%=post.productcount%>">
         <div id="cvErrBody" class="message"></div>
-      </div>
-      <div class="floats">
+      </div> -->
+      <!-- <div class="floats">
         <label>참여 방법</label>
         <input class="cvRequired" type="text" name="post[howtojoin]" cvRqErrMsg="Body is required." cvRqErrTo="#cvErrBody" value="<%=post.howtojoin%>">
         <div id="cvErrBody" class="message"></div>
-      </div>
+      </div> -->
       <div class="floats">
         <label>보상 제품 상세정보 URL</label>
         <input class="cvRequired" type="text" name="post[product_url]" cvRqErrMsg="Body is required." cvRqErrTo="#cvErrproduct_url" value="<%=post.product_url%>">
@@ -85,11 +105,11 @@
         <input class="cvRequired" type="text" name="post[purchase_url]" cvRqErrMsg="Body is required." cvRqErrTo="#cvErrpurchase_urly" value="<%=post.purchase_url%>">
         <div id="cvErrpurchase_urly" class="message"></div>
       </div>
-      <div class="floats">
+      <!-- <div class="floats">
         <label>보상 조건(3줄)</label>
         <textarea class="cvRequired" name="post[condition]" cvRqErrMsg="보상조건을 입력하세요." cvRqErrTo="#cvErrBody"><%=post.condition%></textarea>
         <div id="cvErrBody" class="message"></div>
-      </div>
+      </div> -->
 
       <!-- <div class="floats">
         <label>하단 캡션</label>
@@ -117,7 +137,7 @@
         </input>
         <div id="cvErrTitle" class="message"></div>
       </div>
-      <div class="floats">
+      <!-- <div class="floats">
         <label>보너스 - 카카오</label>
         <select class="cvRequired" id="volume" name="post[bonuskakao]" cvRqErrMsg="카카오 보너스를 입력하세요." cvRqErrTo="#cvErrBonus" >
           <option value="10" <% if(post.bonuskakao === '10') {%> selected <% } %> > 10초</option>
@@ -128,9 +148,9 @@
           <option value="60" <% if(post.bonuskakao === '60') {%> selected <% } %> > 60초</option>
         </select>
         <div id="cvErrBonus" class="message"></div>
-      </div>
+      </div> -->
 
-      <div class="floats">
+      <!-- <div class="floats">
         <label>보너스 - 페이스북</label>
         <select class="cvRequired" id="volume" name="post[bonusface]" cvRqErrMsg="페이스북 보너스를 입력하세요" cvRqErrTo="#cvErrFace" >
           <option value="10" <% if(post.bonusface === '10') {%> selected <% } %> > 10초</option>
@@ -141,9 +161,9 @@
           <option value="60" <% if(post.bonusface === '60') {%> selected <% } %> > 60초</option>
         </select>
         <div id="cvErrFace" class="message"></div>
-      </div>
+      </div> -->
 
-      <div class="floats">
+      <!-- <div class="floats">
         <label>보너스 - 인스타그램</label>
         <select class="cvRequired" id="volume" name="post[bonusinstar]" cvRqErrMsg="제목을 입력 주세요." cvRqErrTo="#cvErrInstar" >
           <option value="10" <% if(post.bonusinstar === '10') {%> selected <% } %> > 10초</option>
@@ -154,7 +174,7 @@
           <option value="60" <% if(post.bonusinstar === '60') {%> selected <% } %> > 60초</option>
         </select>
         <div id="cvErrInstar" class="message"></div>
-      </div>
+      </div> -->
 
       <span>이전 미션 상품 이미지 파일 다운로드 : <a href="<%= prod_url %>" download><%=preprodoriginalname%></a> - 링크 클릭</span>
       <h2 style="color: red" >미션 제품 이미지 사이즈(px) : 91 X 189</h2>

@@ -3,6 +3,7 @@ var SkinQna = require('../models/SkinQna');
 var Reward = require('../models/Reward');
 var Mission = require('../models/Mission');
 var Challenge = require('../models/Challenge');
+var Carezone = require('../models/Carezone');
 var Tags = require('../models/Tags');
 var SkinQnaCounter = require('../models/SkinQnaCounter');
 var jwt = require('jsonwebtoken');
@@ -32,8 +33,6 @@ exports.rewardSave = (req, res) => {
   //console.log("-------------------------------response-------------" + res.body.id);
 
   if (!req.body.email || !req.body.address) {
-    console.log(req.body.email);
-    console.log(req.body.address);
     return res.status(400).json({
       'msg': '정확한 정보를 입력해 주세요. <br / >. 관리자에게 문의 하세요.'
     });
@@ -111,6 +110,12 @@ exports.rewardChallengeSave = (req, res) => {
         }
 
         req.body.reward = true;
+
+        var rewardComment = {
+          email : req.body.email,
+          comment : req.body.review
+        }
+
         Challenge.findOneAndUpdate({
           missionID: req.body.missionID,
           email: req.body.email
@@ -123,9 +128,29 @@ exports.rewardChallengeSave = (req, res) => {
             success: false,
             message: "No data found to update"
           });
+
+          if(post) {
+            Carezone.findOneAndUpdate({
+              _id : req.body.missionID
+            },{
+              $push: {
+                comments: rewardComment
+              }
+            },(err, result2) => {
+              if(err) { 
+                return res.status(400).json(err)
+              };
+              if(!result2) { 
+                return res.status(400).json({"msg" : "보상 댓글 작성 실패"
+              })};
+              if(result2) { 
+                return res.status(201).json(result2);
+              };
+            });
+            // return res.status(201).json(result);
+          }
           // res.redirect('/banner/' + req.params.id);
         });
-        return res.status(201).json(result);
       });
     }], function(callback, counter) {
       // req.body.reward = true;

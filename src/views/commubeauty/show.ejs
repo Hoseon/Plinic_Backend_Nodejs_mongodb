@@ -14,7 +14,7 @@
 <!-- views/commubeauty/show.ejs -->
 <div class="show">
   <div class="buttons floats">
-    <% if(user && user.equals(post.author._id)) { %>
+    <% if(user) { %>
       <form class="float_right" action="/commubeauty/<%=post._id%>?_method=delete" method="post">
         <button type="button" onclick="confirm('Your post will be deleted')?this.parentElement.submit():null;">Delete</button>
       </form>

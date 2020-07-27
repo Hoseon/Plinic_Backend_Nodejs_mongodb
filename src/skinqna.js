@@ -202,7 +202,7 @@ router.get('/editorlist', function(req, res) {
       res.json(docs);
     }).sort({
       "editorUpdateAt": -1
-    }).limit(2);
+    });
   }]);
 });
 

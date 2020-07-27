@@ -175,7 +175,8 @@ router.get('/getmissionmember/:id', function(req, res) {
 router.get('/getchallangemember/:id', function(req, res) {
   async.waterfall([function(callback) {
     Challenge.find({
-        missionID: req.params.id
+        missionID: req.params.id,
+        missioncomplete : false
       },
       function(err, docs) {
         res.json(docs);
@@ -261,7 +262,7 @@ router.get('/challangecount/:id/:date', function(req, res) {
   // console.log("chkmission id " +req.params.id);
   // console.log("chkmission date" +new Date(req.params.date).toISOString().substr(0,10));
   var today = new Date(req.params.date).toISOString().substr(0,10)
-
+  
   async.waterfall([function(callback) {
     Challenge.count({
       missionID: req.params.id,
@@ -524,7 +525,7 @@ router.get('/mission/:id', function(req, res) {
       _id: req.params.id
     }, function(err, docs) {
       res.json(docs);
-    });
+    })
   }]);
 });
 
@@ -891,7 +892,7 @@ router.put('/:id', s3upload.fields([{
     else console.log("케어존 수정 이전 파일 삭제 완료 : " + JSON.stringify(data));
     Carezone.findOneAndUpdate({
       _id: req.params.id,
-      author: req.user._id
+      // author: req.user._id
     }, req.body.post, function(err, post) {
       if (err) return res.json({
         success: false,
@@ -919,7 +920,7 @@ router.put('/:id', s3upload.fields([{
 router.delete('/:id', isLoggedIn, function(req, res, next) {
   Carezone.findOneAndRemove({
     _id: req.params.id,
-    author: req.user._id
+    // author: req.user._id
   }, function(err, post) {
     if (err) return res.json({
       success: false,
