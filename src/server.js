@@ -1607,7 +1607,7 @@ module.exports = function (app) {
     })
   })
 
-  app.get('/Point/getUserOrder/:email', async function(req, res, next) {
+  app.get('/Point/getUserOrder/:email/:dateTime', async function(req, res, next) {
     if(!req.params.email) {
       return res.status(400).send({
         'msg': '사용자 정보가 존재하지 않음 플리닉샵 포인트 가져오기'

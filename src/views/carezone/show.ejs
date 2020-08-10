@@ -80,7 +80,39 @@
     <div class="body highlight" data-highlight="<%= search.highlight.body %>"><img src="<%= challenge_url4 %>"></div>
     <h3>챌린지 슬라이드 이미지5</h3>
     <div class="body highlight" data-highlight="<%= search.highlight.body %>"><img src="<%= challenge_url5 %>"></div>
-
+    
+    <div class="comments">
+      <h4>Comments (<%= post.comments?post.comments.length:"0" %>)</h4>
+      <% if(post.comments) { %>
+        <% post.comments.forEach(function(comment){ %>
+          <div class="comment">
+            <div class="top">
+              <b><%= comment.email %></b>
+              (<%= post.getFormattedTime(comment.updatedAt) %>,
+              <%= post.getFormattedDate(comment.updatedAt) %>)
+              <% if(user) { %>
+                <form class="delete"  method="post"
+                  action="/carezone/<%=post._id%>/comments/<%=comment._id%>?_method=delete&<%= urlQuery %>">
+                  <button type="button"
+                    onclick="confirm('Your comment will be deleted')?this.parentElement.submit():null;">
+                    x
+                  </button>
+                </form>
+              <% } %>
+            </div>
+            <div class="body"><%= comment.comment %></div>
+          </div>
+        <% }) %>
+      <% } %>
+      <!-- <form class="addComment checkValidation"
+        action="/notice/<%=post._id%>/comments?<%= urlQuery %>" method="post">
+        <textarea class="cvRequired" type="text" name="comment[body]"
+          cvRqErrMsg="comments is empty." cvRqErrTo="#cvErrTitle" <%= user?"":"disabled" %>
+          placeholder="<%= user?"Add comment here":"Please login to make a comment" %>"></textarea>
+        <button type="submit" <%= user?"":"disabled" %>>Comment</button>
+        <div id="cvErrTitle" class="message"></div>
+      </form> -->
+    </div>
 <!-- main end -->
     </div><!--carezone end -->
     <footer>

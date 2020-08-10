@@ -26,6 +26,9 @@ routes.post('/register', userController.registerUser);
 routes.post('/registersns', userController.registerUserSnS);
 routes.post('/registersnstoplinic', userController.registerUserSnStoPlinic);
 routes.post('/checkUser', userController.checkUser);
+routes.post('/billings', userController.billings); //빌링 결제 추가
+routes.post('/billingssche', userController.billingSchedule); //빌링 스케쥴 추가 매달 결제 호출을 위해서
+routes.post('/billingcancel', userController.billingCancel); //빌링 스케쥴 추가 매달 결제 호출을 위해서
 routes.post('/changepush', userController.changePush); // 사용자 정보 푸쉬 알림 변경
 routes.post('/updatepushtoken', userController.updatePushToken); // 사용자 정보 푸쉬 알림 변경
 routes.post('/userupdatenickname', userController.updateUserNickname); //사용자 닉네임, 생년월, 비밀번호 변경 로직
