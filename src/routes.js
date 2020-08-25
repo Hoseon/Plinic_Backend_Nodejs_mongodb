@@ -8,6 +8,7 @@ var skinQnaController = require('./controller/skinqna-controller');
 var careZoneController = require('./controller/carezone-controller');
 var rewardController = require('./controller/reward-controller');
 var chulsukController = require('./controller/chulsuk-controller');
+var skinAnalyController = require('./controller/skinAnaly-controller');
 var passport = require('passport');
 var mysql      = require('mysql');
 var dbconfig   = require('./config/database.js');
@@ -42,12 +43,13 @@ routes.post('/pointupdate', userController.pointUpdate);
 routes.post('/snspointupdate', userController.snsPointUpdate);
 routes.post('/usetimeupdate', userController.useTimeUpdate);
 routes.post('/userpointupdate', userController.userPointUpdate);
-
 routes.post('/missionsave', userController.missionSave);
-
 routes.post('/challengeupdate', userController.challengeUpdate);//20200210 챌린지 3분 이상 사용시 14주 도전중 1주 추가
 routes.post('/challengeupdate2', userController.challengeUpdate2);//20200210 챌린지 3분 이상 사용시 14주 도전중 1주 추가
 routes.post('/challengesave', userController.challengeSave); //챌린지를 시작하면 기존 v2를 놔두고 새롭게 챌린지 collection(table)을 만들어서 사용한다.
+
+//피부분석 데이터 저장
+routes.post('/saveskinanaly',skinAnalyController.skinAnalySave)
 
 //문의 하기 저장
 routes.post('/qnasave', qnaController.qnaSave);
