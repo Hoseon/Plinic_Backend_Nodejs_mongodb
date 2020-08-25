@@ -28,7 +28,7 @@ var Tags = require('./models/Tags');
 var AppReview = require('./models/AppReview');
 var Product = require('./models/Product');
 var Test = require('./models/Test');
-
+var SkinAnaly = require('./models/SkinAnaly');
 
 const GoogleStrategy = require('passport-google-oauth20');
 var jwt = require('jsonwebtoken');
@@ -1891,6 +1891,79 @@ module.exports = function (app) {
       }
     })
   });
+
+  app.get('/getSkinAnaly/:email/' ,function(req, res) {
+    SkinAnaly.findOne({
+      email : req.params.email
+    },function(error, data){
+      if(error) {
+        return res.status(400).json(err)
+      }
+      if(data) {
+        res.status(200).json(data);
+      }
+    })
+  })
+
+  function average(array) { //배열 평균 함수
+    return array.reduce((sum, current) => sum + current, 0) / array.length;
+  }
+
+
+  app.get('/getSkinAnalyAge/:age/:gender' ,function(req, res) {
+
+    var avgCheekPoreSize = [];
+    var avgCheekPoreCount = [];
+    var avgForeHeadPoreSize = [];
+    var avgForeHeadPoreCount = [];
+    SkinAnaly.find({
+      agerange : req.params.age,
+      gender : req.params.gender,
+    },function(err, docs){
+
+      if(err) {
+        return res.status(400).json({
+          "msg" : err
+        })
+      }
+
+      if(docs) {
+        for(let i = 0; i < docs.length; i++) {
+          for(let k = 0; k < docs[i].cheek.length; k++) {
+            for(let t= 0; t < docs[i].cheek[k].pore.length; t++) {
+              avgCheekPoreSize.push(docs[i].cheek[k].pore[0].average_pore);
+              avgCheekPoreCount.push(docs[i].cheek[k].pore[0].pore_count);
+            }
+          }
+        }
+        // console.log(avgCheekPoreSize);
+        // console.log(avgCheekPoreCount);
+        // console.log(average(avgCheekPoreSize));
+        // console.log(average(avgCheekPoreCount));
+
+        for(let i = 0; i < docs.length; i++) {
+          for(let k = 0; k < docs[i].forehead.length; k++) {
+            for(let t= 0; t < docs[i].forehead[k].pore.length; t++) {
+              avgForeHeadPoreSize.push(docs[i].forehead[k].pore[0].average_pore);
+              avgForeHeadPoreCount.push(docs[i].forehead[k].pore[0].pore_count);
+            }
+          }
+        }
+
+        // console.log(avgForeHeadPoreSize);
+        // console.log(avgForeHeadPoreCount);
+        // console.log(average(avgForeHeadPoreSize));
+        // console.log(average(avgForeHeadPoreCount));
+  
+        res.status(200).json({
+          "avgCheekPoreSize" : average(avgCheekPoreSize),
+          "avgCheekPoreCount" : average(avgCheekPoreCount),
+          "avgForeHeadPoreSize" : average(avgForeHeadPoreSize),
+          "avgForeHeadPoreCount" : average(avgForeHeadPoreCount),
+        });
+      }
+    })
+  })
 
   function getFormattedDate(date) {
     return date.getFullYear() + "-" + get2digits(date.getMonth() + 1) + "-" + get2digits(date.getDate());
