@@ -27,6 +27,7 @@ var Chulsuk = require('./models/Chulsuk');
 var Tags = require('./models/Tags');
 var AppReview = require('./models/AppReview');
 var Product = require('./models/Product');
+var Test = require('./models/Test');
 var SkinAnaly = require('./models/SkinAnaly');
 
 const GoogleStrategy = require('passport-google-oauth20');
@@ -93,6 +94,9 @@ let s3skinupload = multer({
     acl: 'public-read'
   })
 });
+
+
+
 
 
 
@@ -540,6 +544,40 @@ module.exports = function (app) {
     })
   });
 
+
+  //테스트 페이지 이미지 부분
+  app.get('/test_images/:id', (req, res, next) => {
+    let imgId = req.params.id;
+
+    Test.findById(imgId, (err, image) => {
+      if (err) {
+       res.sendStatus(404);
+      }
+      // stream the image back by loading the file
+     res.setHeader('Content-Type', 'image/jpeg');
+      fs.createReadStream(path.join(__dirname, '../uploads/', image.filename)).pipe(res);
+   })
+  });
+
+  app.get('/test_prodimages/:id', (req, res, next) => {
+    let imgId = req.params.id;
+
+    Test.findById(imgId, (err, image) => {
+      if (err) {
+        res.sendStatus(404);
+      }
+      // stream the image back by loading the file
+      res.setHeader('Content-Type', 'image/jpeg');
+     fs.createReadStream(path.join(__dirname, '../uploads/', image.prodfilename)).pipe(res);
+   })
+  });
+
+
+
+
+
+
+
   // Get one image by its ID
   // app.get('/carezone_images/:id', (req, res, next) => {
   //   let imgId = req.params.id;
@@ -829,6 +867,7 @@ module.exports = function (app) {
   app.use('/exhibition', require('./exhibition'));
   app.use('/reward', require('./reward'));
   app.use('/product', require('./product'));
+  app.use('/test', require('./test'));
 
   app.get('/ejs', (req, res) => {
     res.render('home');
