@@ -844,9 +844,9 @@ module.exports = function (app) {
   app.use('/api', routes);
 
   app.set('view engine', 'ejs');
-  app.set('views', './src/views')
+  //app.set('views', './src/views')
   //cafe24전용 ejs 경로 하드코딩으로 사용해야 성공했음
-  // app.set('views', '/home/hosting_users/g1partners4/apps/g1partners4_plinic/src/views')
+  app.set('views', '/home/hosting_users/g1partners4/apps/g1partners4_plinic/src/views')
 
 
   //플리닉 관리자 페이지 라우터 개발 20190430 추호선
