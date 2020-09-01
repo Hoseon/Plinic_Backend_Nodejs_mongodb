@@ -116,6 +116,7 @@ exports.skinAnalySave = (req, res) => {
       SkinAnaly.findOneAndUpdate({
         email: req.body.email
       }, {
+        updated_at: new Date(),
         $push: {
           cheek: {
             input: req.body.cheek.input,
@@ -161,18 +162,22 @@ exports.skinAnalySave = (req, res) => {
 
       req.body.cheek.skin_analy.pore = JSON.parse(JSON.stringify(req.body.cheek.skin_analy.pore).replace(/mm/g, ""));
       req.body.forehead.skin_analy.pore = JSON.parse(JSON.stringify(req.body.forehead.skin_analy.pore).replace(/mm/g, ""));
+      
+      newUser.firstcheek = req.body.cheek.input.filename; //신규 등록자는 최초 피부 사진 별도 저장 향후 피부 차이 분석 위해 필요
+      newUser.firstforhead = req.body.forehead.input.filename; //신규 등록자는 최초 피부 사진 별도 저장 향후 피부 차이 분석 위해 필요
+
       newUser.cheek = { tone : req.body.cheek.skin_analy.tone,
                         pore : req.body.cheek.skin_analy.pore,
                         wrinkles : req.body.cheek.skin_analy.wrinkles,
                         input : req.body.cheek.input
                       }
 
-      newUser.forehead = { tone : req.body.forehead.skin_analy.tone,
-        pore : req.body.forehead.skin_analy.pore,
-        wrinkles : req.body.forehead.skin_analy.wrinkles,
-        input : req.body.forehead.input
-      }
-      
+      newUser.forehead = {  tone : req.body.forehead.skin_analy.tone,
+                            pore : req.body.forehead.skin_analy.pore,
+                            wrinkles : req.body.forehead.skin_analy.wrinkles,
+                            input : req.body.forehead.input
+                          }
+
       // newUser.forehead = req.body.forehead.skin_analy;
 
 

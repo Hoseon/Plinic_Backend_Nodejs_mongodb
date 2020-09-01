@@ -61,6 +61,8 @@ const convert = require('xml-js');
 
 let s3 = new AWS.S3();
 
+var FormData = require('form-data');
+
 let s3upload = multer({
   storage: multerS3({
     s3: s3,
@@ -1763,7 +1765,6 @@ module.exports = function (app) {
     })
   })
 
-
   //사용자 포인트 다시 가져 오기 2020-02-18
   app.get('/testskinqna/:email', function (req, res, next) {
     User.findOne({
@@ -1964,6 +1965,51 @@ module.exports = function (app) {
       }
     })
   })
+
+
+  app.get('/postTest', s3upload.single('image'), async function(req, res, next) {
+
+    const fs2 = require("fs");
+    const https = require("https");
+    const file = fs2.createWriteStream("hairimage-1587459621827_4.png");
+
+    await https.get("https://plinic.s3.ap-northeast-2.amazonaws.com/skin/hairimage-1587459621827.png", response => {
+      var stream = response.pipe(file);
+      stream.on("finish",  function() {
+        console.log("done");
+        res.status(200).json({
+          file
+        })
+      });  
+    });
+  })
+
+  app.get('/postTest2', async function(req, res, next) {
+    const url = 'http://ec2-3-34-189-215.ap-northeast-2.compute.amazonaws.com/api/'
+    var request22 = require('request');
+    var req = await request22.post(url, function (err, response, body) {
+      if (err) {
+        console.log('Error!');
+      } else {
+        return res.status(200).json({
+          body
+        })
+      }
+    });
+
+    var form = req.form();
+    form.append('image', fs.readFileSync('/Users/hoseonchu/workspace/auth/hairimage-1587459621827_4.png'), {
+      filename: 'hairimage-1587459621827.png',
+      contentType: 'image/png'
+    });
+    form.append('diff_image', fs.readFileSync('/Users/hoseonchu/workspace/auth/hairimage-1587459621827_4.png'), {
+      filename: 'hairimage-1587459621827.png',
+      contentType: 'image/png'
+    });
+  })
+
+    
+  
 
   function getFormattedDate(date) {
     return date.getFullYear() + "-" + get2digits(date.getMonth() + 1) + "-" + get2digits(date.getDate());
