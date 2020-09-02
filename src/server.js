@@ -2013,7 +2013,7 @@ module.exports = function (app) {
                 console.log(JSON.stringify(body));
                 console.log(body.output.skin_analy.pore);
                 body.output.skin_analy.pore = JSON.parse(JSON.stringify(body.output.skin_analy.pore).replace(/mm/g, ""));
-                if ('cheek') {
+                if (req.body.step == 'first') {
                   SkinAnaly.findOneAndUpdate({
                     email: req.body.email
                   }, {
@@ -2041,7 +2041,7 @@ module.exports = function (app) {
                       })
                     }
                   })
-                } else if ('forehead') {
+                } else if (req.body.step =='second') {
                   SkinAnaly.findOneAndUpdate({
                     email: req.body.email
                   }, {
