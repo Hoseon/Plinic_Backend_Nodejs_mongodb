@@ -9,11 +9,19 @@ var skinAnalySchema = mongoose.Schema({
   originalFileName: {
     type: String
   },
+
+  firstcheek: String,
+  firstforhead: String,
+
   cheek: [{
     input: [{
       filename : String,
       filetype: String,
       upload_date : Date,
+    }],
+    diff: [{
+      label: String,
+      value: Number,
     }],
     tone: [{
       label: String,
@@ -42,6 +50,9 @@ var skinAnalySchema = mongoose.Schema({
       filename : String,
       filetype: String,
       upload_date : Date,
+    }],
+    diff: [{
+      value: Number,
     }],
     tone: [{
       label: String,

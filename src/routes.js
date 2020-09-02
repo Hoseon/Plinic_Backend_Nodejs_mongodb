@@ -8,7 +8,7 @@ var skinQnaController = require('./controller/skinqna-controller');
 var careZoneController = require('./controller/carezone-controller');
 var rewardController = require('./controller/reward-controller');
 var chulsukController = require('./controller/chulsuk-controller');
-var testController = require('./controller/test-controller');
+// var testController = require('./controller/test-controller');
 var skinAnalyController = require('./controller/skinAnaly-controller');
 
 var passport = require('passport');
