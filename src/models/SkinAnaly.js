@@ -9,16 +9,10 @@ var skinAnalySchema = mongoose.Schema({
   originalFileName: {
     type: String
   },
-  firstcheek: [{
-    filename : String,
-    created_at: { type: Date, default: Date.now },
-    updated_at: { type: Date, default: Date.now },
-  }],
-  firstforhead: [{
-    filename : String,
-    created_at: { type: Date, default: Date.now },
-    updated_at: { type: Date, default: Date.now },
-  }],
+
+  firstcheek: String,
+  firstforhead: String,
+
   cheek: [{
     input: [{
       filename : String,
@@ -26,6 +20,7 @@ var skinAnalySchema = mongoose.Schema({
       upload_date : Date,
     }],
     diff: [{
+      label: String,
       value: Number,
     }],
     tone: [{

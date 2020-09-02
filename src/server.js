@@ -91,7 +91,7 @@ let s3skinupload = multer({
       });
     },
     key: function (req, file, cb) {
-      cb(null, "skin/" + file.fieldname + '-' + Date.now())
+      cb(null, "skin/" + file.fieldname + '-' + Date.now()+'.jpg')
     },
     acl: 'public-read'
   })
@@ -846,9 +846,9 @@ module.exports = function (app) {
   app.use('/api', routes);
 
   app.set('view engine', 'ejs');
-  app.set('views', './src/views')
+  // app.set('views', './src/views')
   //cafe24전용 ejs 경로 하드코딩으로 사용해야 성공했음
-  // app.set('views', '/home/hosting_users/g1partners4/apps/g1partners4_plinic/src/views')
+  app.set('views', __dirname + '/views');
 
 
   //플리닉 관리자 페이지 라우터 개발 20190430 추호선
@@ -1967,21 +1967,133 @@ module.exports = function (app) {
   })
 
 
-  app.get('/postTest', s3upload.single('image'), async function(req, res, next) {
 
-    const fs2 = require("fs");
-    const https = require("https");
-    const file = fs2.createWriteStream("hairimage-1587459621827_4.png");
+  //20200902 
+  // 1. Hoseon 이미지 파일을 최초 AWS로 저장하고
+  // 2. 저장된 파일은 다시 fileStream을 이용하여 Cafe24서버 내로 저장한다.
+  // 3. 그후 피쳐링 API로 두개의 이미지를 전송하여 Diff의 값을 내려 받는다.
+  // 4. 리턴 받은 결과 값을 다시 Mongodb에 저장한다.
 
-    await https.get("https://plinic.s3.ap-northeast-2.amazonaws.com/skin/hairimage-1587459621827.png", response => {
-      var stream = response.pipe(file);
-      stream.on("finish",  function() {
-        console.log("done");
-        res.status(200).json({
-          file
+  app.post('/skinAnalySecondSave', s3skinupload.single('image'), async function(req, res, next) {
+    console.log(req.body.email);
+    console.log(req.body.step)
+    console.log(req.file.key);
+    console.log(req.file.originalname);
+
+    //MongoDB Start
+    SkinAnaly.findOne({
+      email : req.body.email
+    },function(err, data) {
+      if(err) {
+        res.status(400).json({
+          'msg' : '피부 분석 처리 에러 발생'
         })
-      });  
-    });
+      }
+
+      if(data) {
+        //회원의 정보가 존재 한다면 
+        //파일스트림을 생성하여 로컬 서버에 이미지를 저장한다.
+        //회원정보의 원본 이미지를 찾아서 비교 분석을 실시 한다.
+        const fs2 = require("fs");
+        const https = require("https");
+        const file = fs2.createWriteStream(req.file.key);
+        const featApiUrl = 'http://ec2-3-34-189-215.ap-northeast-2.compute.amazonaws.com/api/';
+        const awsS3Url = 'https://plinic.s3.ap-northeast-2.amazonaws.com/';
+        var request22 = require('request');
+
+        https.get(awsS3Url + req.file.key , response => {
+          var stream = response.pipe(file);
+          stream.on("finish",  function() {
+            console.log("done");
+            var req22 = request22.post(featApiUrl, function (err, response, body) {
+              if (err) {
+                console.log('Error!');
+              } else {
+                body = JSON.parse(body);
+                console.log(JSON.stringify(body));
+                console.log(body.output.skin_analy.pore);
+                body.output.skin_analy.pore = JSON.parse(JSON.stringify(body.output.skin_analy.pore).replace(/mm/g, ""));
+                if ('cheek') {
+                  SkinAnaly.findOneAndUpdate({
+                    email: req.body.email
+                  }, {
+                    updated_at: new Date(),
+                    $push: {
+                      cheek: {
+                        input: body.input,
+                        diff: body.output.skin_analy.diff,
+                        tone: body.output.skin_analy.tone,
+                        pore: body.output.skin_analy.pore,
+                        wrinkles: body.output.skin_analy.wrinkles,
+                        email: req.body.email
+                      }
+                    }
+                  }, (err, post) => {
+                    if (err) {
+                      console.log(err);
+                      return res.status(400).json({
+                        'msg': '에러발생'
+                      })
+                    }
+                    if(post) {
+                      return res.status(200).json({
+                        'msg' : '데이터 처리 완료'
+                      })
+                    }
+                  })
+                } else if ('forehead') {
+                  SkinAnaly.findOneAndUpdate({
+                    email: req.body.email
+                  }, {
+                    updated_at: new Date(),
+                    $push: {
+                      forehead: {
+                        input: body.input,
+                        diff: body.output.skin_analy.diff,
+                        tone: body.output.skin_analy.tone,
+                        pore: body.output.skin_analy.pore,
+                        wrinkles: body.output.skin_analy.wrinkles,
+                        email: req.body.email
+                      }
+                    }
+                  }, (err, post) => {
+                    if (err) {
+                      console.log(err);
+                      return res.status(400).json({
+                        'msg': '에러발생'
+                      })
+                    }
+                    if(post) {
+                      return res.status(200).json({
+                        'msg' : '데이터 처리 완료'
+                      })
+                    }
+                  })
+                }
+                
+
+              }
+            });
+            var form = req22.form();
+            form.append('image', fs.readFileSync(__dirname + '/../skin/' +data.firstcheek), {
+              filename: data.firstcheek,
+              contentType: 'image/png'
+            });
+            form.append('diff_image', fs.readFileSync(__dirname + '/../' + req.file.key), {
+              filename: req.file.key.replace('skin/', ''),
+              contentType: 'image/png'
+            });
+          });  
+        });
+        // res.status(200).json({
+        //   data
+        // })
+      }
+    })
+    //MongoDB End
+
+
+   
   })
 
   app.get('/postTest2', async function(req, res, next) {
@@ -1998,11 +2110,11 @@ module.exports = function (app) {
     });
 
     var form = req.form();
-    form.append('image', fs.readFileSync('/Users/hoseonchu/workspace/auth/hairimage-1587459621827_4.png'), {
+    form.append('image', fs.readFileSync('/Users/hoseonchu/workspace/auth/uploads/18ee9911-2a0c-4cbd-b0cf-cfdc81683cec.jpg'), {
       filename: 'hairimage-1587459621827.png',
       contentType: 'image/png'
     });
-    form.append('diff_image', fs.readFileSync('/Users/hoseonchu/workspace/auth/hairimage-1587459621827_4.png'), {
+    form.append('diff_image', fs.readFileSync('/Users/hoseonchu/workspace/auth/uploads/98b772ca-46b3-467f-8663-61c2ead16854.jpg'), {
       filename: 'hairimage-1587459621827.png',
       contentType: 'image/png'
     });
