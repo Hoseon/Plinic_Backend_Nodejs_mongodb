@@ -13,15 +13,26 @@ var skinAnalySchema = mongoose.Schema({
   firstcheek: String,
   firstforhead: String,
 
+  munjin: [{
+    sleep: Number,
+    alcohol: Number,
+    fitness: Number,
+    created_at: {
+      type: Date,
+      default: Date.now
+    }
+  }],
+
   cheek: [{
     input: [{
-      filename : String,
+      filename: String,
       filetype: String,
-      upload_date : Date,
+      upload_date: Date,
     }],
     diff: [{
       label: String,
       value: Number,
+      output_image: String
     }],
     tone: [{
       label: String,
@@ -43,16 +54,18 @@ var skinAnalySchema = mongoose.Schema({
     }],
     wrinkles: [{
       url: Object
-    }]
+    }],
   }],
   forehead: [{
     input: [{
-      filename : String,
+      filename: String,
       filetype: String,
-      upload_date : Date,
+      upload_date: Date,
     }],
     diff: [{
+      label: String,
       value: Number,
+      output_image: String,
     }],
     tone: [{
       label: String,
