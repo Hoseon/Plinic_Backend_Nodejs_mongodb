@@ -47,6 +47,7 @@ var flash = require('connect-flash');
 var bodyParser = require('body-parser');
 var cookieParser = require('cookie-parser');
 var methodOverride = require('method-override');
+const percentRank = require('percentile-rank');
 var UserSkin = require('./models/UserSkin');
 
 var multerS3 = require('multer-s3');
@@ -2171,7 +2172,35 @@ module.exports = function (app) {
     });
   })
 
+
+  app.get('/getAllMunjinData/:value', function(req, res) {
     
+    if(!req.params.value) {
+      return res.status(400).json({
+        'msg' : '상위 퍼센트 가져오기 에러입니다.'
+      })
+    }
+
+    SkinAnaly.find({}, '-__v').lean().exec((err, data) => {
+      var result = [];
+      if(data) {
+        for(let i = 0; i < data.length; i++){
+          for(let k = 0; k < data[i].munjin.length; k++) {
+            result.push( Number(data[i].munjin[k].sleep) + Number(data[i].munjin[k].alcohol) + Number(data[i].munjin[k].fitness) );
+          }
+        }
+        result = result.sort(function(a, b){ return a-b; });
+        var rank = percentRank(result, Number(req.params.value));
+        rank = Math.floor(100 - (rank * 100));
+        return res.status(200).json({
+          rank : rank
+        })
+      }
+      if (err) {
+        res.sendStatus(404);
+      }
+    });
+  });
   
 
   function getFormattedDate(date) {
