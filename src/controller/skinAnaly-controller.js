@@ -27,13 +27,8 @@ exports.skinAnalySave = (req, res) => {
     }
 
     if(post) {
-      // console.log(req.body.cheek.input);
-      // console.log(req.body.cheek.skin_analy.tone);
-      // console.log(req.body.cheek.input);
-      // console.log(req.body.cheek.input);
-
-      req.body.cheek.skin_analy.pore = JSON.parse(JSON.stringify(req.body.cheek.skin_analy.pore).replace(/mm/g, ""));
-      req.body.forehead.skin_analy.pore = JSON.parse(JSON.stringify(req.body.forehead.skin_analy.pore).replace(/mm/g, ""));
+      req.body.cheek.skin_analy.pore = JSON.parse(JSON.stringify(req.body.cheek.skin_analy.pore).replace(/um/g, ""));
+      req.body.forehead.skin_analy.pore = JSON.parse(JSON.stringify(req.body.forehead.skin_analy.pore).replace(/um/g, ""));
 
       SkinAnaly.findOneAndUpdate({
         email: req.body.email
@@ -84,8 +79,8 @@ exports.skinAnalySave = (req, res) => {
       newUser.forehead.input = req.body.forehead.input;
 
 
-      req.body.cheek.skin_analy.pore = JSON.parse(JSON.stringify(req.body.cheek.skin_analy.pore).replace(/mm/g, ""));
-      req.body.forehead.skin_analy.pore = JSON.parse(JSON.stringify(req.body.forehead.skin_analy.pore).replace(/mm/g, ""));
+      req.body.cheek.skin_analy.pore = JSON.parse(JSON.stringify(req.body.cheek.skin_analy.pore).replace(/um/g, ""));
+      req.body.forehead.skin_analy.pore = JSON.parse(JSON.stringify(req.body.forehead.skin_analy.pore).replace(/um/g, ""));
       
       newUser.firstcheek = req.body.cheek.input.filename; //신규 등록자는 최초 피부 사진 별도 저장 향후 피부 차이 분석 위해 필요
       newUser.firstforhead = req.body.forehead.input.filename; //신규 등록자는 최초 피부 사진 별도 저장 향후 피부 차이 분석 위해 필요
@@ -101,6 +96,11 @@ exports.skinAnalySave = (req, res) => {
                             wrinkles : req.body.forehead.skin_analy.wrinkles,
                             input : req.body.forehead.input
                           }
+
+      newUser.munjin = {  sleep : req.body.munjin.sleep,
+                          alcohol : req.body.munjin.alcohol,
+                          fitness : req.body.munjin.fitness,
+                        }
 
       newUser.save((err, user) => {
         if (err) {
@@ -167,8 +167,6 @@ function getSecondsAsDigitalClock(inputSeconds) {
   return minutesString + ':' + secondsString;
   // return hoursString + ':' + minutesString + ':' + secondsString;
 }
-
-
 
 exports.challengePointUpdate = (req, res) => {
   // console.log("start");

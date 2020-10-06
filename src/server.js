@@ -47,6 +47,7 @@ var flash = require('connect-flash');
 var bodyParser = require('body-parser');
 var cookieParser = require('cookie-parser');
 var methodOverride = require('method-override');
+const percentRank = require('percentile-rank');
 var UserSkin = require('./models/UserSkin');
 
 var multerS3 = require('multer-s3');
@@ -1897,10 +1898,12 @@ module.exports = function (app) {
     SkinAnaly.findOne({
       email : req.params.email
     },function(error, data){
-      if(error) {
+      if(error ) {
         return res.status(400).json(err)
       }
       if(data) {
+        res.status(200).json(data);
+      } else {
         res.status(200).json(data);
       }
     })
@@ -1961,6 +1964,14 @@ module.exports = function (app) {
           "avgCheekPoreCount" : average(avgCheekPoreCount),
           "avgForeHeadPoreSize" : average(avgForeHeadPoreSize),
           "avgForeHeadPoreCount" : average(avgForeHeadPoreCount),
+          "allAvgData" : docs
+        });
+      } else {
+        res.status(200).json({
+          "avgCheekPoreSize" : 0,
+          "avgCheekPoreCount" : 0,
+          "avgForeHeadPoreSize" : 0,
+          "avgForeHeadPoreCount" : 0,
         });
       }
     })
@@ -1974,12 +1985,7 @@ module.exports = function (app) {
   // 3. 그후 피쳐링 API로 두개의 이미지를 전송하여 Diff의 값을 내려 받는다.
   // 4. 리턴 받은 결과 값을 다시 Mongodb에 저장한다.
 
-  app.post('/skinAnalySecondSave', s3skinupload.single('image'), async function(req, res, next) {
-    console.log(req.body.email);
-    console.log(req.body.step)
-    console.log(req.file.key);
-    console.log(req.file.originalname);
-
+  app.post('/skinAnalySecondCheekSave', s3skinupload.single('image'), async function(req, res, next) {
     //MongoDB Start
     SkinAnaly.findOne({
       email : req.body.email
@@ -1996,7 +2002,7 @@ module.exports = function (app) {
         //회원정보의 원본 이미지를 찾아서 비교 분석을 실시 한다.
         const fs2 = require("fs");
         const https = require("https");
-        const file = fs2.createWriteStream(req.file.key);
+        const file = fs2.createWriteStream(__dirname + '/../' + req.file.key);
         const featApiUrl = 'http://ec2-3-34-189-215.ap-northeast-2.compute.amazonaws.com/api/';
         const awsS3Url = 'https://plinic.s3.ap-northeast-2.amazonaws.com/';
         var request22 = require('request');
@@ -2004,16 +2010,14 @@ module.exports = function (app) {
         https.get(awsS3Url + req.file.key , response => {
           var stream = response.pipe(file);
           stream.on("finish",  function() {
-            console.log("done");
             var req22 = request22.post(featApiUrl, function (err, response, body) {
               if (err) {
                 console.log('Error!');
               } else {
+                console.log("1st : " + body);
+                console.log("2nd :" + JSON.stringify(body));
                 body = JSON.parse(body);
-                console.log(JSON.stringify(body));
-                console.log(body.output.skin_analy.pore);
-                body.output.skin_analy.pore = JSON.parse(JSON.stringify(body.output.skin_analy.pore).replace(/mm/g, ""));
-                if ('cheek') {
+                body.output.skin_analy.pore = JSON.parse(JSON.stringify(body.output.skin_analy.pore).replace(/um/g, ""));
                   SkinAnaly.findOneAndUpdate({
                     email: req.body.email
                   }, {
@@ -2026,6 +2030,11 @@ module.exports = function (app) {
                         pore: body.output.skin_analy.pore,
                         wrinkles: body.output.skin_analy.wrinkles,
                         email: req.body.email
+                      },
+                      munjin: {
+                        sleep : req.body.sleep,
+                        alcohol : req.body.alcohol,
+                        fitness : req.body.fitness,
                       }
                     }
                   }, (err, post) => {
@@ -2041,53 +2050,96 @@ module.exports = function (app) {
                       })
                     }
                   })
-                } else if ('forehead') {
-                  SkinAnaly.findOneAndUpdate({
-                    email: req.body.email
-                  }, {
-                    updated_at: new Date(),
-                    $push: {
-                      forehead: {
-                        input: body.input,
-                        diff: body.output.skin_analy.diff,
-                        tone: body.output.skin_analy.tone,
-                        pore: body.output.skin_analy.pore,
-                        wrinkles: body.output.skin_analy.wrinkles,
-                        email: req.body.email
-                      }
-                    }
-                  }, (err, post) => {
-                    if (err) {
-                      console.log(err);
-                      return res.status(400).json({
-                        'msg': '에러발생'
-                      })
-                    }
-                    if(post) {
-                      return res.status(200).json({
-                        'msg' : '데이터 처리 완료'
-                      })
-                    }
-                  })
-                }
-                
-
               }
             });
             var form = req22.form();
-            form.append('image', fs.readFileSync(__dirname + '/../skin/' +data.firstcheek), {
+            form.append('image', fs.readFileSync(__dirname + '/../' + req.file.key), {
+              filename: req.file.key.replace('skin/', ''),
+              contentType: 'image/jpg'
+            });
+            form.append('diff_image', fs.readFileSync(__dirname + '/../skin/' + data.firstcheek), {
               filename: data.firstcheek,
+              contentType: 'image/jpg'
+            });
+          });  
+        });
+      }
+    })
+    //MongoDB End
+   
+  })
+
+  app.post('/skinAnalySecondForeheadSave', s3skinupload.single('image'), async function(req, res, next) {
+    //MongoDB Start
+    SkinAnaly.findOne({
+      email : req.body.email
+    },function(err, data) {
+      if(err) {
+        res.status(400).json({
+          'msg' : '피부 분석 처리 에러 발생'
+        })
+      }
+
+      if(data) {
+        //회원의 정보가 존재 한다면 
+        //파일스트림을 생성하여 로컬 서버에 이미지를 저장한다.
+        //회원정보의 원본 이미지를 찾아서 비교 분석을 실시 한다.
+        const fs2 = require("fs");
+        const https = require("https");
+        const file = fs2.createWriteStream(__dirname + '/../' + req.file.key);
+        const featApiUrl = 'http://ec2-3-34-189-215.ap-northeast-2.compute.amazonaws.com/api/';
+        const awsS3Url = 'https://plinic.s3.ap-northeast-2.amazonaws.com/';
+        var request22 = require('request');
+
+        https.get(awsS3Url + req.file.key , response => {
+          var stream = response.pipe(file);
+          stream.on("finish",  function() {
+            var req22 = request22.post(featApiUrl, function (err, response, body) {
+              if (err) {
+                console.log('Error!');
+              } else {
+                body = JSON.parse(body);
+                body.output.skin_analy.pore = JSON.parse(JSON.stringify(body.output.skin_analy.pore).replace(/um/g, ""));
+                SkinAnaly.findOneAndUpdate({
+                  email: req.body.email
+                }, {
+                  updated_at: new Date(),
+                  $push: {
+                    forehead: {
+                      input: body.input,
+                      diff: body.output.skin_analy.diff,
+                      tone: body.output.skin_analy.tone,
+                      pore: body.output.skin_analy.pore,
+                      wrinkles: body.output.skin_analy.wrinkles,
+                      email: req.body.email
+                    }
+                  }
+                }, (err, post) => {
+                  if (err) {
+                    console.log(err);
+                    return res.status(400).json({
+                      'msg': '에러발생'
+                    })
+                  }
+                  if(post) {
+                    return res.status(200).json({
+                      'msg' : '데이터 처리 완료'
+                    })
+                  }
+                })
+              }
+            });
+            var form = req22.form();
+            form.append('image', fs.readFileSync(__dirname + '/../' + req.file.key), {
+              filename: req.file.key.replace('skin/', ''),
               contentType: 'image/png'
             });
-            form.append('diff_image', fs.readFileSync(__dirname + '/../' + req.file.key), {
-              filename: req.file.key.replace('skin/', ''),
+            form.append('diff_image', fs.readFileSync(__dirname + '/../skin/' +data.firstforhead), {
+              filename: data.firstforhead,
               contentType: 'image/png'
             });
           });  
         });
-        // res.status(200).json({
-        //   data
-        // })
       }
     })
     //MongoDB End
@@ -2120,7 +2172,35 @@ module.exports = function (app) {
     });
   })
 
+
+  app.get('/getAllMunjinData/:value', function(req, res) {
     
+    if(!req.params.value) {
+      return res.status(400).json({
+        'msg' : '상위 퍼센트 가져오기 에러입니다.'
+      })
+    }
+
+    SkinAnaly.find({}, '-__v').lean().exec((err, data) => {
+      var result = [];
+      if(data) {
+        for(let i = 0; i < data.length; i++){
+          for(let k = 0; k < data[i].munjin.length; k++) {
+            result.push( Number(data[i].munjin[k].sleep) + Number(data[i].munjin[k].alcohol) + Number(data[i].munjin[k].fitness) );
+          }
+        }
+        result = result.sort(function(a, b){ return a-b; });
+        var rank = percentRank(result, Number(req.params.value));
+        rank = Math.floor(100 - (rank * 100));
+        return res.status(200).json({
+          rank : rank
+        })
+      }
+      if (err) {
+        res.sendStatus(404);
+      }
+    });
+  });
   
 
   function getFormattedDate(date) {
