@@ -9,10 +9,8 @@ var skinAnalySchema = mongoose.Schema({
   originalFileName: {
     type: String
   },
-
   firstcheek: String,
   firstforhead: String,
-
   munjin: [{
     sleep: Number,
     alcohol: Number,
@@ -22,7 +20,6 @@ var skinAnalySchema = mongoose.Schema({
       default: Date.now
     }
   }],
-
   cheek: [{
     input: [{
       filename: String,
@@ -92,30 +89,6 @@ var skinAnalySchema = mongoose.Schema({
       url: Object
     }]
   }],
-  // tone: [{
-  //   label: String,
-  //   lightest_color: String,
-  //   darkest_color: String,
-  //   average_color: String,
-  //   avgrage_color_hex: String
-  // }],
-  // pore: [{
-  //   pore_count: {
-  //     type: Number,
-  //     default: 0
-  //   },
-  //   smallest_pore: Number,
-  //   largest_pore: Number,
-  //   average_pore: Number,
-  //   pores: {
-  //     type: Object,
-  //     default: 0
-  //   },
-  //   output_image: String
-  // }],
-  // wrinkles: [{
-  //   url: Object
-  // }],
   created_at: {
     type: Date,
     default: Date.now

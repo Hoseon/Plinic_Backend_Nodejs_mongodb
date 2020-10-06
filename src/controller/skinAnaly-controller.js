@@ -27,11 +27,6 @@ exports.skinAnalySave = (req, res) => {
     }
 
     if(post) {
-      // console.log(req.body.cheek.input);
-      // console.log(req.body.cheek.skin_analy.tone);
-      // console.log(req.body.cheek.input);
-      // console.log(req.body.cheek.input);
-
       req.body.cheek.skin_analy.pore = JSON.parse(JSON.stringify(req.body.cheek.skin_analy.pore).replace(/um/g, ""));
       req.body.forehead.skin_analy.pore = JSON.parse(JSON.stringify(req.body.forehead.skin_analy.pore).replace(/um/g, ""));
 
@@ -172,8 +167,6 @@ function getSecondsAsDigitalClock(inputSeconds) {
   return minutesString + ':' + secondsString;
   // return hoursString + ':' + minutesString + ':' + secondsString;
 }
-
-
 
 exports.challengePointUpdate = (req, res) => {
   // console.log("start");
