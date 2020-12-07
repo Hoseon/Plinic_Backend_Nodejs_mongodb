@@ -11,13 +11,13 @@
     <% include partials/top %>
 <!-- main start-->
 
-<!-- views/posts/index.ejs -->
+<!-- views/beautyMovie/index.ejs -->
 <div class="index">
 <div class="message">
   <%= postsMessage %>
 </div>
   <div class="buttons">
-    <!-- <button class="float_left" onclick="location.href='/posts/new'">New</button> -->
+    <button class="float_left" onclick="location.href='/beautyMovie/new'">New</button>
     <% if(user) {%>
       <button class="float_right" onclick="location.href='/home/logout'">Logout</button>
       <button class="float_right" onclick="location.href='/users/<%= user._id %>'">My Profile (<%= user.nickname %>)</button>
@@ -27,103 +27,42 @@
     <% } %>
   </div>
   <table>
-    <!-- <colgroup>
+    <colgroup>
       <col class="num"/>
       <col class="title"/>
       <col class="views"/>
       <col class="date"/>
       <col class="author"/>
-    </colgroup> -->
+    </colgroup>
     <thead>
-      <!-- <tr>
+      <tr>
         <th>Num</th>
         <th>Title</th>
+        <th>에디터 추천</th>
         <th>Views</th>
         <th>Date</th>
         <th>Author</th>
-      </tr> -->
+      </tr>
     </thead>
     <tbody>
-      <tr onclick="location.href='/topbanner'">
-        <td>
-          홈 상단 메인배너
-        </td>
-      </tr>
-      <tr onclick="location.href='/banner'">
-        <td>
-          홈 중단 추천상품
-        </td>
-      </tr>
-      <tr onclick="location.href='/carezone'">
-        <td>
-          케어 챌린지 관리
-        </td>
-      </tr>
-      <!-- <tr onclick="location.href='/beauty'">
-        <td>
-          뷰티 팁 관리
-        </td>
-      </tr> -->
-      <tr onclick="location.href='/notice'">
-        <td>
-          공지사항 관리
-        </td>
-      </tr>
-      <tr onclick="location.href='/qna'">
-        <td>
-          문의하기 관리(문의하기 답변)
-        </td>
-      </tr>
-      <tr onclick="location.href='/commubeauty'">
-        <td>
-          커뮤니티 - 뷰티꿀팁 관리
-        </td>
-      </tr>
-      <!-- <tr onclick="location.href='/beautynote'">
-        <td>
-          커뮤니티 - 뷰티노트 관리
-        </td>
-      </tr> -->
-      <tr onclick="location.href='/skinqna'">
-        <td>
-          커뮤니티 - 피부고민 관리(댓글달기)
-        </td>
-      </tr>
-      <tr onclick="location.href='/beautyMovie'">
-        <td>
-          커뮤니티 - 뷰티 영상 관리
-        </td>
-      </tr>
-      <tr onclick="location.href='/faq'">
-        <td>
-          FAQ(자주하는질문) - FAQ(자주하는질문) 관리
-        </td>
-      </tr>
-      <!-- <tr onclick="location.href='/exhibition'">
-        <td>
-          커뮤니티 - 기획전 관리
-        </td>
-      </tr> -->
-      <tr onclick="location.href='/reward'">
-        <td>
-          상품 보상 관리
-        </td>
-      </tr>
-      <tr onclick="location.href='/product'">
-        <td>
-          상품관리(앱)
-        </td>
-      </tr>
-      <tr onclick="location.href='/posts'">
-        <td>
-          제품 관리
-        </td>
-      </tr>
-      <tr onclick="location.href='/test'">
-        <td>
-          테스트
-        </td>
-      </tr>
+      <% if(beautyMovie == null || beautyMovie.length == 0){ %>
+          <tr class="noData">
+            <td colspan="5">There is no data to show :(</td>
+          </tr>
+      <% } %>
+      <% beautyMovie.forEach(function(post){ %>
+        <tr onclick="window.location = '/beautyMovie/<%= post._id %>?<%= urlQuery %>'">
+          <td><%= post.numId %></td>
+          <td class="highlight" style="width : 400px" data-highlight="<%= search.highlight.title %>">
+            <%= post.title %> <%= post.body %>
+            <span class="comments">(<%= post.comments.length %>)</span>
+          </td>
+          <td style="width : 100px"><%= post.editor ? "에디터 추천" : "" %></td>
+          <td><%= post.views %></td>
+          <td><%= post.getFormattedDate(post.createdAt) %></td>
+          <td class="highlight" data-highlight="<%= search.highlight.author %>"><%= post.author.nickname %></td>
+        </tr>
+      <% }) %>
     </tbody>
   </table>
   <ul class="pagination">
@@ -135,7 +74,7 @@
     <% for(i=1;i<=maxPage;i++){ %>
       <% if(i<=offset || i>maxPage-offset || (i>=page-(offset-1) && i<=page+(offset-1))){ %>
         <% if(i != page){ %>
-          <li>[<a href="/posts?page=<%= i %><%= partialQuery %>"> <%= i %> </a>]</li>
+          <li>[<a href="/beautyMovie?page=<%= i %><%= partialQuery %>"> <%= i %> </a>]</li>
         <% } else { %>
           <li>[ <b><%= i %></b> ]</li>
         <% } %>
@@ -144,7 +83,7 @@
       <% } %>
     <%}%>
   </ul>
-  <!-- <div class="floats">
+  <div class="floats">
     <div class="counter float_left">
       <% if(counter){ %>
         Total <%= counter.totalCount %> visitors<br>
@@ -152,7 +91,7 @@
       <% } %>
     </div>
     <div class="search float_right">
-      <form class="checkValidation" action="/posts/" id="search">
+      <form class="checkValidation" action="/beautyMovie/" id="search">
         <select name="searchType" <%= search.searchType=="author!"?"disabled":"" %>>
           <% var select %>
           <option value="title,body"
@@ -169,23 +108,23 @@
               <%= search.searchType=="author"?select="selected":"" %>>Author</option>
           <%}%>
         </select>
-        <input class="cvMinLength" cvMinLength="3"
+        <input class="cvMinLength" cvMinLength="2"
           cvMinLenErrTo="#searchError"
-          cvMinLenErrMsg="It should be at least 3 characters"
+          cvMinLenErrMsg="It should be at least 2 characters"
           type="text" name="searchText" value="<%= select?search.searchText:"" %>"
           <%= search.searchType=="author!"?"disabled":"" %>>
         <button type="submit" <%= search.searchType=="author!"?"disabled":"" %>>search</button>
         <%if(search.searchType){%>
-          <button type="button" onclick="window.location = '/posts?page=1'">cancel</button>
+          <button type="button" onclick="window.location = '/beautyMovie?page=1'">cancel</button>
         <%}%>
         <div class="message" id="searchError"></div>
       </form>
     </div>
-  </div> -->
+  </div>
 </div>
 
 <!-- main end -->
-    </div><!--posts end -->
+    </div><!--beautyMovie end -->
     <footer>
       <% include ../partials/footer %>
     </footer>

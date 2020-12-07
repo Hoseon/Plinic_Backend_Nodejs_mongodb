@@ -8,6 +8,7 @@ var skinQnaController = require('./controller/skinqna-controller');
 var careZoneController = require('./controller/carezone-controller');
 var rewardController = require('./controller/reward-controller');
 var chulsukController = require('./controller/chulsuk-controller');
+var skinReportController = require('./controller/skinreport-controller');
 // var testController = require('./controller/test-controller');
 var skinAnalyController = require('./controller/skinAnaly-controller');
 
@@ -53,6 +54,11 @@ routes.post('/challengesave', userController.challengeSave); //챌린지를 시�
 //피부분석 데이터 저장
 routes.post('/saveskinanaly',skinAnalyController.skinAnalySave)
 
+//피부 최초 저장일때 2020-11-10 업데이트 기능 추가
+routes.post('/updateskinanaly',skinAnalyController.skinAnalyUpdate)
+
+
+
 //문의 하기 저장
 routes.post('/qnasave', qnaController.qnaSave);
 routes.post('/qnaupdate', qnaController.qnaUpdate);
@@ -91,6 +97,10 @@ routes.post('/rewardchallengesave', rewardController.rewardChallengeSave);
 //출석체크 2020-02-14
 routes.post('/chulsuk', chulsukController.chulsukSave);
 
+
+//피부 WIFI카메라 측정 완료 되면 100P 적립해주기 2020-11-06
+routes.post('/skinReport', skinReportController.skinReportSave);
+
 //사용자 포인트 업데이트(케어하기, 미션) 2020-02-18
 routes.post('/challengepointupdate', userController.challengePointUpdate); //챌린지 할 경우 포인트 누적
 routes.post('/usepointupdate', userController.usePointUpdate); //일반 케어 하기 할 경우 포인트 누적
@@ -103,6 +113,11 @@ routes.post('/loaduser', userController.loadUser);
 routes.post('/findId', userController.findId);
 routes.post('/validIdandSendemail', userController.validSendEmail);
 routes.post('/changePassword', userController.changePassword);
+
+//화장품리뷰등록 2020-11-11
+routes.post('/registerReview', skinReportController.registerReview);
+routes.post('/productReviewDelete', skinReportController.deleteReview);
+routes.post('/productReviewUpdate', skinReportController.productReviewUpdate);
 
 
 //routes.get('/auth/kakao', userController.loginUser_Kakao);
@@ -136,9 +151,12 @@ routes.post('/daumjuso', function(req,res) {
 })
 
 routes.get('/daumjuso/mobile', function(req,res) {
-	// console.log(juso);
-	res.send(juso);
-	juso = null;
+  // console.log("데이터 없음 : " + juso);
+  if(juso){
+    // console.log("데이터 있음 :" + juso)
+    res.send(juso);
+    juso = null;
+  }
 });
 
 

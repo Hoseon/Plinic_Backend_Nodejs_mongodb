@@ -14,7 +14,7 @@ const AWS = require("aws-sdk");
 AWS.config.loadFromPath(__dirname + "/config/awsconfig.json");
 
 
-exports.skinAnalySave = (req, res) => {
+exports.skinAnalySave = (req, res) => { //피부분석 데이터가 저장되면 100P를 적립해준다.
 
   SkinAnaly.findOne({
     email : req.body.email
@@ -119,8 +119,13 @@ exports.skinAnalySave = (req, res) => {
           const file2 = fs2.createWriteStream(__dirname + '/../../skin/'+req.body.forehead.input.filename);
 
           //http://ec2-3-34-189-215.ap-northeast-2.compute.amazonaws.com/media/images/18ee9911-2a0c-4cbd-b0cf-cfdc81683cec.jpg
-          var originalCheekImageUrl = "http://ec2-3-34-189-215.ap-northeast-2.compute.amazonaws.com/media/images/" + req.body.cheek.input.filename;
-          var originalForeheadImageUrl = "http://ec2-3-34-189-215.ap-northeast-2.compute.amazonaws.com/media/images/" + req.body.forehead.input.filename;
+
+          //피쳐링 기존 API 주소 2020-12-07
+          // var originalCheekImageUrl = "http://ec2-3-34-189-215.ap-northeast-2.compute.amazonaws.com/media/images/" + req.body.cheek.input.filename;
+          // var originalForeheadImageUrl = "http://ec2-3-34-189-215.ap-northeast-2.compute.amazonaws.com/media/images/" + req.body.forehead.input.filename;
+
+          var originalCheekImageUrl = "http://ec2-15-164-210-238.ap-northeast-2.compute.amazonaws.com/media/images/" + req.body.cheek.input.filename;
+          var originalForeheadImageUrl = "http://ec2-15-164-210-238.ap-northeast-2.compute.amazonaws.com/media/images/" + req.body.forehead.input.filename;
           http.get(originalCheekImageUrl, response => {
             var stream = response.pipe(file);
             stream.on("finish",  function() {
@@ -142,6 +147,81 @@ exports.skinAnalySave = (req, res) => {
   })
 
   
+};
+
+
+exports.skinAnalyUpdate = (req, res) => { //피부분석 데이터가 저장되면 100P를 적립해준다.
+
+  SkinAnaly.findOne({
+    email : req.body.email
+  },(err, post) => {
+    if (err) {
+      console.log(err);
+      return res.status(400).json({
+        'msg': '회원 찾기 에러발생'
+      })
+    }
+
+    if(post) {
+      SkinAnaly.findOneAndUpdate({
+        email: req.body.email
+      }, {
+        updated_at: new Date(),
+        firstcheek : req.body.cheek.input.filename, //신규 등록자는 최초 피부 사진 별도 저장 향후 피부 차이 분석 위해 필요
+        firstforhead : req.body.forehead.input.filename, //신규 등록자는 최초 피부 사진 별도 저장 향후 피부 차이 분석 위해 필요
+      }, (err, post) => {
+        if (err) {
+          console.log(err);
+          return res.status(400).json({
+            'msg': '에러발생'
+          })
+        }
+        if(post) {
+          //첨부 파일 교체 작업
+          const fs2 = require("fs");
+          const http = require("http");
+          
+          //server
+          const file = fs2.createWriteStream(__dirname + '/../../skin/'+req.body.cheek.input.filename);
+          const file2 = fs2.createWriteStream(__dirname + '/../../skin/'+req.body.forehead.input.filename);
+
+          //http://ec2-3-34-189-215.ap-northeast-2.compute.amazonaws.com/media/images/18ee9911-2a0c-4cbd-b0cf-cfdc81683cec.jpg
+
+          //http://ec2-15-164-210-238.ap-northeast-2.compute.amazonaws.com
+
+
+          //2020-12-07 피처링 기존 API 주소
+          // var originalCheekImageUrl = "http://ec2-3-34-189-215.ap-northeast-2.compute.amazonaws.com/media/images/" + req.body.cheek.input.filename;
+          // var originalForeheadImageUrl = "http://ec2-3-34-189-215.ap-northeast-2.compute.amazonaws.com/media/images/" + req.body.forehead.input.filename;
+
+          //2020-12-07 지원파트너스 신규 API 주소
+          var originalCheekImageUrl = "http://ec2-15-164-210-238.ap-northeast-2.compute.amazonaws.com/media/images/" + req.body.cheek.input.filename;
+          var originalForeheadImageUrl = "http://ec2-15-164-210-238.ap-northeast-2.compute.amazonaws.com/media/images/" + req.body.forehead.input.filename;
+          http.get(originalCheekImageUrl, response => {
+            var stream = response.pipe(file);
+            stream.on("finish",  function() {
+              console.log("CheekDone");
+              http.get(originalForeheadImageUrl, response => {
+                var stream = response.pipe(file2);
+                stream.on("finish",  function() {
+                  console.log("ForheadDone");
+                  return res.status(201).json({
+                    'msg' : '최초 이미지 변경 처리 완료'
+                  });
+                });  
+              });
+            });  
+          });
+        }
+      })
+    } 
+    else { 
+      //첨부 파일을 교체 해야 하는데 사용자가 없을 경우
+      return res.status(400).json({
+        'msg' : '첨부 파일 변경해야 할 사용자가 존재하지 않습니다.'
+      });
+    }
+  })
 };
 
 

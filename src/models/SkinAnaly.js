@@ -34,7 +34,9 @@ var skinAnalySchema = mongoose.Schema({
     tone: [{
       label: String,
       lightest_color: String,
+      lightest_color_hex: String,
       darkest_color: String,
+      darkest_color_hex: String,
       average_color: String,
       avgrage_color_hex: String
     }],
@@ -67,7 +69,9 @@ var skinAnalySchema = mongoose.Schema({
     tone: [{
       label: String,
       lightest_color: String,
+      lightest_color_hex: String,
       darkest_color: String,
+      darkest_color_hex: String,
       average_color: String,
       avgrage_color_hex: String
     }],

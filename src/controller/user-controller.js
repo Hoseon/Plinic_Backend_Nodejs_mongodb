@@ -429,7 +429,7 @@ exports.billingSchedule = async (req, res) => {
         data: {
           customer_uid: paymentData.customer_uid, //휴대폰 앱에서 카드 정보를 넣을 다시에 customer ID
           merchant_uid: 'mid_' + new Date().getTime(), // 새로 생성한 결제(재결제)용 주문 번호
-          amount: 1000,
+          amount: 10900, //초기 결제 비용은 7,900원 + 배송비 3,000원을 더한 10,900원을 결제 한다. 2020-10-29
           name: "플리닉 월간 이용권 정기결제"
         }
       });
@@ -445,8 +445,8 @@ exports.billingSchedule = async (req, res) => {
           customer_uid: paymentData.customer_uid, // 카드(빌링키)와 1:1로 대응하는 값
           schedules: [{
             merchant_uid: 'mid_' + new Date().getTime(), // 주문 번호
-            schedule_at: new Date(new Date().getFullYear(), new Date().getMonth() + 1, new Date().getDay() + 2, 12) / 1000, //1596711600 // 결제 시도 시각 in Unix Time Stamp. ex. 다음 달 1일
-            amount: 2000,
+            schedule_at: new Date(new Date().getFullYear(), new Date().getMonth() + 1, new Date().getDay() + 25, 12) / 1000, //1596711600 // 결제 시도 시각 in Unix Time Stamp. ex. 다음 달 1일
+            amount: 7900,
             name: "월간 이용권 정기결제",
           }]
         }
