@@ -29,6 +29,8 @@ var AppReview = require('./models/AppReview');
 var Product = require('./models/Product');
 var Test = require('./models/Test');
 var SkinAnaly = require('./models/SkinAnaly');
+var SkinReport = require('./models/SkinReport');
+var ProductsReview = require('./models/ProductsReview');
 
 const GoogleStrategy = require('passport-google-oauth20');
 var jwt = require('jsonwebtoken');
@@ -865,6 +867,7 @@ module.exports = function (app) {
   app.use('/qna', require('./qna'));
   app.use('/faq', require('./faq'));
   app.use('/commubeauty', require('./commubeauty'));
+  app.use('/beautyMovie', require('./beautyMovie'));
   app.use('/beautynote', require('./beautynote'));
   app.use('/skinqna', require('./skinqna'));
   app.use('/exhibition', require('./exhibition'));
@@ -1608,6 +1611,20 @@ module.exports = function (app) {
       });
   });
 
+  //2020-11-06 피부 측정 후 오늘 날짜의 데이터가 있는지 확인하기
+  app.get('/checkskinreport/:email', function (req, res, next) {
+    SkinReport.findOne({
+        email: req.params.email
+      },
+      function (err, docs) {
+        if (err) {
+          res.sendStatus(400);
+        } else {
+          res.json(docs);
+        }
+      });
+  });
+
   app.get('/Point/getPlinicPoint/', async function(req, res, next) {
     var request1 = require('request');
     var url = 'http://plinicshop.com:50082/Point/getPointList' 
@@ -1725,6 +1742,7 @@ module.exports = function (app) {
       // console.log('Headers', JSON.stringify(response.headers));
       // console.log('Reponse received', body);
       var xmlToJson = convert.xml2json(body, {compact: true, spaces: 4});
+      // console.log("데이터 오류 확인 : " + JSON.stringify(xmlToJson)); //2020-11-05 콘솔에 원인 모를 에러가 자꾸 찍혀 확인 필요
       res.send(xmlToJson);
 
     })
@@ -2003,10 +2021,10 @@ module.exports = function (app) {
         const fs2 = require("fs");
         const https = require("https");
         const file = fs2.createWriteStream(__dirname + '/../' + req.file.key);
-        const featApiUrl = 'http://ec2-3-34-189-215.ap-northeast-2.compute.amazonaws.com/api/';
+        // const featApiUrl = 'http://ec2-3-34-189-215.ap-northeast-2.compute.amazonaws.com/api/'; // 피쳐링 피부분석 API 
+        const featApiUrl = 'http://ec2-15-164-210-238.ap-northeast-2.compute.amazonaws.com/api/'; // 지원파트너스 피부분석 API 2020-12-07
         const awsS3Url = 'https://plinic.s3.ap-northeast-2.amazonaws.com/';
         var request22 = require('request');
-
         https.get(awsS3Url + req.file.key , response => {
           var stream = response.pipe(file);
           stream.on("finish",  function() {
@@ -2014,8 +2032,8 @@ module.exports = function (app) {
               if (err) {
                 console.log('Error!');
               } else {
-                console.log("1st : " + body);
-                console.log("2nd :" + JSON.stringify(body));
+                // console.log("1st : " + body);
+                // console.log("2nd :" + JSON.stringify(body));
                 body = JSON.parse(body);
                 body.output.skin_analy.pore = JSON.parse(JSON.stringify(body.output.skin_analy.pore).replace(/um/g, ""));
                   SkinAnaly.findOneAndUpdate({
@@ -2052,6 +2070,7 @@ module.exports = function (app) {
                   })
               }
             });
+            
             var form = req22.form();
             form.append('image', fs.readFileSync(__dirname + '/../' + req.file.key), {
               filename: req.file.key.replace('skin/', ''),
@@ -2087,7 +2106,8 @@ module.exports = function (app) {
         const fs2 = require("fs");
         const https = require("https");
         const file = fs2.createWriteStream(__dirname + '/../' + req.file.key);
-        const featApiUrl = 'http://ec2-3-34-189-215.ap-northeast-2.compute.amazonaws.com/api/';
+        // const featApiUrl = 'http://ec2-3-34-189-215.ap-northeast-2.compute.amazonaws.com/api/'; //피쳐링 피부분석 API
+        const featApiUrl = 'http://ec2-15-164-210-238.ap-northeast-2.compute.amazonaws.com/api/'; // 지원파트너스 피부분석 API 2020-12-07
         const awsS3Url = 'https://plinic.s3.ap-northeast-2.amazonaws.com/';
         var request22 = require('request');
 
@@ -2098,6 +2118,7 @@ module.exports = function (app) {
               if (err) {
                 console.log('Error!');
               } else {
+                // console.log("2st : " + body);
                 body = JSON.parse(body);
                 body.output.skin_analy.pore = JSON.parse(JSON.stringify(body.output.skin_analy.pore).replace(/um/g, ""));
                 SkinAnaly.findOneAndUpdate({
@@ -2149,7 +2170,8 @@ module.exports = function (app) {
   })
 
   app.get('/postTest2', async function(req, res, next) {
-    const url = 'http://ec2-3-34-189-215.ap-northeast-2.compute.amazonaws.com/api/'
+    // const url = 'http://ec2-3-34-189-215.ap-northeast-2.compute.amazonaws.com/api/'  //피처링 기존 API 주소 2020-12-07
+    const url = 'http://ec2-15-164-210-238.ap-northeast-2.compute.amazonaws.com/api/' //지원파트너스 신규 API 주소 2020-12-07
     var request22 = require('request');
     var req = await request22.post(url, function (err, response, body) {
       if (err) {
@@ -2161,14 +2183,14 @@ module.exports = function (app) {
       }
     });
 
-    var form = req.form();
-    form.append('image', fs.readFileSync('/Users/hoseonchu/workspace/auth/uploads/18ee9911-2a0c-4cbd-b0cf-cfdc81683cec.jpg'), {
-      filename: 'hairimage-1587459621827.png',
-      contentType: 'image/png'
+    var form = req22.form();
+    form.append('image', fs.readFileSync(__dirname + '/../' + req.file.key), {
+      filename: req.file.key.replace('skin/', ''),
+      contentType: 'image/jpg'
     });
-    form.append('diff_image', fs.readFileSync('/Users/hoseonchu/workspace/auth/uploads/98b772ca-46b3-467f-8663-61c2ead16854.jpg'), {
-      filename: 'hairimage-1587459621827.png',
-      contentType: 'image/png'
+    form.append('diff_image', fs.readFileSync(__dirname + '/../skin/' + data.firstcheek), {
+      filename: data.firstcheek,
+      contentType: 'image/jpg'
     });
   })
 
@@ -2200,6 +2222,20 @@ module.exports = function (app) {
         res.sendStatus(404);
       }
     });
+  });
+
+  //화장품 리뷰 가져 오기 2020-11-12
+  app.get('/getProductReview/:product_num', function (req, res, next) {
+    ProductsReview.find({
+      product_num: req.params.product_num
+      },
+      function (err, docs) {
+        if (err) {
+          res.sendStatus(400);
+        } else {
+          res.json(docs);
+        }
+      });
   });
   
 
