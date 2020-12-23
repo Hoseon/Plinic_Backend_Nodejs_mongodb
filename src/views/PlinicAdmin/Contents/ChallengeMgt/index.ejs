@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <% include ../../../partials/head %>
+    <title></title>
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css' />
+</head>
+<script type="text/javascript" src="/js/jquery-1.10.2.js"></script>
+<script>
+        $(document).ready(function(){
+            $(".active").removeClass("active");
+            $("#products").addClass("active");
+        });
+</script>
+<title>Hello, world!</title>
+
+<body>
+    
+    <header>
+        <% include ../../../partials/header %>
+    </header>
+
+
+    <div class="container-fluid">
+        <div class="row">
+            <!-- 3단길이의 첫번째 열 -->
+            <div class="col-md-2">
+
+                <!-- 사이드 메뉴 시작 -->
+                <aside class="bd-aside sticky-xl-top text-muted align-self-start mb-3 mb-xl-5 px-2">
+                    <!-- <h2 class="h6 pt-4 pb-3 mb-4 border-bottom">On this page</h2> -->
+                    <nav class="small" id="toc">
+                        <ul class="list-unstyled">
+                            <li class="my-2">
+                                    <a id="challBtn" class="btn align-items-center collapsed"
+                                    href="#typography">챌린지</a>
+                                <!-- <button class="btn d-inline-flex align-items-center collapsed" data-bs-toggle="collapse"
+                                    aria-expanded="false" data-bs-target="#contents-collapse"
+                                    aria-controls="contents-collapse" href="#overview" ><span class="btn::before"></span>챌린지</button> -->
+                                <ul class="list-unstyled ps-3 collapse" id="contents-collapse" style="">
+                                    <li><a class="d-inline-flex align-items-center rounded"
+                                            href="#typography">챌린지</a></li>
+                                    <!-- <li><a class="d-inline-flex align-items-center rounded" href="#images">Images</a>
+                                    </li>
+                                    <li><a class="d-inline-flex align-items-center rounded" href="#tables">Tables</a>
+                                    </li>
+                                    <li><a class="d-inline-flex align-items-center rounded" href="#figures">Figures</a>
+                                    </li> -->
+                                </ul>
+                            </li>
+                            <li class="my-2">
+                                <button class="btn d-inline-flex align-items-center collapsed" data-bs-toggle="collapse"
+                                    aria-expanded="false" data-bs-target="#forms-collapse"
+                                    aria-controls="forms-collapse">뷰티팁</button>
+                                <ul class="list-unstyled ps-3 collapse" id="forms-collapse">
+                                    <li><a class="d-inline-flex align-items-center rounded" href="#overview">포스트관리</a></li>
+                                    <li><a class="d-inline-flex align-items-center rounded" href="#disabled-forms">포스트진열관리</a></li>
+                                    <li><a class="d-inline-flex align-items-center rounded" href="#sizing">영상 관리</a></li>
+                                    <li><a class="d-inline-flex align-items-center rounded" href="#sizing">영상 진열 관리</a></li>
+                                </ul>
+                            </li>
+                            <li class="my-2">
+                                <button class="btn d-inline-flex align-items-center collapsed" data-bs-toggle="collapse"
+                                    aria-expanded="false" data-bs-target="#forms-collapse2"
+                                    aria-controls="forms-collapse2">게시판 댓글</button>
+                                <ul class="list-unstyled ps-3 collapse" id="forms-collapse2">
+                                    <li><a class="d-inline-flex align-items-center rounded" href="#accordion">챌린지 댓글</a></li>
+                                    <li><a class="d-inline-flex align-items-center rounded" href="#alerts">영상 댓글</a></li>
+                                    <li><a class="d-inline-flex align-items-center rounded" href="#badge">피부고민 게시판</a></li>
+                                    <li><a class="d-inline-flex align-items-center rounded" href="#breadcrumb">공지사항 게시판</a></li>
+                                    <li><a class="d-inline-flex align-items-center rounded" href="#card">FAQ 게시판</a></li>
+                                    <li><a class="d-inline-flex align-items-center rounded" href="#card">문의하기 게시판</a></li>
+                                </ul>
+                            </li>
+                            <li class="my-2">
+                                <button class="btn d-inline-flex align-items-center collapsed" data-bs-toggle="collapse"
+                                    aria-expanded="false" data-bs-target="#forms-collapse3"
+                                    aria-controls="forms-collapse3">홈 팝업</button>
+                                <ul class="list-unstyled ps-3 collapse" id="forms-collapse3">
+                                    <li><a class="d-inline-flex align-items-center rounded"
+                                            href="#accordion">Accordion</a></li>
+                                    <li><a class="d-inline-flex align-items-center rounded" href="#alerts">Alerts</a>
+                                    </li>
+                                    <li><a class="d-inline-flex align-items-center rounded" href="#badge">Badge</a></li>
+                                    <li><a class="d-inline-flex align-items-center rounded"
+                                            href="#breadcrumb">Breadcrumb</a></li>
+                                    <li><a class="d-inline-flex align-items-center rounded" href="#card">Card</a></li>
+                                </ul>
+                            </li>
+                            <li class="my-2">
+                                <button class="btn d-inline-flex align-items-center collapsed" data-bs-toggle="collapse"
+                                    aria-expanded="false" data-bs-target="#forms-collapse4"
+                                    aria-controls="forms-collapse4">광고 배너</button>
+                                <ul class="list-unstyled ps-3 collapse" id="forms-collapse4">
+                                    <li><a class="d-inline-flex align-items-center rounded"
+                                            href="#accordion">Accordion</a></li>
+                                    <li><a class="d-inline-flex align-items-center rounded" href="#alerts">Alerts</a>
+                                    </li>
+                                    <li><a class="d-inline-flex align-items-center rounded" href="#badge">Badge</a></li>
+                                    <li><a class="d-inline-flex align-items-center rounded"
+                                            href="#breadcrumb">Breadcrumb</a></li>
+                                    <li><a class="d-inline-flex align-items-center rounded" href="#card">Card</a></li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </nav>
+                </aside>
+                <!-- 사이드 메뉴 종료 -->
+            </div>
+
+
+            <!-- 9단길이의 첫번째 열 -->
+            <div class="col-md-10">
+                    <div id="page-inner">
+                            <div class="row">
+                                   <div class="col-md-12">
+                                       <h1 class="page-header">
+                                           플리닉 양식 페이지(제목) <small>플리닉 Sub제목</small>
+                                       </h1>
+                                   </div>
+                               </div> 
+                                <!-- /. ROW  -->
+                             <div class="row">
+                               <div class="col-lg-12">
+                                   <div class="panel panel-default">
+                                       <div class="panel-heading">
+                                            기본적인 업무 설명을 넣어 준다.
+                                       </div>
+                                       <div class="panel-body">
+                                           <div class="row">
+                                               <div class="col-lg-6">
+                                                   <form role="form">
+                                                       <div class="form-group">
+                                                           <label>Text Input</label>
+                                                           <input class="form-control">
+                                                           <p class="help-block">Example block-level help text here.</p>
+                                                       </div>
+                                                       <div class="form-group">
+                                                           <label>Text Input with Placeholder</label>
+                                                           <input class="form-control" placeholder="Enter text">
+                                                       </div>
+                                                       <div class="form-group">
+                                                           <label>Static Control</label>
+                                                           <p class="form-control-static">email@example.com</p>
+                                                       </div>
+                                                       <div class="form-group">
+                                                           <label>File input</label>
+                                                           <input type="file">
+                                                       </div>
+                                                       <div class="form-group">
+                                                           <label>Text area</label>
+                                                           <textarea class="form-control" rows="3"></textarea>
+                                                       </div>
+                                                       <div class="form-group">
+                                                           <label>Checkboxes</label>
+                                                           <div class="checkbox">
+                                                               <label>
+                                                                   <input type="checkbox" value="">Checkbox 1
+                                                               </label>
+                                                           </div>
+                                                           <div class="checkbox">
+                                                               <label>
+                                                                   <input type="checkbox" value="">Checkbox 2
+                                                               </label>
+                                                           </div>
+                                                           <div class="checkbox">
+                                                               <label>
+                                                                   <input type="checkbox" value="">Checkbox 3
+                                                               </label>
+                                                           </div>
+                                                       </div>
+                                                       <div class="form-group">
+                                                           <label>Inline Checkboxes</label>
+                                                           <label class="checkbox-inline">
+                                                               <input type="checkbox">1
+                                                           </label>
+                                                           <label class="checkbox-inline">
+                                                               <input type="checkbox">2
+                                                           </label>
+                                                           <label class="checkbox-inline">
+                                                               <input type="checkbox">3
+                                                           </label>
+                                                       </div>
+                                                       <div class="form-group">
+                                                           <label>Radio Buttons</label>
+                                                           <div class="radio">
+                                                               <label>
+                                                                   <input type="radio" name="optionsRadios" id="optionsRadios1" value="option1" checked="">Radio 1
+                                                               </label>
+                                                           </div>
+                                                           <div class="radio">
+                                                               <label>
+                                                                   <input type="radio" name="optionsRadios" id="optionsRadios2" value="option2">Radio 2
+                                                               </label>
+                                                           </div>
+                                                           <div class="radio">
+                                                               <label>
+                                                                   <input type="radio" name="optionsRadios" id="optionsRadios3" value="option3">Radio 3
+                                                               </label>
+                                                           </div>
+                                                       </div>
+                                                       <div class="form-group">
+                                                           <label>Inline Radio Buttons</label>
+                                                           <label class="radio-inline">
+                                                               <input type="radio" name="optionsRadiosInline" id="optionsRadiosInline1" value="option1" checked="">1
+                                                           </label>
+                                                           <label class="radio-inline">
+                                                               <input type="radio" name="optionsRadiosInline" id="optionsRadiosInline2" value="option2">2
+                                                           </label>
+                                                           <label class="radio-inline">
+                                                               <input type="radio" name="optionsRadiosInline" id="optionsRadiosInline3" value="option3">3
+                                                           </label>
+                                                       </div>
+                                                       <div class="form-group">
+                                                           <label>Selects</label>
+                                                           <select class="form-control">
+                                                               <option>1</option>
+                                                               <option>2</option>
+                                                               <option>3</option>
+                                                               <option>4</option>
+                                                               <option>5</option>
+                                                           </select>
+                                                       </div>
+                                                       <div class="form-group">
+                                                           <label>Multiple Selects</label>
+                                                           <select multiple="" class="form-control">
+                                                               <option>1</option>
+                                                               <option>2</option>
+                                                               <option>3</option>
+                                                               <option>4</option>
+                                                               <option>5</option>
+                                                           </select>
+                                                       </div>
+                                                       <button type="submit" class="btn btn-default">저장 버튼</button>
+                                                       <button type="reset" class="btn btn-default">초기화 버튼</button>
+                                                   </form>
+                                               </div>
+                                               <!-- /.col-lg-6 (nested) -->
+                                               <div class="col-lg-6">
+                                                   <h4>Disabled Form States</h4>
+                                                   <form role="form">
+                                                       <fieldset disabled="">
+                                                           <div class="form-group">
+                                                               <label for="disabledSelect">Disabled input</label>
+                                                               <input class="form-control" id="disabledInput" type="text" placeholder="Disabled input" disabled="">
+                                                           </div>
+                                                           <div class="form-group">
+                                                               <label for="disabledSelect">Disabled select menu</label>
+                                                               <select id="disabledSelect" class="form-control">
+                                                                   <option>Disabled select</option>
+                                                               </select>
+                                                           </div>
+                                                           <div class="checkbox">
+                                                               <label>
+                                                                   <input type="checkbox">Disabled Checkbox
+                                                               </label>
+                                                           </div>
+                                                           <button type="submit" class="btn btn-primary">Disabled Button</button>
+                                                       </fieldset>
+                                                   </form>
+                                                   <h4>Form Validation States</h4>
+                                                   <form role="form">
+                                                       <div class="form-group has-success">
+                                                           <label class="control-label" for="inputSuccess">Input with success</label>
+                                                           <input type="text" class="form-control" id="inputSuccess">
+                                                       </div>
+                                                       <div class="form-group has-warning">
+                                                           <label class="control-label" for="inputWarning">Input with warning</label>
+                                                           <input type="text" class="form-control" id="inputWarning">
+                                                       </div>
+                                                       <div class="form-group has-error">
+                                                           <label class="control-label" for="inputError">Input with error</label>
+                                                           <input type="text" class="form-control" id="inputError">
+                                                       </div>
+                                                   </form>
+                                                   <h4>Input Groups</h4>
+                                                   <form role="form">
+                                                       <div class="form-group input-group">
+                                                           <span class="input-group-addon">@</span>
+                                                           <input type="text" class="form-control" placeholder="Username">
+                                                       </div>
+                                                       <div class="form-group input-group">
+                                                           <input type="text" class="form-control">
+                                                           <span class="input-group-addon">.00</span>
+                                                       </div>
+                                                       <div class="form-group input-group">
+                                                           <span class="input-group-addon"><i class="fa fa-eur"></i>
+                                                           </span>
+                                                           <input type="text" class="form-control" placeholder="Font Awesome Icon">
+                                                       </div>
+                                                       <div class="form-group input-group">
+                                                           <span class="input-group-addon">$</span>
+                                                           <input type="text" class="form-control">
+                                                           <span class="input-group-addon">.00</span>
+                                                       </div>
+                                                       <div class="form-group input-group">
+                                                           <input type="text" class="form-control">
+                                                           <span class="input-group-btn">
+                                                               <button class="btn btn-default" type="button"><i class="fa fa-search"></i>
+                                                               </button>
+                                                           </span>
+                                                       </div>
+                                                   </form>
+                                               </div>
+                                               <!-- /.col-lg-6 (nested) -->
+                                           </div>
+                                           <!-- /.row (nested) -->
+                                       </div>
+                                       <!-- /.panel-body -->
+                                   </div>
+                                   <!-- /.panel -->
+                               </div>
+                               <!-- /.col-lg-12 -->
+                           </div>
+                           <!-- <footer><p>All right reserved. Template by: <a href="http://webthemez.com">WebThemez</a></p></footer> -->
+                           </div>
+            </div>
+        </div>
+    </div>
+
+
+
+
+</body>
+
+<script src="/js/jquery-1.10.2.js"></script>
+<!-- Bootstrap Js -->
+<script src="/js/bootstrap.min.js"></script>
+<!-- Custom Js -->
+<script src="/js/custom-scripts.js"></script>
+</html>

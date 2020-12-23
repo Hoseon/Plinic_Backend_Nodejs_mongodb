@@ -10,11 +10,15 @@ var userSchema = mongoose.Schema({
 userSchema.pre("save", hashPassword);
 userSchema.pre("findOneAndUpdate", function hashPassword(next){
   var user = this._update;
-  if(!user.newPassword){
+  console.log(user);
+  // if(!user.newPassword){ //2020-12-23 플리닉 관리자 비밀번호 변경시 단순 초기설정 비밀번호를 보내버린다.
+  if(!user.password){
     delete user.password;
     return next();
   } else {
-    user.password = bcrypt.hashSync(user.newPassword);
+    // user.password = bcrypt.hashSync(user.newPassword); //2020-12-23 플리닉 관리자 비밀번호 변경시 단순 초기설정 비밀번호를 보내버린다.
+    user.password = bcrypt.hashSync(user.password); 
+    console.log("222" + user.password);
     return next();
   }
 });

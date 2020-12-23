@@ -1,3 +1,68 @@
 <!-- views/partials/header.ejs -->
 
-<h1><a href="/menus">G1Partners Plinic</a></h1>
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark rounded-0" aria-label="Fifth navbar example">
+    <div class="container-fluid">
+      <a class="navbar-brand" href="#">플리닉 관리자</a>
+      <button
+        class="navbar-toggler"
+        type="button"
+        data-bs-toggle="collapse"
+        data-bs-target="#navbarsExample05"
+        aria-controls="navbarsExample05"
+        aria-expanded="false"
+        aria-label="Toggle navigation"
+      >
+        <span class="navbar-toggler-icon"></span>
+      </button>
+  
+      <div class="collapse navbar-collapse" id="navbarsExample05">
+        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+          <li class="nav-item">
+            <a class="nav-link disabled" aria-current="page" href="#"
+              >주문관리</a
+            >
+          </li>
+          <li  class="nav-item">
+            <a id="products" class="nav-link " href="/contents/Challenge"><span class="sr-only">(current)</span>상품관리</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link disabled" href="#">고객관리</a>
+          </li>
+          <li class="nav-item">
+            <a id="contents" class="nav-link " href="/contents/Main">콘텐츠관리<span class="sr-only">(current)</span></a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link disabled" href="#">매출관리</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link disabled" href="#">Link</a>
+          </li>
+          <li class="nav-item">
+            <a
+              class="nav-link disabled"
+              href="#"
+              tabindex="-1"
+              aria-disabled="true"
+              >Disabled</a
+            >
+          </li>
+          <!-- <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="dropdown05" data-bs-toggle="dropdown" aria-expanded="false">Dropdown</a>
+            <ul class="dropdown-menu" aria-labelledby="dropdown05">
+              <li><a class="dropdown-item" href="#">Action</a></li>
+              <li><a class="dropdown-item" href="#">Another action</a></li>
+              <li><a class="dropdown-item" href="#">Something else here</a></li>
+            </ul>
+          </li> -->
+        </ul>
+        <button onclick="location.href='/home/logout'">로그아웃</button>
+        <!-- <form>
+          <input class="form-control" type="text" placeholder="Search" aria-label="Search">
+        </form> -->
+      </div>
+    </div>
+  </nav>
+
+
+
+<!-- <h1><a href="/menus">G1Partners Plinic</a></h1> -->
