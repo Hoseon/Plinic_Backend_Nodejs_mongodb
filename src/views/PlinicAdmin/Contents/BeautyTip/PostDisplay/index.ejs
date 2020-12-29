@@ -2,7 +2,7 @@
 <html lang="en">
 
 <head>
-    <% include ../../../partials/head %>
+    <% include ../../../../partials/head %>
     <title></title>
     <link href='http://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css' />
 </head>
@@ -11,7 +11,7 @@
 <body>
     
     <header>
-        <% include ../../../partials/header %>
+        <% include ../../../../partials/header %>
     </header>
 
 
@@ -19,7 +19,7 @@
         <div class="row">
             <!-- 2단길이의 첫번째 열 -->
             <div class="col-md-2">
-                <% include ../../../partials/side %>
+                <% include ../../../../partials/side %>
             </div>
 
             <!-- 10단길이의 첫번째 열 -->
@@ -28,7 +28,7 @@
                     <div class="row">
                         <div class="col-md-12">
                             <h1 class="page-header">
-                                챌린지 관리
+                                포스트 진열관리
                                 <!-- <small> 챌린지 관리 Sub제목</small> -->
                             </h1>
                         </div>
@@ -222,6 +222,7 @@
         $(document).ready(function(){
             $(".active").removeClass("active");
             $("#contents").addClass("active");
+            $("#forms-collapse1").addClass('show');
 
             $('.btn-number').click(function(e){
                 e.preventDefault();

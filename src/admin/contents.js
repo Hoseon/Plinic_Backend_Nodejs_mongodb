@@ -70,6 +70,75 @@ router.get("/Challenge", function(req, res) {
 });
 //콘텐츠관리 챌린지 화면
 
+router.get("/Challenge/new", function(req, res) {
+  return res.render("PlinicAdmin/Contents/ChallengeMgt/new", {});
+});
+//콘텐츠관리 챌린지 신규 등록 화면
+
+router.get("/BeautyTip/PostMgt", function(req, res) {
+  return res.render("PlinicAdmin/Contents/BeautyTip/PostMgt/index", {});
+});
+//포스트 관리 리스트 화면
+
+router.get("/BeautyTip/PostDisplay", function(req, res) {
+  return res.render("PlinicAdmin/Contents/BeautyTip/PostDisplay/index", {});
+});
+//포스트 진열관리 리스트 화면
+
+router.get("/BeautyTip/MovieMgt", function(req, res) {
+  return res.render("PlinicAdmin/Contents/BeautyTip/MovieMgt/index", {});
+});
+//포스트 영상 관리 리스트 화면
+
+router.get("/BeautyTip/MovieDisplay", function(req, res) {
+  return res.render("PlinicAdmin/Contents/BeautyTip/MovieDisplay/index", {});
+});
+//포스트 영상 진열 관리 리스트 화면
+
+////////////////////////////////////// 게시판 댓글
+router.get("/Comments/ChallengeComment", function(req, res) {
+  return res.render("PlinicAdmin/Contents/Comments/ChallengeComment/index", {});
+});
+//챌린지 댓글 리스트 화면
+
+router.get("/Comments/MovieComment", function(req, res) {
+  return res.render("PlinicAdmin/Contents/Comments/MovieComment/index", {});
+});
+//영상 댓글 리스트 화면
+
+router.get("/Comments/SkinQna", function(req, res) {
+  return res.render("PlinicAdmin/Contents/Comments/SkinQna/index", {});
+});
+//피부고민 게시판 리스트 화면
+
+router.get("/Comments/Notice", function(req, res) {
+  return res.render("PlinicAdmin/Contents/Comments/Notice/index", {});
+});
+//공지사항 게시판 리스트 화면
+
+router.get("/Comments/Faq", function(req, res) {
+  return res.render("PlinicAdmin/Contents/Comments/Faq/index", {});
+});
+//FAQ 게시판 리스트 화면
+
+router.get("/Comments/Answer", function(req, res) {
+  return res.render("PlinicAdmin/Contents/Comments/Answer/index", {});
+});
+//문의하기 게시판 리스트 화면
+
+//////////////////////////////////// 게시판 댓글 종료
+
+router.get("/HomePopup", function(req, res) {
+  return res.render("PlinicAdmin/Contents/HomePopup/index", {});
+});
+//홈 팝업 리스트 화면
+
+router.get("/ADBanner", function(req, res) {
+  return res.render("PlinicAdmin/Contents/ADBanner/index", {});
+});
+//광고배너 리스트 화면
+
+
 router.get("/", function(req, res) {
   return res.render("PlinicAdmin/bootstraptest/index", {});
 });

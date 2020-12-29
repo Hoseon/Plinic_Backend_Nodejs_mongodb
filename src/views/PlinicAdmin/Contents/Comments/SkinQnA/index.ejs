@@ -2,16 +2,103 @@
 <html lang="en">
 
 <head>
-    <% include ../../../partials/head %>
+    <% include ../../../../partials/head %>
     <title></title>
     <link href='http://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css' />
 </head>
 <script type="text/javascript" src="/js/jquery-1.10.2.js"></script>
+<script>
+        $(document).ready(function(){
+            $(".active").removeClass("active");
+            $("#contents").addClass("active");
 
+            // $("#challBtn").bind("click");
+            // $("#challBtn").trigger("click");
+            // $("#challBtn").removeClass("collapsed");
+            // $("#challBtn").attr('aria-expanded', 'true');
+            $("#forms-collapse2").addClass('show');
+
+            
+
+
+            $('.btn-number').click(function(e){
+                e.preventDefault();
+                
+                fieldName = $(this).attr('data-field');
+                type      = $(this).attr('data-type');
+                var input = $("input[name='"+fieldName+"']");
+                var currentVal = parseInt(input.val());
+                if (!isNaN(currentVal)) {
+                    if(type == 'minus') {
+                        
+                        if(currentVal > input.attr('min')) {
+                            input.val(currentVal - 1).change();
+                        } 
+                        if(parseInt(input.val()) == input.attr('min')) {
+                            $(this).attr('disabled', true);
+                        }
+
+                    } else if(type == 'plus') {
+
+                        if(currentVal < input.attr('max')) {
+                            input.val(currentVal + 1).change();
+                        }
+                        if(parseInt(input.val()) == input.attr('max')) {
+                            $(this).attr('disabled', true);
+                        }
+
+                    }
+                } else {
+                    input.val(0);
+                }
+            });
+            $('.input-number').focusin(function(){
+            $(this).data('oldValue', $(this).val());
+            });
+            $('.input-number').change(function() {
+            
+                minValue =  parseInt($(this).attr('min'));
+                maxValue =  parseInt($(this).attr('max'));
+                valueCurrent = parseInt($(this).val());
+                
+                name = $(this).attr('name');
+                if(valueCurrent >= minValue) {
+                    $(".btn-number[data-type='minus'][data-field='"+name+"']").removeAttr('disabled')
+                } else {
+                    alert('Sorry, the minimum value was reached');
+                    $(this).val($(this).data('oldValue'));
+                }
+                if(valueCurrent <= maxValue) {
+                    $(".btn-number[data-type='plus'][data-field='"+name+"']").removeAttr('disabled')
+                } else {
+                    alert('Sorry, the maximum value was reached');
+                    $(this).val($(this).data('oldValue'));
+                }
+                
+                
+            });
+            $(".input-number").keydown(function (e) {
+                // Allow: backspace, delete, tab, escape, enter and .
+                if ($.inArray(e.keyCode, [46, 8, 9, 27, 13, 190]) !== -1 ||
+                    // Allow: Ctrl+A
+                    (e.keyCode == 65 && e.ctrlKey === true) || 
+                    // Allow: home, end, left, right
+                    (e.keyCode >= 35 && e.keyCode <= 39)) {
+                        // let it happen, don't do anything
+                        return;
+                }
+                // Ensure that it is a number and stop the keypress
+                if ((e.shiftKey || (e.keyCode < 48 || e.keyCode > 57)) && (e.keyCode < 96 || e.keyCode > 105)) {
+                    e.preventDefault();
+                }
+            });
+            
+        });
+</script>
 <body>
     
     <header>
-        <% include ../../../partials/header %>
+        <% include ../../../../partials/header %>
     </header>
 
 
@@ -19,7 +106,7 @@
         <div class="row">
             <!-- 2단길이의 첫번째 열 -->
             <div class="col-md-2">
-                <% include ../../../partials/side %>
+                <% include ../../../../partials/side %>
             </div>
 
             <!-- 10단길이의 첫번째 열 -->
@@ -28,7 +115,7 @@
                     <div class="row">
                         <div class="col-md-12">
                             <h1 class="page-header">
-                                챌린지 관리
+                                피부고민 게시판
                                 <!-- <small> 챌린지 관리 Sub제목</small> -->
                             </h1>
                         </div>
@@ -218,83 +305,5 @@
 <script src="/js/custom-scripts.js"></script>
 <script src="/js/jquery-1.10.2.js"></script>
 <script src="/js/bootstrap.min.js"></script>
-<script>
-        $(document).ready(function(){
-            $(".active").removeClass("active");
-            $("#contents").addClass("active");
 
-            $('.btn-number').click(function(e){
-                e.preventDefault();
-                
-                fieldName = $(this).attr('data-field');
-                type      = $(this).attr('data-type');
-                var input = $("input[name='"+fieldName+"']");
-                var currentVal = parseInt(input.val());
-                if (!isNaN(currentVal)) {
-                    if(type == 'minus') {
-                        
-                        if(currentVal > input.attr('min')) {
-                            input.val(currentVal - 1).change();
-                        } 
-                        if(parseInt(input.val()) == input.attr('min')) {
-                            $(this).attr('disabled', true);
-                        }
-
-                    } else if(type == 'plus') {
-
-                        if(currentVal < input.attr('max')) {
-                            input.val(currentVal + 1).change();
-                        }
-                        if(parseInt(input.val()) == input.attr('max')) {
-                            $(this).attr('disabled', true);
-                        }
-
-                    }
-                } else {
-                    input.val(0);
-                }
-            });
-            $('.input-number').focusin(function(){
-            $(this).data('oldValue', $(this).val());
-            });
-            $('.input-number').change(function() {
-            
-                minValue =  parseInt($(this).attr('min'));
-                maxValue =  parseInt($(this).attr('max'));
-                valueCurrent = parseInt($(this).val());
-                
-                name = $(this).attr('name');
-                if(valueCurrent >= minValue) {
-                    $(".btn-number[data-type='minus'][data-field='"+name+"']").removeAttr('disabled')
-                } else {
-                    alert('Sorry, the minimum value was reached');
-                    $(this).val($(this).data('oldValue'));
-                }
-                if(valueCurrent <= maxValue) {
-                    $(".btn-number[data-type='plus'][data-field='"+name+"']").removeAttr('disabled')
-                } else {
-                    alert('Sorry, the maximum value was reached');
-                    $(this).val($(this).data('oldValue'));
-                }
-                
-                
-            });
-            $(".input-number").keydown(function (e) {
-                // Allow: backspace, delete, tab, escape, enter and .
-                if ($.inArray(e.keyCode, [46, 8, 9, 27, 13, 190]) !== -1 ||
-                    // Allow: Ctrl+A
-                    (e.keyCode == 65 && e.ctrlKey === true) || 
-                    // Allow: home, end, left, right
-                    (e.keyCode >= 35 && e.keyCode <= 39)) {
-                        // let it happen, don't do anything
-                        return;
-                }
-                // Ensure that it is a number and stop the keypress
-                if ((e.shiftKey || (e.keyCode < 48 || e.keyCode > 57)) && (e.keyCode < 96 || e.keyCode > 105)) {
-                    e.preventDefault();
-                }
-            });
-            
-        });
-</script>
 </html>
