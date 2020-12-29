@@ -874,6 +874,10 @@ module.exports = function (app) {
   app.use('/reward', require('./reward'));
   app.use('/product', require('./product'));
   app.use('/test', require('./test'));
+  app.use('/bootstraptest', require('./bootstraptest'));
+
+  //플리닉 뉴 관리자 2020-12-23
+  app.use('/contents', require('./admin/contents'));
 
   app.get('/ejs', (req, res) => {
     res.render('home');
@@ -1784,6 +1788,82 @@ module.exports = function (app) {
     })
   })
 
+  //2020-12-15 오픈웨더 현재날씨, 미세먼지, 자외선 가져 오기
+  app.get('/getOpenCurrentWeather/:lat/:lon', async function(req, res, next) {
+    var resultData = {
+      current : '',
+      air : '',
+      uv : '',
+    }
+    var lat = req.params.lat;
+    var lon = req.params.lon;
+    
+    var request1 = require('request');
+    var url1 = 'http://api.openweathermap.org/data/2.5/weather'; /*URL*/
+    var queryParams1 = '?' + encodeURIComponent('appid') + '='+'5106b1b8096baed4eb5395318240e46d'; /*API Key*/
+    queryParams1 += '&' + encodeURIComponent('lat') + '=' + encodeURIComponent(lat); /**/
+    queryParams1 += '&' + encodeURIComponent('lon') + '=' + encodeURIComponent(lon); /**/
+    queryParams1 += '&' + encodeURIComponent('units') + '=' + encodeURIComponent('metric'); /**/
+    queryParams1 += '&' + encodeURIComponent('lang') + '=' + encodeURIComponent('kr'); /**/
+
+    var request2 = require('request');
+    var url2 = 'http://api.openweathermap.org/data/2.5/air_pollution'; /*URL*/
+    var queryParams2 = '?' + encodeURIComponent('appid') + '='+'5106b1b8096baed4eb5395318240e46d'; /*API Key*/
+    queryParams2 += '&' + encodeURIComponent('lat') + '=' + encodeURIComponent(lat); /**/
+    queryParams2 += '&' + encodeURIComponent('lon') + '=' + encodeURIComponent(lon); /**/
+
+    var request3 = require('request');
+    var url3 = 'http://api.openweathermap.org/data/2.5/uvi'; /*URL*/
+    var queryParams3 = '?' + encodeURIComponent('appid') + '='+'5106b1b8096baed4eb5395318240e46d'; /*API Key*/
+    queryParams3 += '&' + encodeURIComponent('lat') + '=' + encodeURIComponent(lat); /**/
+    queryParams3 += '&' + encodeURIComponent('lon') + '=' + encodeURIComponent(lon); /**/
+
+    await request1({
+      url: url1 + queryParams1,
+      method: 'GET'
+    }, function (error, response, body1) {
+
+      if(!body1) {
+        return res.status(400).send({
+          'msg': 'OpenWeather 현재 날씨 조회'
+        });
+      } else{
+        resultData.current = JSON.parse(body1);
+      }
+    })
+
+    await request2({
+      url: url2 + queryParams2,
+      method: 'GET'
+    }, function (error, response, body2) {
+
+      if(!body2) {
+        return res.status(400).send({
+          'msg': 'OpenWeather 현재 날씨 조회'
+        });
+      } else{
+        resultData.air = JSON.parse(body2);
+      }
+    })
+
+    await request3({
+      url: url3 + queryParams3,
+      method: 'GET'
+    }, function (error, response, body3) {
+
+      if(!body3) {
+        return res.status(400).send({
+          'msg': 'OpenWeather 현재 날씨 조회'
+        });
+      } else{
+        resultData.uv = JSON.parse(body3);
+        setTimeout(() => {
+          return res.status(201).json(resultData);  
+        }, 500);
+      }
+    })
+  })
+
   //사용자 포인트 다시 가져 오기 2020-02-18
   app.get('/testskinqna/:email', function (req, res, next) {
     User.findOne({
@@ -2022,7 +2102,7 @@ module.exports = function (app) {
         const https = require("https");
         const file = fs2.createWriteStream(__dirname + '/../' + req.file.key);
         // const featApiUrl = 'http://ec2-3-34-189-215.ap-northeast-2.compute.amazonaws.com/api/'; // 피쳐링 피부분석 API 
-        const featApiUrl = 'http://ec2-15-164-210-238.ap-northeast-2.compute.amazonaws.com/api/'; // 지원파트너스 피부분석 API 2020-12-07
+        const featApiUrl = 'http://ec2-52-79-142-125.ap-northeast-2.compute.amazonaws.com/api/'; // 지원파트너스 피부분석 API 2020-12-07
         const awsS3Url = 'https://plinic.s3.ap-northeast-2.amazonaws.com/';
         var request22 = require('request');
         https.get(awsS3Url + req.file.key , response => {
@@ -2030,44 +2110,50 @@ module.exports = function (app) {
           stream.on("finish",  function() {
             var req22 = request22.post(featApiUrl, function (err, response, body) {
               if (err) {
-                console.log('Error!');
+                console.log('skinAnalySecondCheekSave Error! : ' + err);
               } else {
                 // console.log("1st : " + body);
                 // console.log("2nd :" + JSON.stringify(body));
-                body = JSON.parse(body);
-                body.output.skin_analy.pore = JSON.parse(JSON.stringify(body.output.skin_analy.pore).replace(/um/g, ""));
-                  SkinAnaly.findOneAndUpdate({
-                    email: req.body.email
-                  }, {
-                    updated_at: new Date(),
-                    $push: {
-                      cheek: {
-                        input: body.input,
-                        diff: body.output.skin_analy.diff,
-                        tone: body.output.skin_analy.tone,
-                        pore: body.output.skin_analy.pore,
-                        wrinkles: body.output.skin_analy.wrinkles,
-                        email: req.body.email
-                      },
-                      munjin: {
-                        sleep : req.body.sleep,
-                        alcohol : req.body.alcohol,
-                        fitness : req.body.fitness,
+                if(IsJsonString(body)) {
+                  body = JSON.parse(body);
+                  body.output.skin_analy.pore = JSON.parse(JSON.stringify(body.output.skin_analy.pore).replace(/um/g, ""));
+                    SkinAnaly.findOneAndUpdate({
+                      email: req.body.email
+                    }, {
+                      updated_at: new Date(),
+                      $push: {
+                        cheek: {
+                          input: body.input,
+                          diff: body.output.skin_analy.diff,
+                          tone: body.output.skin_analy.tone,
+                          pore: body.output.skin_analy.pore,
+                          wrinkles: body.output.skin_analy.wrinkles,
+                          email: req.body.email
+                        },
+                        munjin: {
+                          sleep : req.body.sleep,
+                          alcohol : req.body.alcohol,
+                          fitness : req.body.fitness,
+                        }
                       }
-                    }
-                  }, (err, post) => {
-                    if (err) {
-                      console.log(err);
-                      return res.status(400).json({
-                        'msg': '에러발생'
-                      })
-                    }
-                    if(post) {
-                      return res.status(200).json({
-                        'msg' : '데이터 처리 완료'
-                      })
-                    }
+                    }, (err, post) => {
+                      if (err) {
+                        console.log(err);
+                        return res.status(400).json({
+                          'msg': '에러발생'
+                        })
+                      }
+                      if(post) {
+                        return res.status(200).json({
+                          'msg' : '데이터 처리 완료'
+                        })
+                      }
+                    })  
+                } else {
+                  return res.status(400).json({
+                    "msg" : "피부 분석 에러 (볼 부위 실패)"
                   })
+                }
               }
             });
             
@@ -2080,6 +2166,7 @@ module.exports = function (app) {
               filename: data.firstcheek,
               contentType: 'image/jpg'
             });
+
           });  
         });
       }
@@ -2107,7 +2194,7 @@ module.exports = function (app) {
         const https = require("https");
         const file = fs2.createWriteStream(__dirname + '/../' + req.file.key);
         // const featApiUrl = 'http://ec2-3-34-189-215.ap-northeast-2.compute.amazonaws.com/api/'; //피쳐링 피부분석 API
-        const featApiUrl = 'http://ec2-15-164-210-238.ap-northeast-2.compute.amazonaws.com/api/'; // 지원파트너스 피부분석 API 2020-12-07
+        const featApiUrl = 'http://ec2-52-79-142-125.ap-northeast-2.compute.amazonaws.com/api/'; // 지원파트너스 피부분석 API 2020-12-07
         const awsS3Url = 'https://plinic.s3.ap-northeast-2.amazonaws.com/';
         var request22 = require('request');
 
@@ -2116,38 +2203,44 @@ module.exports = function (app) {
           stream.on("finish",  function() {
             var req22 = request22.post(featApiUrl, function (err, response, body) {
               if (err) {
-                console.log('Error!');
+                console.log('skinAnalySecondForeheadSave Error! : ' + err);
               } else {
                 // console.log("2st : " + body);
-                body = JSON.parse(body);
-                body.output.skin_analy.pore = JSON.parse(JSON.stringify(body.output.skin_analy.pore).replace(/um/g, ""));
-                SkinAnaly.findOneAndUpdate({
-                  email: req.body.email
-                }, {
-                  updated_at: new Date(),
-                  $push: {
-                    forehead: {
-                      input: body.input,
-                      diff: body.output.skin_analy.diff,
-                      tone: body.output.skin_analy.tone,
-                      pore: body.output.skin_analy.pore,
-                      wrinkles: body.output.skin_analy.wrinkles,
-                      email: req.body.email
+                if(IsJsonString(body)) {
+                  body = JSON.parse(body);
+                  body.output.skin_analy.pore = JSON.parse(JSON.stringify(body.output.skin_analy.pore).replace(/um/g, ""));
+                  SkinAnaly.findOneAndUpdate({
+                    email: req.body.email
+                  }, {
+                    updated_at: new Date(),
+                    $push: {
+                      forehead: {
+                        input: body.input,
+                        diff: body.output.skin_analy.diff,
+                        tone: body.output.skin_analy.tone,
+                        pore: body.output.skin_analy.pore,
+                        wrinkles: body.output.skin_analy.wrinkles,
+                        email: req.body.email
+                      }
                     }
-                  }
-                }, (err, post) => {
-                  if (err) {
-                    console.log(err);
-                    return res.status(400).json({
-                      'msg': '에러발생'
-                    })
-                  }
-                  if(post) {
-                    return res.status(200).json({
-                      'msg' : '데이터 처리 완료'
-                    })
-                  }
-                })
+                  }, (err, post) => {
+                    if (err) {
+                      console.log(err);
+                      return res.status(400).json({
+                        'msg': '에러발생'
+                      })
+                    }
+                    if(post) {
+                      return res.status(200).json({
+                        'msg' : '데이터 처리 완료'
+                      })
+                    }
+                  })  
+                } else {
+                  return res.status(400).json({
+                    "msg" : "피부 분석 에러 발생 (이마 부위 분석 실패)"
+                  })  
+                }
               }
             });
             var form = req22.form();
@@ -2159,6 +2252,7 @@ module.exports = function (app) {
               filename: data.firstforhead,
               contentType: 'image/png'
             });
+
           });  
         });
       }
@@ -2171,7 +2265,7 @@ module.exports = function (app) {
 
   app.get('/postTest2', async function(req, res, next) {
     // const url = 'http://ec2-3-34-189-215.ap-northeast-2.compute.amazonaws.com/api/'  //피처링 기존 API 주소 2020-12-07
-    const url = 'http://ec2-15-164-210-238.ap-northeast-2.compute.amazonaws.com/api/' //지원파트너스 신규 API 주소 2020-12-07
+    const url = 'http://ec2-52-79-142-125.ap-northeast-2.compute.amazonaws.com/api/' //지원파트너스 신규 API 주소 2020-12-07
     var request22 = require('request');
     var req = await request22.post(url, function (err, response, body) {
       if (err) {
@@ -2336,6 +2430,16 @@ module.exports = function (app) {
     }
     return randomStr;
   }
+
+  function IsJsonString(str) {
+    try {
+      var json = JSON.parse(str);
+      return (typeof json === 'object');
+    } catch (e) {
+      return false;
+    }
+  }
+
 
 
 

@@ -112,6 +112,7 @@ routes.post('/loaduser', userController.loadUser);
 //사용자 ID찾기,패스워드 리셋 2020-06-04
 routes.post('/findId', userController.findId);
 routes.post('/validIdandSendemail', userController.validSendEmail);
+routes.post('/validSendPassEmail', userController.validSendPassEmail); //20202-12-23 플리닉 관리자 비밀번호 리셋
 routes.post('/changePassword', userController.changePassword);
 
 //화장품리뷰등록 2020-11-11

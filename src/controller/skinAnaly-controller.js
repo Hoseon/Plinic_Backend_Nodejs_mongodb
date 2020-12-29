@@ -124,8 +124,8 @@ exports.skinAnalySave = (req, res) => { //피부분석 데이터가 저장되면
           // var originalCheekImageUrl = "http://ec2-3-34-189-215.ap-northeast-2.compute.amazonaws.com/media/images/" + req.body.cheek.input.filename;
           // var originalForeheadImageUrl = "http://ec2-3-34-189-215.ap-northeast-2.compute.amazonaws.com/media/images/" + req.body.forehead.input.filename;
 
-          var originalCheekImageUrl = "http://ec2-15-164-210-238.ap-northeast-2.compute.amazonaws.com/media/images/" + req.body.cheek.input.filename;
-          var originalForeheadImageUrl = "http://ec2-15-164-210-238.ap-northeast-2.compute.amazonaws.com/media/images/" + req.body.forehead.input.filename;
+          var originalCheekImageUrl = "http://ec2-52-79-142-125.ap-northeast-2.compute.amazonaws.com/media/images/" + req.body.cheek.input.filename;
+          var originalForeheadImageUrl = "http://ec2-52-79-142-125.ap-northeast-2.compute.amazonaws.com/media/images/" + req.body.forehead.input.filename;
           http.get(originalCheekImageUrl, response => {
             var stream = response.pipe(file);
             stream.on("finish",  function() {
@@ -187,7 +187,7 @@ exports.skinAnalyUpdate = (req, res) => { //피부분석 데이터가 저장되�
 
           //http://ec2-3-34-189-215.ap-northeast-2.compute.amazonaws.com/media/images/18ee9911-2a0c-4cbd-b0cf-cfdc81683cec.jpg
 
-          //http://ec2-15-164-210-238.ap-northeast-2.compute.amazonaws.com
+          //http://ec2-3-35-11-19.ap-northeast-2.compute.amazonaws.com
 
 
           //2020-12-07 피처링 기존 API 주소
@@ -195,8 +195,8 @@ exports.skinAnalyUpdate = (req, res) => { //피부분석 데이터가 저장되�
           // var originalForeheadImageUrl = "http://ec2-3-34-189-215.ap-northeast-2.compute.amazonaws.com/media/images/" + req.body.forehead.input.filename;
 
           //2020-12-07 지원파트너스 신규 API 주소
-          var originalCheekImageUrl = "http://ec2-15-164-210-238.ap-northeast-2.compute.amazonaws.com/media/images/" + req.body.cheek.input.filename;
-          var originalForeheadImageUrl = "http://ec2-15-164-210-238.ap-northeast-2.compute.amazonaws.com/media/images/" + req.body.forehead.input.filename;
+          var originalCheekImageUrl = "http://ec2-52-79-142-125.ap-northeast-2.compute.amazonaws.com/media/images/" + req.body.cheek.input.filename;
+          var originalForeheadImageUrl = "http://ec2-52-79-142-125.ap-northeast-2.compute.amazonaws.com/media/images/" + req.body.forehead.input.filename;
           http.get(originalCheekImageUrl, response => {
             var stream = response.pipe(file);
             stream.on("finish",  function() {

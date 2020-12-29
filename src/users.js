@@ -15,6 +15,10 @@ router.get('/new', function(req,res){
   );
 }); // new
 
+router.get('/findpassword', function(req,res){
+  res.render('users/findPassword');
+}); // findPassword
+
 
 router.get('/snsexists/:email', function(req,res){
   User2.findOne({email : req.params.email}, function (err,user) {
