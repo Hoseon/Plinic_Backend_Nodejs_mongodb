@@ -46,6 +46,7 @@
     "path": "^0.12.7",
     "percentile-rank": "1.0.4",
     "request": "2.88.2",
+    "request-promise-native": "1.0.9",
     "ssh2-sftp-client": "^4.2.0",
     "xml-js": "1.6.11"
   },

@@ -22,11 +22,11 @@ passport.use('local-login',
         if (err) return done(err);
         if (!user){
             req.flash("email", req.body.email);
-            return done(null, false, req.flash('loginError', 'No user found.'));
+            return done(null, false, req.flash('loginError', '사용자를 찾을 수 없습니다.'));
         }
         if (!user.authenticate(password)){
             req.flash("email", req.body.email);
-            return done(null, false, req.flash('loginError', 'Password does not Match.'));
+            return done(null, false, req.flash('loginError', '패스워드가 일치하지 않습니다.'));
         }
         req.flash('postsMessage', 'Welcome '+user.nickname+'!');
         return done(null, user);

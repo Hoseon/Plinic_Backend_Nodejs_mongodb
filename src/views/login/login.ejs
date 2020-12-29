@@ -5,19 +5,19 @@
   </head>
   <body>
     <header>
-      <% include ../partials/header %>
+      <% include ../partials/loginHeader %>
     </header>
     <div class="login">
 <!-- main start-->
 
 <!-- views/login/login.ejs -->
 <div class="message"><%= loginMessage %></div>
-<div class="buttons">
+<!-- <div class="buttons">
   <button onclick="location.href='/home/login'" class="float_left">Home</button>
   <button onclick="location.href='/users/new'" class="float_right">Sign Up</button>
 </div>
-<h3>Login</h3>
-<form class="checkValidation" action="/home/login" method="post">
+<h3>Login</h3> -->
+<!-- <form class="checkValidation" action="/home/login" method="post">
   <div class="inputs">
     <div class="floats">
       <label>Email</label>
@@ -36,12 +36,43 @@
   <div class="buttons">
     <button type="submit">Submit</button>
   </div>
-</form>
+</form> -->
+
+<form class="checkValidation" action="/home/login" method="post">
+    <!-- <img class="mb-4" src="/docs/5.0/assets/brand/bootstrap-logo.svg" alt="" width="72" height="57"> -->
+    <h1 class="h3 mb-3 fw-normal">LOGIN ID/PW</h1>
+
+    <div class="row mb-3">
+        <div class="col-8 p-0"><label for="inputEmail" class="visually-hidden">Email address</label>
+        <input type="email" name="email" id="inputEmail" class="rounded-0 form-control" placeholder="이메일" required="" autofocus="">
+        <label for="inputPassword" class="visually-hidden">Password</label>
+        <input type="password" name="password" id="inputPassword" class="rounded-0 form-control" placeholder="비밀번호" required="">
+      </div>
+      <div class="col-4 p-0"><button class="w-100 h-100 btn btn-lg btn-primary rounded-0" type="submit">로그인</button></div>
+    </div>
+    <div class="row align-items-center">
+      <div class="col-4 p-0">
+        <input type="checkbox" value="remember-me"><span> 아이디 저장</span> 
+      </div>
+      <div class="col-4 p-0 d-flex flex-row-reverse">
+          <button  onclick="location.href='/users/new'" 
+                   class="w-100 h-100 btn btn-sm rounded-0 border border-secondary" >
+                   회원가입
+          </button>
+      </div>
+      <div class="col-4 p-0 d-flex flex-row-reverse">
+          <button onclick="location.href='/users/findpassword'"  class="w-100 h-100 btn btn-sm rounded-0 border border-secondary">비밀번호 찾기</button>
+      </div>
+    </div>
+    <% loginError.forEach(function(e){ %>
+      <div class="message"><%= e %><div>
+    <% }) %>
+  </form>
 
 <!-- main end -->
     </div><!--login end -->
     <footer>
-      <% include ../partials/footer %>
+      <% //include ../partials/footer %>
     </footer>
   </body>
 </html>

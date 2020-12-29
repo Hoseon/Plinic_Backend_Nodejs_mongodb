@@ -1,4 +1,5 @@
 var User = require('../models/user');
+var User_Admin = require('../models/User_admin');
 var Mission = require('../models/Mission');
 var Challenge = require('../models/Challenge');
 var jwt = require('jsonwebtoken');
@@ -11,6 +12,7 @@ var request = require('request');
 var axios = require('axios');
 const AWS = require("aws-sdk");
 AWS.config.loadFromPath(__dirname + "/config/awsconfig.json");
+
 
 function createToken(user) {
   return jwt.sign({
@@ -1975,6 +1977,94 @@ exports.validSendEmail = (req, res) => {
             email: req.body.email,
             name: req.body.name,
             birthday: req.body.birthday
+          }, req.body, (err, result) => {
+            if (err) {
+              return res.status(400).json({
+                'msg': "비밀번호를 초기화 할 수 없습니다."
+              });
+            }
+            if (result) {
+              return res.status(201).json({
+                'msg': "회원님의 Email로<br>임시 비밀번호를 발송했습니다<br>임시 비밀번호로 패스워드 변경해주세요"
+              });
+            }
+          });
+        }
+      })
+      AWS.config.update({
+        region: "ap-northeast-2"
+      });
+
+      // return res.status(400).json({ 'msg': 'The user already exists' });
+      // return res.status(201).json({
+      //   'id': user.email
+      // });
+    }
+    if (!user) {
+      return res.status(400).json({
+        'msg': "사용자 정보를 찾을 수 없습니다."
+      })
+    }
+  });
+};
+
+exports.validSendPassEmail = (req, res) => { //2020-12-23 관리자 페이지 비밀번호 찾기
+  if (!req.body.email && !req.body.name && !req.body.birthday) {
+    return res.status(400).json({
+      'msg': "이메일, 이름, 생년월을를 입력해 주세요."
+    });
+  }
+
+  User_Admin.findOne({
+    email: req.body.email,
+  }, (err, user) => {
+    if (err) {
+      return res.status(400).json({
+        'msg': "사용자 정보를 찾을 수 없습니다."
+      });
+    }
+    if (user) {
+      AWS.config.update({
+        region: "us-west-2"
+      });
+      var ses = new AWS.SES();
+      var temp_pw = makeRandomStr();
+      var nickname = user.nickname;
+      let params = {
+        Destination: {
+          ToAddresses: [user.email], // 받는 사람 이메일 주소
+          CcAddresses: [], // 참조
+          BccAddresses: [] // 숨은 참조
+        },
+        Message: {
+          Body: {
+            Text: {
+              Data: "안녕하세요 플리닉관리자 입니다. \n" + nickname + "회원님의 비밀번호는 " + temp_pw + " 입니다. \n 암호는 바꿀수 없습니다 그냥 쓰세요.\n감사합니다.", // 본문 내용
+              Charset: "utf-8" // 인코딩 타입
+            }
+          },
+          Subject: {
+            Data: "플리닉 임시 비밀번호 발송", // 제목 내용
+            Charset: "utf-8" // 인코딩 타입
+          }
+        },
+        Source: "no-reply@g1p.co.kr", // 보낸 사람 주소
+        ReplyToAddresses: ["no-reply@g1p.co.kr"] // 답장 받을 이메일 주소
+      }
+      ses.sendEmail(params, function (err, data) {
+        if (err) {
+          console.log(err);
+        }
+
+        if (data) { //임시비밀번호 전송이 성공되면 USER에 패스워드 상태가 리셋상태, 그리고 임시 비밀번호를 db에 저장한다.
+          // req.body.pwreset = true;
+          req.body.password = temp_pw;
+          console.log(req.body.password);
+          // console.log(req.body.email);
+          User_Admin.findOneAndUpdate({
+            email: req.body.email,
+            // name: req.body.name,
+            // birthday: req.body.birthday
           }, req.body, (err, result) => {
             if (err) {
               return res.status(400).json({
