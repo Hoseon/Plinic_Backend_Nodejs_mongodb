@@ -18,7 +18,7 @@ var multerS3 = require('multer-s3');
 const AWS = require("aws-sdk");
 AWS.config.loadFromPath(__dirname + "/config/awsconfig.json");
 // var request = require('request');
-const request = require('request-promise-native')
+// const request = require('request-promise-native')
 const YOUTUBE_API_KEY = 'AIzaSyCQ7I3wA7JDk9QFWMA7VaSMCCakpTN5K_U';
 
 
