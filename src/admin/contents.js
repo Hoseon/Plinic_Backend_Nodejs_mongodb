@@ -80,6 +80,11 @@ router.get("/BeautyTip/PostMgt", function(req, res) {
 });
 //포스트 관리 리스트 화면
 
+router.get("/BeautyTip/PostMgt/new", function(req, res) {
+  return res.render("PlinicAdmin/Contents/BeautyTip/PostMgt/new", {});
+});
+//포스트 관리 리스트 화면
+
 router.get("/BeautyTip/PostDisplay", function(req, res) {
   return res.render("PlinicAdmin/Contents/BeautyTip/PostDisplay/index", {});
 });

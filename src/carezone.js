@@ -595,6 +595,70 @@ router.get('/', function(req, res) {
   });
 }); // index
 
+router.get('/newIndex', function(req, res) {
+  var vistorCounter = null;
+  var page = Math.max(1, req.query.page) > 1 ? parseInt(req.query.page) : 1;
+  var limit = Math.max(1, req.query.limit) > 1 ? parseInt(req.query.limit) : 10;
+  var search = createSearch(req.query);
+  async.waterfall([function(callback) {
+    CarezoneCounter.findOne({
+      name: "carezone"
+    }, function(err, counter) {
+      if (err) callback(err);
+      vistorCounter = counter;
+      callback(null);
+    });
+  }, function(callback) {
+    if (!search.findUser) return callback(null);
+    User_admin.find(search.findUser, function(err, users) {
+      if (err) callback(err);
+      var or = [];
+      users.forEach(function(user) {
+        or.push({
+          author: mongoose.Types.ObjectId(user._id)
+        });
+      });
+      if (search.findPost.$or) {
+        search.findPost.$or = search.findPost.$or.concat(or);
+      } else if (or.length > 0) {
+        search.findPost = {
+          $or: or
+        };
+      }
+      callback(null);
+    });
+  }, function(callback) {
+    if (search.findUser && !search.findPost.$or) return callback(null, null, 0);
+    Carezone.count(search.findPost, function(err, count) {
+      if (err) callback(err);
+      skip = (page - 1) * limit;
+      maxPage = Math.ceil(count / limit);
+      callback(null, skip, maxPage);
+    });
+  }, function(skip, maxPage, callback) {
+    if (search.findUser && !search.findPost.$or) return callback(null, [], 0);
+    Carezone.find(search.findPost).populate("author").sort('-createdAt').skip(skip).limit(limit).exec(function(err, carezone) {
+      if (err) callback(err);
+      callback(null, carezone, maxPage);
+    });
+  }], function(err, carezone, maxPage) {
+    if (err) return res.json({
+      success: false,
+      message: err
+    });
+    return res.render("PlinicAdmin/Contents/ChallengeMgt/index", {
+      carezone: carezone,
+      user: req.user,
+      page: page,
+      maxPage: maxPage,
+      urlQuery: req._parsedUrl.query,
+      search: search,
+      counter: vistorCounter,
+      postsMessage: req.flash("postsMessage")[0]
+    });
+  });
+}); // new index
+
 
 
 
@@ -610,7 +674,7 @@ router.get('/new', isLoggedIn, function(req, res) {
 router.post('/', s3upload.fields([{
   name: 'image'
 }, {
-  name: 'prodimage'
+  name: 'homeimage'
 }, {
   name: 'challenge_image1'
 }, {
@@ -648,8 +712,10 @@ router.post('/', s3upload.fields([{
     newPost.numId = counter.totalCount + 1;
     req.body.post.filename = req.files['image'][0].key;
     req.body.post.originalName = req.files['image'][0].originalname;
-    req.body.post.prodfilename = req.files['prodimage'][0].key;
-    req.body.post.prodoriginalname = req.files['prodimage'][0].originalname;
+    req.body.post.homeimage_filename = req.files['homeimage'][0].key;
+    req.body.post.homeimage_originalname = req.files['homeimage'][0].originalname;
+    // req.body.post.prodfilename = req.files['prodimage'][0].key;
+    // req.body.post.prodoriginalname = req.files['prodimage'][0].originalname;
     req.body.post.challenge_image1_filename = req.files['challenge_image1'][0].key;
     req.body.post.challenge_image1_originalname = req.files['challenge_image1'][0].originalname;
 
