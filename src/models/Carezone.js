@@ -56,6 +56,8 @@ var carezoneSchema = mongoose.Schema({
   challenge_image4_originalname: String,
   challenge_image5_filename: String,
   challenge_image5_originalname: String,
+  homeimage_filename: String,
+  homeimage_originalname: String,
   productcount: {type:Number},
   howtojoin: String,
   condition: String,
