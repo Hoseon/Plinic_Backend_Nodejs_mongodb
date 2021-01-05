@@ -48,129 +48,54 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr>
-                                    <th scope="row" class="align-middle">
-                                        <div class="form-check">
-                                            <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
-                                            <label class="form-check-label" for="flexCheckDefault">1</label>
-                                        </div>
-                                    </th>
-                                <td class="w-25 align-middle"><img src="https://plinic.s3.ap-northeast-2.amazonaws.com/image-1593492322970" class="img-thumbnail" alt="..."></td>
-                                <td class="align-middle"><u>요일 챌린지 HA 앰플 보상</u></td>
-                                <td class="align-middle">212</td>
-                                <td class="align-middle">플리닉담당</td>
-                                <td class="align-middle">2021-01-12</td>
-                                <td class="align-middle">활성화</td>
-                                <td class="align-middle">
-                                    <div class="row mb-3 align-middle">
-                                            <div class="row align-middle">
-                                                <div class="col align-middle p-0"> <span class="input-group-btn">
-                                                        <button type="button" class="btn btn-danger btn-number"  data-type="minus" data-field="quant[2]">
-                                                          <span class="glyphicon glyphicon-minus"></span>
-                                                        </button>
-                                                    </span></div>        
-                                                <div class="col align-middle p-0"><input type="text" name="quant[2]" class=" form-control input-number text-center w-100 align-middle" value="10" min="1" max="100"></div>        
-                                                <div class="col p-0"><span class="input-group-btn">
-                                                        <button type="button" class="btn btn-success btn-number" data-type="plus" data-field="quant[2]">
-                                                            <span class="glyphicon glyphicon-plus"></span>
-                                                        </button>
-                                                    </span></div>        
+                                <% if(carezone == null || carezone.length == 0){ %>
+                                    <tr class="noData">
+                                        <td colspan="5">There is no data to show :(</td>
+                                    </tr>
+                                <% } %>
+                                <% carezone.forEach(function(post){ %>
+                                    <tr>
+                                        <th scope="row" class="align-middle">
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
+                                                <label class="form-check-label" for="flexCheckDefault"><%= post.numId %></label>
                                             </div>
-                                        <!-- <div class="d-grid gap-2 d-md-block">
-                                            <button type="button" class="btn btn-primary">저장 버튼</button>
-                                            <button type="button" class="btn btn-secondary">저장 버튼</button>
-                                        </div> -->
-                                    </div>
-                                    <div class="row">
-                                        <div class="d-grid gap-2 d-md-block">
-                                            <button type="button" class="btn btn-primary">적용하기</button>
-                                            <button type="button" class="btn btn-secondary">변경바로가기</button>
-                                        </div>
-                                    </div>
-                                </td>
-                                </tr>
-                                <tr>
-                                    <th scope="row" class="align-middle">
-                                        <div class="form-check">
-                                            <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
-                                            <label class="form-check-label" for="flexCheckDefault">2</label>
-                                        </div>
-                                    </th>
-                                    <td class="w-25 align-middle"><img src="https://plinic.s3.ap-northeast-2.amazonaws.com/image-1593492322970" class="img-thumbnail" alt="..."></td>
-                                    <td class="align-middle"><u>요일 챌린지 HA 앰플 보상</u></td>
-                                    <td class="align-middle">212</td>
-                                    <td class="align-middle">플리닉담당</td>
-                                    <td class="align-middle">2021-01-12</td>
-                                    <td class="align-middle">활성화</td>
-                                    <td class="align-middle">
-                                        <div class="row mb-3 align-middle">
-                                                <div class="row align-middle">
-                                                    <div class="col align-middle p-0"> <span class="input-group-btn">
-                                                            <button type="button" class="btn btn-danger btn-number"  data-type="minus" data-field="quant[2]">
+                                        </th>
+                                        <td class="w-25 align-middle"><img src="https://plinic.s3.ap-northeast-2.amazonaws.com/<%= post.filename %>" class="img-thumbnail" alt="..."></td>
+                                        <td class="align-middle"><u><%= post.title %></u></td>
+                                        <td class="align-middle"><%= post.comments.length %></td>
+                                        <td class="align-middle"><%= post.author.nickname %></td>
+                                        <td class="align-middle"><%= post.getFormattedDate(post.createdAt) %></td>
+                                        <td class="align-middle">활성화</td>
+                                        <td class="align-middle">
+                                            <div class="row mb-3 align-middle">
+                                                    <div class="row align-middle">
+                                                        <div class="col align-middle p-0"> <span class="input-group-btn">
+                                                                <button type="button" class="btn btn-danger btn-number"  data-type="minus" data-field="quant[2]">
                                                                 <span class="glyphicon glyphicon-minus"></span>
-                                                            </button>
-                                                        </span></div>        
-                                                    <div class="col align-middle p-0"><input type="text" name="quant[2]" class="form-control input-number text-center w-100 align-middle" value="10" min="1" max="100"></div>        
-                                                    <div class="col p-0"><span class="input-group-btn">
-                                                            <button type="button" class="btn btn-success btn-number" data-type="plus" data-field="quant[2]">
-                                                                <span class="glyphicon glyphicon-plus"></span>
-                                                            </button>
-                                                        </span></div>        
-                                                </div>
-                                            <!-- <div class="d-grid gap-2 d-md-block">
-                                                <button type="button" class="btn btn-primary">저장 버튼</button>
-                                                <button type="button" class="btn btn-secondary">저장 버튼</button>
-                                            </div> -->
-                                        </div>
-                                        <div class="row">
-                                            <div class="d-grid gap-2 d-md-block">
-                                                <button type="button" class="btn btn-primary">적용하기</button>
-                                                <button type="button" class="btn btn-secondary">변경바로가기</button>
+                                                                </button>
+                                                            </span></div>        
+                                                        <div class="col align-middle p-0"><input type="text" name="quant[2]" class=" form-control input-number text-center w-100 align-middle" value="10" min="1" max="100"></div>        
+                                                        <div class="col p-0"><span class="input-group-btn">
+                                                                <button type="button" class="btn btn-success btn-number" data-type="plus" data-field="quant[2]">
+                                                                    <span class="glyphicon glyphicon-plus"></span>
+                                                                </button>
+                                                            </span></div>        
+                                                    </div>
+                                                <!-- <div class="d-grid gap-2 d-md-block">
+                                                    <button type="button" class="btn btn-primary">저장 버튼</button>
+                                                    <button type="button" class="btn btn-secondary">저장 버튼</button>
+                                                </div> -->
                                             </div>
-                                        </div>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <th scope="row" class="align-middle">
-                                        <div class="form-check">
-                                            <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
-                                            <label class="form-check-label" for="flexCheckDefault">3</label>
-                                        </div>
-                                    </th>
-                                    <td class="w-25 align-middle"><img src="https://plinic.s3.ap-northeast-2.amazonaws.com/image-1593492322970" class="img-thumbnail" alt="..."></td>
-                                    <td class="align-middle"><u>요일 챌린지 HA 앰플 보상</u></td>
-                                    <td class="align-middle">212</td>
-                                    <td class="align-middle">플리닉담당</td>
-                                    <td class="align-middle">2021-01-12</td>
-                                    <td class="align-middle">활성화</td>
-                                    <td class="align-middle">
-                                        <div class="row mb-3 align-middle">
-                                                <div class="row align-middle">
-                                                    <div class="col align-middle p-0"> <span class="input-group-btn">
-                                                            <button type="button" class="btn btn-danger btn-number"  data-type="minus" data-field="quant[2]">
-                                                                <span class="glyphicon glyphicon-minus"></span>
-                                                            </button>
-                                                        </span></div>        
-                                                    <div class="col align-middle p-0"><input type="text" name="quant[2]" class="form-control input-number text-center w-100 align-middle" value="10" min="1" max="100"></div>        
-                                                    <div class="col p-0"><span class="input-group-btn">
-                                                            <button type="button" class="btn btn-success btn-number" data-type="plus" data-field="quant[2]">
-                                                                <span class="glyphicon glyphicon-plus"></span>
-                                                            </button>
-                                                        </span></div>        
+                                            <div class="row">
+                                                <div class="d-grid gap-2 d-md-block">
+                                                    <button type="button" class="btn btn-primary">적용하기</button>
+                                                    <button type="button" class="btn btn-secondary">변경바로가기</button>
                                                 </div>
-                                            <!-- <div class="d-grid gap-2 d-md-block">
-                                                <button type="button" class="btn btn-primary">저장 버튼</button>
-                                                <button type="button" class="btn btn-secondary">저장 버튼</button>
-                                            </div> -->
-                                        </div>
-                                        <div class="row">
-                                            <div class="d-grid gap-2 d-md-block">
-                                                <button type="button" class="btn btn-primary">적용하기</button>
-                                                <button type="button" class="btn btn-secondary">변경바로가기</button>
                                             </div>
-                                        </div>
-                                    </td>
-                                </tr>
+                                        </td>
+                                    </tr>
+                                <% }) %>
                             </tbody>
                         </table>
                         <div class="row">

@@ -5,18 +5,20 @@
     <% include ../../../partials/head %>
     <title></title>
     <link href='http://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css' />
+    <link rel="stylesheet" href="/stylesheets/image_upload.css">
 </head>
 <script type="text/javascript" src="/js/jquery-1.10.2.js"></script>
+<script type="text/javascript" src="/js/image_upload.js"></script>
 <script>
-        $(document).ready(function(){
-            $(".active").removeClass("active");
-            $("#contents").addClass("active");
-        });
+    $(document).ready(function () {
+        $(".active").removeClass("active");
+        $("#contents").addClass("active");
+    });
 </script>
 <title>Hello, world!</title>
 
 <body>
-    
+
     <header>
         <% include ../../../partials/header %>
     </header>
@@ -34,209 +36,236 @@
 
             <!-- 10단길이의 첫번째 열 -->
             <div class="col-md-10">
-                    <div id="page-inner">
-                            <div class="row">
-                                   <div class="col-md-12">
-                                       <h1 class="page-header">
-                                           플리닉 양식 페이지(제목) <small>플리닉 Sub제목</small>
-                                       </h1>
-                                   </div>
-                               </div> 
-                                <!-- /. ROW  -->
-                             <div class="row">
-                               <div class="col-lg-12">
-                                   <div class="panel panel-default">
-                                       <div class="panel-heading">
-                                            기본적인 업무 설명을 넣어 준다.
-                                       </div>
-                                       <div class="panel-body">
-                                           <div class="row">
-                                               <div class="col-lg-6">
-                                                   <form role="form">
-                                                       <div class="form-group">
-                                                           <label>Text Input</label>
-                                                           <input class="form-control">
-                                                           <p class="help-block">Example block-level help text here.</p>
-                                                       </div>
-                                                       <div class="form-group">
-                                                           <label>Text Input with Placeholder</label>
-                                                           <input class="form-control" placeholder="Enter text">
-                                                       </div>
-                                                       <div class="form-group">
-                                                           <label>Static Control</label>
-                                                           <p class="form-control-static">email@example.com</p>
-                                                       </div>
-                                                       <div class="form-group">
-                                                           <label>File input</label>
-                                                           <input type="file">
-                                                       </div>
-                                                       <div class="form-group">
-                                                           <label>Text area</label>
-                                                           <textarea class="form-control" rows="3"></textarea>
-                                                       </div>
-                                                       <div class="form-group">
-                                                           <label>Checkboxes</label>
-                                                           <div class="checkbox">
-                                                               <label>
-                                                                   <input type="checkbox" value="">Checkbox 1
-                                                               </label>
-                                                           </div>
-                                                           <div class="checkbox">
-                                                               <label>
-                                                                   <input type="checkbox" value="">Checkbox 2
-                                                               </label>
-                                                           </div>
-                                                           <div class="checkbox">
-                                                               <label>
-                                                                   <input type="checkbox" value="">Checkbox 3
-                                                               </label>
-                                                           </div>
-                                                       </div>
-                                                       <div class="form-group">
-                                                           <label>Inline Checkboxes</label>
-                                                           <label class="checkbox-inline">
-                                                               <input type="checkbox">1
-                                                           </label>
-                                                           <label class="checkbox-inline">
-                                                               <input type="checkbox">2
-                                                           </label>
-                                                           <label class="checkbox-inline">
-                                                               <input type="checkbox">3
-                                                           </label>
-                                                       </div>
-                                                       <div class="form-group">
-                                                           <label>Radio Buttons</label>
-                                                           <div class="radio">
-                                                               <label>
-                                                                   <input type="radio" name="optionsRadios" id="optionsRadios1" value="option1" checked="">Radio 1
-                                                               </label>
-                                                           </div>
-                                                           <div class="radio">
-                                                               <label>
-                                                                   <input type="radio" name="optionsRadios" id="optionsRadios2" value="option2">Radio 2
-                                                               </label>
-                                                           </div>
-                                                           <div class="radio">
-                                                               <label>
-                                                                   <input type="radio" name="optionsRadios" id="optionsRadios3" value="option3">Radio 3
-                                                               </label>
-                                                           </div>
-                                                       </div>
-                                                       <div class="form-group">
-                                                           <label>Inline Radio Buttons</label>
-                                                           <label class="radio-inline">
-                                                               <input type="radio" name="optionsRadiosInline" id="optionsRadiosInline1" value="option1" checked="">1
-                                                           </label>
-                                                           <label class="radio-inline">
-                                                               <input type="radio" name="optionsRadiosInline" id="optionsRadiosInline2" value="option2">2
-                                                           </label>
-                                                           <label class="radio-inline">
-                                                               <input type="radio" name="optionsRadiosInline" id="optionsRadiosInline3" value="option3">3
-                                                           </label>
-                                                       </div>
-                                                       <div class="form-group">
-                                                           <label>Selects</label>
-                                                           <select class="form-control">
-                                                               <option>1</option>
-                                                               <option>2</option>
-                                                               <option>3</option>
-                                                               <option>4</option>
-                                                               <option>5</option>
-                                                           </select>
-                                                       </div>
-                                                       <div class="form-group">
-                                                           <label>Multiple Selects</label>
-                                                           <select multiple="" class="form-control">
-                                                               <option>1</option>
-                                                               <option>2</option>
-                                                               <option>3</option>
-                                                               <option>4</option>
-                                                               <option>5</option>
-                                                           </select>
-                                                       </div>
-                                                       <button type="submit" class="btn btn-default">저장 버튼</button>
-                                                       <button type="reset" class="btn btn-default">초기화 버튼</button>
-                                                   </form>
-                                               </div>
-                                               <!-- /.col-lg-6 (nested) -->
-                                               <div class="col-lg-6">
-                                                   <h4>Disabled Form States</h4>
-                                                   <form role="form">
-                                                       <fieldset disabled="">
-                                                           <div class="form-group">
-                                                               <label for="disabledSelect">Disabled input</label>
-                                                               <input class="form-control" id="disabledInput" type="text" placeholder="Disabled input" disabled="">
-                                                           </div>
-                                                           <div class="form-group">
-                                                               <label for="disabledSelect">Disabled select menu</label>
-                                                               <select id="disabledSelect" class="form-control">
-                                                                   <option>Disabled select</option>
-                                                               </select>
-                                                           </div>
-                                                           <div class="checkbox">
-                                                               <label>
-                                                                   <input type="checkbox">Disabled Checkbox
-                                                               </label>
-                                                           </div>
-                                                           <button type="submit" class="btn btn-primary">Disabled Button</button>
-                                                       </fieldset>
-                                                   </form>
-                                                   <h4>Form Validation States</h4>
-                                                   <form role="form">
-                                                       <div class="form-group has-success">
-                                                           <label class="control-label" for="inputSuccess">Input with success</label>
-                                                           <input type="text" class="form-control" id="inputSuccess">
-                                                       </div>
-                                                       <div class="form-group has-warning">
-                                                           <label class="control-label" for="inputWarning">Input with warning</label>
-                                                           <input type="text" class="form-control" id="inputWarning">
-                                                       </div>
-                                                       <div class="form-group has-error">
-                                                           <label class="control-label" for="inputError">Input with error</label>
-                                                           <input type="text" class="form-control" id="inputError">
-                                                       </div>
-                                                   </form>
-                                                   <h4>Input Groups</h4>
-                                                   <form role="form">
-                                                       <div class="form-group input-group">
-                                                           <span class="input-group-addon">@</span>
-                                                           <input type="text" class="form-control" placeholder="Username">
-                                                       </div>
-                                                       <div class="form-group input-group">
-                                                           <input type="text" class="form-control">
-                                                           <span class="input-group-addon">.00</span>
-                                                       </div>
-                                                       <div class="form-group input-group">
-                                                           <span class="input-group-addon"><i class="fa fa-eur"></i>
-                                                           </span>
-                                                           <input type="text" class="form-control" placeholder="Font Awesome Icon">
-                                                       </div>
-                                                       <div class="form-group input-group">
-                                                           <span class="input-group-addon">$</span>
-                                                           <input type="text" class="form-control">
-                                                           <span class="input-group-addon">.00</span>
-                                                       </div>
-                                                       <div class="form-group input-group">
-                                                           <input type="text" class="form-control">
-                                                           <span class="input-group-btn">
-                                                               <button class="btn btn-default" type="button"><i class="fa fa-search"></i>
-                                                               </button>
-                                                           </span>
-                                                       </div>
-                                                   </form>
-                                               </div>
-                                               <!-- /.col-lg-6 (nested) -->
-                                           </div>
-                                           <!-- /.row (nested) -->
-                                       </div>
-                                       <!-- /.panel-body -->
-                                   </div>
-                                   <!-- /.panel -->
-                               </div>
-                               <!-- /.col-lg-12 -->
-                           </div>
-                           <!-- <footer><p>All right reserved. Template by: <a href="http://webthemez.com">WebThemez</a></p></footer> -->
-                           </div>
+                <div id="page-inner">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <h1 class="page-header">
+                                챌린지 관리<small></small>
+                            </h1>
+                        </div>
+                    </div>
+                    <!-- /. ROW  -->
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <div class="panel panel-default">
+                                <div class="panel-heading">
+                                    챌린지 세부내용
+                                </div>
+                                <div class="panel-body">
+                                    <div class="row">
+                                        <div class="col-lg-3"></div>
+                                        <div class="col-lg-6">
+                                            <form role="form" action="/carezone" method="post"
+                                                enctype="multipart/form-data">
+                                                <div class="form-group">
+                                                    <!-- 콘텐츠명 -->
+                                                    <div class="row align-items-center w-75 mb-3">
+                                                        <label class="col-md-3 text-left">콘텐츠명</label>
+                                                        <div class="col-md-9">
+                                                            <input type="text" name="post[title]" class="form-control"
+                                                                maxlength="15" placeholder="15자 이내" required>
+                                                        </div>
+                                                    </div>
+                                                    <!-- 콘텐츠설명 -->
+                                                    <div class="row align-items-center w-75 mb-3">
+                                                        <label class="col-md-3 text-left">콘텐츠설명</label>
+                                                        <div class="col-md-9">
+                                                            <input class="form-control" name="post[body]" maxlength="20"
+                                                                placeholder="20자 이내" required>
+                                                        </div>
+                                                    </div>
+                                                    <!-- 챌린지 조건 -->
+                                                    <div class="row align-items-center w-75 mb-3">
+                                                        <label class="col-md-3 text-left">챌린지 조건</label>
+                                                        <div class="col-md-9">
+                                                            <input class="form-control" name="post[chaljogun]"
+                                                                maxlength="20" placeholder="20자 이내" required>
+                                                        </div>
+                                                    </div>
+                                                    <!-- 참여기간 -->
+                                                    <div class="row align-items-center w-75 mb-3">
+                                                        <label class="col-md-3 text-left">참여기간</label>
+                                                        <div class="col-md-9">
+                                                            <input class="form-control" name="post[gigan]"
+                                                                maxlength="20" placeholder="20자 이내" required>
+                                                        </div>
+                                                    </div>
+                                                    <!-- 참여인원 -->
+                                                    <div class="row align-items-center w-75 mb-3">
+                                                        <label class="col-md-3 text-left">참여인원</label>
+                                                        <div class="col-md-9">
+                                                            <input class="form-control" name="post[inwon]"
+                                                                maxlength="20" placeholder="20자 이내" required>
+                                                        </div>
+                                                    </div>
+                                                    <!-- 챌린지 기간 -->
+                                                    <div class="row align-items-center w-75 mb-3">
+                                                        <label class="col-md-3 text-left">챌린지 기간</label>
+                                                        <div class="col-md-9">
+                                                            <input class="form-control" name="post[chalgigan]"
+                                                                maxlength="20" placeholder="20자 이내" required>
+                                                        </div>
+                                                    </div>
+                                                    <!-- 보상 상품명 -->
+                                                    <div class="row align-items-center w-75 mb-3">
+                                                        <label class="col-md-3 text-left">보상 상품명</label>
+                                                        <div class="col-md-9">
+                                                            <input class="form-control" name="post[product]"
+                                                                maxlength="20" placeholder="20자 이내" required>
+                                                        </div>
+                                                    </div>
+                                                    <!-- 보상품 URL -->
+                                                    <div class="row align-items-center w-75 mb-3">
+                                                        <label class="col-md-3 text-left">보상품 URL</label>
+                                                        <div class="col-md-9">
+                                                            <input class="form-control" name="post[product_url]"
+                                                                placeholder="URL주소" required>
+                                                        </div>
+                                                    </div>
+                                                    <!-- 즉시구매 URL -->
+                                                    <div class="row align-items-center w-75 mb-3">
+                                                        <label class="col-md-3 text-left">즉시구매 URL</label>
+                                                        <div class="col-md-9">
+                                                            <input class="form-control" name="post[purchase_url]"
+                                                                placeholder="URL주소" required>
+                                                        </div>
+                                                    </div>
+                                                    <!-- 홈 표시 이미지 업로드 -->
+                                                    <div class="row align-items-center w-75 mb-3">
+                                                        <label class="col-md-3 text-left">홈 이미지</label>
+                                                        <div class="col-md-9">
+                                                            <div class="row">
+                                                                <div class="col-6 imgUp">
+                                                                    <div class="imagePreview"></div>
+                                                                    <label class="btn btn-primary">
+                                                                        Upload
+                                                                        <input name="homeimage" type="file"
+                                                                            class="uploadFile img form-control"
+                                                                            value="Upload Photo"
+                                                                            style="width: 0px;height: 0px;overflow: hidden;"
+                                                                            required accept=".jpg, .jpeg, .png">
+                                                                    </label>
+                                                                </div>
+                                                                <!-- <i class="fa fa-plus imgAdd"></i> -->
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <!-- 메인 이미지 업로드 -->
+                                                    <div class="row align-items-center w-75 mb-3">
+                                                        <label class="col-md-3 text-left">챌린지 탭 이미지</label>
+                                                        <div class="col-md-9">
+                                                            <div class="row">
+                                                                <div class="col-6 imgUp">
+                                                                    <div class="imagePreview"></div>
+                                                                    <label class="btn btn-primary">
+                                                                        Upload
+                                                                        <input name="image" type="file"
+                                                                            class="uploadFile img form-control"
+                                                                            value="Upload Photo"
+                                                                            style="width: 0px;height: 0px;overflow: hidden;"
+                                                                            required accept=".jpg, .jpeg, .png">
+                                                                    </label>
+                                                                </div>
+                                                                <!-- <i class="fa fa-plus imgAdd"></i> -->
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <!-- 슬라이드 이미지 업로드 -->
+                                                    <div class="row align-items-center w-75 mb-3">
+                                                        <label class="col-md-3 text-left">본문 이미지</label>
+                                                        <div class="col-md-9">
+                                                            <div class="row">
+                                                                <div class="col-6 w-50 imgUp">
+                                                                    <div class="imagePreview"></div>
+                                                                    <label class="btn btn-primary">
+                                                                        Upload1
+                                                                        <input name="challenge_image1" type="file"
+                                                                            class="uploadFile img form-control"
+                                                                            value="Upload Photo"
+                                                                            style="width: 0px;height: 0px;overflow: hidden;"
+                                                                            required accept=".jpg, .jpeg, .png">
+                                                                    </label>
+                                                                    <p class="help-block">사이즈(px) : 720 X 405</p>
+                                                                </div>
+                                                                <div class="col-6 w-50 imgUp">
+                                                                    <div class="imagePreview"></div>
+                                                                    <label class="btn btn-primary">
+                                                                        Upload2
+                                                                        <input name="challenge_image2" type="file"
+                                                                            class="uploadFile img form-control"
+                                                                            value="Upload Photo"
+                                                                            style="width: 0px;height: 0px;overflow: hidden;"
+                                                                            required accept=".jpg, .jpeg, .png">
+                                                                    </label>
+                                                                </div>
+                                                                <div class="col-6 w-50 imgUp">
+                                                                    <div class="imagePreview"></div>
+                                                                    <label class="btn btn-primary">
+                                                                        Upload3
+                                                                        <input name="challenge_image3" type="file"
+                                                                            class="uploadFile img form-control"
+                                                                            value="Upload Photo"
+                                                                            style="width: 0px;height: 0px;overflow: hidden;"
+                                                                            required accept=".jpg, .jpeg, .png">
+                                                                    </label>
+                                                                </div>
+                                                                <div class="col-6 w-50 imgUp">
+                                                                    <div class="imagePreview"></div>
+                                                                    <label class="btn btn-primary">
+                                                                        Upload4
+                                                                        <input name="challenge_image4" type="file"
+                                                                            class="uploadFile img form-control"
+                                                                            value="Upload Photo"
+                                                                            style="width: 0px;height: 0px;overflow: hidden;"
+                                                                            required accept=".jpg, .jpeg, .png">
+                                                                    </label>
+                                                                </div>
+                                                                <div class="col-6 w-50 imgUp">
+                                                                    <div class="imagePreview"></div>
+                                                                    <label class="btn btn-primary">
+                                                                        Upload5
+                                                                        <input name="challenge_image5" type="file"
+                                                                            class="uploadFile img form-control"
+                                                                            value="Upload Photo"
+                                                                            style="width: 0px;height: 0px;overflow: hidden;"
+                                                                            required accept=".jpg, .jpeg, .png">
+                                                                    </label>
+                                                                </div>
+                                                                <!-- <i class="fa fa-plus imgAdd"></i> -->
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <!-- 활성화 -->
+                                                    <div class="row align-items-center w-75 mb-3">
+                                                        <label class="col-md-3 text-left">활성화</label>
+                                                        <div class="col-md-9">
+                                                            <label class="radio-inline">
+                                                                <input type="radio" name="optionsRadiosInline"
+                                                                    id="optionsRadiosInline1" value="option1" checked=""
+                                                                    required>활성화
+                                                            </label>
+                                                            <label class="radio-inline">
+                                                                <input type="radio" name="optionsRadiosInline"
+                                                                    id="optionsRadiosInline2" value="option2"
+                                                                    required>비활성화
+                                                            </label>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="row justify-content-end">
+                                                    <button type="reset" class="w-25 m-1 btn btn-default">초기화</button>
+                                                    <button type="submit" class="w-25 m-1 btn btn-primary">저장</button>
+                                                </div>
+                                            </form>
+                                        </div>
+                                        <div class="col-lg-3"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- <footer><p>All right reserved. Template by: <a href="http://webthemez.com">WebThemez</a></p></footer> -->
+                </div>
             </div>
         </div>
     </div>
@@ -251,4 +280,5 @@
 <script src="/js/bootstrap.min.js"></script>
 <!-- Custom Js -->
 <script src="/js/custom-scripts.js"></script>
+
 </html>
