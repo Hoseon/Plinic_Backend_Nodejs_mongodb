@@ -872,12 +872,14 @@ module.exports = function (app) {
   app.use('/skinqna', require('./skinqna'));
   app.use('/exhibition', require('./exhibition'));
   app.use('/reward', require('./reward'));
-  app.use('/product', require('./product'));
+  // app.use('/product', require('./product'));
   app.use('/test', require('./test'));
   app.use('/bootstraptest', require('./bootstraptest'));
 
   //플리닉 뉴 관리자 2020-12-23
   app.use('/contents', require('./admin/contents'));
+  //테스트 상품 페이지
+  app.use('/product', require('./admin/product'));
 
   app.get('/ejs', (req, res) => {
     res.render('home');
