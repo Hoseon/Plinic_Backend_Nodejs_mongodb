@@ -1,95 +1,133 @@
 <!DOCTYPE html>
-<html>
-  <head>
-    <% include ../partials/head %>
-  </head>
-  <body>
+<html lang="en">
+
+<head>
+    <% include ../../../../partials/head %>
+    <title></title>
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css' />
+</head>
+<script type="text/javascript" src="/js/jquery-1.10.2.js"></script>
+<script>
+        $(document).ready(function(){
+            $(".active").removeClass("active");
+            $("#contents").addClass("active");
+        });
+</script>
+<title>Hello, world!</title>
+
+<body>
+    
     <header>
-      <% include ../partials/header %>
+        <% include ../../../../partials/header %>
     </header>
-    <div class="posts">
-    <% include partials/top %>
-<!-- main start-->
 
-<!-- views/qna/show.ejs -->
-<div class="show">
-  <div class="buttons floats">
-      <form class="float_right" action="/qna/<%=post._id%>?_method=delete" method="post">
-        <button type="button" onclick="confirm('Your post will be deleted')?this.parentElement.submit():null;">Delete</button>
-      </form>
-      <button class="float_right" onclick="location.href='/qna/<%=post._id%>/edit'">Edit</button>
-    <button class="float_left" onclick="location.href='/qna?<%= urlQuery %>'">Back</button>
-  </div>
-  <!-- <h3>
-    <%= post.numId %>
-    <span class="highlight" data-highlight="<%= search.highlight.title %>">
-      [<%= post.select %>]
-    </span>
-  </h3> -->
-  <div class="content floats">
-    <div class="info float_right">
-      <div class="highlight" data-highlight="<%= search.highlight.author %>">
-        Author: <%= post.email %>
-      </div>
-      <div>
-        <%= post.views %> views
-      </div>
-      <div class="timestamp"><span>Created:</span>
-        <%= post.getFormattedTime(post.createdAt) %>, <%= post.getFormattedDate(post.createdAt) %>
-      </div>
-      <% if(post.updatedAt) { %>
-        <div class="timestamp"><span>Updated:</span>
-          <%= post.getFormattedTime(post.updatedAt) %>, <%= post.getFormattedDate(post.updatedAt) %>
+
+    <div class="container-fluid">
+      <div class="row">
+        <!-- 2단길이의 첫번째 열 -->
+        <div class="col-md-2">
+          <!-- 사이드 메뉴 시작 -->
+          <% include ../../../../partials/side %>
+          <!-- 사이드 메뉴 종료 -->
         </div>
-      <% } %>
-    </div>
-    <h3>공지사항 관리</h3>
 
-    <div class="body highlight" data-highlight="<%= search.highlight.body %>">문의하기 분류 : <%= post.select %></div>
 
-    <div class="body highlight" data-highlight="<%= search.highlight.body %>">문의하기 내용 : <%= post.qna %></div>
+        <!-- 10단길이의 첫번째 열 -->
+        <div class="col-md-10">
+          <div id="page-inner">
+            <!-- /. ROW  -->
+            <div class="row">
+              <div class="col-lg-12">
+                <div class="panel panel-default">
+                  <div class="panel-heading">
+                    내용보기
+                  </div>
+                  <br>
+                  <button type="button" class="w-15 m-1 btn btn-success btn-sm">수정</button>
+                  <button type="button" class="w-15 m-1 btn btn-success btn-sm" onclick="location.href='/contents/Comments/ChallengeComment/new'">담변</button>
+                  <button type="button" class="w-15 m-1 btn btn-danger btn-sm">삭제</button>
+                  <button type="button" class="w-15 m-1 btn btn-primary btn-sm" onclick="location.href='/carezone/nIndex'">목록으로</button>
 
-    <div class="comments">
-      <h4>Comments (<%= post.comments?post.comments.length:"0" %>)</h4>
-      <% if(post.comments) { %>
-        <% post.comments.forEach(function(comment){ %>
-          <div class="comment">
-            <div class="top">
-              <b><%= comment.author.nickname %></b>
-              (<%= post.getFormattedTime(comment.createdAt) %>,
-              <%= post.getFormattedDate(comment.createdAt) %>)
-              <% if(user && user.equals(comment.author._id)) { %>
-                <form class="delete"  method="post"
-                  action="/qna/<%=post._id%>/comments/<%=comment._id%>?_method=delete&<%= urlQuery %>">
-                  <button type="button"
-                    onclick="confirm('Your comment will be deleted')?this.parentElement.submit():null;">
-                    x
-                  </button>
-                </form>
-              <% } %>
+                  <div class="buttons floats">
+                    <% if(user) { %>
+                      <form class="float_right" action="/carezone/nIndex/<%=post._id%>?_method=delete" method="post">
+                        <button type="button" onclick="confirm('Your post will be deleted')?this.parentElement.submit():null;">Delete</button>
+                      </form>
+                      <button class="float_right" onclick="location.href='/carezone/nIndex/<%=post._id%>/edit'">Edit</button>
+                    <% } %>
+                    <button class="float_left" onclick="location.href='/carezone/nIndex?<%= urlQuery %>'">Back</button>
+                  </div>
+                  <table class="table-bordered table table-striped table-hover">
+                      <% if(post.comments) { %>
+                    <tr>
+                        <th class="text-center">제목</th>
+                        <td colspan="3" class="text-left" data-highlight="<%= search.highlight.comment %>"><%= post.title %></td>
+                    </tr>
+                    <tr>
+                        <th class="text-center">이름</th>
+                        <td class="text-left" data-highlight="<%= search.highlight.email %>"><%= post.comments.email %></td>
+                        <th class="text-center" width="250">작성일</th>
+                        <td width="400" class="text-left">
+                        </td>
+                    </tr>
+                    <tr>
+                        <th class="col-2" style="text-align: center;">IP주소</th>
+                        <td class="text-left" class="text-left">121.161.30.211</td>
+                        <th class="text-center" width="250">챌린지 제목</th>
+                        <td width="400" class="text-left" data-highlight="<%= search.highlight.title %>"><%= post.title %></td>
+                    </tr>
+                    <tr>
+                        <th class="col-2" style="text-align: center;">첨부파일</th>
+                        <td colspan="3" class="text-left" data-highlight="<%= search.highlight.img_url%>"><%= post.img_url %></td>
+                    </tr>
+                    <tr>
+                      <td colspan="4" class="text-left" data-highlight="<%= search.highlight.body %>">
+                        <%= post.contents %>
+                      </td>
+                    </tr>
+                    <% } %>
+                </table>
+                <div class="comments">
+                  <h8>댓글 </h8>
+
+                  <div class="comment">
+                    <div class="top">
+                      <b>작성자</b>
+
+
+                    </div>
+                    <div class="body">내용</div>
+                  </div>
+
+
+                    <div>이름 관리자</div>
+                    <textarea class="cvRequired" type="text" name="comment[body]" cvRqErrMsg="comments is empty."
+                      cvRqErrTo="#cvErrTitle" ></textarea>
+                    <button type="submit">저장</button>
+                    <div id="cvErrTitle" class="message"></div>
+
+                </div>
+
+
+                  
+
+                  <button type="submit" class="w-15 m-1 btn btn-primary btn btn-primary btn-sm">저장</button>
+                </div>
+              </div>
             </div>
-            <div class="body"><%= comment.body %></div>
           </div>
-        <% }) %>
-      <% } %>
-      <form class="addComment checkValidation"
-        action="/qna/<%=post._id%>/comments?<%= urlQuery %>" method="post">
-        <input type="hidden" name="id" value="<%=post._id%>" /> <!-- 관리자가 댓글을 작성할시에 푸시 알림 클릭시 해당 창으로 이동 할 수 있도록 조치-->
-        <input type="hidden" name="pushtoken" value="<%=post.pushtoken%>" /> <!-- 관리자가 댓글을 작성할시에 푸시 알림이 가도록 설정 -->
-        <textarea class="cvRequired" type="text" name="comment[body]"
-          cvRqErrMsg="comments is empty." cvRqErrTo="#cvErrTitle" <%= user?"":"disabled" %>
-          placeholder="<%= user?"Add comment here":"로그인 한 후 문의하기 댓글을 작성해주세요.." %>"></textarea>
-        <button type="submit" <%= user?"":"disabled" %>>Comment</button>
-        <div id="cvErrTitle" class="message"></div>
-      </form>
+        </div>
+      </div>
     </div>
-  </div>
-</div>
 
-<!-- main end -->
-    </div><!--qna end -->
-    <footer>
-      <% include ../partials/footer %>
-    </footer>
-  </body>
+
+
+
+</body>
+
+<script src="/js/jquery-1.10.2.js"></script>
+<!-- Bootstrap Js -->
+<script src="/js/bootstrap.min.js"></script>
+<!-- Custom Js -->
+<script src="/js/custom-scripts.js"></script>
 </html>
