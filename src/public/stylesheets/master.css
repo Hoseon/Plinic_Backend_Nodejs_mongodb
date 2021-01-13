@@ -193,12 +193,12 @@ button[disabled]:hover{
   border-right: 1px solid #aaa !important;
   border-bottom: 1px solid #aaa !important;
 }
-.pagination{
+/* .pagination{
   text-align: center;
 }
 .pagination li{
   display: inline;
-}
+} */
 
 .login,
 .users
@@ -411,5 +411,9 @@ select::-ms-expand { /* for IE 11 */
   /* margin: 40px 0 20px; */
   border-bottom: 1px solid #eee;
 }
+
+/* td:hover{
+  cursor:move;
+  } */
 
 

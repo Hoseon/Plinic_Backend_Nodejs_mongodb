@@ -55,7 +55,7 @@
                                     <div class="row">
                                         <div class="col-lg-3"></div>
                                         <div class="col-lg-6">
-                                            <form role="form" action="/carezone" method="post"
+                                            <form role="form" action="/contents/Challenge" method="post"
                                                 enctype="multipart/form-data">
                                                 <div class="form-group">
                                                     <!-- 콘텐츠명 -->
@@ -72,6 +72,30 @@
                                                         <div class="col-md-9">
                                                             <input class="form-control" name="post[body]" maxlength="20"
                                                                 placeholder="20자 이내" required>
+                                                        </div>
+                                                    </div>
+                                                    <!-- 노출 순서 -->
+                                                    <div class="row align-items-center w-75 mb-3">
+                                                        <label class="col-md-3 text-left">노출 순서</label>
+                                                        <div class="col-md-9">
+                                                            <input type="number" class="form-control" name="post[seq]" maxlength="2"
+                                                                placeholder="2자(숫자로만)" required>
+                                                        </div>
+                                                    </div>
+                                                    <!-- 요일 선택 -->
+                                                    <div class="row align-items-center w-75 mb-3">
+                                                        <label class="col-md-3 text-left">참가 요일</label>
+                                                        <div class="col-md-9">
+                                                            <select name="post[day]" class="form-select" aria-label="Default select example" required>
+                                                                <option selected>요일을 선택하세요</option>
+                                                                <option value="1">월요일</option>
+                                                                <option value="2">화요일</option>
+                                                                <option value="3">수요일</option>
+                                                                <option value="4">목요일</option>
+                                                                <option value="5">금요일</option>
+                                                                <option value="6">토요일</option>
+                                                                <option value="0">일요일</option>
+                                                            </select>
                                                         </div>
                                                     </div>
                                                     <!-- 챌린지 조건 -->
@@ -151,12 +175,13 @@
                                                         </div>
                                                     </div>
                                                     <!-- 메인 이미지 업로드 -->
+                                                    <div class="row border-top p-2"></div>
                                                     <div class="row align-items-center w-75 mb-3">
                                                         <label class="col-md-3 text-left">챌린지 탭 이미지</label>
                                                         <div class="col-md-9">
                                                             <div class="row">
                                                                 <div class="col-6 imgUp">
-                                                                    <div class="imagePreview"></div>
+                                                                    <img class="imagePreview img-fluid" />
                                                                     <label class="btn btn-primary">
                                                                         Upload
                                                                         <input name="image" type="file"
@@ -171,12 +196,13 @@
                                                         </div>
                                                     </div>
                                                     <!-- 슬라이드 이미지 업로드 -->
+                                                    <div class="row border-top p-2"></div>
                                                     <div class="row align-items-center w-75 mb-3">
-                                                        <label class="col-md-3 text-left">본문 이미지</label>
+                                                        <label class="col-md-3 text-left">슬라이드 이미지</label>
                                                         <div class="col-md-9">
                                                             <div class="row">
                                                                 <div class="col-6 w-50 imgUp">
-                                                                    <div class="imagePreview"></div>
+                                                                    <img class="imagePreview img-fluid" />
                                                                     <label class="btn btn-primary">
                                                                         Upload1
                                                                         <input name="challenge_image1" type="file"
@@ -188,47 +214,47 @@
                                                                     <p class="help-block">사이즈(px) : 720 X 405</p>
                                                                 </div>
                                                                 <div class="col-6 w-50 imgUp">
-                                                                    <div class="imagePreview"></div>
+                                                                    <img class="imagePreview img-fluid" />
                                                                     <label class="btn btn-primary">
                                                                         Upload2
                                                                         <input name="challenge_image2" type="file"
                                                                             class="uploadFile img form-control"
                                                                             value="Upload Photo"
                                                                             style="width: 0px;height: 0px;overflow: hidden;"
-                                                                            required accept=".jpg, .jpeg, .png">
+                                                                            accept=".jpg, .jpeg, .png">
                                                                     </label>
                                                                 </div>
                                                                 <div class="col-6 w-50 imgUp">
-                                                                    <div class="imagePreview"></div>
+                                                                    <img class="imagePreview img-fluid" />
                                                                     <label class="btn btn-primary">
                                                                         Upload3
                                                                         <input name="challenge_image3" type="file"
                                                                             class="uploadFile img form-control"
                                                                             value="Upload Photo"
                                                                             style="width: 0px;height: 0px;overflow: hidden;"
-                                                                            required accept=".jpg, .jpeg, .png">
+                                                                            accept=".jpg, .jpeg, .png">
                                                                     </label>
                                                                 </div>
                                                                 <div class="col-6 w-50 imgUp">
-                                                                    <div class="imagePreview"></div>
+                                                                    <img class="imagePreview img-fluid" />
                                                                     <label class="btn btn-primary">
                                                                         Upload4
                                                                         <input name="challenge_image4" type="file"
                                                                             class="uploadFile img form-control"
                                                                             value="Upload Photo"
                                                                             style="width: 0px;height: 0px;overflow: hidden;"
-                                                                            required accept=".jpg, .jpeg, .png">
+                                                                            accept=".jpg, .jpeg, .png">
                                                                     </label>
                                                                 </div>
                                                                 <div class="col-6 w-50 imgUp">
-                                                                    <div class="imagePreview"></div>
+                                                                    <img class="imagePreview img-fluid" />
                                                                     <label class="btn btn-primary">
                                                                         Upload5
                                                                         <input name="challenge_image5" type="file"
                                                                             class="uploadFile img form-control"
                                                                             value="Upload Photo"
                                                                             style="width: 0px;height: 0px;overflow: hidden;"
-                                                                            required accept=".jpg, .jpeg, .png">
+                                                                            accept=".jpg, .jpeg, .png">
                                                                     </label>
                                                                 </div>
                                                                 <!-- <i class="fa fa-plus imgAdd"></i> -->
