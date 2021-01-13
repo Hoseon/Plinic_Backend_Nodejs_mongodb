@@ -33,7 +33,7 @@ var carezoneSchema = mongoose.Schema({
   // exposure : String,
   prodfilename: String,
   prodoriginalname: String,
-
+  day: String,
   proddesc: String,
   caption: String,
   maxmember: {type:Number},
@@ -74,6 +74,7 @@ var carezoneSchema = mongoose.Schema({
   inwon: String,
   chaljogun: String,
   chalgigan: String,
+  seq: Number,
 });
 
 carezoneSchema.methods.getFormattedDate = function (date) {
