@@ -383,7 +383,8 @@ router.get('/list', function(req, res) {
     }, function(err, docs) {
       res.json(docs);
     }).sort({
-      "startmission": -1
+      "seq": 1,
+      "updatedAt": -1
     });
   }]);
 });
@@ -412,14 +413,16 @@ router.get('/challengefirstlist', function(req, res) {
   //var carezonelist = null;
   async.waterfall([function(callback) {
     Carezone.find({
-      endmission: {     //종료일이 오늘 날짜/시간으로 지나지 않은것만 가져 온다.
-        $gt: new Date()
-      }
+      // endmission: {     //종료일이 오늘 날짜/시간으로 지나지 않은것만 가져 온다.
+      //   $gt: new Date()
+      // }
     }, function(err, docs) {
       res.json(docs);
     }).sort({
-      "startmission": -1
-    }).limit(5);
+      "seq": 1,
+      "updatedAt": -1
+    })
+    // .limit(5);
   }]);
 });
 
@@ -533,8 +536,8 @@ router.get('/mission/:id', function(req, res) {
 
 router.get('/', function(req, res) {
   var vistorCounter = null;
-  var page = Math.max(1, req.query.page) > 1 ? parseInt(req.query.page) : 1;
-  var limit = Math.max(1, req.query.limit) > 1 ? parseInt(req.query.limit) : 10;
+  var page = Math.max(1, req.query.page) > 1 ? parseInt(req.query.page) : 1; //현재 페이지가 2페이지 이상인 경우 제어
+  var limit = Math.max(1, req.query.limit) > 1 ? parseInt(req.query.limit) : 10; //한페이지에 보여지는 노출 갯수
   var search = createSearch(req.query);
   async.waterfall([function(callback) {
     CarezoneCounter.findOne({
@@ -567,8 +570,8 @@ router.get('/', function(req, res) {
     if (search.findUser && !search.findPost.$or) return callback(null, null, 0);
     Carezone.count(search.findPost, function(err, count) {
       if (err) callback(err);
-      skip = (page - 1) * limit;
-      maxPage = Math.ceil(count / limit);
+      skip = (page - 1) * limit; //다음페이지로 넘어가고 전페이지의 만큼의 갯수를 뺸 후 노출갯수를 표현한다.
+      maxPage = Math.ceil(count / limit); //최대 페이지는 현재 모든 아이템 갯수 나누니 노출갯수를 나누어 페이지 표시를 한다.
       callback(null, skip, maxPage);
     });
   }, function(skip, maxPage, callback) {
@@ -827,6 +830,7 @@ router.get('/:id', function(req, res) {
       //res.setHeader('Content-Type', 'image/jpeg');
       var url = 'https://plinic.s3.ap-northeast-2.amazonaws.com/' + post.filename;
       var prod_url = 'https://plinic.s3.ap-northeast-2.amazonaws.com/' + post.prodfilename;
+      var homeImage = 'https://plinic.s3.ap-northeast-2.amazonaws.com/' + post.homeimage_filename;
       var challenge_url1 = 'https://plinic.s3.ap-northeast-2.amazonaws.com/' + post.challenge_image1_filename;
       var challenge_url2 = 'https://plinic.s3.ap-northeast-2.amazonaws.com/' + post.challenge_image2_filename;
       var challenge_url3 = 'https://plinic.s3.ap-northeast-2.amazonaws.com/' + post.challenge_image3_filename;
@@ -837,6 +841,7 @@ router.get('/:id', function(req, res) {
         post: post,
         url: url,
         prod_url: prod_url,
+        homeImage: homeImage,
         challenge_url1: challenge_url1,
         challenge_url2: challenge_url2,
         challenge_url3: challenge_url3,
@@ -961,10 +966,6 @@ router.get('/:id/edit', isLoggedIn, function(req, res) {
   });
 }); // edit
 
-
-
-
-
 router.put('/:id', s3upload.fields([{
   name: 'image'
 }, {
@@ -980,8 +981,6 @@ router.put('/:id', s3upload.fields([{
 }, {
   name: 'challenge_image5'
 }]), isLoggedIn, function(req, res, next) {
-  //console.log("prefilename:"+ req.body.prefilename);
-  //console.log("preoriginalName:" + req.body.preoriginalName);
   req.body.post.updatedAt = Date.now();
   req.body.post.filename = req.files['image'][0].key;
   req.body.post.originalName = req.files['image'][0].originalname;
