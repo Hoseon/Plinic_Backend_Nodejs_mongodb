@@ -130,10 +130,10 @@
                           </h2>
                           <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
                             <div class="accordion-body">
-                                <table class="table-bordered table table-striped table-hover">
+                                <!-- <table class="table-bordered table table-striped table-hover">
                                     <tr>
                                         <th class="col-2" style="background-color: #f5f5f5; text-align: center;">등록일</th>
-                                        <td class="col-4" style="text-align: left; background-color: white;">
+                                        <td style="text-align: left; background-color: white;">
                                             <input type="date" id="date">
                                             &nbsp; ~ &nbsp;
                                             <input type="date" id="date">
@@ -148,13 +148,70 @@
                                         </td >
                                     </tr>
                                     <tr>
-                                        <th class="col-md-2" style="text-align: center;">상품명</th>
-                                        <td class="col-md-4">
+                                        <th class="col-2" style="text-align: center;">상품명</th>
+                                        <td class="col-6">
                                             <input class="form-control" list="datalistOptions" id="exampleDataList">
+                                            <datalist id="datalistOptions">
+                                                <option value="San Francisco">
+                                                <option value="New York">
+                                                <option value="Seattle">
+                                                <option value="Los Angeles">
+                                                <option value="Chicago">
+                                            </datalist>
                                         </td>
-                                        <th class="col-md-2" style="text-align: center;">상품가격</th>
-                                        <td class="col-md-4">
-                                            <input class="form-control" list="datalistOptions" id="exampleDataList">
+
+                                    </tr>
+                                    <tr>
+                                        <th class="col-2" style="text-align: center;">분류명</th>
+                                        <td></td>
+                                    </tr>
+                                    <tr>
+                                        <th class="col-2" style="text-align: center;">재고</th>
+                                        <td></td>
+                                    </tr>
+                                    <tr>
+                                        <th class="col-2" style="text-align: center;">상품 TAG</th>
+                                        <td></td>
+                                    </tr>
+                                    <tr>
+                                        <th class="col-2" style="text-align: center;">목록수</th>
+                                        <td></td>
+                                    </tr>
+                                </table> -->
+
+
+
+
+
+
+                                <table class="table-bordered table table-striped table-hover">
+                                    <tr>
+                                        <th class="text-center">등록일</th>
+                                        <td colspan="3">
+                                            <input type="date" id="date">
+                                            &nbsp; ~ &nbsp;
+                                            <input type="date" id="date">
+                                            &nbsp;
+                                            <button type="button" class="btn btn-light">오늘</button>
+                                            <button type="button" class="btn btn-light">어제</button>
+                                            <button type="button" class="btn btn-light">이번주</button>
+                                            <button type="button" class="btn btn-light">지난주</button>
+                                            <button type="button" class="btn btn-light">이번달</button>
+                                            <button type="button" class="btn btn-light">지난달</button>
+                                            <button type="button" class="btn btn-light">전체</button>
+                                        </td>
+                                        <td rowspan="7">
+                                            <input type="button" id="SearchSubmit" class="btn btn-info btn-lg" value="검색">
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th class="text-center">상품명</th>
+                                        <td>
+                                            <input name="s_od_name" class="form-control" type="text" value>
+                                        </td>
+                                        <th class="text-center">상품가격</th>
+                                        <td>
+                                            
                                         </td>
                                     </tr>
                                     <tr>

@@ -23,223 +23,173 @@
 
 
     <div class="container-fluid">
-        <div class="row">
-            <!-- 2단길이의 첫번째 열 -->
-            <div class="col-md-2">
-                <!-- 사이드 메뉴 시작 -->
-                <% include ../../../../partials/side %>
-                <!-- 사이드 메뉴 종료 -->
-            </div>
-
-
-            <!-- 10단길이의 첫번째 열 -->
-            <div class="col-md-10">
-                    <div id="page-inner">
-                            <div class="row">
-                                   <div class="col-md-12">
-                                       <h1 class="page-header">
-                                           플리닉 양식 페이지(제목) <small>플리닉 Sub제목</small>
-                                       </h1>
-                                   </div>
-                               </div> 
-                                <!-- /. ROW  -->
-                             <div class="row">
-                               <div class="col-lg-12">
-                                   <div class="panel panel-default">
-                                       <div class="panel-heading">
-                                            기본적인 업무 설명을 넣어 준다.
-                                       </div>
-                                       <div class="panel-body">
-                                           <div class="row">
-                                               <div class="col-lg-6">
-                                                   <form role="form">
-                                                       <div class="form-group">
-                                                           <label>Text Input</label>
-                                                           <input class="form-control">
-                                                           <p class="help-block">Example block-level help text here.</p>
-                                                       </div>
-                                                       <div class="form-group">
-                                                           <label>Text Input with Placeholder</label>
-                                                           <input class="form-control" placeholder="Enter text">
-                                                       </div>
-                                                       <div class="form-group">
-                                                           <label>Static Control</label>
-                                                           <p class="form-control-static">email@example.com</p>
-                                                       </div>
-                                                       <div class="form-group">
-                                                           <label>File input</label>
-                                                           <input type="file">
-                                                       </div>
-                                                       <div class="form-group">
-                                                           <label>Text area</label>
-                                                           <textarea class="form-control" rows="3"></textarea>
-                                                       </div>
-                                                       <div class="form-group">
-                                                           <label>Checkboxes</label>
-                                                           <div class="checkbox">
-                                                               <label>
-                                                                   <input type="checkbox" value="">Checkbox 1
-                                                               </label>
-                                                           </div>
-                                                           <div class="checkbox">
-                                                               <label>
-                                                                   <input type="checkbox" value="">Checkbox 2
-                                                               </label>
-                                                           </div>
-                                                           <div class="checkbox">
-                                                               <label>
-                                                                   <input type="checkbox" value="">Checkbox 3
-                                                               </label>
-                                                           </div>
-                                                       </div>
-                                                       <div class="form-group">
-                                                           <label>Inline Checkboxes</label>
-                                                           <label class="checkbox-inline">
-                                                               <input type="checkbox">1
-                                                           </label>
-                                                           <label class="checkbox-inline">
-                                                               <input type="checkbox">2
-                                                           </label>
-                                                           <label class="checkbox-inline">
-                                                               <input type="checkbox">3
-                                                           </label>
-                                                       </div>
-                                                       <div class="form-group">
-                                                           <label>Radio Buttons</label>
-                                                           <div class="radio">
-                                                               <label>
-                                                                   <input type="radio" name="optionsRadios" id="optionsRadios1" value="option1" checked="">Radio 1
-                                                               </label>
-                                                           </div>
-                                                           <div class="radio">
-                                                               <label>
-                                                                   <input type="radio" name="optionsRadios" id="optionsRadios2" value="option2">Radio 2
-                                                               </label>
-                                                           </div>
-                                                           <div class="radio">
-                                                               <label>
-                                                                   <input type="radio" name="optionsRadios" id="optionsRadios3" value="option3">Radio 3
-                                                               </label>
-                                                           </div>
-                                                       </div>
-                                                       <div class="form-group">
-                                                           <label>Inline Radio Buttons</label>
-                                                           <label class="radio-inline">
-                                                               <input type="radio" name="optionsRadiosInline" id="optionsRadiosInline1" value="option1" checked="">1
-                                                           </label>
-                                                           <label class="radio-inline">
-                                                               <input type="radio" name="optionsRadiosInline" id="optionsRadiosInline2" value="option2">2
-                                                           </label>
-                                                           <label class="radio-inline">
-                                                               <input type="radio" name="optionsRadiosInline" id="optionsRadiosInline3" value="option3">3
-                                                           </label>
-                                                       </div>
-                                                       <div class="form-group">
-                                                           <label>Selects</label>
-                                                           <select class="form-control">
-                                                               <option>1</option>
-                                                               <option>2</option>
-                                                               <option>3</option>
-                                                               <option>4</option>
-                                                               <option>5</option>
-                                                           </select>
-                                                       </div>
-                                                       <div class="form-group">
-                                                           <label>Multiple Selects</label>
-                                                           <select multiple="" class="form-control">
-                                                               <option>1</option>
-                                                               <option>2</option>
-                                                               <option>3</option>
-                                                               <option>4</option>
-                                                               <option>5</option>
-                                                           </select>
-                                                       </div>
-                                                       <button type="submit" class="btn btn-default">저장 버튼</button>
-                                                       <button type="reset" class="btn btn-default">초기화 버튼</button>
-                                                   </form>
-                                               </div>
-                                               <!-- /.col-lg-6 (nested) -->
-                                               <div class="col-lg-6">
-                                                   <h4>Disabled Form States</h4>
-                                                   <form role="form">
-                                                       <fieldset disabled="">
-                                                           <div class="form-group">
-                                                               <label for="disabledSelect">Disabled input</label>
-                                                               <input class="form-control" id="disabledInput" type="text" placeholder="Disabled input" disabled="">
-                                                           </div>
-                                                           <div class="form-group">
-                                                               <label for="disabledSelect">Disabled select menu</label>
-                                                               <select id="disabledSelect" class="form-control">
-                                                                   <option>Disabled select</option>
-                                                               </select>
-                                                           </div>
-                                                           <div class="checkbox">
-                                                               <label>
-                                                                   <input type="checkbox">Disabled Checkbox
-                                                               </label>
-                                                           </div>
-                                                           <button type="submit" class="btn btn-primary">Disabled Button</button>
-                                                       </fieldset>
-                                                   </form>
-                                                   <h4>Form Validation States</h4>
-                                                   <form role="form">
-                                                       <div class="form-group has-success">
-                                                           <label class="control-label" for="inputSuccess">Input with success</label>
-                                                           <input type="text" class="form-control" id="inputSuccess">
-                                                       </div>
-                                                       <div class="form-group has-warning">
-                                                           <label class="control-label" for="inputWarning">Input with warning</label>
-                                                           <input type="text" class="form-control" id="inputWarning">
-                                                       </div>
-                                                       <div class="form-group has-error">
-                                                           <label class="control-label" for="inputError">Input with error</label>
-                                                           <input type="text" class="form-control" id="inputError">
-                                                       </div>
-                                                   </form>
-                                                   <h4>Input Groups</h4>
-                                                   <form role="form">
-                                                       <div class="form-group input-group">
-                                                           <span class="input-group-addon">@</span>
-                                                           <input type="text" class="form-control" placeholder="Username">
-                                                       </div>
-                                                       <div class="form-group input-group">
-                                                           <input type="text" class="form-control">
-                                                           <span class="input-group-addon">.00</span>
-                                                       </div>
-                                                       <div class="form-group input-group">
-                                                           <span class="input-group-addon"><i class="fa fa-eur"></i>
-                                                           </span>
-                                                           <input type="text" class="form-control" placeholder="Font Awesome Icon">
-                                                       </div>
-                                                       <div class="form-group input-group">
-                                                           <span class="input-group-addon">$</span>
-                                                           <input type="text" class="form-control">
-                                                           <span class="input-group-addon">.00</span>
-                                                       </div>
-                                                       <div class="form-group input-group">
-                                                           <input type="text" class="form-control">
-                                                           <span class="input-group-btn">
-                                                               <button class="btn btn-default" type="button"><i class="fa fa-search"></i>
-                                                               </button>
-                                                           </span>
-                                                       </div>
-                                                   </form>
-                                               </div>
-                                               <!-- /.col-lg-6 (nested) -->
-                                           </div>
-                                           <!-- /.row (nested) -->
-                                       </div>
-                                       <!-- /.panel-body -->
-                                   </div>
-                                   <!-- /.panel -->
-                               </div>
-                               <!-- /.col-lg-12 -->
-                           </div>
-                           <!-- <footer><p>All right reserved. Template by: <a href="http://webthemez.com">WebThemez</a></p></footer> -->
-                           </div>
-            </div>
+      <div class="row">
+        <!-- 2단길이의 첫번째 열 -->
+        <div class="col-md-2">
+          <!-- 사이드 메뉴 시작 -->
+          <% include ../../../../partials/side %>
+          <!-- 사이드 메뉴 종료 -->
         </div>
+
+
+        <!-- 10단길이의 첫번째 열 -->
+        <div class="col-md-10">
+          <div id="page-inner">
+            <div class="row">
+              <div class="col-md-12">
+                  <h1 class="page-header">
+                      포스트 관리
+                      <!-- <small> 챌린지 관리 Sub제목</small> -->
+                  </h1>
+              </div>
+            </div>
+
+            <div class="accordion-body">
+              <div class="container">
+                <div class="panel-heading">
+                  <h4 class="text-left" style="margin-top:5px;">포스트 세부내용</h4>
+                  <br>
+                  <div class="row">
+                    <div class="col-lg-12">
+                      <label class="col-1">노출위치</label>
+                      <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="checkbox" id="inlineCheckbox1" value="option1">
+                        <label class="form-check-label" for="inlineCheckbox1">메인홈</label>
+                      </div>
+                      <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="checkbox" id="inlineCheckbox2" value="option2">
+                        <label class="form-check-label" for="inlineCheckbox2">모공크기</label>
+                      </div>
+                      <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="checkbox" id="inlineCheckbox3" value="option3">
+                        <label class="form-check-label" for="inlineCheckbox3">모공수</label>
+                      </div>
+                      <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="checkbox" id="inlineCheckbox4" value="option4">
+                        <label class="form-check-label" for="inlineCheckbox4">피부톤</label>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="row">
+                    <div class="col-lg-12">
+                      <label class="col-1"></label>
+                      <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="checkbox" id="inlineCheckbox4" value="option4">
+                        <label class="form-check-label" for="inlineCheckbox4">피부톤</label>
+                      </div>
+                      <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="checkbox" id="inlineCheckbox5" value="option5">
+                        <label class="form-check-label" for="inlineCheckbox5">클린지수</label>
+                      </div>
+                      <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="checkbox" id="inlineCheckbox6" value="option6">
+                        <label class="form-check-label" for="inlineCheckbox6">생활문진</label>
+                      </div>
+                      <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="checkbox" id="inlineCheckbox7" value="option7">
+                        <label class="form-check-label" for="inlineCheckbox7">에디터추천</label>
+                      </div>
+                    </div>
+                  </div>
+                  <br>
+
+                  <div class="row">
+                    <div class="col-lg-12">
+                      <label class="col-1">분류</label>
+                      <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="checkbox" id="inlineCheckbox1" value="option1">
+                        <label class="form-check-label" for="inlineCheckbox1">뷰티템</label>
+                      </div>
+                      <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="checkbox" id="inlineCheckbox2" value="option2">
+                        <label class="form-check-label" for="inlineCheckbox2">뷰티템</label>
+                      </div>
+                      <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="checkbox" id="inlineCheckbox3" value="option3">
+                        <label class="form-check-label" for="inlineCheckbox3">뷰티템</label>
+                      </div>
+                      <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="checkbox" id="inlineCheckbox4" value="option4">
+                        <label class="form-check-label" for="inlineCheckbox4">뷰티템</label>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="row">
+                    <div class="col-lg-12">
+                      <label class="col-1">제목</label>
+                      <div class="form-check form-check-inline col-4" style="padding-left:0;">
+                        <input name="name" id="name" placeholder="Username" class="form-control" value="" data-validate="data">
+                      </div>
+                    </div>
+                  </div>
+                  
+                  <div class="row">
+                    <div class="col-lg-12">
+                      <label class="col-1">내용</label>
+                      <div class="form-check form-check-inline col-4" style="padding-left:0;">
+                        <textarea class="form-control" placeholder="Username" id="floatingTextarea2" style="height: 200px"></textarea>
+                        <!-- <input type="text" class="form-control" id="basic-url" style="height: 200px" aria-describedby="basic-addon3"> -->
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="row">
+                    <div class="col-lg-12">
+                      <label class="col-1">URL</label>
+                      <div class="form-check form-check-inline col-4" style="padding-left:0;">
+                        <input type="text" class="form-control" id="basic-url" style="height: 100px" aria-describedby="basic-addon3">
+                      </div>
+                    </div>
+                  </div>
+                  <br>
+                  <div class="row">
+                    <div class="col-lg-12">
+                      <label class="col-1">대표 이미지</label>
+                      <div class="form-check form-check-inline col-4" style="padding-left:0;">
+                        <div class="col-6 w-50 imgUp">
+                          <div class="imagePreview"></div>
+                          <label class="btn btn-primary">
+                            Upload
+                            <input name="homeimage" type="file"
+                              class="uploadFile img form-control"
+                              value="Upload Photo"
+                              style="width: 0px;height: 0px;overflow: hidden;"
+                              required accept=".jpg, .jpeg, .png">
+                          </label>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <br>
+                  <div class="row">
+                    <div class="col-lg-12">
+                      <label class="col-1">활성화</label>
+                      <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="checkbox" id="inlineCheckbox1" value="option1">
+                        <label class="form-check-label" for="inlineCheckbox1">활성화</label>
+                      </div>
+                      <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="checkbox" id="inlineCheckbox2" value="option2">
+                        <label class="form-check-label" for="inlineCheckbox2">비활성화</label>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="row justify-content-end">
+                    <button type="reset" class="w-25 m-1 btn btn-default">닫기</button>
+                    <button type="submit" class="w-25 m-1 btn btn-primary">저장</button>
+                </div>
+
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
+
 
 
 

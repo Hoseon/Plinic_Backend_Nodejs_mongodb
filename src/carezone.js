@@ -659,8 +659,69 @@ router.get('/newIndex', function(req, res) {
   });
 }); // new index
 
-
-
+router.get('/nIndex', function(req, res) {
+  var vistorCounter = null;
+  var page = Math.max(1, req.query.page) > 1 ? parseInt(req.query.page) : 1;
+  var limit = Math.max(1, req.query.limit) > 1 ? parseInt(req.query.limit) : 10;
+  var search = createSearch(req.query);
+  async.waterfall([function(callback) {
+    CarezoneCounter.findOne({
+      name: "carezone"
+    }, function(err, counter) {
+      if (err) callback(err);
+      vistorCounter = counter;
+      callback(null);
+    });
+  }, function(callback) {
+    if (!search.findUser) return callback(null);
+    User_admin.find(search.findUser, function(err, users) {
+      if (err) callback(err);
+      var or = [];
+      users.forEach(function(user) {
+        or.push({
+          author: mongoose.Types.ObjectId(user._id)
+        });
+      });
+      if (search.findPost.$or) {
+        search.findPost.$or = search.findPost.$or.concat(or);
+      } else if (or.length > 0) {
+        search.findPost = {
+          $or: or
+        };
+      }
+      callback(null);
+    });
+  }, function(callback) {
+    if (search.findUser && !search.findPost.$or) return callback(null, null, 0);
+    Carezone.count(search.findPost, function(err, count) {
+      if (err) callback(err);
+      skip = (page - 1) * limit;
+      maxPage = Math.ceil(count / limit);
+      callback(null, skip, maxPage);
+    });
+  }, function(skip, maxPage, callback) {
+    if (search.findUser && !search.findPost.$or) return callback(null, [], 0);
+    Carezone.find(search.findPost).populate("author").sort('-createdAt').skip(skip).limit(limit).exec(function(err, carezone) {
+      if (err) callback(err);
+      callback(null, carezone, maxPage);
+    });
+  }], function(err, carezone, maxPage) {
+    if (err) return res.json({
+      success: false,
+      message: err
+    });
+    return res.render("PlinicAdmin/Contents/Comments/ChallengeComment/index", {
+      carezone: carezone,
+      user: req.user,
+      page: page,
+      maxPage: maxPage,
+      urlQuery: req._parsedUrl.query,
+      search: search,
+      counter: vistorCounter,
+      postsMessage: req.flash("postsMessage")[0]
+    });
+  });
+}); // nIndex
 
 
 router.get('/new', isLoggedIn, function(req, res) {
@@ -773,6 +834,43 @@ router.get('/:id', function(req, res) {
       var challenge_url5 = 'https://plinic.s3.ap-northeast-2.amazonaws.com/' + post.challenge_image5_filename;
       //fs.createReadStream(path.join(__dirname, '../uploads/', post.filename)).pipe(res);
       res.render("carezone/show", {
+        post: post,
+        url: url,
+        prod_url: prod_url,
+        challenge_url1: challenge_url1,
+        challenge_url2: challenge_url2,
+        challenge_url3: challenge_url3,
+        challenge_url4: challenge_url4,
+        challenge_url5: challenge_url5,
+        urlQuery: req._parsedUrl.query,
+        user: req.user,
+        search: createSearch(req.query)
+      });
+    });
+}); // show
+
+router.get('/nIndex/:id', function(req, res) {
+  Carezone.findById(req.params.id)
+    .populate(['author', 'comments.author'])
+    .exec(function(err, post) {
+      if (err) return res.json({
+        success: false,
+        message: err
+      });
+      post.views++;
+      post.save();
+
+      //배너 이미지 가져 오기 20190502
+      //res.setHeader('Content-Type', 'image/jpeg');
+      var url = 'https://plinic.s3.ap-northeast-2.amazonaws.com/' + post.filename;
+      var prod_url = 'https://plinic.s3.ap-northeast-2.amazonaws.com/' + post.prodfilename;
+      var challenge_url1 = 'https://plinic.s3.ap-northeast-2.amazonaws.com/' + post.challenge_image1_filename;
+      var challenge_url2 = 'https://plinic.s3.ap-northeast-2.amazonaws.com/' + post.challenge_image2_filename;
+      var challenge_url3 = 'https://plinic.s3.ap-northeast-2.amazonaws.com/' + post.challenge_image3_filename;
+      var challenge_url4 = 'https://plinic.s3.ap-northeast-2.amazonaws.com/' + post.challenge_image4_filename;
+      var challenge_url5 = 'https://plinic.s3.ap-northeast-2.amazonaws.com/' + post.challenge_image5_filename;
+      //fs.createReadStream(path.join(__dirname, '../uploads/', post.filename)).pipe(res);
+      res.render("PlinicAdmin/Contents/Comments/ChallengeComment/show", {
         post: post,
         url: url,
         prod_url: prod_url,

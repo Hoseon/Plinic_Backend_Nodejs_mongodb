@@ -75,15 +75,25 @@ router.get("/Challenge/new", function(req, res) {
 });
 //콘텐츠관리 챌린지 신규 등록 화면
 
+router.get("/Challenge/edit", function(req, res) {
+  return res.render("PlinicAdmin/Contents/ChallengeMgt/edit", {});
+});
+//콘텐츠관리 챌린지 변경 등록 화면
+
 router.get("/BeautyTip/PostMgt", function(req, res) {
   return res.render("PlinicAdmin/Contents/BeautyTip/PostMgt/index", {});
 });
 //포스트 관리 리스트 화면
 
+router.get("/BeautyTip/PostMgt/edit", function(req, res) {
+  return res.render("PlinicAdmin/Contents/BeautyTip/PostMgt/edit", {});
+});
+//포스트 관리 edit
+
 router.get("/BeautyTip/PostMgt/new", function(req, res) {
   return res.render("PlinicAdmin/Contents/BeautyTip/PostMgt/new", {});
 });
-//포스트 관리 리스트 화면
+//포스트 신규 등록 화면
 
 router.get("/BeautyTip/PostDisplay", function(req, res) {
   return res.render("PlinicAdmin/Contents/BeautyTip/PostDisplay/index", {});
@@ -95,41 +105,111 @@ router.get("/BeautyTip/MovieMgt", function(req, res) {
 });
 //포스트 영상 관리 리스트 화면
 
+router.get("/BeautyTip/MovieMgt/edit", function(req, res) {
+  return res.render("PlinicAdmin/Contents/BeautyTip/MovieMgt/edit", {});
+});
+//포스트 영상 관리 edit
+
+router.get("/BeautyTip/MovieMgt/new", function(req, res) {
+  return res.render("PlinicAdmin/Contents/BeautyTip/MovieMgt/new", {});
+});
+//포스트 영상 관리 신규 등록 화면
+
 router.get("/BeautyTip/MovieDisplay", function(req, res) {
   return res.render("PlinicAdmin/Contents/BeautyTip/MovieDisplay/index", {});
 });
 //포스트 영상 진열 관리 리스트 화면
 
 ////////////////////////////////////// 게시판 댓글
-router.get("/Comments/ChallengeComment", function(req, res) {
-  return res.render("PlinicAdmin/Contents/Comments/ChallengeComment/index", {});
-});
+// router.get("/Comments/ChallengeComment", function(req, res) {
+//   return res.render("PlinicAdmin/Contents/Comments/ChallengeComment/index", {});
+// });
 //챌린지 댓글 리스트 화면
+
+router.get("/Comments/ChallengeComment/show", function(req, res) {
+  return res.render("PlinicAdmin/Contents/Comments/ChallengeComment/show", {});
+});
+//챌린지 댓글 상세 화면
+
+router.get("/Comments/ChallengeComment/new", function(req, res) {
+  return res.render("PlinicAdmin/Contents/Comments/ChallengeComment/new", {});
+});
+//챌린지 댓글 답변 화면
 
 router.get("/Comments/MovieComment", function(req, res) {
   return res.render("PlinicAdmin/Contents/Comments/MovieComment/index", {});
 });
 //영상 댓글 리스트 화면
 
+router.get("/Comments/MovieComment/show", function(req, res) {
+  return res.render("PlinicAdmin/Contents/Comments/MovieComment/show", {});
+});
+//영상 댓글 상세 화면
+
+router.get("/Comments/MovieComment/new", function(req, res) {
+  return res.render("PlinicAdmin/Contents/Comments/MovieComment/new", {});
+});
+//영상 댓글 답변 화면
+
 router.get("/Comments/SkinQna", function(req, res) {
   return res.render("PlinicAdmin/Contents/Comments/SkinQna/index", {});
 });
 //피부고민 게시판 리스트 화면
+
+router.get("/Comments/SkinQna/show", function(req, res) {
+  return res.render("PlinicAdmin/Contents/Comments/SkinQna/show", {});
+});
+//피부고민 게시판 상세 화면
+
+router.get("/Comments/SkinQna/new", function(req, res) {
+  return res.render("PlinicAdmin/Contents/Comments/SkinQna/new", {});
+});
+//피부고민 게시판 답변 화면
 
 router.get("/Comments/Notice", function(req, res) {
   return res.render("PlinicAdmin/Contents/Comments/Notice/index", {});
 });
 //공지사항 게시판 리스트 화면
 
+router.get("/Comments/Notice/show", function(req, res) {
+  return res.render("PlinicAdmin/Contents/Comments/Notice/show", {});
+});
+//피부고민 게시판 상세 화면
+
+router.get("/Comments/Notice/new", function(req, res) {
+  return res.render("PlinicAdmin/Contents/Comments/Notice/new", {});
+});
+//피부고민 게시판 답변 화면
+
 router.get("/Comments/Faq", function(req, res) {
   return res.render("PlinicAdmin/Contents/Comments/Faq/index", {});
 });
 //FAQ 게시판 리스트 화면
 
+router.get("/Comments/Faq/show", function(req, res) {
+  return res.render("PlinicAdmin/Contents/Comments/Faq/show", {});
+});
+//FAQ 게시판 상세 화면
+
+router.get("/Comments/Faq/new", function(req, res) {
+  return res.render("PlinicAdmin/Contents/Comments/Faq/new", {});
+});
+//FAQ 게시판 답변 화면
+
 router.get("/Comments/Answer", function(req, res) {
   return res.render("PlinicAdmin/Contents/Comments/Answer/index", {});
 });
 //문의하기 게시판 리스트 화면
+
+router.get("/Comments/Answer/show", function(req, res) {
+  return res.render("PlinicAdmin/Contents/Comments/Answer/show", {});
+});
+//문의하기 게시판 상세 화면
+
+router.get("/Comments/Answer/new", function(req, res) {
+  return res.render("PlinicAdmin/Contents/Comments/Answer/new", {});
+});
+//문의하기 게시판 답변 화면
 
 //////////////////////////////////// 게시판 댓글 종료
 
@@ -138,10 +218,25 @@ router.get("/HomePopup", function(req, res) {
 });
 //홈 팝업 리스트 화면
 
+router.get("/HomePopup/new", function(req, res) {
+  return res.render("PlinicAdmin/Contents/HomePopup/new", {});
+});
+//홈 팝업 신규 등록 화면
+
+router.get("/HomePopup/edit", function(req, res) {
+  return res.render("PlinicAdmin/Contents/HomePopup/edit", {});
+});
+//홈 팝업 수정 화면
+
 router.get("/ADBanner", function(req, res) {
   return res.render("PlinicAdmin/Contents/ADBanner/index", {});
 });
 //광고배너 리스트 화면
+
+router.get("/ADBanner/new", function(req, res) {
+  return res.render("PlinicAdmin/Contents/ADBanner/new", {});
+});
+//콘텐츠관리 챌린지 신규 등록 화면
 
 
 router.get("/", function(req, res) {
