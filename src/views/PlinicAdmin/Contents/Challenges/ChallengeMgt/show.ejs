@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html>
+    <head>
+    <% include ../../../../partials/head %>
+    <link rel="stylesheet" href="/stylesheets/image_upload.css">
+    </head>
+    <script type="text/javascript" src="/js/jquery-1.10.2.js"></script>
+    <script type="text/javascript" src="/js/image_upload.js"></script>
+    <script>
+        $(document).ready(function () {
+            $(".active").removeClass("active");
+            $("#contents").addClass("active");
+        });
+    </script>
+  <body>
+    <header>
+      <% include ../../../../partials/header %>
+    </header>
+    <div class="posts">
+<!-- main start-->
+
+<!-- views/carezone/show.ejs -->
+    <!-- <div class="show"> -->
+    <!-- <div class="buttons floats">
+      <% if(user) { %>
+        <form class="float_right" action="/carezone/<%=post._id%>?_method=delete" method="post">
+          <button type="button" onclick="confirm('Your post will be deleted')?this.parentElement.submit():null;">Delete</button>
+        </form>
+        <button class="float_right" onclick="location.href='/carezone/<%=post._id%>/edit'">Edit</button>
+      <% } %>
+      <button class="float_left" onclick="location.href='/carezone?<%= urlQuery %>'">Back</button>
+    </div> -->
+    <div class="container-fluid">
+      <div class="row">
+          <!-- 2단길이의 첫번째 열 -->
+          <div class="col-md-2">
+              <!-- 사이드 메뉴 시작 -->
+              <% include ../../../../partials/side %>
+              <!-- 사이드 메뉴 종료 -->
+          </div>
+
+
+          <!-- 10단길이의 첫번째 열 -->
+          <div class="col-md-10">
+              <div id="page-inner">
+                  <div class="row">
+                      <div class="col-md-12">
+                          <h1 class="page-header">
+                              챌린지 관리<small></small>
+                          </h1>
+                      </div>
+                  </div>
+                  <!-- /. ROW  -->
+                  <div class="row">
+                      <div class="col-lg-12">
+                          <div class="panel panel-default">
+                              <div class="panel-heading">
+                                  챌린지 세부내용
+                              </div>
+                              <!-- <div class="buttons floats">
+                                <% if(user) { %>
+                                  <form class="float_right" action="/carezone/<%=post._id%>?_method=delete" method="post">
+                                    <button type="button" onclick="confirm('Your post will be deleted')?this.parentElement.submit():null;">Delete</button>
+                                  </form>
+                                  <button class="float_right" onclick="location.href='/carezone/<%=post._id%>/edit'">Edit</button>
+                                <% } %>
+                                <button class="float_left" onclick="location.href='/carezone?<%= urlQuery %>'">Back</button>
+                              </div> -->
+                              <div class="panel-body">
+                                  <button class="btn btn-default m-2 float-start" onclick="location.href='/carezone/newIndex?<%= urlQuery %>'">뒤로</button>
+                                  <% if(user) { %>
+                                    <form class="float_right" action="/contents/Challenge/<%=post._id%>?_method=delete" method="post">
+                                      <button type="submit" class="btn btn-danger m-2 float-end">삭제</button>
+                                    </form>                                    
+                                    <button onclick="location.href='/contents/Challenge/<%=post._id%>/edit'" class="btn btn-primary m-2 float-end">수정</button>
+                                  <% } %>
+                                  <div class="row">
+                                      <div class="col-lg-1"></div>
+                                      <div class="col-lg-9">
+                                          <form role="form" action="/carezone" method="post"
+                                              enctype="multipart/form-data">
+                                              <div class="form-group">
+                                                  <!-- 콘텐츠명 -->
+                                                  <div class="row align-items-center w-75 mb-3">
+                                                      <label class="col-md-3 text-left">콘텐츠명</label>
+                                                      <div class="col-md-9">
+                                                          <!-- <input type="text" name="post[title]" class="form-control"
+                                                              maxlength="15" placeholder="15자 이내" required value="<%= post.title %>"> -->
+                                                          <p class="form-control-static"><%= post.title %></p>
+                                                      </div>
+                                                  </div>
+                                                  <!-- 콘텐츠설명 -->
+                                                  <div class="row align-items-center w-75 mb-3">
+                                                      <label class="col-md-3 text-left">콘텐츠설명</label>
+                                                      <div class="col-md-9">
+                                                          <!-- <input class="form-control" name="post[body]" maxlength="20"
+                                                              placeholder="20자 이내" required value="<%= post.body %>"> -->
+                                                          <p class="form-control-static"><%= post.body %></p>
+                                                      </div>
+                                                  </div>
+                                                  <!-- 노출 순서 -->
+                                                  <div class="row align-items-center w-75 mb-3">
+                                                    <label class="col-md-3 text-left">노출 순서</label>
+                                                    <div class="col-md-9">
+                                                        <!-- <input class="form-control" name="post[body]" maxlength="20"
+                                                            placeholder="20자 이내" required value="<%= post.body %>"> -->
+                                                        <p class="form-control-static"><%= post.seq %></p>
+                                                    </div>
+                                                </div>
+
+                                                  <!-- 참여 요일 -->
+                                                  <div class="row align-items-center w-75 mb-3">
+                                                        <label class="col-md-3 text-left">참가 요일</label>
+                                                        <div class="col-md-9">
+                                                            <!-- <input class="form-control" name="post[chaljogun]"
+                                                                maxlength="20" placeholder="20자 이내" required value="<%= post.chaljogun %>"> -->
+                                                                <% if(post.day == '1')  { %>
+                                                                    <p class="form-control-static">월요일</p>
+                                                                <% } else if(post.day == '2')  { %>
+                                                                    <p class="form-control-static">화요일</p>
+                                                                <% } else if(post.day == '3')  { %>
+                                                                    <p class="form-control-static">수요일</p>
+                                                                <% } else if(post.day == '4')  { %>
+                                                                    <p class="form-control-static">목요일</p>
+                                                                <% } else if(post.day == '5')  { %>
+                                                                    <p class="form-control-static">금요일</p>
+                                                                <% } else if(post.day == '6')  { %>
+                                                                    <p class="form-control-static">토요일</p>
+                                                                <% } else if(post.day == '0')  { %>
+                                                                    <p class="form-control-static">일요일</p>
+                                                                <% } %>
+                                                        </div>
+                                                    </div>
+                                                  <!-- 챌린지 조건 -->
+                                                  <div class="row align-items-center w-75 mb-3">
+                                                      <label class="col-md-3 text-left">챌린지 조건</label>
+                                                      <div class="col-md-9">
+                                                          <!-- <input class="form-control" name="post[chaljogun]"
+                                                              maxlength="20" placeholder="20자 이내" required value="<%= post.chaljogun %>"> -->
+                                                              <p class="form-control-static"><%= post.chaljogun %></p>
+                                                      </div>
+                                                  </div>
+                                                  <!-- 참여기간 -->
+                                                  <div class="row align-items-center w-75 mb-3">
+                                                      <label class="col-md-3 text-left">참여기간</label>
+                                                      <div class="col-md-9">
+                                                          <!-- <input class="form-control" name="post[gigan]"
+                                                              maxlength="20" placeholder="20자 이내" required value="<%= post.gigan %>"> -->
+                                                              <p class="form-control-static"><%= post.gigan %></p>
+                                                      </div>
+                                                  </div>
+                                                  <!-- 참여인원 -->
+                                                  <div class="row align-items-center w-75 mb-3">
+                                                      <label class="col-md-3 text-left">참여인원</label>
+                                                      <div class="col-md-9">
+                                                          <!-- <input class="form-control" name="post[inwon]"
+                                                              maxlength="20" placeholder="20자 이내" required value="<%= post.inwon %>"> -->
+                                                              <p class="form-control-static"><%= post.inwon %></p>
+                                                      </div>
+                                                  </div>
+                                                  <!-- 챌린지 기간 -->
+                                                  <div class="row align-items-center w-75 mb-3">
+                                                      <label class="col-md-3 text-left">챌린지 기간</label>
+                                                      <div class="col-md-9">
+                                                          <!-- <input class="form-control" name="post[chalgigan]"
+                                                              maxlength="20" placeholder="20자 이내" required value="<%= post.chalgigan %>"> -->
+                                                              <p class="form-control-static"><%= post.chalgigan %></p>
+                                                      </div>
+                                                  </div>
+                                                  <!-- 보상 상품명 -->
+                                                  <div class="row align-items-center w-75 mb-3">
+                                                      <label class="col-md-3 text-left">보상 상품명</label>
+                                                      <div class="col-md-9">
+                                                          <!-- <input class="form-control" name="post[product]"
+                                                              maxlength="20" placeholder="20자 이내" required value="<%= post.product %>"> -->
+                                                              <p class="form-control-static"><%= post.product %></p>
+                                                      </div>
+                                                  </div>
+                                                  <!-- 보상품 URL -->
+                                                  <div class="row align-items-center w-75 mb-3">
+                                                      <label class="col-md-3 text-left">보상품 URL</label>
+                                                      <div class="col-md-9">
+                                                          <!-- <input class="form-control" name="post[product_url]"
+                                                              placeholder="URL주소" required value="<%= post.product_url %>"> -->
+                                                              <p class="form-control-static"><%= post.product_url %></p>
+                                                      </div>
+                                                  </div>
+                                                  <!-- 즉시구매 URL -->
+                                                  <div class="row align-items-center w-75 mb-3">
+                                                      <label class="col-md-3 text-left">즉시구매 URL</label>
+                                                      <div class="col-md-9">
+                                                          <!-- <input class="form-control" name="post[purchase_url]"
+                                                              placeholder="URL주소" required value="<%= post.purchase_url %>"> -->
+                                                              <p class="form-control-static"><%= post.purchase_url %></p>
+                                                      </div>
+                                                  </div>
+                                                  <!-- 홈 표시 이미지 업로드 -->
+                                                  <div class="row align-items-center w-75 mb-3">
+                                                      <label class="col-md-3 text-left">홈 이미지</label>
+                                                      <div class="col-md-9">
+                                                          <div class="row">
+                                                              <div class="col-6 imgUp">
+                                                                <img style="width: 200px;" src="<%= homeImage %>" />
+                                                                <!-- <div class="imagePreview" style="background: url('<%= url %>');"></div> -->
+                                                                <p class="help-block">Size(px) : 1080 × 1205</p>
+                                                                  <!-- <label class="btn btn-primary">
+                                                                      Upload
+                                                                      <input name="homeimage" type="file"
+                                                                          class="uploadFile img form-control"
+                                                                          value="Upload Photo"
+                                                                          style="width: 0px;height: 0px;overflow: hidden;"
+                                                                          required accept=".jpg, .jpeg, .png">
+                                                                  </label> -->
+                                                              </div>
+                                                              <!-- <i class="fa fa-plus imgAdd"></i> -->
+                                                          </div>
+                                                      </div>
+                                                  </div>
+                                                  <!-- 메인 이미지 업로드 -->
+                                                  <div class="row border-top p-2"></div>
+                                                  <div class="row align-items-center w-75 mb-3">
+                                                      <label class="col-md-3 text-left">챌린지 탭 이미지</label>
+                                                      <div class="col-md-9">
+                                                          <div class="row">
+                                                              <div class="col-6 imgUp">
+                                                                  <img style="width: 200px;" src="<%= url %>" />
+                                                                  <!-- <div class="imagePreview" style="width: 300px; height: 100px; background: url('<%= url %>')"></div> -->
+                                                                  <p class="help-block">Size(px) : 640 × 360</p>
+                                                                  <!-- <label class="btn btn-primary">
+                                                                      Upload
+                                                                      <input name="image" type="file"
+                                                                          class="uploadFile img form-control"
+                                                                          value="Upload Photo"
+                                                                          style="width: 0px;height: 0px;overflow: hidden;"
+                                                                          required accept=".jpg, .jpeg, .png">
+                                                                  </label> -->
+                                                              </div>
+                                                              <!-- <i class="fa fa-plus imgAdd"></i> -->
+                                                          </div>
+                                                      </div>
+                                                  </div>
+                                                  <!-- 슬라이드 이미지 업로드 -->
+                                                  <div class="row border-top p-2"></div>
+                                                  <div class="row align-items-center w-75 mb-3">
+                                                      <label class="col-md-3 text-left">슬라이드 이미지</label>
+                                                      <div class="col-md-9">
+                                                          <div class="row">
+                                                              <div class="col-6 w-50 imgUp">
+                                                                <img style="width: 200px;" src="<%= challenge_url1 %>" />
+                                                                <!-- <div class="imagePreview" style="background: url('<%= challenge_url1 %>');"></div> -->
+                                                                <p class="help-block">Size(px) : 640 × 360</p>
+                                                                  <!-- <label class="btn btn-primary">
+                                                                      Upload1
+                                                                      <input name="challenge_image1" type="file"
+                                                                          class="uploadFile img form-control"
+                                                                          value="Upload Photo"
+                                                                          style="width: 0px;height: 0px;overflow: hidden;"
+                                                                          required accept=".jpg, .jpeg, .png">
+                                                                  </label> -->
+                                                                  <!-- <p class="help-block">Size(px) : 720 X 405</p> -->
+                                                              </div>
+                                                              <div class="col-6 w-50 imgUp">
+                                                                <img style="width: 200px;" src="<%= challenge_url2 %>" />
+                                                                <!-- <div class="imagePreview" style="background: url('<%= challenge_url2 %>');"></div> -->
+                                                                <p class="help-block">Size(px) : 640 × 360</p>
+                                                                  <!-- <label class="btn btn-primary">
+                                                                      Upload2
+                                                                      <input name="challenge_image2" type="file"
+                                                                          class="uploadFile img form-control"
+                                                                          value="Upload Photo"
+                                                                          style="width: 0px;height: 0px;overflow: hidden;"
+                                                                          required accept=".jpg, .jpeg, .png">
+                                                                  </label> -->
+                                                              </div>
+                                                              <div class="col-6 w-50 imgUp">
+                                                                <img style="width: 200px;" src="<%= challenge_url3 %>" />
+                                                                <!-- <div class="imagePreview" style="background: url('<%= challenge_url3 %>');"></div> -->
+                                                                <p class="help-block">Size(px) : 640 × 360</p>
+                                                                  <!-- <label class="btn btn-primary">
+                                                                      Upload3
+                                                                      <input name="challenge_image3" type="file"
+                                                                          class="uploadFile img form-control"
+                                                                          value="Upload Photo"
+                                                                          style="width: 0px;height: 0px;overflow: hidden;"
+                                                                          required accept=".jpg, .jpeg, .png">
+                                                                  </label> -->
+                                                              </div>
+                                                              <div class="col-6 w-50 imgUp">
+                                                                <img style="width: 200px;" src="<%= challenge_url4 %>" />
+                                                                <!-- <div class="imagePreview" style="background: url('<%= challenge_url4 %>');"></div> -->
+                                                                <p class="help-block">Size(px) : 640 × 360</p>
+                                                                  <!-- <label class="btn btn-primary">
+                                                                      Upload4
+                                                                      <input name="challenge_image4" type="file"
+                                                                          class="uploadFile img form-control"
+                                                                          value="Upload Photo"
+                                                                          style="width: 0px;height: 0px;overflow: hidden;"
+                                                                          required accept=".jpg, .jpeg, .png">
+                                                                  </label> -->
+                                                              </div>
+                                                              <div class="col-6 imgUp">
+                                                                <img style="width: 200px;" src="<%= challenge_url5 %>" />
+                                                                <!-- <div class="imagePreview" style="background: url('<%= challenge_url5 %>');"></div> -->
+                                                                <p class="help-block">Size(px) : 640 × 360</p>                                                                
+                                                                  <!-- <label class="btn btn-primary">
+                                                                      Upload5
+                                                                      <input name="challenge_image5" type="file"
+                                                                          class="uploadFile img form-control"
+                                                                          value="Upload Photo"
+                                                                          style="width: 0px;height: 0px;overflow: hidden;"
+                                                                          required accept=".jpg, .jpeg, .png">
+                                                                  </label> -->
+                                                              </div>
+                                                              <!-- <i class="fa fa-plus imgAdd"></i> -->
+                                                          </div>
+                                                      </div>
+                                                  </div>
+                                                  <!-- 활성화 -->
+                                                  <div class="row align-items-center w-75 mb-3">
+                                                      <label class="col-md-3 text-left">활성화</label>
+                                                      <div class="col-md-9">
+                                                          <label class="radio-inline">
+                                                              <input type="radio" name="optionsRadiosInline"
+                                                                  id="optionsRadiosInline1" value="option1" checked=""
+                                                                  required>활성화
+                                                          </label>
+                                                          <label class="radio-inline">
+                                                              <input type="radio" name="optionsRadiosInline"
+                                                                  id="optionsRadiosInline2" value="option2"
+                                                                  required>비활성화
+                                                          </label>
+                                                      </div>
+                                                  </div>
+                                              </div>
+                                          </form>
+                                      </div>
+                                      <div class="col-lg-1"></div>
+                                  </div>
+                              </div>
+                              <button class="btn btn-default m-2 float-start" onclick="location.href='/carezone/newIndex?<%= urlQuery %>'">뒤로</button>
+                              <% if(user) { %>
+                                <form class="float_right" action="/contents/Challenge/<%=post._id%>?_method=delete" method="post">
+                                  <button type="submit" class="btn btn-danger m-2 float-end">삭제</button>
+                                </form>                                    
+                                <button onclick="location.href='/contents/Challenge/<%=post._id%>/edit'" class="btn btn-primary m-2 float-end">수정</button>
+                              <% } %>
+                          </div>
+                      </div>
+                  </div>
+                  <!-- <footer><p>All right reserved. Template by: <a href="http://webthemez.com">WebThemez</a></p></footer> -->
+              </div>
+          </div>
+      </div>
+  </div>
+  <!-- <footer>
+    <% include ../../../../partials/footer %>
+  </footer> -->
+  </body>
+</html>
