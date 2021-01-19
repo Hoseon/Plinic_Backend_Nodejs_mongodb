@@ -258,16 +258,12 @@ router.get('/challengechkstart/:id', function(req, res) {
 });
 
 router.get('/challangecount/:id/:date', function(req, res) {
-  //var carezonelist = null;
-  // console.log("chkmission id " +req.params.id);
-  // console.log("chkmission date" +new Date(req.params.date).toISOString().substr(0,10));
-  var today = new Date(req.params.date).toISOString().substr(0,10)
-  
+  var today = getCovertKoreaTime(new Date(req.params.date)).toISOString().substr(0,10)
   async.waterfall([function(callback) {
     Challenge.count({
       missionID: req.params.id,
       createdAt: {
-        $gte: new Date(today),
+        $gte: today,
         // $lte: new Date(req.params.date),
       }
     }, function(err, docs) {
@@ -1258,4 +1254,10 @@ function createSearch(queries) {
     findUser: findUser,
     highlight: highlight
   };
+}
+
+function getCovertKoreaTime(time) {
+  return new Date(
+    new Date(time).getTime() - new Date().getTimezoneOffset() * 60000
+  )
 }

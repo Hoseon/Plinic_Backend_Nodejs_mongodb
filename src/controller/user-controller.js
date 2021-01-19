@@ -118,6 +118,7 @@ exports.challengeSave = (req, res) => {
     } else {
       //등록 한 미션이 없거나 완료가 되었을 때
       let newMission = Challenge(req.body);
+      newMission.createdAt = getCovertKoreaTime(new Date()); //데이터베이스에 오늘 날짜를 그냥 넣어 버림 GMT+09:00 기준
       newMission.save((err, user) => {
         if (err) {
           console.log(err);
@@ -2224,4 +2225,10 @@ function makeRandomStr() {
     randomStr += possible.charAt(Math.floor(Math.random() * possible.length));
   }
   return randomStr;
+}
+
+function getCovertKoreaTime(time) {
+  return new Date(
+    new Date(time).getTime() - new Date().getTimezoneOffset() * 60000
+  )
 }
