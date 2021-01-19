@@ -527,6 +527,48 @@ router.get("/BeautyTip/PostMgt/new", function(req, res) {
 });
 //포스트 신규 등록 화면
 
+router.post('/BeautyTip/PostMgt', 
+// s3upload.single('image'), 
+// isLoggedIn, 
+function(req, res, next) {
+  // async.waterfall([function(callback) {
+  //   CarezoneCounter.findOne({
+  //     name: "carezone"
+  //   }, function(err, counter) {
+  //     if (err) callback(err);
+  //     if (counter) {
+  //       callback(null, counter);
+  //     } else {
+  //       CarezoneCounter.create({
+  //         name: "carezone",
+  //         totalCount: 0
+  //       }, function(err, counter) {
+  //         if (err) return res.json({
+  //           success: false,
+  //           message: err
+  //         });
+  //         callback(null, counter);
+  //       });
+  //     }
+  //   });
+  // }], function(callback, counter) {
+  //   var newPost = req.body.post;
+  //   newPost.author = req.user._id;
+  //   newPost.numId = counter.totalCount + 1;
+  //   req.body.post.filename = req.files['image'][0].key;
+  //   req.body.post.originalName = req.files['image'][0].originalname;
+  //   Carezone.create(req.body.post, function(err, post) {
+  //     if (err) return res.json({
+  //       success: false,
+  //       message: err
+  //     });
+  //     counter.totalCount++;
+  //     counter.save();
+  //     res.redirect('/contents/Challenge/newIndex');
+  //   });
+  // });
+}); // create
+
 router.get("/BeautyTip/PostDisplay", function(req, res) {
   return res.render("PlinicAdmin/Contents/BeautyTip/PostDisplay/index", {});
 });

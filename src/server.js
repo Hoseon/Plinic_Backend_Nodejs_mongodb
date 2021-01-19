@@ -878,6 +878,7 @@ module.exports = function (app) {
 
   //플리닉 뉴 관리자 2020-12-23
   app.use('/contents', require('./admin/contents'));
+  app.use('/beautyTip', require('./admin/beautyTip'));
   //테스트 상품 페이지
   app.use('/product', require('./admin/product'));
 
