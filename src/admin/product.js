@@ -21,11 +21,11 @@ var fcm = new FCM(serverKey);
 
 //multer 선언 이미지 rest api 개발 20190425
 var storage = multer.diskStorage({
-  destination: function(req, file, cb) {
+  destination: function (req, file, cb) {
     cb(null, path.join(__dirname, "../uploads/"));
     //cb(null, UPLOAD_PATH)
   },
-  filename: function(req, file, cb) {
+  filename: function (req, file, cb) {
     cb(null, file.fieldname + "-" + Date.now());
   }
 });
@@ -44,10 +44,10 @@ var sftpUpload = multer({
       password: "g100210!!"
     },
     // basepath: '/www/plinic',
-    destination: function(req, file, cb) {
+    destination: function (req, file, cb) {
       cb(null, "/www/plinic");
     },
-    filename: function(req, file, cb) {
+    filename: function (req, file, cb) {
       cb(null, file.fieldname + "-" + Date.now());
     }
   })
@@ -60,63 +60,43 @@ const sftpconfig = {
   password: "g100210!!"
 };
 
-router.get("/Main", function(req, res) {
+router.get("/Main", function (req, res) {
   return res.render("PlinicAdmin/Product/Main/index", {});
 });
 //상품관리 메인 화면
 
-router.get("/PaymentWeb/PaymentWeb-List", function(req, res) {
-  return res.render("PlinicAdmin/Product/PaymentWeb/PaymentWeb-List/index", {});
-});
-//일시불 상품관리 리스트 화면
-
-router.get("/PaymentWeb/PaymentWeb-Register", function(req, res) {
-  return res.render("PlinicAdmin/Product/PaymentWeb/PaymentWeb-Register/index", {});
-});
-//일시불 상품관리 생성 화면
-
-router.get("/PaymentApp/PaymentApp-List", function(req, res) {
-  return res.render("PlinicAdmin/Product/PaymentApp/PaymentApp-List/index", {});
-});
-//정기결제 상품관리 리스트 화면
-
-router.get("/PaymentApp/PaymentApp-Register", function(req, res) {
-  return res.render("PlinicAdmin/Product/PaymentApp/PaymentApp-Register/index", {});
-});
-//정기결제 상품관리 생성 화면
-
 ////////////////////////////////////// 상품 데이터
-router.get("/ProductData/ProductList", function(req, res) {
+router.get("/ProductData/ProductList", function (req, res) {
   return res.render("PlinicAdmin/Product/ProductData/ProductList/index", {});
 });
 //상품데이터 상품관리 리스트 화면
 
-router.get("/ProductData/ProductRegister", function(req, res) {
+router.get("/ProductData/ProductRegister", function (req, res) {
   return res.render("PlinicAdmin/Product/ProductData/ProductRegister/index", {});
 });
 //상품데이터 상품관리 생성 화면
 
-router.get("/ProductData/ProductCategory", function(req, res) {
+router.get("/ProductData/ProductCategory", function (req, res) {
   return res.render("PlinicAdmin/Product/ProductData/ProductCategory/index", {});
 });
 //상품데이터 카테고리 화면
 
-router.get("/ProductData/ProductTabShow", function(req, res) {
+router.get("/ProductData/ProductTabShow", function (req, res) {
   return res.render("PlinicAdmin/Product/ProductData/ProductTabShow/index", {});
 });
 //상품데이터 탭 진열 관리 화면
 
-router.get("/ProductData/ProductRecomShow", function(req, res) {
+router.get("/ProductData/ProductRecomShow", function (req, res) {
   return res.render("PlinicAdmin/Product/ProductData/ProductRecomShow/index", {});
 });
 //상품데이터 상품 추천 노출위치 관리 화면
 
-router.get("/ProductData/ProductTransCost", function(req, res) {
+router.get("/ProductData/ProductTransCost", function (req, res) {
   return res.render("PlinicAdmin/Product/ProductData/ProductTransCost/index", {});
 });
 //상품데이터 배송비 설정 화면
 
-router.get("/ProductData/ProductQnA", function(req, res) {
+router.get("/ProductData/ProductQnA", function (req, res) {
   return res.render("PlinicAdmin/Product/ProductData/ProductQnA/index", {});
 });
 //상품데이터 문의관리 화면
@@ -124,7 +104,7 @@ router.get("/ProductData/ProductQnA", function(req, res) {
 //////////////////////////////////// 상품데이터 종료
 
 
-router.get("/", function(req, res) {
+router.get("/", function (req, res) {
   return res.render("PlinicAdmin/bootstraptest/index", {});
 });
 // index

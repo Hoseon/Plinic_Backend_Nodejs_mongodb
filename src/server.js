@@ -878,9 +878,44 @@ module.exports = function (app) {
 
   //플리닉 뉴 관리자 2020-12-23
   app.use('/contents', require('./admin/contents'));
-  app.use('/beautyTip', require('./admin/beautyTip'));
-  //테스트 상품 페이지
+
+  app.uset('/beautyTip', require('./admin/beautyTip'));
+
+  //상품 관리자
   app.use('/product', require('./admin/product'));
+
+  //// 콘텐츠관리
+
+  //챌린지 성공 관리
+  app.use('/challengeSuccess', require('./admin/challengeSuccess'));
+  //뷰티팁 영상 관리
+  app.use('/movies', require('./admin/movies'));
+  //뷰티팁 영상진열 관리
+  app.use('/movieDisplay', require('./admin/movieDisplay'));
+  //챌린지 댓글 관리
+  app.use('/challengeComments', require('./admin/challengeComments'));
+  //영상 댓글 관리
+  app.use('/movieComments', require('./admin/movieComments'));
+  //피부고민 댓글 관리
+  app.use('/skinqnaComments', require('./admin/skinqnaComments'));
+  //공지사항 댓글 관리
+  app.use('/noticeComments', require('./admin/noticeComments'));
+  //FAQ 댓글 관리
+  app.use('/faqComments', require('./admin/faqComments'));
+  //문의하기 댓글 관리
+  app.use('/answerComments', require('./admin/answerComments'));
+  //홈 팝업 관리
+  app.use('/homePopups', require('./admin/homePopups'));
+  //광고 배너 관리
+  app.use('/adBanners', require('./admin/adBanners'));
+
+  //// 상품관리
+
+  //플리닉 일시불(웹) 관리
+  app.use('/paymentWebs', require('./admin/paymentWebs'));
+  //플리닉 정기결제(앱) 관리
+  app.use('/paymentApps', require('./admin/paymentApps'));
+
 
   app.get('/ejs', (req, res) => {
     res.render('home');

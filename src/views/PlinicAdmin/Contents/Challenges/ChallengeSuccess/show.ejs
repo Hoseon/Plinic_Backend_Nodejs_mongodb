@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
     <head>
-    <% include ../../../partials/head %>
+    <% include ../../../../partials/head %>
     <link rel="stylesheet" href="/stylesheets/image_upload.css">
     </head>
     <script type="text/javascript" src="/js/jquery-1.10.2.js"></script>
@@ -14,7 +14,7 @@
     </script>
   <body>
     <header>
-      <% include ../../../partials/header %>
+      <% include ../../../../partials/header %>
     </header>
     <div class="posts">
 <!-- main start-->
@@ -35,7 +35,7 @@
           <!-- 2단길이의 첫번째 열 -->
           <div class="col-md-2">
               <!-- 사이드 메뉴 시작 -->
-              <% include ../../../partials/side %>
+              <% include ../../../../partials/side %>
               <!-- 사이드 메뉴 종료 -->
           </div>
 
@@ -46,7 +46,7 @@
                   <div class="row">
                       <div class="col-md-12">
                           <h1 class="page-header">
-                              챌린지 관리<small></small>
+                              챌린지 성공 관리<small></small>
                           </h1>
                       </div>
                   </div>
@@ -71,7 +71,7 @@
                                   <% if(user) { %>
                                     <form class="float_right" action="/contents/Challenge/<%=post._id%>?_method=delete" method="post">
                                       <button type="submit" class="btn btn-danger m-2 float-end">삭제</button>
-                                    </form>
+                                    </form>                                    
                                     <button onclick="location.href='/contents/Challenge/<%=post._id%>/edit'" class="btn btn-primary m-2 float-end">수정</button>
                                   <% } %>
                                   <div class="row">
@@ -82,138 +82,82 @@
                                               <div class="form-group">
                                                   <!-- 콘텐츠명 -->
                                                   <div class="row align-items-center w-75 mb-3">
-                                                      <label class="col-md-3 text-left">콘텐츠명</label>
+                                                      <label class="col-md-3 text-left">미션명</label>
                                                       <div class="col-md-9">
                                                           <!-- <input type="text" name="post[title]" class="form-control"
                                                               maxlength="15" placeholder="15자 이내" required value="<%= post.title %>"> -->
-                                                          <p class="form-control-static"><%= post.title %></p>
+                                                          <p class="form-control-static">-</p>
                                                       </div>
                                                   </div>
                                                   <!-- 콘텐츠설명 -->
                                                   <div class="row align-items-center w-75 mb-3">
-                                                      <label class="col-md-3 text-left">콘텐츠설명</label>
+                                                      <label class="col-md-3 text-left">보상상품</label>
                                                       <div class="col-md-9">
                                                           <!-- <input class="form-control" name="post[body]" maxlength="20"
                                                               placeholder="20자 이내" required value="<%= post.body %>"> -->
-                                                          <p class="form-control-static"><%= post.body %></p>
+                                                          <p class="form-control-static">-</p>
                                                       </div>
                                                   </div>
                                                   <!-- 노출 순서 -->
                                                   <div class="row align-items-center w-75 mb-3">
-                                                    <label class="col-md-3 text-left">노출 순서</label>
+                                                    <label class="col-md-3 text-left">받을사람</label>
                                                     <div class="col-md-9">
                                                         <!-- <input class="form-control" name="post[body]" maxlength="20"
                                                             placeholder="20자 이내" required value="<%= post.body %>"> -->
-                                                        <p class="form-control-static"><%= post.seq %></p>
+                                                        <p class="form-control-static">-</p>
                                                     </div>
                                                 </div>
 
                                                   <!-- 참여 요일 -->
                                                   <div class="row align-items-center w-75 mb-3">
-                                                        <label class="col-md-3 text-left">참가 요일</label>
+                                                        <label class="col-md-3 text-left">연락처</label>
                                                         <div class="col-md-9">
-                                                            <!-- <input class="form-control" name="post[chaljogun]"
-                                                                maxlength="20" placeholder="20자 이내" required value="<%= post.chaljogun %>"> -->
-                                                                <% if(post.day == '1')  { %>
-                                                                    <p class="form-control-static">월요일</p>
-                                                                <% } else if(post.day == '2')  { %>
-                                                                    <p class="form-control-static">화요일</p>
-                                                                <% } else if(post.day == '3')  { %>
-                                                                    <p class="form-control-static">수요일</p>
-                                                                <% } else if(post.day == '4')  { %>
-                                                                    <p class="form-control-static">목요일</p>
-                                                                <% } else if(post.day == '5')  { %>
-                                                                    <p class="form-control-static">금요일</p>
-                                                                <% } else if(post.day == '6')  { %>
-                                                                    <p class="form-control-static">토요일</p>
-                                                                <% } else if(post.day == '0')  { %>
-                                                                    <p class="form-control-static">일요일</p>
-                                                                <% } %>
+                                                            -
                                                         </div>
                                                     </div>
                                                   <!-- 챌린지 조건 -->
                                                   <div class="row align-items-center w-75 mb-3">
-                                                      <label class="col-md-3 text-left">챌린지 조건</label>
+                                                      <label class="col-md-3 text-left">우편번호</label>
                                                       <div class="col-md-9">
                                                           <!-- <input class="form-control" name="post[chaljogun]"
                                                               maxlength="20" placeholder="20자 이내" required value="<%= post.chaljogun %>"> -->
-                                                              <p class="form-control-static"><%= post.chaljogun %></p>
+                                                              <p class="form-control-static">-</p>
                                                       </div>
                                                   </div>
                                                   <!-- 참여기간 -->
                                                   <div class="row align-items-center w-75 mb-3">
-                                                      <label class="col-md-3 text-left">참여기간</label>
+                                                      <label class="col-md-3 text-left">주소</label>
                                                       <div class="col-md-9">
                                                           <!-- <input class="form-control" name="post[gigan]"
                                                               maxlength="20" placeholder="20자 이내" required value="<%= post.gigan %>"> -->
-                                                              <p class="form-control-static"><%= post.gigan %></p>
+                                                              <p class="form-control-static">-</p>
                                                       </div>
                                                   </div>
                                                   <!-- 참여인원 -->
                                                   <div class="row align-items-center w-75 mb-3">
-                                                      <label class="col-md-3 text-left">참여인원</label>
+                                                      <label class="col-md-3 text-left">배송특이사항</label>
                                                       <div class="col-md-9">
                                                           <!-- <input class="form-control" name="post[inwon]"
                                                               maxlength="20" placeholder="20자 이내" required value="<%= post.inwon %>"> -->
-                                                              <p class="form-control-static"><%= post.inwon %></p>
+                                                              <p class="form-control-static">-</p>
                                                       </div>
                                                   </div>
                                                   <!-- 챌린지 기간 -->
                                                   <div class="row align-items-center w-75 mb-3">
-                                                      <label class="col-md-3 text-left">챌린지 기간</label>
+                                                      <label class="col-md-3 text-left">미션시작일</label>
                                                       <div class="col-md-9">
                                                           <!-- <input class="form-control" name="post[chalgigan]"
                                                               maxlength="20" placeholder="20자 이내" required value="<%= post.chalgigan %>"> -->
-                                                              <p class="form-control-static"><%= post.chalgigan %></p>
+                                                              <p class="form-control-static">-</p>
                                                       </div>
                                                   </div>
                                                   <!-- 보상 상품명 -->
                                                   <div class="row align-items-center w-75 mb-3">
-                                                      <label class="col-md-3 text-left">보상 상품명</label>
+                                                      <label class="col-md-3 text-left">미션종료일</label>
                                                       <div class="col-md-9">
                                                           <!-- <input class="form-control" name="post[product]"
                                                               maxlength="20" placeholder="20자 이내" required value="<%= post.product %>"> -->
-                                                              <p class="form-control-static"><%= post.product %></p>
-                                                      </div>
-                                                  </div>
-                                                  <!-- 보상품 URL -->
-                                                  <div class="row align-items-center w-75 mb-3">
-                                                      <label class="col-md-3 text-left">보상품 URL</label>
-                                                      <div class="col-md-9">
-                                                          <!-- <input class="form-control" name="post[product_url]"
-                                                              placeholder="URL주소" required value="<%= post.product_url %>"> -->
-                                                              <p class="form-control-static"><%= post.product_url %></p>
-                                                      </div>
-                                                  </div>
-                                                  <!-- 즉시구매 URL -->
-                                                  <div class="row align-items-center w-75 mb-3">
-                                                      <label class="col-md-3 text-left">즉시구매 URL</label>
-                                                      <div class="col-md-9">
-                                                          <!-- <input class="form-control" name="post[purchase_url]"
-                                                              placeholder="URL주소" required value="<%= post.purchase_url %>"> -->
-                                                              <p class="form-control-static"><%= post.purchase_url %></p>
-                                                      </div>
-                                                  </div>
-                                                  <!-- 홈 표시 이미지 업로드 -->
-                                                  <div class="row align-items-center w-75 mb-3">
-                                                      <label class="col-md-3 text-left">홈 이미지</label>
-                                                      <div class="col-md-9">
-                                                          <div class="row">
-                                                              <div class="col-6 imgUp">
-                                                                <img style="width: 200px;" src="<%= homeImage %>" />
-                                                                <!-- <div class="imagePreview" style="background: url('<%= url %>');"></div> -->
-                                                                <p class="help-block">Size(px) : 1080 × 1205</p>
-                                                                  <!-- <label class="btn btn-primary">
-                                                                      Upload
-                                                                      <input name="homeimage" type="file"
-                                                                          class="uploadFile img form-control"
-                                                                          value="Upload Photo"
-                                                                          style="width: 0px;height: 0px;overflow: hidden;"
-                                                                          required accept=".jpg, .jpeg, .png">
-                                                                  </label> -->
-                                                              </div>
-                                                              <!-- <i class="fa fa-plus imgAdd"></i> -->
-                                                          </div>
+                                                              <p class="form-control-static">-</p>
                                                       </div>
                                                   </div>
                                                   <!-- 메인 이미지 업로드 -->
@@ -301,7 +245,7 @@
                                                               <div class="col-6 imgUp">
                                                                 <img style="width: 200px;" src="<%= challenge_url5 %>" />
                                                                 <!-- <div class="imagePreview" style="background: url('<%= challenge_url5 %>');"></div> -->
-                                                                <p class="help-block">Size(px) : 640 × 360</p>
+                                                                <p class="help-block">Size(px) : 640 × 360</p>                                                                
                                                                   <!-- <label class="btn btn-primary">
                                                                       Upload5
                                                                       <input name="challenge_image5" type="file"
@@ -341,7 +285,7 @@
                               <% if(user) { %>
                                 <form class="float_right" action="/contents/Challenge/<%=post._id%>?_method=delete" method="post">
                                   <button type="submit" class="btn btn-danger m-2 float-end">삭제</button>
-                                </form>
+                                </form>                                    
                                 <button onclick="location.href='/contents/Challenge/<%=post._id%>/edit'" class="btn btn-primary m-2 float-end">수정</button>
                               <% } %>
                           </div>
@@ -353,7 +297,7 @@
       </div>
   </div>
   <!-- <footer>
-    <% include ../../../partials/footer %>
+    <% include ../../../../partials/footer %>
   </footer> -->
   </body>
 </html>

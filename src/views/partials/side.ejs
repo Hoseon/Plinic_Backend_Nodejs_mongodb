@@ -4,40 +4,46 @@
         <nav class="small" id="toc">
             <ul class="list-unstyled">
                 <li class="my-2">
-                        <a class="btn align-items-center collapsed"
-                        href="/contents/Challenge/newIndex">챌린지</a>
+                    <button class="btn d-inline-flex align-items-center collapsed" data-bs-toggle="collapse"
+                        aria-expanded="false" data-bs-target="#forms-collapse"
+                        aria-controls="forms-collapse">챌린지</button>
+                        <ul class="list-unstyled ps-3 collapse" id="forms-collapse">
+                            <li><a class="d-inline-flex align-items-center rounded" href="/contents/Challenge/newIndex">챌린지 관리</a></li>
+                            <li><a class="d-inline-flex align-items-center rounded" href="/challengeSuccess/Challenge/newIndex">챌린지 성공 관리</a></li>
+                        </ul>
+                        
                 </li>
                 <li class="my-2">
                     <button class="btn d-inline-flex align-items-center collapsed" data-bs-toggle="collapse"
                         aria-expanded="false" data-bs-target="#forms-collapse1"
                         aria-controls="forms-collapse">뷰티팁</button>
                     <ul class="list-unstyled ps-3 collapse" id="forms-collapse1">
-                        <li><a id="postmgt" class="d-inline-flex align-items-center rounded" href="/beautyTip/PostMgt/index">포스트관리</a></li>
-                        <li><a class="d-inline-flex align-items-center rounded" href="/contents/BeautyTip/PostDisplay">포스트진열관리</a></li>
-                        <li><a class="d-inline-flex align-items-center rounded" href="/contents/BeautyTip/MovieMgt">영상 관리</a></li>
-                        <li><a class="d-inline-flex align-items-center rounded" href="/contents/BeautyTip/MovieDisplay">영상 진열 관리</a></li>
+                        <li><a id="postmgt" class="d-inline-flex align-items-center rounded" href="/contents/BeautyTip/PostMgt">포스트 관리</a></li>
+                        <li><a class="d-inline-flex align-items-center rounded" href="/contents/BeautyTip/PostDisplay">포스트 진열 관리</a></li>
+                        <li><a class="d-inline-flex align-items-center rounded" href="/movies/BeautyTip/MovieMgt">영상 관리</a></li>
+                        <li><a class="d-inline-flex align-items-center rounded" href="/movieDisplay/BeautyTip/MovieDisplay">영상 진열 관리</a></li>
                     </ul>
                 </li>
                 <li class="my-2">
                     <button class="btn d-inline-flex align-items-center collapsed" data-bs-toggle="collapse"
                         aria-expanded="false" data-bs-target="#forms-collapse2"
-                        aria-controls="forms-collapse2">게시판 댓글</button>
+                        aria-controls="forms-collapse">게시판 댓글</button>
                     <ul class="list-unstyled ps-3 collapse" id="forms-collapse2">
                         <li><a class="d-inline-flex align-items-center rounded" href="/carezone/nIndex">챌린지 댓글</a></li>
-                        <li><a class="d-inline-flex align-items-center rounded" href="/contents/Comments/MovieComment">영상 댓글</a></li>
-                        <li><a class="d-inline-flex align-items-center rounded" href="/contents/Comments/SkinQna">피부고민 게시판</a></li>
-                        <li><a class="d-inline-flex align-items-center rounded" href="/contents/Comments/Notice">공지사항 게시판</a></li>
-                        <li><a class="d-inline-flex align-items-center rounded" href="/contents/Comments/Faq">FAQ 게시판</a></li>
-                        <li><a class="d-inline-flex align-items-center rounded" href="/contents/Comments/Answer">문의하기 게시판</a></li>
+                        <li><a class="d-inline-flex align-items-center rounded" href="/movieComments/Comments/MovieComment">영상 댓글</a></li>
+                        <li><a class="d-inline-flex align-items-center rounded" href="/skinqnaComments/Comments/SkinQna">피부고민 게시판</a></li>
+                        <li><a class="d-inline-flex align-items-center rounded" href="/noticeComments/Comments/Notice">공지사항 게시판</a></li>
+                        <li><a class="d-inline-flex align-items-center rounded" href="/faqComments/Comments/Faq">FAQ 게시판</a></li>
+                        <li><a class="d-inline-flex align-items-center rounded" href="/answerComments/Comments/Answer">문의하기 게시판</a></li>
                     </ul>
                 </li>
                 <li class="my-2">
                         <a class="btn align-items-center collapsed"
-                        href="/contents/HomePopup">홈 팝업</a>
+                        href="/homePopups/HomePopup">홈 팝업</a>
                 </li>
                 <li class="my-2">
                         <a class="btn align-items-center collapsed"
-                        href="/contents/ADBanner">광고배너</a>
+                        href="/adBanners/ADBanner">광고배너</a>
                 </li>
             </ul>
         </nav>
