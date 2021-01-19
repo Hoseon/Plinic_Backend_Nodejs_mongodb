@@ -3,20 +3,20 @@
 
 <head>
     <% include ../../../../partials/head %>
-    <title></title>
-    <link href='http://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css' />
+        <title></title>
+        <link href='http://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css' />
 </head>
 <script type="text/javascript" src="/js/jquery-1.10.2.js"></script>
 <script>
-        $(document).ready(function(){
-            $(".active").removeClass("active");
-            $("#contents").addClass("active");
-        });
+    $(document).ready(function () {
+        $(".active").removeClass("active");
+        $("#contents").addClass("active");
+    });
 </script>
 <title>Hello, world!</title>
 
 <body>
-    
+
     <header>
         <% include ../../../../partials/header %>
     </header>
@@ -24,80 +24,85 @@
 
     <div class="container-fluid">
         <div class="row">
-          <!-- 2단길이의 첫번째 열 -->
-          <div class="col-md-2">
-            <!-- 사이드 메뉴 시작 -->
-            <% include ../../../../partials/side %>
-            <!-- 사이드 메뉴 종료 -->
-          </div>
-  
-  
-          <!-- 10단길이의 첫번째 열 -->
-          <div class="col-md-10">
-            <div id="page-inner">
-              <!-- /. ROW  -->
-              <div class="row">
-                <div class="col-lg-12">
-                  <div class="panel panel-default">
-                    <div class="panel-heading">
-                      내용보기
-                    </div>
-                    <br>
-                    <div class="form-group row">
-                        <label class="col-sm-2 text-center control-label" for="name">제목</label>
-                        <div class="col-sm-10 controls">
-                            <input name="name" id="name" class="form-control" value="" data-validate="data">
-                        </div>
-                    </div>
+            <!-- 2단길이의 첫번째 열 -->
+            <div class="col-md-2">
+                <!-- 사이드 메뉴 시작 -->
+                <% include ../../../../partials/side %>
+                    <!-- 사이드 메뉴 종료 -->
+            </div>
 
-                    <div class="form-group row">
-                        <label class="col-sm-2 text-center control-label" for="name">이름</label>
-                        <div class="col-sm-4 controls">
-                            <input name="name" id="name" class="form-control" value="" data-validate="data">
-                        </div>
-                        <label class="col-sm-2 text-center control-label" for="email">이메일</label>
-                        <div class="col-sm-4 controls">
-                            <input name="email" id="email" class="form-control" value="" data-validate="data">
-                        </div>
-                    </div>
-  
-                    <div class="form-group row">
-                        <label class="col-sm-2 text-center control-label" for="name">본문</label>
-                        <div class="col-sm-10 controls">
-                            <textarea class="form-control" id="floatingTextarea2" style="width: 1092px; height: 200px;"></textarea>
-                        </div>
-                    </div>
 
-                    <div class="form-group row">
-                        <label class="col-sm-2 text-center control-label" for="name">첨부파일</label>
-                        <div class="col-sm-4 controls">
-                            <div class="row align-items-center w-75 mb-3">
-                                <div class="col-md-4">
-                                    <div class="imgUp">
-                                        <div class="imagePreview"></div>
-                                        <label class="btn btn-primary">
-                                            Upload
-                                            <input name="homeimage" type="file"
-                                                class="uploadFile img form-control"
-                                                value="Upload Photo"
-                                                style="width: 0px;height: 0px;overflow: hidden;"
-                                                required accept=".jpg, .jpeg, .png">
-                                        </label>
-                                    </div>
+            <!-- 10단길이의 첫번째 열 -->
+            <div class="col-md-10">
+                <div id="page-inner">
+                    <!-- /. ROW  -->
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <div class="panel panel-default">
+                                <div class="panel-heading">
+                                    내용보기
                                 </div>
+                                <br>
+                                <form action="" method="post" enctype="multipart/form-data">
+                                    <div class="form-group row">
+                                        <label class="col-sm-2 text-center control-label" for="name">제목</label>
+                                        <div class="col-sm-10 controls">
+                                            <input name="name" id="name" class="form-control" value=""
+                                                data-validate="data">
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group row">
+                                        <label class="col-sm-2 text-center control-label" for="name">이름</label>
+                                        <div class="col-sm-4 controls">
+                                            <input name="name" id="name" class="form-control" value=""
+                                                data-validate="data">
+                                        </div>
+                                        <label class="col-sm-2 text-center control-label" for="email">이메일</label>
+                                        <div class="col-sm-4 controls">
+                                            <input name="email" id="email" class="form-control" value=""
+                                                data-validate="data">
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group row">
+                                        <label class="col-sm-2 text-center control-label" for="name">본문</label>
+                                        <div class="col-sm-10 controls">
+                                            <textarea class="form-control" id="floatingTextarea2"
+                                                style="width: 1092px; height: 200px;"></textarea>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group row">
+                                        <label class="col-sm-2 text-center control-label" for="name">첨부파일</label>
+                                        <div class="col-sm-4 controls">
+                                            <div class="row align-items-center w-75 mb-3">
+                                                <div class="col-md-4">
+                                                    <div class="imgUp">
+                                                        <div class="imagePreview"></div>
+                                                        <label class="btn btn-primary">
+                                                            Upload
+                                                            <input name="homeimage" type="file"
+                                                                class="uploadFile img form-control" value="Upload Photo"
+                                                                style="width: 0px;height: 0px;overflow: hidden;"
+                                                                required accept=".jpg, .jpeg, .png">
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                                        <button type="submit" class="w-15 m-1 btn btn-dark btn-sm">저장하기</button>
+                                        <button type="reset" class="w-15 m-1 btn btn-danger btn-sm">취소</button>
+                                    </div>
+                                </form>
                             </div>
                         </div>
                     </div>
-                    
-                    <div class="d-grid gap-2 d-md-flex justify-content-md-end">
-                        <button type="submit" class="w-15 m-1 btn btn-dark btn-sm">저장하기</button>
-                        <button type="submit" class="w-15 m-1 btn btn-danger btn-sm">취소</button>
-                    </div>
-                  </div>
                 </div>
-              </div>
             </div>
-          </div>
         </div>
     </div>
 
@@ -111,4 +116,5 @@
 <script src="/js/bootstrap.min.js"></script>
 <!-- Custom Js -->
 <script src="/js/custom-scripts.js"></script>
+
 </html>

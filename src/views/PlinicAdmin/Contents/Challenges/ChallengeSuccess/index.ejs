@@ -2,7 +2,7 @@
 <html lang="en">
 
 <head>
-    <% include ../../../partials/head %>
+    <% include ../../../../partials/head %>
     <title></title>
     <link href='http://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css' />
 </head>
@@ -10,7 +10,7 @@
 <body>
     
     <header>
-        <% include ../../../partials/header %>
+        <% include ../../../../partials/header %>
     </header>
 
 
@@ -18,7 +18,7 @@
         <div class="row">
             <!-- 2단길이의 첫번째 열 -->
             <div class="col-md-2">
-                <% include ../../../partials/side %>
+                <% include ../../../../partials/side %>
             </div>
 
             <!-- 10단길이의 첫번째 열 -->
@@ -27,7 +27,7 @@
                     <div class="row">
                         <div class="col-md-12">
                             <h1 class="page-header">
-                                챌린지 관리
+                                챌린지 성공 관리
                                 <!-- <small> 챌린지 관리 Sub제목</small> -->
                             </h1>
                         </div>
@@ -39,11 +39,10 @@
                                 <th scope="col"></th>
                                 <th scope="col">홈 이미지</th>
                                 <th scope="col">콘텐츠 제목</th>
-                                <th scope="col">댓글</th>
-                                <th scope="col">글쓴이</th>
-                                <th scope="col">업데이트일</th>
-                                <th scope="col">활성화</th>
-                                <th scope="col">노출순서 및 관리</th>
+                                <th scope="col">시작날짜</th>
+                                <th scope="col">종료날짜</th>
+                                <th scope="col">받는사람(고객명)</th>
+                                <th scope="col">송장번호</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -62,43 +61,10 @@
                                         </th>
                                         <td onclick="window.location = '/contents/Challenge/<%= post._id %>?<%= urlQuery %>'" class="align-middle"><img style="max-width: 120px;" src="https://plinic.s3.ap-northeast-2.amazonaws.com/<%= post.homeimage_filename %>" class="img-thumbnail" alt="..."></td>
                                         <td onclick="window.location = '/contents/Challenge/<%= post._id %>?<%= urlQuery %>'" class="align-middle"><u><%= post.title %></u></td>
-                                        <td class="align-middle"><%= post.comments.length %></td>
-                                        <td class="align-middle"><%= post.author.nickname %></td>
-                                        <td class="align-middle"><%= post.getFormattedDate(post.createdAt) %></td>
-                                        <td class="align-middle">활성화</td>
-                                        <td class="align-middle">
-                                                <div class="row mb-3 align-middle">
-                                                        <div class="row align-middle">
-                                                            <div class="col align-middle p-0"> 
-                                                                <span class="input-group-btn">
-                                                                    <button type="button" class="btn btn-danger btn-number"  data-type="minus" data-field="seq[<%= index %>]">
-                                                                    <span class="glyphicon glyphicon-minus"></span>
-                                                                    </button>
-                                                                </span></div>        
-                                                            <div class="col align-middle p-0">
-                                                                <input type="number" readonly value="<%= post.seq %>" name="seq[<%= index %>]" class="form-control text-center w-100 align-middle" min="1" max="100"></div>        
-                                                            <div class="col p-0">
-                                                                <span class="input-group-btn">
-                                                                    <button type="button" class="btn btn-success btn-number" data-type="plus" data-field="seq[<%= index %>]">
-                                                                        <span class="glyphicon glyphicon-plus"></span>
-                                                                    </button>
-                                                                </span></div>        
-                                                        </div>
-                                                </div>        
-                                                <div class="row justify-content-center">
-                                                        <div class="col-6 p-0 m-0">
-                                                            <form name="seqFormSubmit<%= index %>">
-                                                                <button class="btn btn-primary" type="button" 
-                                                                onclick="seqChange('<%= index %>')">변경하기</button>
-                                                                <input type="hidden" value="<%= post.seq %>" name="seq[<%= index %>]"></div>
-                                                                <input type="hidden" value="<%= post._id %>"  name="seqNumberId[<%= index %>]">
-                                                            </form>
-                                                        <div class="col-6 p-0 m-0">
-                                                         <button type="button" class="btn btn-secondary" disabled>변경바로가기</button>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                        </td>
+                                        <td class="align-middle">-</td>
+                                        <td class="align-middle">-</td>
+                                        <td class="align-middle">-</td>
+                                        <td class="align-middle">-</td>
                                     </tr>
                                 <% }) %>
                             </tbody>
