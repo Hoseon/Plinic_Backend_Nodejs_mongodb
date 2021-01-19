@@ -3,7 +3,6 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/.idea/auth.iml" filepath="$PROJECT_DIR$/.idea/auth.iml" />
-      <module fileurl="file://$PROJECT_DIR$/../plinic/.idea/plinic.iml" filepath="$PROJECT_DIR$/../plinic/.idea/plinic.iml" />
     </modules>
   </component>
 </project>
