@@ -1,7 +1,7 @@
 var mongoose = require('mongoose');
 
 var beautyMovieSchema = mongoose.Schema({
-  title: {type:String, required:true},
+  title: {type:String, required:false},
   body: {type:String, required:true},
   author: {type:mongoose.Schema.Types.ObjectId, ref:'user_admin', required:true},
   views: {type:Number, default: 0},
@@ -38,6 +38,22 @@ var beautyMovieSchema = mongoose.Schema({
   like: {type:Number, default: 0},
   likeuser: {type:Array, default: ''},
   midtext: String,
+  showLocation: [{
+    home: {type: Boolean, default: false}, //메인 홈
+    poreSize: {type: Boolean, default: false}, //모공크기
+    poreCount: {type: Boolean, default: false}, //모공수
+    skinTone: {type: Boolean, default: false}, //피부톤
+    clean : {type: Boolean, default: false}, //클린지수
+    munjin: {type: Boolean, default: false}, //생활문진
+    editor: {type: Boolean, default: false}, //에디터추천
+  }],
+  tabLocation: [{ // 탭명 노출
+    tip: {type: Boolean, default: false},
+    hit: {type: Boolean, default: false},
+    new: {type: Boolean, default: false},
+  }],
+  visible: { type: Boolean, default: true }, //활성화
+  seq : { type: Number, default: 1},
 });
 
 beautyMovieSchema.methods.getFormattedDate = function (date) {
@@ -50,5 +66,20 @@ beautyMovieSchema.methods.getFormattedTime = function (date) {
 function get2digits(num){
   return ("0" + num).slice(-2);
 }
+
+beautyMovieSchema.methods.isEmpty = function (str) {
+  if(typeof str == "undefined" || str == null || str == "")
+      return true;
+  else
+      return false ;
+};
+
+beautyMovieSchema.methods.nvl = function (str, defaultStr) {
+  if(typeof str == "undefined" || str == null || str == "")
+      str = defaultStr ;
+   
+  return str ;
+};
+
 var BeautyMovie = mongoose.model('beautyMovie',beautyMovieSchema);
 module.exports = BeautyMovie;

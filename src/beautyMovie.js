@@ -215,13 +215,13 @@ router.get('/list', function(req, res) {
             `part=snippet`,
             `id=${element.posturlId}`,
           ].join('&');
-          request.get(url + params, function(err,response,body) {
+          
+          request.get(url + params, function (err, response, body) {
             if(body) {
               result.push(JSON.parse(body));    
               if(docs.length == result.length) {
                 // result = JSON.parse(JSON.stringify(result).replace(/\n+/g, ""))
                 res.status(200).json(result);
-                
               }      
             }
           });
