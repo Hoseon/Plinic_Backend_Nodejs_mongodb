@@ -30,7 +30,7 @@
                         <form action="" method="post" enctype="multipart/form-adta">
                             <div class="col-lg-12">
                                 <h1 class="page-header">
-                                    등록/수정
+                                    일시불 등록/수정
                                 </h1>
                                 <div class="panel panel-default">
                                     <div class="panel-heading">
@@ -352,52 +352,6 @@
                                                                                 </tr>
                                                                             </tbody>
                                                                         </table>
-
-                                                                        <div class="accordion" id="accordionExample3">
-                                                                            <div class="accordion-item">
-                                                                                <h2 class="accordion-header"
-                                                                                    id="headingOne3">
-                                                                                    <button class="accordion-button"
-                                                                                        type="button"
-                                                                                        data-bs-toggle="collapse"
-                                                                                        data-bs-target="#collapseOne3"
-                                                                                        aria-expanded="true"
-                                                                                        aria-controls="collapseOne3">
-                                                                                        포인트 설정
-                                                                                    </button>
-                                                                                </h2>
-                                                                                <div id="collapseOne3"
-                                                                                    class="accordion-collapse collapse show"
-                                                                                    aria-labelledby="headingOne"
-                                                                                    data-bs-parent="#accordionExample">
-                                                                                    <div class="accordion-body">
-                                                                                        <div class="row">
-                                                                                            <div
-                                                                                                class="col-sm-2 controls">
-                                                                                                <button
-                                                                                                    class="btn btn-default btn-icon btn-sm "
-                                                                                                    type="button">✓사용</button>
-                                                                                                <button type="button"
-                                                                                                    class="btn btn-info btn-sm">✗사용안함</button>
-                                                                                            </div>
-                                                                                            <div
-                                                                                                class="col-sm-5 controls">
-                                                                                                <label
-                                                                                                    class="form-check-label"
-                                                                                                    for="inlineCheckbox15">최대
-                                                                                                    사용가능 포인트는</label>
-                                                                                                <input name="number"
-                                                                                                    id="number"
-                                                                                                    class="form-control"
-                                                                                                    value=""
-                                                                                                    data-validate="data">
-                                                                                                %
-                                                                                            </div>
-                                                                                        </div>
-                                                                                    </div>
-                                                                                </div>
-                                                                            </div>
-                                                                        </div>
                                                                     </div>
                                                                 </div>
                                                             </div>
@@ -405,6 +359,44 @@
                                                     </div>
                                                 </div>
                                             </div>
+
+                                            <div class="accordion" id="accordionExample3">
+                                                <div class="accordion-item">
+                                                    <h2 class="accordion-header" id="headingOne3">
+                                                        <button class="accordion-button" type="button"
+                                                            data-bs-toggle="collapse" data-bs-target="#collapseOne3"
+                                                            aria-expanded="true" aria-controls="collapseOne3">
+                                                            포인트 설정
+                                                        </button>
+                                                    </h2>
+                                                    <div id="collapseOne3" class="accordion-collapse collapse show"
+                                                        aria-labelledby="headingOne" data-bs-parent="#accordionExample">
+                                                        <div class="accordion-body">
+                                                            <div class="form-group row">
+                                                                <div class="col-sm-2 controls">
+                                                                    <button class="btn btn-default btn-icon btn-sm "
+                                                                        type="button">✓사용</button>
+                                                                    <button type="button"
+                                                                        class="btn btn-info btn-sm">✗사용안함</button>
+                                                                </div>
+
+                                                                <div class="col-sm-2 controls">
+                                                                    <label class="form-check-label"
+                                                                        for="inlineCheckbox15">최대
+                                                                        사용가능 포인트는</label>
+                                                                </div>
+                                                                <div class="col-sm-2 controls">
+                                                                    <input name="number" id="number"
+                                                                        class="form-control" value=""
+                                                                        data-validate="data">
+                                                                </div>
+                                                                <div class="col-sm-1">%</div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
                                             <br><br>
                                             <div class="form-group row">
                                                 <label class="col-sm-2 text-center control-label" for="name">상품
@@ -530,7 +522,7 @@
     $(document).ready(function () {
         $(".active").removeClass("active");
         $("#products").addClass("active");
-        $("#forms-collapse1").addClass('show');
+        $("#forms-collapse2").addClass('show');
 
         $('.btn-number').click(function (e) {
             e.preventDefault();

@@ -60,26 +60,12 @@ const sftpconfig = {
   password: "g100210!!"
 };
 
-router.get("/Main", function (req, res) {
-  return res.render("PlinicAdmin/Product/Main/index", {});
+router.get("/ProductData/ProductCategory", function (req, res) {
+  return res.render("PlinicAdmin/Product/ProductData/ProductCategory/index", {});
 });
-//상품관리 메인 화면
+//상품데이터 카테고리 화면
 
-////////////////////////////////////// 상품 데이터
-router.get("/ProductData/ProductList", function (req, res) {
-return res.render("PlinicAdmin/Product/ProductData/ProductList/index", {});
-});
-//상품데이터 상품관리 리스트 화면
 
-router.get("/ProductData/ProductRegister", function (req, res) {
-return res.render("PlinicAdmin/Product/ProductData/ProductRegister/index", {});
-});
-//상품데이터 상품관리 생성 화면
-
-router.get("/ProductData/ProductRegister/edit", function (req, res) {
-return res.render("PlinicAdmin/Product/ProductData/ProductRegister/edit", {});
-});
-//상품데이터 상품관리 수정 화면
 
 router.get("/", function (req, res) {
   return res.render("PlinicAdmin/bootstraptest/index", {});
