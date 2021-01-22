@@ -3,10 +3,13 @@
 
 <head>
   <% include ../../../../partials/head %>
-    <title></title>
-    <link href='http://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css' />
+  <title></title>
+  <link href="http://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet" type="text/css" />
+  <link rel="stylesheet" href="/stylesheets/image_upload.css" />
 </head>
 <script type="text/javascript" src="/js/jquery-1.10.2.js"></script>
+<script type="text/javascript" src="/js/image_upload.js"></script>
+
 <script>
   $(document).ready(function () {
     $(".active").removeClass("active");
@@ -16,11 +19,9 @@
 <title>Hello, world!</title>
 
 <body>
-
   <header>
     <% include ../../../../partials/header %>
   </header>
-
 
   <div class="container-fluid">
     <div class="row">
@@ -28,9 +29,8 @@
       <div class="col-md-2">
         <!-- 사이드 메뉴 시작 -->
         <% include ../../../../partials/side %>
-          <!-- 사이드 메뉴 종료 -->
+        <!-- 사이드 메뉴 종료 -->
       </div>
-
 
       <!-- 10단길이의 첫번째 열 -->
       <div class="col-md-10">
@@ -38,128 +38,207 @@
           <div class="row">
             <div class="col-md-12">
               <h1 class="page-header">
-                영상 관리
+                영상관리
                 <!-- <small> 챌린지 관리 Sub제목</small> -->
               </h1>
             </div>
           </div>
-
-          <div class="accordion-body">
-            <div class="container">
-              <div class="panel-heading">
-                <h4 class="text-left" style="margin-top:5px;">영상 세부내용</h4>
-                <br>
-                <form action="" method="post">
+          <form role="form" action="/movies/<%=post._id%>?_method=put" method="post" enctype="multipart/form-data">
+            <div class="accordion-body">
+              <div class="container">
+                <div class="panel-heading">
+                  <h4 class="text-left" style="margin-top:5px;">
+                    영상관리 세부내용(수정)
+                  </h4>
+                  <br />
+                  <%if(!post.isEmpty(post.showLocation)) { %>
                   <div class="row">
                     <div class="col-lg-12">
                       <label class="col-1">노출위치</label>
                       <div class="form-check form-check-inline">
-                        <input class="form-check-input" type="checkbox" id="inlineCheckbox1" value="option1">
+                        <input name="showLocation[home]" class="form-check-input" type="checkbox" id="inlineCheckbox1"
+                          value=true <%= post.showLocation[0].home ? "checked" : "value=false"
+                          %> />
                         <label class="form-check-label" for="inlineCheckbox1">메인홈</label>
                       </div>
                       <div class="form-check form-check-inline">
-                        <input class="form-check-input" type="checkbox" id="inlineCheckbox2" value="option2">
+                        <input name="showLocation[poreSize]" class="form-check-input" type="checkbox"
+                          id="inlineCheckbox2" value=true <%= post.showLocation[0].poreSize ? "checked" :
+                          "value=false" %>>
                         <label class="form-check-label" for="inlineCheckbox2">모공크기</label>
                       </div>
                       <div class="form-check form-check-inline">
-                        <input class="form-check-input" type="checkbox" id="inlineCheckbox3" value="option3">
-                        <label class="form-check-label" for="inlineCheckbox3">모공수</label>
+                        <input name="showLocation[poreCount]" class="form-check-input" type="checkbox" id="inlineCheckbox3"
+                          value=true <%= post.showLocation[0].poreCount ? "checked" :
+                          "value=false" %>>
+                        <label class="form-check-poreCount" for="inlineCheckbox3">모공수</label>
                       </div>
                       <div class="form-check form-check-inline">
-                        <input class="form-check-input" type="checkbox" id="inlineCheckbox4" value="option4">
-                        <label class="form-check-label" for="inlineCheckbox4">피부톤</label>
-                      </div>
-                    </div>
-                  </div>
-
-                  <div class="row">
-                    <div class="col-lg-12">
-                      <label class="col-1"></label>
-                      <div class="form-check form-check-inline">
-                        <input class="form-check-input" type="checkbox" id="inlineCheckbox4" value="option4">
+                        <input name="showLocation[skinTone]" class="form-check-input" type="checkbox"
+                          id="inlineCheckbox4" value=true <%= post.showLocation[0].skinTone ? "checked" :
+                          "value=false" %>>
                         <label class="form-check-label" for="inlineCheckbox4">피부톤</label>
                       </div>
                       <div class="form-check form-check-inline">
-                        <input class="form-check-input" type="checkbox" id="inlineCheckbox5" value="option5">
+                        <input name="showLocation[clean]" class="form-check-input" type="checkbox" id="inlineCheckbox5"
+                          value=true <%= post.showLocation[0].clean ? "checked" : "value=false"
+                          %>>
                         <label class="form-check-label" for="inlineCheckbox5">클린지수</label>
                       </div>
                       <div class="form-check form-check-inline">
-                        <input class="form-check-input" type="checkbox" id="inlineCheckbox6" value="option6">
+                        <input name="showLocation[munjin]" class="form-check-input" type="checkbox" id="inlineCheckbox6"
+                          value=true <%= post.showLocation[0].munjin ? "checked" :
+                          "value=false" %>>
                         <label class="form-check-label" for="inlineCheckbox6">생활문진</label>
                       </div>
+                    </div>
+                  </div>
+                  <% } else { %>
+                  <div class="row">
+                    <div class="col-lg-12">
+                      <label class="col-1">노출위치</label>
                       <div class="form-check form-check-inline">
-                        <input class="form-check-input" type="checkbox" id="inlineCheckbox7" value="option7">
-                        <label class="form-check-label" for="inlineCheckbox7">에디터추천</label>
+                        <input name="showLocation[home]" class="form-check-input" type="checkbox" id="inlineCheckbox1"
+                          value=true />
+                        <label class="form-check-label" for="inlineCheckbox1">메인홈</label>
+                      </div>
+                      <div class="form-check form-check-inline">
+                        <input name="showLocation[poreSize]" class="form-check-input" type="checkbox"
+                          id="inlineCheckbox2" value=true />
+                        <label class="form-check-label" for="inlineCheckbox2">모공크기</label>
+                      </div>
+                      <div class="form-check form-check-inline">
+                        <input name="showLocation[poreCount]" class="form-check-input" type="checkbox" id="inlineCheckbox3"
+                          value=true />
+                        <label class="form-check-poreCount" for="inlineCheckbox3">모공수</label>
+                      </div>
+                      <div class="form-check form-check-inline">
+                        <input name="showLocation[skinTone]" class="form-check-input" type="checkbox"
+                          id="inlineCheckbox4" value=true />
+                        <label class="form-check-label" for="inlineCheckbox4">피부톤</label>
+                      </div>
+                      <div class="form-check form-check-inline">
+                        <input name="showLocation[clean]" class="form-check-input" type="checkbox" id="inlineCheckbox5"
+                          value=true />
+                        <label class="form-check-label" for="inlineCheckbox5">클린지수</label>
+                      </div>
+                      <div class="form-check form-check-inline">
+                        <input name="showLocation[munjin]" class="form-check-input" type="checkbox" id="inlineCheckbox6"
+                          value=true />
+                        <label class="form-check-label" for="inlineCheckbox6">생활문진</label>
                       </div>
                     </div>
                   </div>
-                  <br>
-
+                  <% } %> <%if(!post.isEmpty(post.tabLocation)) { %>
                   <div class="row">
                     <div class="col-lg-12">
-                      <label class="col-1">분류</label>
+                      <label class="col-1">탭명</label>
                       <div class="form-check form-check-inline">
-                        <input class="form-check-input" type="checkbox" id="inlineCheckbox1" value="option1">
-                        <label class="form-check-label" for="inlineCheckbox1">뷰티템</label>
+                        <input name="tabLocation[tip]" class="form-check-input" type="checkbox" id="inlineCheckbox1"
+                          value=true <%= post.tabLocation[0].tip ? "checked" : "value=false" %>>
+                        <label class="form-check-label" for="inlineCheckbox1">TIP</label>
                       </div>
                       <div class="form-check form-check-inline">
-                        <input class="form-check-input" type="checkbox" id="inlineCheckbox2" value="option2">
-                        <label class="form-check-label" for="inlineCheckbox2">뷰티템</label>
+                        <input name="tabLocation[hit]" class="form-check-input" type="checkbox" id="inlineCheckbox2"
+                          value=true <%= post.tabLocation[0].hit ? "checked" : "value=false" %>>
+                        <label class="form-check-label" for="inlineCheckbox2">HIT</label>
                       </div>
                       <div class="form-check form-check-inline">
-                        <input class="form-check-input" type="checkbox" id="inlineCheckbox3" value="option3">
-                        <label class="form-check-label" for="inlineCheckbox3">뷰티템</label>
+                        <input name="tabLocation[new]" class="form-check-input" type="checkbox" id="inlineCheckbox3"
+                          value=true <%= post.tabLocation[0].new ? "checked" : "value=false" %>>
+                        <label class="form-check-label" for="inlineCheckbox3">NEW</label>
                       </div>
-                      <div class="form-check form-check-inline">
-                        <input class="form-check-input" type="checkbox" id="inlineCheckbox4" value="option4">
-                        <label class="form-check-label" for="inlineCheckbox4">뷰티템</label>
-                      </div>
+                      <!-- <div class="form-check form-check-inline">
+                          <input class="form-check-input" type="checkbox" id="inlineCheckbox4" value="option4">
+                          <label class="form-check-label" for="inlineCheckbox4">뷰티템</label>
+                        </div> -->
                     </div>
                   </div>
+                  <% } else { %>
+                  <div class="row">
+                    <div class="col-lg-12">
+                      <label class="col-1">탭명</label>
+                      <div class="form-check form-check-inline">
+                        <input name="tabLocation[tip]" class="form-check-input" type="checkbox" id="inlineCheckbox1"
+                          value=true />
+                        <label class="form-check-label" for="inlineCheckbox1">TIP</label>
+                      </div>
+                      <div class="form-check form-check-inline">
+                        <input name="tabLocation[hit]" class="form-check-input" type="checkbox" id="inlineCheckbox2"
+                          value=true />
+                        <label class="form-check-label" for="inlineCheckbox2">HIT</label>
+                      </div>
+                      <div class="form-check form-check-inline">
+                        <input name="tabLocation[new]" class="form-check-input" type="checkbox" id="inlineCheckbox3"
+                          value=true />
+                        <label class="form-check-label" for="inlineCheckbox3">NEW</label>
+                      </div>
+                      <!-- <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="checkbox" id="inlineCheckbox4" value="option4">
+                            <label class="form-check-label" for="inlineCheckbox4">뷰티템</label>
+                          </div> -->
+                    </div>
+                  </div>
+                  <% } %>
 
                   <div class="row">
                     <div class="col-lg-12">
-                      <label class="col-1">URL</label>
+                      <label class="col-1">영상관리 제목</label>
                       <div class="form-check form-check-inline col-4" style="padding-left:0;">
-                        <input type="text" class="form-control" id="basic-url" style="height: 100px"
-                          aria-describedby="basic-addon3">
+                        <input name="post[body]" id="name" class="form-control" value="<%=post.body%>"
+                          data-validate="data" required />
                       </div>
                     </div>
                   </div>
-                  <br>
                   <div class="row">
                     <div class="col-lg-12">
-                      <label class="col-1">활성화</label>
-                      <div class="form-check form-check-inline">
-                        <input class="form-check-input" type="checkbox" id="inlineCheckbox1" value="option1">
-                        <label class="form-check-label" for="inlineCheckbox1">활성화</label>
-                      </div>
-                      <div class="form-check form-check-inline">
-                        <input class="form-check-input" type="checkbox" id="inlineCheckbox2" value="option2">
-                        <label class="form-check-label" for="inlineCheckbox2">비활성화</label>
+                      <label class="col-1">유튜브 URL</label>
+                      <div class="form-check form-check-inline col-4" style="padding-left:0;">
+                        <input name="post[posturl]" id="name" class="form-control" value="<%=post.posturl%>"
+                          data-validate="data" required />
                       </div>
                     </div>
                   </div>
-
-                  <div class="row justify-content-end">
-                    <button type="reset" class="w-25 m-1 btn btn-default">삭제하기</button>
-                    <button type="reset" class="w-25 m-1 btn btn-default"
-                      onclick="location.href='/movies/BeautyTip/MovieMgt'">목록가기</button>
-                    <button type="submit" class="w-25 m-1 btn btn-primary">변경하기</button>
+                  <div class="row">
+                    <div class="col-lg-12">
+                      <label class="col-1">유튜브 동영상ID</label>
+                      <div class="form-check form-check-inline col-4" style="padding-left:0;">
+                        <input name="post[posturlId]" id="name" class="form-control" value="<%=post.posturlId%>"
+                          data-validate="data" required />
+                      </div>
+                    </div>
                   </div>
-                </form>
+                  <br />
+                  <div class="row align-items-center">
+                      <label class="col-md-1 text-left">활성화</label>
+                      <div class="col-md-11">
+                          <label class="radio-inline">
+                              <input name="post[visible]" type="radio"
+                                  id="optionsRadiosInline1" value=true checked required <%=post.visible ? "checked" : "value=false" %>>활성화
+                          </label>
+                          <label class="radio-inline">
+                              <input name="post[visible]" type="radio" id="optionsRadiosInline2" value=false required <%=!post.visible ? "checked" : "value=false" %>>비활성화
+                          </label>
+                      </div>
+                  </div>
+                  <div class="row justify-content-end">
+                    <!-- <button type="reset" class="w-25 m-1 btn btn-default">삭제하기</button> -->
+                    <button type="reset" class="w-25 m-1 btn btn-default"
+                      onclick="location.href='/contents/BeautyTip/PostMgt'">
+                      목록가기
+                    </button>
+                    <button type="submit" class="w-25 m-1 btn btn-primary">
+                      저장하기
+                    </button>
+                  </div>
+                </div>
               </div>
             </div>
-          </div>
+          </form>
         </div>
       </div>
     </div>
   </div>
-
-
-
-
-
 </body>
 
 <script src="/js/jquery-1.10.2.js"></script>

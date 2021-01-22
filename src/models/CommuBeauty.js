@@ -46,6 +46,7 @@ var commubeautySchema = mongoose.Schema({
     new: {type: Boolean, default: false},
   }],
   visible: {type: Boolean, default: true}, //활성화
+  seq: {type: Number, default: 99}, //활성화
 });
 
 commubeautySchema.methods.getFormattedDate = function (date) {

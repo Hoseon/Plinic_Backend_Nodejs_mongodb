@@ -1,8 +1,10 @@
 var express = require("express");
 var router = express.Router();
 var mongoose = require("mongoose");
-var BeautyMovie = require('../models/BeautyMovie');
-var BeautyMovieCounter = require('../models/BeautyMovieCounter');
+var Carezone = require("../models/Carezone");
+var CarezoneCounter = require("../models/CarezoneCounter");
+var CommuBeauty = require("../models/CommuBeauty");
+var CommuBeautyCounter = require("../models/CommuBeautyCounter");
 var User_admin = require("../models/User_admin");
 var async = require("async");
 var multer = require("multer");
@@ -11,6 +13,8 @@ var sftpStorage = require("multer-sftp");
 var path = require("path");
 var FCM = require("fcm-node");
 var serverKey = "AIzaSyCAcTA318i_SVCMl94e8SFuXHhI5VtXdhU";
+var fcm = new FCM(serverKey);
+
 var multerS3 = require("multer-s3");
 const AWS = require("aws-sdk");
 AWS.config.loadFromPath(__dirname + "/../config/awsconfig.json");
@@ -75,7 +79,7 @@ const sftpconfig = {
   password: "g100210!!"
 };
 
-router.get("/PostMgt/index", function(req, res) {
+router.get("/PostSeqMgt/index", function(req, res) {
   var vistorCounter = null;
   var page = Math.max(1, req.query.page) > 1 ? parseInt(req.query.page) : 1;
   var limit = Math.max(1, req.query.limit) > 1 ? parseInt(req.query.limit) : 10;
@@ -145,7 +149,7 @@ router.get("/PostMgt/index", function(req, res) {
           success: false,
           message: err
         });
-      return res.render("PlinicAdmin/Contents/BeautyTip/PostMgt/index", {
+      return res.render("PlinicAdmin/Contents/BeautyTip/PostDisplay/index", {
         commuBeauty: commuBeauty,
         user: req.user,
         page: page,
@@ -201,7 +205,7 @@ router.get("/", function(req, res) {
       function(callback) {
         if (search.findUser && !search.findPost.$or)
           return callback(null, null, 0);
-        BeautyMovie.count(search.findPost, function(err, count) {
+        CommuBeauty.count(search.findPost, function(err, count) {
           if (err) callback(err);
           skip = (page - 1) * limit;
           maxPage = Math.ceil(count / limit);
@@ -213,38 +217,42 @@ router.get("/", function(req, res) {
           return callback(null, [], 0);
 
         if(search.sortViews[0]) {
-          BeautyMovie.find(search.findPost)
+          CommuBeauty.find(search.findPost)
+          .sort({"seq": 1})
+          .sort({ "updatedAt": 1 })
           .sort(search.sortViews[0])
           .populate("author")
           .sort(search.sortViews[0])
           .skip(skip)
           .limit(limit)
-          .exec(function(err, beautyMovie) {
+          .exec(function(err, commuBeauty) {
             if (err) callback(err);
-            callback(null, beautyMovie, maxPage);
+            callback(null, commuBeauty, maxPage);
           });
         } else {
-          BeautyMovie.find(search.findPost)
+          CommuBeauty.find(search.findPost)
+          .sort({"seq": 1})
           // .sort({ createdAt: -1 })
+          .sort({ "updatedAt": 1 })
           .populate("author")
           .sort({ seq: 1, updatedAt: -1 })
           .skip(skip)
           .limit(limit)
-          .exec(function(err, beautyMovie) {
+          .exec(function(err, commuBeauty) {
             if (err) callback(err);
-            callback(null, beautyMovie, maxPage);
+            callback(null, commuBeauty, maxPage);
           });
         }
       }
     ],
-    function(err, beautyMovie, maxPage) {
+    function(err, commuBeauty, maxPage) {
       if (err)
         return res.json({
           success: false,
           message: err
         });
-      return res.render("PlinicAdmin/Contents/BeautyTip/MovieMgt/index", {
-        beautyMovie: beautyMovie,
+      return res.render("PlinicAdmin/Contents/BeautyTip/PostDisplay/index", {
+        commuBeauty: commuBeauty,
         user: req.user,
         page: page,
         maxPage: maxPage,
@@ -257,19 +265,15 @@ router.get("/", function(req, res) {
   );
 }); // Search Test
 
-router.get("/new", function (req, res) {
-  return res.render("PlinicAdmin/Contents/BeautyTip/MovieMgt/new", {});
-}); //new
-
-router.post("/",s3upload.single("image"),isLoggedIn,function(req, res, next) {
+router.post("/BeautyTip/PostSeqMgt",s3upload.single("image"),isLoggedIn,function(req, res, next) {
 
     showLocation = req.body.showLocation
-    // req.body.post.filename = req.file.key;
-    // req.body.post.originalName = req.file.originalname;
+    req.body.post.filename = req.file.key;
+    req.body.post.originalName = req.file.originalname;
     async.waterfall(
       [
         function(callback) {
-          BeautyMovieCounter.findOne(
+          CommuBeautyCounter.findOne(
             {
               name: "postMgt"
             },
@@ -278,7 +282,7 @@ router.post("/",s3upload.single("image"),isLoggedIn,function(req, res, next) {
               if (counter) {
                 callback(null, counter);
               } else {
-                BeautyMovieCounter.create(
+                CommuBeautyCounter.create(
                   {
                     name: "postMgt",
                     totalCount: 0
@@ -301,11 +305,11 @@ router.post("/",s3upload.single("image"),isLoggedIn,function(req, res, next) {
         var newPost = req.body.post;
         newPost.author = req.user._id;
         newPost.numId = counter.totalCount + 1;
-        // req.body.post.filename = req.file.key;
-        // req.body.post.originalName = req.file.originalname;
+        req.body.post.filename = req.file.key;
+        req.body.post.originalName = req.file.originalname;
         req.body.post.showLocation = req.body.showLocation;
         req.body.post.tabLocation = req.body.tabLocation;
-        BeautyMovie.create(req.body.post, function(err, post) {
+        CommuBeauty.create(req.body.post, function(err, post) {
           if (err) {
             console.log("포스트 관리 등록 에러");
             console.log(err);
@@ -316,15 +320,15 @@ router.post("/",s3upload.single("image"),isLoggedIn,function(req, res, next) {
           }
           counter.totalCount++;
           counter.save();
-          res.redirect("/movies");
+          res.redirect("/beautyTip/PostMgt/index");
         });
       }
     );
   }
 ); // create
 
-router.get("/:id", function(req, res) {
-  BeautyMovie.findById(req.params.id)
+router.get("/CommuBeauty/:id", function(req, res) {
+  CommuBeauty.findById(req.params.id)
     .populate(["author", "comments.author"])
     .exec(function(err, post) {
       if (err)
@@ -339,7 +343,7 @@ router.get("/:id", function(req, res) {
       //res.setHeader('Content-Type', 'image/jpeg');
       var url =
         "https://plinic.s3.ap-northeast-2.amazonaws.com/" + post.filename;
-      res.render("PlinicAdmin/Contents/BeautyTip/MovieMgt/show", {
+      res.render("PlinicAdmin/Contents/BeautyTip/PostDisplay/show", {
         post: post,
         url: url,
         urlQuery: req._parsedUrl.query,
@@ -352,7 +356,11 @@ router.get("/:id", function(req, res) {
 //콘텐츠관리 챌린지 Show
 
 router.get("/:id/edit", isLoggedIn, function(req, res) {
-  BeautyMovie.findById(req.params.id, function(err, post) {
+  CommuBeauty.findById(req.params.id, function(err, post) {
+    var url = "https://plinic.s3.ap-northeast-2.amazonaws.com/" + post.filename;
+
+    var prefilename = post.filename; //이전 파일들은 삭제
+    var preoriginalName = post.originalName; //이전 파일들은 삭제
 
     if (err)
       return res.json({
@@ -363,8 +371,11 @@ router.get("/:id/edit", isLoggedIn, function(req, res) {
     //   success: false,
     //   message: "Unauthrized Attempt"
     // });
-    res.render("PlinicAdmin/Contents/BeautyTip/MovieMgt/edit", {
+    res.render("PlinicAdmin/Contents/BeautyTip/PostDisplay/edit", {
       post: post,
+      prefilename: prefilename,
+      preoriginalName: preoriginalName,
+      url: url,
       user: req.user
     });
   });
@@ -376,32 +387,63 @@ router.put("/:id", s3upload.single("image"), isLoggedIn, function(
   next
 ) {
   req.body.post.updatedAt = Date.now();
+  req.body.post.filename = req.file.key;
+
+  if (req.file) {
+    req.body.post.filename = req.file.key;
+    req.body.post.originalName = req.file.originalname;
+  }
+
   req.body.post.showLocation = req.body.showLocation;
   req.body.post.tabLocation = req.body.tabLocation;
- 
-  BeautyMovie.findOneAndUpdate(
-    {
-      _id: req.params.id
-    },
-    req.body.post,
-    function(err, post) {
-      if (err)
-        return res.json({
-          success: false,
-          message: err
-        });
-      if (!post)
-        return res.json({
-          success: false,
-          message: "No data found to update"
-        });
-      res.redirect("/movies/" + req.params.id);
+
+  var params = {
+    Bucket: "plinic",
+    Delete: {
+      // required
+      Objects: [
+        // required
+        {
+          Key: req.body.prefilename // required
+        }
+      ]
     }
-  );
+  };
+  s3.deleteObjects(params, function(err, data) {
+    if (err) {
+      console.log(
+        "케어존 수정 아마존 파일 삭제 에러 : " +
+          req.body.prefilename +
+          "err : " +
+          err
+      );
+      res.status(500);
+    } else console.log("케어존 수정 이전 파일 삭제 완료 : " + JSON.stringify(data));
+    CommuBeauty.findOneAndUpdate(
+      {
+        _id: req.params.id
+        // author: req.user._id
+      },
+      req.body.post,
+      function(err, post) {
+        if (err)
+          return res.json({
+            success: false,
+            message: err
+          });
+        if (!post)
+          return res.json({
+            success: false,
+            message: "No data found to update"
+          });
+        res.redirect("/beautyTip/CommuBeauty/" + req.params.id);
+      }
+    );
+  });
 }); //update
 
 router.delete('/:id', isLoggedIn, function(req, res, next) {
-  BeautyMovie.findOneAndRemove({
+  CommuBeauty.findOneAndRemove({
     _id: req.params.id,
     // author: req.user._id
   }, function(err, post) {
@@ -428,7 +470,7 @@ router.delete('/:id', isLoggedIn, function(req, res, next) {
       }
       else console.log("케어존 수정 이전 파일 삭제 완료 : " + JSON.stringify(data));
     });
-    res.redirect('/movies/');
+    res.redirect('/beautyTip/PostMgt/index');
   });
 }); //destroy
 
@@ -438,7 +480,7 @@ router.put('/SeqUpdate/:id', isLoggedIn, function (req, res, next) {
   // console.log(req.body.seq[0]);
   req.body.seq = req.body.seq[0];
   req.body.updatedAt = Date.now();
-  BeautyMovie.findOneAndUpdate({
+  CommuBeauty.findOneAndUpdate({
     _id: req.body.seqNumberId[0],
   }, req.body, function (err, post) {
     if (err) return res.json({
@@ -449,9 +491,9 @@ router.put('/SeqUpdate/:id', isLoggedIn, function (req, res, next) {
       success: false,
       message: "No data found to update"
     });
-    res.redirect('/movies/');
+    res.redirect('/postDisplay/');
   });
-}); //Seq Change
+}); //순서변경
 
 function isLoggedIn(req, res, next) {
   if (req.isAuthenticated()) {
@@ -460,6 +502,8 @@ function isLoggedIn(req, res, next) {
   req.flash("postsMessage", "Please login first.");
   res.redirect("/");
 }
+
+module.exports = router;
 
 function createSearchTest(queries) {
   var findPost = {},
@@ -687,5 +731,3 @@ function isEmpty2(str) {
   else
     return false ;
 }
-
-module.exports = router;

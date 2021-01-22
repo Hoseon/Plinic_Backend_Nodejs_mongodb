@@ -3,101 +3,12 @@
 
 <head>
     <% include ../../../../partials/head %>
-        <title></title>
-        <link href='http://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css' />
+    <title></title>
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css' />
 </head>
 <script type="text/javascript" src="/js/jquery-1.10.2.js"></script>
-<script>
-    $(document).ready(function () {
-        $(".active").removeClass("active");
-        $("#contents").addClass("active");
-
-        // $("#challBtn").bind("click");
-        // $("#challBtn").trigger("click");
-        // $("#challBtn").removeClass("collapsed");
-        // $("#challBtn").attr('aria-expanded', 'true');
-        $("#forms-collapse1").addClass('show');
-
-
-
-
-        $('.btn-number').click(function (e) {
-            e.preventDefault();
-
-            fieldName = $(this).attr('data-field');
-            type = $(this).attr('data-type');
-            var input = $("input[name='" + fieldName + "']");
-            var currentVal = parseInt(input.val());
-            if (!isNaN(currentVal)) {
-                if (type == 'minus') {
-
-                    if (currentVal > input.attr('min')) {
-                        input.val(currentVal - 1).change();
-                    }
-                    if (parseInt(input.val()) == input.attr('min')) {
-                        $(this).attr('disabled', true);
-                    }
-
-                } else if (type == 'plus') {
-
-                    if (currentVal < input.attr('max')) {
-                        input.val(currentVal + 1).change();
-                    }
-                    if (parseInt(input.val()) == input.attr('max')) {
-                        $(this).attr('disabled', true);
-                    }
-
-                }
-            } else {
-                input.val(0);
-            }
-        });
-        $('.input-number').focusin(function () {
-            $(this).data('oldValue', $(this).val());
-        });
-        $('.input-number').change(function () {
-
-            minValue = parseInt($(this).attr('min'));
-            maxValue = parseInt($(this).attr('max'));
-            valueCurrent = parseInt($(this).val());
-
-            name = $(this).attr('name');
-            if (valueCurrent >= minValue) {
-                $(".btn-number[data-type='minus'][data-field='" + name + "']").removeAttr('disabled')
-            } else {
-                alert('Sorry, the minimum value was reached');
-                $(this).val($(this).data('oldValue'));
-            }
-            if (valueCurrent <= maxValue) {
-                $(".btn-number[data-type='plus'][data-field='" + name + "']").removeAttr('disabled')
-            } else {
-                alert('Sorry, the maximum value was reached');
-                $(this).val($(this).data('oldValue'));
-            }
-
-
-        });
-        $(".input-number").keydown(function (e) {
-            // Allow: backspace, delete, tab, escape, enter and .
-            if ($.inArray(e.keyCode, [46, 8, 9, 27, 13, 190]) !== -1 ||
-                // Allow: Ctrl+A
-                (e.keyCode == 65 && e.ctrlKey === true) ||
-                // Allow: home, end, left, right
-                (e.keyCode >= 35 && e.keyCode <= 39)) {
-                // let it happen, don't do anything
-                return;
-            }
-            // Ensure that it is a number and stop the keypress
-            if ((e.shiftKey || (e.keyCode < 48 || e.keyCode > 57)) && (e.keyCode < 96 || e.keyCode > 105)) {
-                e.preventDefault();
-            }
-        });
-
-    });
-</script>
-
 <body>
-
+    
     <header>
         <% include ../../../../partials/header %>
     </header>
@@ -116,218 +27,333 @@
                     <div class="row">
                         <div class="col-md-12">
                             <h1 class="page-header">
-                                영상 관리
+                                영상관리
                                 <!-- <small> 챌린지 관리 Sub제목</small> -->
                             </h1>
                         </div>
                     </div>
-                    <!-- <div class="accordion-body">
-                        <div class="container">
-                            <div class="panel panel-default">
-                                <div class="panel-heading">
-                                    <h4 class="text-left" style="margin-top:5px;">포스트 관리</h4>
+                    <div class="table-responsive">
 
-                                    
-
-                                </div>
-                            </div>
-                        </div>
-                    </div> -->
-
-                    <div class="row">
-                        <div class="col-lg-12">
-                            <label class="col-9"></label>
-                            <div class="form-check form-check-inline col-2 text-right" style="padding-left:0;">
-                                <input class="form-control" list="datalistOptions" id="exampleDataList"
-                                    placeholder="Type to search...">
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="panel-body" style="padding-top:0px;padding-bottom:15px;">
-                        <div class="table-responsive dataTables_wrapper form-inline">
                             <table class="table table-bordered  table-condensed table-hover  text-center">
                                 <tr>
-                                    <th class="text-center" width="150" style="padding-top: 20px;">영상 관리</th>
-                                    <td colspan="3" class="text-left">
-                                        <div class="col-lg-12">
-                                            노출위치 &nbsp;
-                                            <div class="form-check form-check-inline">
-                                                <input class="form-check-input" type="checkbox" id="inlineCheckbox1"
-                                                    value="option1">
-                                                <label class="form-check-label" for="inlineCheckbox1">메인홈</label>
-                                            </div>
-                                            <div class="form-check form-check-inline">
-                                                <input class="form-check-input" type="checkbox" id="inlineCheckbox2"
-                                                    value="option2">
-                                                <label class="form-check-label" for="inlineCheckbox2">모공크기</label>
-                                            </div>
-                                            <div class="form-check form-check-inline">
-                                                <input class="form-check-input" type="checkbox" id="inlineCheckbox3"
-                                                    value="option3">
-                                                <label class="form-check-label" for="inlineCheckbox3">모공수</label>
-                                            </div>
-                                            <div class="form-check form-check-inline">
-                                                <input class="form-check-input" type="checkbox" id="inlineCheckbox4"
-                                                    value="option4">
-                                                <label class="form-check-label" for="inlineCheckbox4">피부톤</label>
-                                            </div>
-                                            <div class="form-check form-check-inline">
-                                                <input class="form-check-input" type="checkbox" id="inlineCheckbox5"
-                                                    value="option5">
-                                                <label class="form-check-label" for="inlineCheckbox5">클린지수</label>
-                                            </div>
-                                            <div class="form-check form-check-inline">
-                                                <input class="form-check-input" type="checkbox" id="inlineCheckbox6"
-                                                    value="option6">
-                                                <label class="form-check-label" for="inlineCheckbox6">생활문진</label>
-                                            </div>
-                                            <div class="form-check form-check-inline">
-                                                <input class="form-check-input" type="checkbox" id="inlineCheckbox7"
-                                                    value="option7">
-                                                <label class="form-check-label" for="inlineCheckbox7">에디터추천</label>
-                                            </div>
-                                            <div class="form-check form-check-inline">
-                                                <input class="form-check-input" type="checkbox" id="inlineCheckbox8"
-                                                    value="option8">
-                                                <label class="form-check-label" for="inlineCheckbox8">인기영상</label>
-                                            </div>
-                                        </div>
-                                        <div class="col-lg-12">
-                                            분류별 &nbsp;
-                                            <div class="form-check form-check-inline">
-                                                <input class="form-check-input" type="checkbox" id="inlineCheckbox1"
-                                                    value="option1">
-                                                <label class="form-check-label" for="inlineCheckbox1">뷰티템</label>
-                                            </div>
-                                            <div class="form-check form-check-inline">
-                                                <input class="form-check-input" type="checkbox" id="inlineCheckbox2"
-                                                    value="option2">
-                                                <label class="form-check-label" for="inlineCheckbox2">뷰티템</label>
-                                            </div>
-                                            <div class="form-check form-check-inline">
-                                                <input class="form-check-input" type="checkbox" id="inlineCheckbox3"
-                                                    value="option3">
-                                                <label class="form-check-label" for="inlineCheckbox3">높은조회수</label>
-                                            </div>
-                                            <div class="form-check form-check-inline">
-                                                <input class="form-check-input" type="checkbox" id="inlineCheckbox4"
-                                                    value="option4">
-                                                <label class="form-check-label" for="inlineCheckbox4">낮은조회수</label>
-                                            </div>
-                                        </div>
-                                    </td>
-                                    <td>
-                                        <button type="button" class="btn btn-primary"
-                                            style="padding-bottom: 15px; padding-top: 15px;">모아보기</button>
-                                    </td>
+                                    <form class="checkValidation" action="/movies">
+                                        <th class="text-center" width="150" style="padding-top: 20px;">영상 관리</th>
+                                        <td colspan="3" class="text-left">
+                                            <% if(typeof search.findAfter == "undefined" || search.findAfter == null || search.findAfter == "") {%>
+                                                <div class="col-lg-12">
+                                                    노출위치 &nbsp;
+                                                    <div class="form-check form-check-inline">
+                                                        <input name="searchCheck[home]" class="form-check-input" type="checkbox"
+                                                                id="inlineCheckbox1" value=true>
+                                                        <label class="form-check-label" for="inlineCheckbox1">메인홈</label>
+                                                    </div>
+                                                    <div class="form-check form-check-inline">
+                                                        <input name="searchCheck[poreSize]" class="form-check-input"
+                                                                type="checkbox" id="inlineCheckbox2" value=true>
+                                                        <label class="form-check-label" for="inlineCheckbox2">모공크기</label>
+                                                    </div>
+                                                    <div class="form-check form-check-inline">
+                                                        <input name="searchCheck[poreCount]" class="form-check-input"
+                                                                type="checkbox" id="inlineCheckbox3" value=true>
+                                                        <label class="form-check-label" for="inlineCheckbox3">모공수</label>
+                                                    </div>
+                                                    <div class="form-check form-check-inline">
+                                                        <input name="searchCheck[skinTone]" class="form-check-input"
+                                                                type="checkbox" id="inlineCheckbox4" value=true>
+                                                        <label class="form-check-label" for="inlineCheckbox4">피부톤</label>
+                                                    </div>
+                                                    <div class="form-check form-check-inline">
+                                                        <input name="searchCheck[clean]" class="form-check-input"
+                                                                type="checkbox" id="inlineCheckbox5" value=true>
+                                                        <label class="form-check-label" for="inlineCheckbox5">클린지수</label>
+                                                    </div>
+                                                    <div class="form-check form-check-inline">
+                                                        <input name="searchCheck[munjin]" class="form-check-input"
+                                                                type="checkbox" id="inlineCheckbox6" value=true>
+                                                        <label class="form-check-label" for="inlineCheckbox6">생활문진</label>
+                                                    </div>
+                                                    <!-- <div class="form-check form-check-inline">
+                                                        <input name="searchCheck[editor]" class="form-check-input"
+                                                                type="checkbox" id="inlineCheckbox7" value=true>
+                                                        <label class="form-check-label" for="inlineCheckbox7">에디터추천</label>
+                                                    </div> -->
+                                                </div>
+                                                <div class="col-lg-12">
+                                                    분류별 &nbsp;
+                                                    <div class="form-check form-check-inline">
+                                                        <input name="searchCheck[tip]" class="form-check-input"
+                                                                type="checkbox" id="inlineCheckbox1" value=true>
+                                                        <label class="form-check-label" for="inlineCheckbox1">TIP</label>
+                                                    </div>
+                                                    <div class="form-check form-check-inline">
+                                                        <input name="searchCheck[hit]" class="form-check-input"
+                                                                type="checkbox" id="inlineCheckbox2" value=true>
+                                                        <label class="form-check-label" for="inlineCheckbox2">HIT</label>
+                                                    </div>
+                                                    <div class="form-check form-check-inline">
+                                                        <input name="searchCheck[new]" class="form-check-input"
+                                                                type="checkbox" id="inlineCheckbox3" value=true>
+                                                        <label class="form-check-label" for="inlineCheckbox3">NEW</label>
+                                                    </div>
+                                                    <div class="form-check form-check-inline">
+                                                        <input name="sortCheck[downView]" class="form-check-input"
+                                                                type="checkbox" id="inlineCheckbox4" value=true>
+                                                        <label class="form-check-label" for="inlineCheckbox4">낮은조회수</label>
+                                                    </div>
+                                                    <div class="form-check form-check-inline">
+                                                        <input name="sortCheck[upView]" class="form-check-input"
+                                                                type="checkbox" id="inlineCheckbox5" value=true>
+                                                        <label class="form-check-label" for="inlineCheckbox5">높은조회수</label>
+                                                    </div>
+                                                </div>
+                                            <% } else { %>
+                                                    <div class="col-lg-12">
+                                                        노출위치 &nbsp;
+                                                        <div class="form-check form-check-inline">
+                                                            <input name="searchCheck[home]" class="form-check-input" type="checkbox"
+                                                                    id="inlineCheckbox1" value=true <% if(search.findAfter.home) { %> checked <% }%> >
+                                                            <label class="form-check-label" for="inlineCheckbox1">메인홈</label>
+                                                        </div>
+                                                        <div class="form-check form-check-inline">
+                                                            <input name="searchCheck[poreSize]" class="form-check-input"
+                                                                    type="checkbox" id="inlineCheckbox2" value=true <% if(search.findAfter.poreSize) { %> checked <% }%>>
+                                                            <label class="form-check-label" for="inlineCheckbox2">모공크기</label>
+                                                        </div>
+                                                        <div class="form-check form-check-inline">
+                                                            <input name="searchCheck[poreCount]" class="form-check-input"
+                                                                    type="checkbox" id="inlineCheckbox3" value=true <% if(search.findAfter.poreCount) { %> checked <% }%>>
+                                                            <label class="form-check-label" for="inlineCheckbox3">모공수</label>
+                                                        </div>
+                                                        <div class="form-check form-check-inline">
+                                                            <input name="searchCheck[skinTone]" class="form-check-input"
+                                                                    type="checkbox" id="inlineCheckbox4" value=true <% if(search.findAfter.skinTone) { %> checked <% }%>>
+                                                            <label class="form-check-label" for="inlineCheckbox4">피부톤</label>
+                                                        </div>
+                                                        <div class="form-check form-check-inline">
+                                                            <input name="searchCheck[clean]" class="form-check-input"
+                                                                    type="checkbox" id="inlineCheckbox5" value=true <% if(search.findAfter.clean) { %> checked <% }%>>
+                                                            <label class="form-check-label" for="inlineCheckbox5">클린지수</label>
+                                                        </div>
+                                                        <div class="form-check form-check-inline">
+                                                            <input name="searchCheck[munjin]" class="form-check-input"
+                                                                    type="checkbox" id="inlineCheckbox6" value=true <% if(search.findAfter.munjin) { %> checked <% }%>>
+                                                            <label class="form-check-label" for="inlineCheckbox6">생활문진</label>
+                                                        </div>
+                                                        <!-- <div class="form-check form-check-inline">
+                                                            <input name="searchCheck[editor]" class="form-check-input"
+                                                                    type="checkbox" id="inlineCheckbox7" value=true <% if(search.findAfter.editor) { %> checked <% }%>>
+                                                            <label class="form-check-label" for="inlineCheckbox7">에디터추천</label>
+                                                        </div> -->
+                                                    </div>
+                                                    <div class="col-lg-12">
+                                                        분류별 &nbsp;
+                                                        <div class="form-check form-check-inline">
+                                                            <input name="searchCheck[tip]" class="form-check-input"
+                                                                    type="checkbox" id="inlineCheckbox1" value=true <% if(search.findAfter.tip) { %> checked <% }%>>
+                                                            <label class="form-check-label" for="inlineCheckbox1">TIP</label>
+                                                        </div>
+                                                        <div class="form-check form-check-inline">
+                                                            <input name="searchCheck[hit]" class="form-check-input"
+                                                                    type="checkbox" id="inlineCheckbox2" value=true <% if(search.findAfter.hit) { %> checked <% }%>>
+                                                            <label class="form-check-label" for="inlineCheckbox2">HIT</label>
+                                                        </div>
+                                                        <div class="form-check form-check-inline">
+                                                            <input name="searchCheck[new]" class="form-check-input"
+                                                                    type="checkbox" id="inlineCheckbox3" value=true <% if(search.findAfter.new) { %> checked <% }%>>
+                                                            <label class="form-check-label" for="inlineCheckbox3">NEW</label>
+                                                        </div>
+                                                        <div class="form-check form-check-inline">
+                                                            <input name="sortCheck[downView]" class="form-check-input"
+                                                                    type="checkbox" id="inlineCheckbox4" value=true <% if(search.findAfter.downView) { %> checked <% }%>>
+                                                            <label class="form-check-label" for="inlineCheckbox4">낮은조회수</label>
+                                                        </div>
+                                                        <div class="form-check form-check-inline">
+                                                            <input name="sortCheck[upView]" class="form-check-input"
+                                                                    type="checkbox" id="inlineCheckbox5" value=true <% if(search.findAfter.upView) { %> checked <% }%>>
+                                                            <label class="form-check-label" for="inlineCheckbox5">높은조회수</label>
+                                                        </div>
+                                                    </div>
+                                            <% } %>
+                                        </td>
+                                        <td>
+                                            <button type="submit" class="btn btn-primary"
+                                                    style="padding-bottom: 15px; padding-top: 15px;">모아보기(임시)
+                                            </button>
+                                        </td>
+                                    </form>
                                 </tr>
                             </table>
 
-                            <table class="table table-striped table-bordered table-image text-center">
-                                <thead>
-                                    <tr>
-                                        <th scope="col">No.</th>
-                                        <th scope="col">노출위치</th>
-                                        <th scope="col">분류</th>
-                                        <th scope="col">콘텐츠 제목</th>
-                                        <th scope="col">조회수</th>
-                                        <th scope="col">글쓴이</th>
-                                        <th scope="col">업데이트일</th>
-                                        <th scope="col">노출순서 및 관리</th>
+                        <table class="table table-striped table-bordered table-image text-center" id="table-1">
+                            <thead>
+                                <tr>
+                                <th scope="col">No</th>
+                                <th scope="col">노출위치</th>
+                                <th scope="col">분류</th>
+                                <th scope="col">콘텐츠 제목</th>
+                                <th scope="col">조회수</th>
+                                <th scope="col">글쓴이</th>
+                                <th scope="col">업데이트일</th>
+                                <th scope="col">노출순서 및 관리</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <% if(beautyMovie == null || beautyMovie.length == 0){ %>
+                                    <tr class="noData">
+                                        <td colspan="5">There is no data to show :(</td>
                                     </tr>
-                                </thead>
-                                <tbody>
+                                <% } %>
+                                <% beautyMovie.forEach(function(post, index){ %>
                                     <tr>
                                         <th scope="row" class="align-middle">
-                                            <div class="form-check">
-                                                <input class="form-check-input" type="checkbox" value=""
-                                                    id="flexCheckDefault">
-                                                <label class="form-check-label" for="flexCheckDefault">10</label>
+                                            <div>
+                                                <input type="checkbox" onclick="selectCheckRow(this)" name="del_unit[]" value="<%= post._id %>">
+                                                <!-- <label class="form-check-label" for="flexCheckDefault"></label> -->
                                             </div>
                                         </th>
-                                        <td class="align-middle"><u>에디터 추천</u></td>
-                                        <td class="align-middle">뷰티템</td>
-                                        <td class="align-middle">모공 관리 방법 TOP5</td>
-                                        <td class="align-middle">1020</td>
-                                        <td class="align-middle">플리닉담당</td>
-                                        <td class="align-middle">2021-01-12</td>
+                                        <td onclick="window.location = '/movies/<%= post._id %>?<%= urlQuery %>'" class="align-middle">준비중(개발)</td>
+                                        <td style="max-width: 150px;" onclick="window.location = '/movies/<%= post._id %>?<%= urlQuery %>'" class="align-middle text-truncate">
+
+                                            <% if(post.tabLocation == "undefined" || post.tabLocation == null || post.tabLocation == "") { %>
+                                            분류지정 안됨
+                                            <% } else {%>
+                                                <% if(post.tabLocation[0].tip) { %>Tip<%}%>
+                                                <% if(post.tabLocation[0].hit) { %>Hit<%}%>
+                                                <% if(post.tabLocation[0].new) { %>New<%}%>
+                                            <%} %>
+
+                                            <!-- <u></u> -->
+                                        </td>
+                                        <td onclick="window.location = '/movies/<%= post._id %>?<%= urlQuery %>'" style="max-width: 150px;" class="align-middle text-truncate"><%= post.body %></td>
+                                        <td onclick="window.location = '/movies/<%= post._id %>?<%= urlQuery %>'" class="align-middle"><%= post.views %></td>
+                                        <td class="align-middle"><%= post.author.nickname %></td>
+                                        <td class="align-middle"><%= post.getFormattedDate(post.createdAt) %></td>
                                         <td class="align-middle">
-                                            <div class="row mb-3 align-middle">
-                                                <div class="row align-middle">
-                                                    <div class="col align-middle p-0">
-                                                        <span class="input-group-btn">
-                                                            <button type="button" class="btn btn-danger btn-number"
-                                                                data-type="minus" data-field="quant[2]">
-                                                                <span class="glyphicon glyphicon-minus"></span>
-                                                            </button>
-                                                        </span>
+                                                <div class="row mb-3 align-middle">
+                                                        <div class="row align-middle">
+                                                            <div class="col align-middle p-0"> 
+                                                                <span class="input-group-btn">
+                                                                    <button type="button" class="btn btn-danger btn-number"  data-type="minus" data-field="seq[<%= index %>]">
+                                                                    <span class="glyphicon glyphicon-minus"></span>
+                                                                    </button>
+                                                                </span></div>        
+                                                            <div class="col align-middle p-0">
+                                                                <input type="number" readonly value="<%= post.seq %>" name="seq[<%= index %>]" class="form-control text-center w-100 align-middle" min="1" max="100"></div>        
+                                                            <div class="col p-0">
+                                                                <span class="input-group-btn">
+                                                                    <button type="button" class="btn btn-success btn-number" data-type="plus" data-field="seq[<%= index %>]">
+                                                                        <span class="glyphicon glyphicon-plus"></span>
+                                                                    </button>
+                                                                </span></div>        
+                                                        </div>
+                                                </div>        
+                                                <div class="row justify-content-center">
+                                                        <div class="col-6 p-0 m-0">
+                                                            <form name="seqFormSubmit<%= index %>">
+                                                                <button class="btn btn-primary" type="button" 
+                                                                onclick="seqChange('<%= index %>')">변경하기</button>
+                                                                <input type="hidden" value="<%= post.seq %>" name="seq[<%= index %>]"></div>
+                                                                <input type="hidden" value="<%= post._id %>"  name="seqNumberId[<%= index %>]">
+                                                            </form>
+                                                        <div class="col-6 p-0 m-0">
+                                                         <button type="button" class="btn btn-secondary" disabled>변경바로가기</button>
+                                                        </div>
                                                     </div>
-                                                    <div class="col align-middle p-0"><input type="text" name="quant[2]"
-                                                            class=" form-control input-number text-center w-100 align-middle"
-                                                            value="10" min="1" max="100"></div>
-                                                    <div class="col p-0"><span class="input-group-btn">
-                                                            <button type="button" class="btn btn-success btn-number"
-                                                                data-type="plus" data-field="quant[2]">
-                                                                <span class="glyphicon glyphicon-plus"></span>
-                                                            </button>
-                                                        </span></div>
                                                 </div>
-                                            </div>
-                                            <div class="row">
-                                                <div class="d-grid gap-2 d-md-block">
-                                                    <form>
-                                                        <button type="button" class="btn btn-primary">적용하기</button>
-                                                    </form>
-                                                    <button type="button" class="btn btn-secondary"
-                                                        onclick="location.href='/movies/BeautyTip/MovieMgt/edit'">변경바로가기</button>
-                                                </div>
-                                            </div>
                                         </td>
                                     </tr>
-                                </tbody>
-                            </table>
+                                <% }) %>
+                            </tbody>
+                        </table>
+                        <div class="row">
+                            <div class="col-md-4 d-grid gap-2 d-md-block">
+                                <form class="float_left" name="frmSubmit">
+                                    <button class="btn btn-primary" type="button" onclick="selectDelRow(this)">삭제</button>
+                                </form>
+                                <!-- <button class="btn btn-primary" type="button">활성화</button>
+                                <button class="btn btn-primary" type="button">비활성화</button> -->
+                            </div>
+                            <div class="col-md-4">
+                                <nav aria-label="Page navigation example">
+                                    <ul class="pagination pagination-sm justify-content-center">
+                                        <%
+                                            var offset = 4;
+                                            var partialQuery;
+                                            if(urlQuery) partialQuery = "&"+urlQuery.replace(/page=(.*?)(&|$)/ig,"");
+                                        %>
 
-                            <div class="row">
-                                <div class="col-md-4 d-grid gap-2 d-md-block">
-                                </div>
-                                <div class="col-md-4">
-                                    <nav aria-label="Page navigation example">
-                                        <ul class="pagination pagination-sm justify-content-center">
-                                            <li class="page-item">
-                                                <a class="page-link" href="#" aria-label="Previous">
-                                                    <span aria-hidden="true">&laquo;</span>
-                                                </a>
-                                            </li>
-                                            <li class="page-item"><a class="page-link" href="#">1</a></li>
-                                            <li class="page-item"><a class="page-link" href="#">2</a></li>
-                                            <li class="page-item"><a class="page-link" href="#">3</a></li>
-                                            <li class="page-item">
-                                                <a class="page-link" href="#" aria-label="Next">
-                                                    <span aria-hidden="true">&raquo;</span>
-                                                </a>
-                                            </li>
-                                        </ul>
-                                    </nav>
-                                </div>
-                                <div class="col-md-12">
-                                    <div class="text-center">
-                                        <button type="button" onclick="location.href='/movies/BeautyTip/MovieMgt/new'"
-                                            class="btn btn-primary me-md-2">신규 등록</button>
-                                    </div>
+                                        <li class="page-item disabled">
+                                            <a class="page-link" href="#" aria-label="Previous">
+                                                <span aria-hidden="true">&laquo;</span>
+                                            </a>
+                                        </li>
+
+                                        <% for(i=1;i<=maxPage;i++){ %>
+
+                                            <% if(i<=offset || i>maxPage-offset || (i>=page-(offset-1) && i<=page+(offset-1))){ %>
+                                                <% if(i != page){ %>
+                                                    <!-- <li>[<a href="/carezone?page=<%= i %><%= partialQuery %>"> <%= i %> </a>]</li> -->
+                                                    <li class="page-item"><a class="page-link" href="/contents/Challenge/newIndex/?page=<%= i %><%= partialQuery %>"><%= i %></a></li>
+                                                <% } else { %>
+                                                    <li class="page-item" name="currentPage" aria-current="page"><a class="page-link" href="#"><%= i %></a></li>
+                                                <% } %>
+                                            <% } else if(i == offset+1 || i == maxPage-offset){ %>
+                                                    <li>...</li>
+                                            <% } %>
+                                        <%}%>
+                                        <li class="page-item disabled">
+                                        <a class="page-link" href="#" aria-label="Next">
+                                            <span aria-hidden="true">&raquo;</span>
+                                        </a>
+                                        </li>
+                                    </ul>
+                                </nav>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="d-grid d-md-block d-md-flex justify-content-md-end">
+                                    <button type="button" onclick="location.href='/movies/new'" class="btn btn-primary me-md-2">신규 등록</button>
                                 </div>
                             </div>
-
                         </div>
-                    </div>
-
-
-
-
-
-
-
-
+                        <!-- <div class="floats">
+                                <div class="counter float-start">
+                                  <% if(counter){ %>
+                                    Total <%= counter.totalCount %> visitors<br>
+                                    (today: <%= counter.todayCount %>)
+                                  <% } %>
+                                </div>
+                                <div class="search float-end">
+                                  <form class="checkValidation" action="/carezone/" id="search">
+                                    <select class="form-select" name="searchType" <%= search.searchType=="author!"?"disabled":"" %>>
+                                      <% var select %>
+                                      <option value="title,body"
+                                        <%= search.searchType=="title,body"?select="selected":"" %>>Title+Body</option>
+                                      <option value="title"
+                                        <%= search.searchType=="title"?select="selected":"" %>>Title</option>
+                                      <option value="body"
+                                        <%= search.searchType=="body"?select="selected":"" %>>Body</option>
+                                      <%if(search.searchType=="author!"){%>
+                                        <option value="author!"
+                                          <%= search.searchType=="author!"?select="selected":"" %>>Author</option>
+                                      <%} else {%>
+                                        <option value="author"
+                                          <%= search.searchType=="author"?select="selected":"" %>>Author</option>
+                                      <%}%>
+                                    </select>
+                                    <input class="form-control" cvMinLength="2"
+                                      cvMinLenErrTo="#searchError"
+                                      cvMinLenErrMsg="It should be at least 2 characters"
+                                      type="text" name="searchText" value="<%= select?search.searchText:"" %>"
+                                      <%= search.searchType=="author!"?"disabled":"" %>>
+                                    <button type="submit" <%= search.searchType=="author!"?"disabled":"" %>>search</button>
+                                    <%if(search.searchType){%>
+                                      <button type="button" onclick="window.location = '/carezone?page=1'">cancel</button>
+                                    <%}%>
+                                    <div class="message" id="searchError"></div>
+                                  </form>
+                                </div>
+                        </div> -->
+                    </div> 
                 </div>
             </div>
         </div>
@@ -336,9 +362,195 @@
 
 
 
+
+    <!-- <table id="table-1" cellspacing="0" cellpadding="2" >
+            <tr id="1"><td>1</td><td>One</td><td>some text</td></tr>
+            <tr id="1"><td>2</td><td>Two</td><td>some text</td></tr>
+            <tr id="1"><td>3</td><td>Three</td><td>some text</td></tr>
+            <tr id="1"><td>4</td><td>Four</td><td>some text</td></tr>
+            <tr id="1"><td>5</td><td>Five</td><td>some text</td></tr>
+            <tr id="1"><td>6</td><td>Six</td><td>some text</td></tr>
+        </table> -->
+
+
 </body>
 <script src="/js/custom-scripts.js"></script>
 <script src="/js/jquery-1.10.2.js"></script>
 <script src="/js/bootstrap.min.js"></script>
+<script src="/js/jquery.tablednd.0.7.min.js"></script>
+<script>
+    function seqChange(seq) {
+        // var chk = document.getElementsByName("quant["+seq+"]")[0].value; // 체크박스객체를 담는다
+        var chk = document.getElementsByName("seqNumberId["+seq+"]")[0].value; // 체크박스객체를 담는다
+        if(confirm('적용 하시겠습니까?')) {
+            var seqFormSubmit = document.getElementsByName("seqFormSubmit"+seq)[0];
+            seqFormSubmit.method = "post"; 
+            seqFormSubmit.target = "_self"; 
+            seqFormSubmit.action = "/movies/SeqUpdate/" + chk + "?_method=put";
+            seqFormSubmit.submit();
+        }
+    }
 
+    function selectDelRow(chk) {
+
+        var chk = document.getElementsByName("del_unit[]"); // 체크박스객체를 담는다
+        var len = chk.length;    //체크박스의 전체 개수
+        var checkRow = '';      //체크된 체크박스의 value를 담기위한 변수
+        var checkCnt = 0;        //체크된 체크박스의 개수
+        var checkLast = '';      //체크된 체크박스 중 마지막 체크박스의 인덱스를 담기위한 변수
+        var rowid = '';             //체크된 체크박스의 모든 value 값을 담는다
+        var cnt = 0;                 
+
+        for(var i=0; i<len; i++){
+            if(chk[i].checked == true){
+            checkCnt++;        //체크된 체크박스의 개수
+            checkLast = i;     //체크된 체크박스의 인덱스
+            }
+        } 
+        for(var i=0; i<len; i++){
+            if(chk[i].checked == true){  //체크가 되어있는 값 구분
+                checkRow = chk[i].value;
+                if(checkCnt == 1){                            //체크된 체크박스의 개수가 한 개 일때,
+                    rowid += ""+checkRow+"";        //'value'의 형태 (뒤에 ,(콤마)가 붙지않게)
+                }else{                                            //체크된 체크박스의 개수가 여러 개 일때,
+                    if(i == checkLast){                     //체크된 체크박스 중 마지막 체크박스일 때,
+                        rowid += ""+checkRow+"";  //'value'의 형태 (뒤에 ,(콤마)가 붙지않게)
+                    }else{
+                        rowid += ""+checkRow+",";	 //'value',의 형태 (뒤에 ,(콤마)가 붙게)         			
+                    }
+                }
+                cnt++;
+                checkRow = '';    //checkRow초기화.
+            }   
+            // alert(rowid);    //'value1', 'value2', 'value3' 의 형태로 출력된다.
+        }
+
+
+
+        if(confirm('정말 삭제하시겠습니까?')) {
+            // alert(rowid);
+            var theForm = document.frmSubmit;
+            theForm.method = "post"; 
+            theForm.target = "_self"; 
+            theForm.action = "/movies/" + rowid + "?_method=delete";
+            theForm.submit();
+        }
+    }
+
+    function selectCheckRow(chk) {
+        var obj = document.getElementsByName("del_unit[]");
+        for(var i=0; i < obj.length; i++){
+            if(obj[i] != chk){
+                obj[i].checked = false;
+            }
+        }
+
+        
+        
+        // alert(rowid);
+    }
+
+    $(document).ready(function(){
+
+        // $("#table-1").tableDnD()
+
+        // $("#table-2 tr:even').addClass('alt')");
+
+        // // Initialise the second table specifying a dragClass and an onDrop function that will display an alert
+        // $("#table-2").tableDnD({
+        //     onDragClass: "myDragClass",
+        //     onDrop: function(table, row) {
+        //         var rows = table.tBodies[0].rows;
+        //         var debugStr = "Row dropped was "+row.id+". New order: ";
+        //         for (var i=0; i<rows.length; i++) {
+        //             debugStr += rows[i].id+" ";
+        //         }
+        //         $('#debugArea').html(debugStr);
+        //     },
+        //     onDragStart: function(table, row) {
+        //         $('#debugArea').html("Started dragging row "+row.id);
+        //     }
+        // });
+
+        // $("currentPage").addClass("active");
+        $('li[aria-current="page"]').addClass("active");
+
+        $("a.active").removeClass("active");
+        $("#contents").addClass("active");
+        $("#forms-collapse1").addClass('show');
+
+        $('.btn-number').click(function(e){
+            e.preventDefault();
+            
+            fieldName = $(this).attr('data-field');
+            type      = $(this).attr('data-type');
+            var input = $("input[name='"+fieldName+"']");
+            var currentVal = parseInt(input.val());
+            if (!isNaN(currentVal)) {
+                if(type == 'minus') {
+                    
+                    if(currentVal > input.attr('min')) {
+                        input.val(currentVal - 1).change();
+                    } 
+                    if(parseInt(input.val()) == input.attr('min')) {
+                        $(this).attr('disabled', true);
+                    }
+
+                } else if(type == 'plus') {
+
+                    if(currentVal < input.attr('max')) {
+                        input.val(currentVal + 1).change();
+                    }
+                    if(parseInt(input.val()) == input.attr('max')) {
+                        $(this).attr('disabled', true);
+                    }
+
+                }
+            } else {
+                input.val(0);
+            }
+        });
+        $('.input-number').focusin(function(){
+        $(this).data('oldValue', $(this).val());
+        });
+        $('.input-number').change(function() {
+        
+            minValue =  parseInt($(this).attr('min'));
+            maxValue =  parseInt($(this).attr('max'));
+            valueCurrent = parseInt($(this).val());
+            
+            name = $(this).attr('name');
+            if(valueCurrent >= minValue) {
+                $(".btn-number[data-type='minus'][data-field='"+name+"']").removeAttr('disabled')
+            } else {
+                alert('Sorry, the minimum value was reached');
+                $(this).val($(this).data('oldValue'));
+            }
+            if(valueCurrent <= maxValue) {
+                $(".btn-number[data-type='plus'][data-field='"+name+"']").removeAttr('disabled')
+            } else {
+                alert('Sorry, the maximum value was reached');
+                $(this).val($(this).data('oldValue'));
+            }
+            
+            
+        });
+        $(".input-number").keydown(function (e) {
+                // Allow: backspace, delete, tab, escape, enter and .
+                if ($.inArray(e.keyCode, [46, 8, 9, 27, 13, 190]) !== -1 ||
+                    // Allow: Ctrl+A
+                    (e.keyCode == 65 && e.ctrlKey === true) || 
+                    // Allow: home, end, left, right
+                    (e.keyCode >= 35 && e.keyCode <= 39)) {
+                        // let it happen, don't do anything
+                        return;
+                }
+                // Ensure that it is a number and stop the keypress
+                if ((e.shiftKey || (e.keyCode < 48 || e.keyCode > 57)) && (e.keyCode < 96 || e.keyCode > 105)) {
+                    e.preventDefault();
+                }
+            });
+            
+        });
+</script>
 </html>

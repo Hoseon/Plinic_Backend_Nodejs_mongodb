@@ -47,7 +47,7 @@ var challengeSchema = mongoose.Schema({
     status: {type:String},
   }],
   isdailycheck : {type: Boolean}, //챌린지가 안이어지면 False 계속 이어지면 True로 한다
-  reward: {type:Boolean, defalut:false},
+  reward: {type:Boolean, default:false},
   userImageFilename: {type:String},
 });
 

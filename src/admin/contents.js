@@ -89,7 +89,7 @@ router.get("/Main", function (req, res) {
 //콘텐츠관리 메인 화면
 
 router.get("/Challenge", function (req, res) {
-  return res.render("PlinicAdmin/Contents/ChallengeMgt/index", {});
+  return res.render("PlinicAdmin/Contents/Challenges/ChallengeMgt/index", {});
 });
 //콘텐츠관리 챌린지 화면
 
@@ -161,6 +161,7 @@ router.get('/Challenge/newIndex', function (req, res) {
 router.get("/Challenge/new", function (req, res) {
   return res.render("PlinicAdmin/Contents/Challenges/ChallengeMgt/new", {});
 });
+
 //콘텐츠관리 챌린지 신규 등록 화면
 
 router.post('/Challenge/', s3upload.fields([
@@ -359,7 +360,7 @@ router.get('/Challenge/:id/edit', isLoggedIn, function (req, res) {
     //   success: false,
     //   message: "Unauthrized Attempt"
     // });
-    res.render("PlinicAdmin/Contents/ChallengeMgt/edit", {
+    res.render("PlinicAdmin/Contents/Challenges/ChallengeMgt/edit", {
       post: post,
       prefilename: prefilename,
       preoriginalName: preoriginalName,
