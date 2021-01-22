@@ -915,6 +915,17 @@ module.exports = function (app) {
   app.use('/paymentWebs', require('./admin/paymentWebs'));
   //플리닉 정기결제(앱) 관리
   app.use('/paymentApps', require('./admin/paymentApps'));
+  //상품 카테고리 관리
+  app.use('/productCategory', require('./admin/productCategory'));
+  //상품 탭 진열 관리
+  app.use('/productTabShow', require('./admin/productTabShow'));
+  //상품 추천 노출위치 관리
+  app.use('/productRecomShow', require('./admin/productRecomShow'));
+  //배송비 설정 관리
+  app.use('/productTransCost', require('./admin/productTransCost'));
+  //상품문의 관리
+  app.use('/productQnA', require('./admin/productQnA'));
+
 
 
   app.get('/ejs', (req, res) => {

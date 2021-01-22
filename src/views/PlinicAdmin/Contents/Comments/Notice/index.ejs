@@ -172,24 +172,32 @@
                                                     </tr>
                                                 </thead>
                                                 <tbody>
-                                                    <tr>
-                                                        <td>1</td>
-                                                        <td>공지사항 게시판 인덱스 부분</td>
-                                                        <td>관리자</td>
-                                                        <td>2020/12/28</td>
-                                                        <td></td>
-                                                        <td class="center">
-                                                            <input type="checkbox" class="form-check-input"
-                                                                id="exampleCheck1">
-                                                        </td>
-                                                    </tr>
+                                                <%if(post != null && post != undefined) {%>
+                                                    <% post.forEach(function(post2, index){ %>
+                                                        <tr>
+                                                            <td>1</td>
+                                                            <td><%=post2.missontitle%></td>
+                                                            <td>관리자</td>
+                                                            <td>2020/12/28</td>
+                                                            <td></td>
+                                                            <td class="center">
+                                                                <input type="checkbox" class="form-check-input"
+                                                                    id="exampleCheck1">
+                                                            </td>
+                                                        </tr>
+                                                    <%})%>
+                                                <%} else {%>
+                                                    aaa
+                                                   
+                                                <% }%>
+                                                    
                                                 </tbody>
                                             </table>
 
                                             <div class="row">
                                                 <div class="col-auto me-auto" style="padding-top:10px;">
                                                     <button class="btn btn-primary" type="button"
-                                                        onclick="location.href='/noticeComments/Comments/Notice/new'">작성</button>
+                                                        onclick="location.href='/noticeComments/new'">작성</button>
                                                     <form>
                                                         <button class="btn btn-primary btn btn-danger"
                                                             type="button">삭제</button>

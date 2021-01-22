@@ -60,26 +60,26 @@ const sftpconfig = {
   password: "g100210!!"
 };
 
-router.get("/Main", function (req, res) {
-  return res.render("PlinicAdmin/Product/Main/index", {});
+router.get("/ProductData/ProductQnA", function (req, res) {
+  return res.render("PlinicAdmin/Product/ProductData/ProductQnA/index", {});
 });
-//상품관리 메인 화면
+//상품데이터 문의관리 화면
 
-////////////////////////////////////// 상품 데이터
-router.get("/ProductData/ProductList", function (req, res) {
-return res.render("PlinicAdmin/Product/ProductData/ProductList/index", {});
+router.get("/ProductData/ProductQnA/show", function(req, res) {
+  return res.render("PlinicAdmin/Product/ProductData/ProductQnA/show", {});
 });
-//상품데이터 상품관리 리스트 화면
+//상품데이터 문의관리 show
 
-router.get("/ProductData/ProductRegister", function (req, res) {
-return res.render("PlinicAdmin/Product/ProductData/ProductRegister/index", {});
+router.get("/ProductData/ProductQnA/new", function(req, res) {
+  return res.render("PlinicAdmin/Product/ProductData/ProductQnA/new", {});
 });
-//상품데이터 상품관리 생성 화면
+//상품데이터 문의관리 new
 
-router.get("/ProductData/ProductRegister/edit", function (req, res) {
-return res.render("PlinicAdmin/Product/ProductData/ProductRegister/edit", {});
+router.get("/ProductData/ProductQnA/edit", function(req, res) {
+  return res.render("PlinicAdmin/Product/ProductData/ProductQnA/edit", {});
 });
-//상품데이터 상품관리 수정 화면
+//상품데이터 문의관리 edit
+
 
 router.get("/", function (req, res) {
   return res.render("PlinicAdmin/bootstraptest/index", {});
