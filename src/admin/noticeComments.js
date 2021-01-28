@@ -152,72 +152,73 @@ router.get('/', function (req, res) {
   });
 }); // Real index
 
-router.get("/new", function (req, res) {
-  return res.render("PlinicAdmin/Contents/ChallengeMgt/new", {});
-});  //new
+router.get('/new', isLoggedIn, function(req, res) {
+  res.render("PlinicAdmin/Contents/Comments/Notice/new", {
+    user: req.user
+  });
+}); // new
 
-router.post('/', s3upload.fields([
-  { name: 'image' }, { name: 'homeimage' }, { name: 'challenge_image1' }, { name: 'challenge_image2' }, { name: 'challenge_image3' }, { name: 'challenge_image4' }, { name: 'challenge_image5' }]), isLoggedIn, function (req, res, next) {
-    async.waterfall([function (callback) {
-      CarezoneCounter.findOne({
-        name: "carezone"
-      }, function (err, counter) {
-        if (err) callback(err);
-        if (counter) {
-          callback(null, counter);
-        } else {
-          CarezoneCounter.create({
-            name: "carezone",
-            totalCount: 0
-          }, function (err, counter) {
-            if (err) return res.json({
-              success: false,
-              message: err
-            });
-            callback(null, counter);
-          });
-        }
-      });
-    }], function (callback, counter) {
+router.post("/noticeComments/",s3upload.single("image"),isLoggedIn,function(req, res, next) {
+
+  showLocation = req.body.showLocation
+  req.body.post.filename = req.file.key;
+  req.body.post.originalName = req.file.originalname;
+  async.waterfall(
+    [
+      function(callback) {
+        NoticeCounter.findOne(
+          {
+            name: "/"
+          },
+          function(err, counter) {
+            if (err) callback(err);
+            if (counter) {
+              callback(null, counter);
+            } else {
+              NoticeCounter.create(
+                {
+                  name: "/",
+                  totalCount: 0
+                },
+                function(err, counter) {
+                  if (err)
+                    return res.json({
+                      success: false,
+                      message: err
+                    });
+                  callback(null, counter);
+                }
+              );
+            }
+          }
+        );
+      }
+    ],
+    function(callback, counter) {
       var newPost = req.body.post;
       newPost.author = req.user._id;
       newPost.numId = counter.totalCount + 1;
-      req.body.post.filename = req.files['image'][0].key;
-      req.body.post.originalName = req.files['image'][0].originalname;
-      req.body.post.homeimage_filename = req.files['homeimage'][0].key;
-      req.body.post.homeimage_originalname = req.files['homeimage'][0].originalname;
-      // req.body.post.prodfilename = req.files['prodimage'][0].key;
-      // req.body.post.prodoriginalname = req.files['prodimage'][0].originalname;
-      req.body.post.challenge_image1_filename = req.files['challenge_image1'][0].key;
-      req.body.post.challenge_image1_originalname = req.files['challenge_image1'][0].originalname;
-
-      if (req.files['challenge_image2']) {
-        req.body.post.challenge_image2_filename = req.files['challenge_image2'][0].key;
-        req.body.post.challenge_image2_originalname = req.files['challenge_image2'][0].originalname;
-      }
-      if (req.files['challenge_image3']) {
-        req.body.post.challenge_image3_filename = req.files['challenge_image3'][0].key;
-        req.body.post.challenge_image3_originalname = req.files['challenge_image3'][0].originalname;
-      }
-      if (req.files['challenge_image4']) {
-        req.body.post.challenge_image4_filename = req.files['challenge_image4'][0].key;
-        req.body.post.challenge_image4_originalname = req.files['challenge_image4'][0].originalname;
-      }
-      if (req.files['challenge_image5']) {
-        req.body.post.challenge_image5_filename = req.files['challenge_image5'][0].key;
-        req.body.post.challenge_image5_originalname = req.files['challenge_image5'][0].originalname;
-      }
-      Carezone.create(req.body.post, function (err, post) {
-        if (err) return res.json({
-          success: false,
-          message: err
-        });
+      req.body.post.filename = req.file.key;
+      req.body.post.originalName = req.file.originalname;
+      req.body.post.showLocation = req.body.showLocation;
+      req.body.post.tabLocation = req.body.tabLocation;
+      Notice.create(req.body.post, function(err, post) {
+        if (err) {
+          console.log("공지사항 등록 에러");
+          console.log(err);
+          return res.json({
+            success: false,
+            message: err
+          });
+        }
         counter.totalCount++;
         counter.save();
-        res.redirect('/contents/Challenge/newIndex');
+        res.redirect("/noticeComments/");
       });
-    });
-}); // create
+    }
+  );
+}
+); // create
 
 router.delete('/:id', isLoggedIn, function (req, res, next) {
   console.log(req);
@@ -261,7 +262,7 @@ router.delete('/:id', isLoggedIn, function (req, res, next) {
 }); //destroy
 
 router.get("/:id", function (req, res) {
-  Carezone.findById(req.params.id)
+  Notice.findById(req.params.id)
     .populate(['author', 'comments.author'])
     .exec(function (err, post) {
       if (err) return res.json({
@@ -283,7 +284,7 @@ router.get("/:id", function (req, res) {
       var challenge_url5 = 'https://plinic.s3.ap-northeast-2.amazonaws.com/' + post.challenge_image5_filename;
       //fs.createReadStream(path.join(__dirname, '../uploads/', post.filename)).pipe(res);
       // console.log(post.day);
-      res.render("PlinicAdmin/Contents/ChallengeMgt/show", {
+      res.render("PlinicAdmin/Contents/Comments/Notice/show", {
         post: post,
         url: url,
         prod_url: prod_url,
