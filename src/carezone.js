@@ -720,7 +720,7 @@ router.get('/nIndex', function(req, res) {
       postsMessage: req.flash("postsMessage")[0]
     });
   });
-}); // nIndex
+}); // nIndex 챌린지 댓글 리스트
 
 
 router.get('/new', isLoggedIn, function(req, res) {

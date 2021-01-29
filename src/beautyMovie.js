@@ -85,6 +85,234 @@ let s3upload = multer({
 //   password: 'g100210!!'
 // };
 
+//2021-01-28 슬기로운 플뷰 생활 조회순
+router.get('/getMoviePlinicListSortView', function(req, res) {
+  var result = [];
+  var count = 0;
+  async.waterfall([function(callback) {
+    BeautyMovie.find({
+      'tabLocation.hit' : true
+    },function(err, docs) {
+      if(err) {
+        res.status(400).json(err);
+      }
+        if (docs) {
+        count = docs.length;
+        docs.forEach((element,i) => {
+          let url = "https://www.googleapis.com/youtube/v3/videos?";
+          let params = [
+            `key=${YOUTUBE_API_KEY}`,
+            `part=snippet`,
+            `id=${element.posturlId}`,
+          ].join('&');
+          
+          request.get(url + params, function (err, response, body) {
+            if(JSON.parse(body).items.length > 0) {
+              result.push(JSON.parse(body));    
+              if(count == result.length) {
+                // result = JSON.parse(JSON.stringify(result).replace(/\n+/g, ""))
+                res.status(200).json(result);
+              }      
+            } else {
+              count--;
+            }
+          });
+        });
+      }
+    }).sort({"views" : -1});
+  }]);
+});
+
+//2021-01-28 슬기로운 플뷰 생활 최신순
+router.get('/getMoviePlinicListSortCreate', function(req, res) {
+  var result = [];
+  var count = 0;
+  async.waterfall([function(callback) {
+    BeautyMovie.find({
+      'tabLocation.hit' : true
+    },function(err, docs) {
+      if(err) {
+        res.status(400).json(err);
+      }
+        if (docs) {
+        count = docs.length;
+        docs.forEach((element,i) => {
+          let url = "https://www.googleapis.com/youtube/v3/videos?";
+          let params = [
+            `key=${YOUTUBE_API_KEY}`,
+            `part=snippet`,
+            `id=${element.posturlId}`,
+          ].join('&');
+          
+          request.get(url + params, function (err, response, body) {
+            if(JSON.parse(body).items.length > 0) {
+              result.push(JSON.parse(body));    
+              if(count == result.length) {
+                // result = JSON.parse(JSON.stringify(result).replace(/\n+/g, ""))
+                res.status(200).json(result);
+              }      
+            } else {
+              count--;
+            }
+          });
+        });
+      }
+    }).sort({"createdAt" : -1});
+  }]);
+});
+
+//2021-01-28 이번주 HOT Clip 조회순
+router.get('/getMovieListSortView', function(req, res) {
+  var result = [];
+  var count = 0;
+  async.waterfall([function(callback) {
+    BeautyMovie.find({
+      'tabLocation.tip' : true
+    },function(err, docs) {
+      if(err) {
+        res.status(400).json(err);
+      }
+        if (docs) {
+        count = docs.length;
+        docs.forEach((element,i) => {
+          let url = "https://www.googleapis.com/youtube/v3/videos?";
+          let params = [
+            `key=${YOUTUBE_API_KEY}`,
+            `part=snippet`,
+            `id=${element.posturlId}`,
+          ].join('&');
+          
+          request.get(url + params, function (err, response, body) {
+            if(JSON.parse(body).items.length > 0) {
+              result.push(JSON.parse(body));    
+              if(count == result.length) {
+                // result = JSON.parse(JSON.stringify(result).replace(/\n+/g, ""))
+                res.status(200).json(result);
+              }      
+            } else {
+              count--;
+            }
+          });
+        });
+      }
+    }).sort({"views" : -1});
+  }]);
+});
+
+//2021-01-28 이번주 HOT Clip 최신순
+router.get('/getMovieListSortCreate', function(req, res) {
+  var result = [];
+  var count = 0;
+  async.waterfall([function(callback) {
+    BeautyMovie.find({
+      'tabLocation.tip' : true
+    },function(err, docs) {
+      if(err) {
+        res.status(400).json(err);
+      }
+        if (docs) {
+        count = docs.length;
+        docs.forEach((element,i) => {
+          let url = "https://www.googleapis.com/youtube/v3/videos?";
+          let params = [
+            `key=${YOUTUBE_API_KEY}`,
+            `part=snippet`,
+            `id=${element.posturlId}`,
+          ].join('&');
+          
+          request.get(url + params, function (err, response, body) {
+            if(JSON.parse(body).items.length > 0) {
+              result.push(JSON.parse(body));    
+              if(count == result.length) {
+                // result = JSON.parse(JSON.stringify(result).replace(/\n+/g, ""))
+                res.status(200).json(result);
+              }      
+            } else {
+              count--;
+            }
+          });
+        });
+      }
+    }).sort({"createdAt" : -1});
+  }]);
+});
+
+
+
+router.get('/getMovieList3ea', function(req, res) {
+  var result = [];
+  var count = 0;
+  async.waterfall([function(callback) {
+    BeautyMovie.find({
+      'tabLocation.tip' : true
+    },function(err, docs) {
+      if(err) {
+        res.status(400).json(err);
+      }
+        if (docs) {
+        count = docs.length;
+        docs.forEach((element,i) => {
+          let url = "https://www.googleapis.com/youtube/v3/videos?";
+          let params = [
+            `key=${YOUTUBE_API_KEY}`,
+            `part=snippet`,
+            `id=${element.posturlId}`,
+          ].join('&');
+          
+          request.get(url + params, function (err, response, body) {
+            if(JSON.parse(body).items.length > 0) {
+              result.push(JSON.parse(body));    
+              if(3 == result.length) {
+                // result = JSON.parse(JSON.stringify(result).replace(/\n+/g, ""))
+                res.status(200).json(result);
+              }      
+            } else {
+              count--;
+            }
+          });
+        });
+      }
+    }).sort({"createdAt" : -1});
+  }]);
+});
+
+router.get('/getMoviePlinicList3ea', function(req, res) {
+  var result = [];
+  var count = 0;
+  async.waterfall([function(callback) {
+    BeautyMovie.find({
+      'tabLocation.hit' : true
+    },function(err, docs) {
+      if(err) {
+        res.status(400).json(err);
+      }
+        if (docs) {
+        count = docs.length;
+        docs.forEach((element,i) => {
+          let url = "https://www.googleapis.com/youtube/v3/videos?";
+          let params = [
+            `key=${YOUTUBE_API_KEY}`,
+            `part=snippet`,
+            `id=${element.posturlId}`,
+          ].join('&');
+          
+          request.get(url + params, function (err, response, body) {
+            if(JSON.parse(body).items.length > 0) {
+              result.push(JSON.parse(body));    
+              if(count == result.length) {
+                // result = JSON.parse(JSON.stringify(result).replace(/\n+/g, ""))
+                res.status(200).json(result);
+              }      
+            } else {
+              count--;
+            }
+          });
+        });
+      }
+    }).sort({"createdAt" : -1});
+  }]);
+});
+
 
 //대댓글 기능 추가 2020-11-23
 router.post('/:id/recomments', function(req, res) {
@@ -201,13 +429,15 @@ router.get('/dislike/:id/:email', function(req, res) {
 
 router.get('/list', function(req, res) {
   var result = [];
+  var count = 0;
   async.waterfall([function(callback) {
     BeautyMovie.find(function(err, docs) {
       if(err) {
         res.status(400).json(err);
       }
       
-      if(docs) {
+      if (docs) {
+        count = docs.length;
         docs.forEach((element,i) => {
           let url = "https://www.googleapis.com/youtube/v3/videos?";
           let params = [
@@ -217,12 +447,14 @@ router.get('/list', function(req, res) {
           ].join('&');
           
           request.get(url + params, function (err, response, body) {
-            if(body) {
+            if(JSON.parse(body).items.length > 0) {
               result.push(JSON.parse(body));    
-              if(docs.length == result.length) {
+              if(count == result.length) {
                 // result = JSON.parse(JSON.stringify(result).replace(/\n+/g, ""))
                 res.status(200).json(result);
-              }      
+              } 
+            } else {
+              count--;
             }
           });
         });
@@ -752,4 +984,10 @@ function createSearch(queries) {
     findUser: findUser,
     highlight: highlight
   };
+}
+function isEmpty(str) {
+  if(typeof str == "undefined" || str == null || str == "")
+    return true;
+  else
+    return false ;
 }

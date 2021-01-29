@@ -118,6 +118,98 @@ router.get('/editorlist', function(req, res) {
   }]);
 });
 
+router.get('/postNewList', function(req, res) {
+  //var carezonelist = null;
+  async.waterfall([function(callback) {
+    CommuBeauty.find({
+      'tabLocation.new': true
+    }, function(err, docs) {
+      res.json(docs);
+    }).sort({
+      "editorUpdateAt": -1
+    });
+  }]);
+});
+
+router.get('/getpostHitList3ea', function(req, res) {
+  //var carezonelist = null;
+  async.waterfall([function(callback) {
+    CommuBeauty.find({
+      'tabLocation.hit': true
+    }, function(err, docs) {
+      res.json(docs);
+    }).sort({
+      "editorUpdateAt": -1
+    }).limit(3);
+  }]);
+});
+
+router.get('/postTipList3ea', function(req, res) {
+  //var carezonelist = null;
+  async.waterfall([function(callback) {
+    CommuBeauty.find({
+      'tabLocation.tip': true
+    }, function(err, docs) {
+      res.json(docs);
+    }).sort({
+      "editorUpdateAt": -1
+    }).limit(3);
+  }]);
+});
+
+router.get('/postListSortView', function(req, res) {
+  //var carezonelist = null;
+  async.waterfall([function(callback) {
+    CommuBeauty.find({
+      'tabLocation.tip': true
+    },function(err, docs) {
+      res.json(docs);
+    }).sort({
+      "views": -1
+    });
+  }]);
+});
+
+router.get('/postListSortCreate', function(req, res) {
+  //var carezonelist = null;
+  async.waterfall([function(callback) {
+    CommuBeauty.find({
+      'tabLocation.tip': true
+    },function(err, docs) {
+      res.json(docs);
+    }).sort({
+      "createdAt": -1
+    });
+  }]);
+});
+
+router.get('/postHitListSortView', function(req, res) {
+  //var carezonelist = null;
+  async.waterfall([function(callback) {
+    CommuBeauty.find({
+      'tabLocation.hit': true
+    },function(err, docs) {
+      res.json(docs);
+    }).sort({
+      "views": -1
+    });
+  }]);
+});
+
+router.get('/postHitListSortCreate', function(req, res) {
+  //var carezonelist = null;
+  async.waterfall([function(callback) {
+    CommuBeauty.find({
+      'tabLocation.hit': true
+    },function(err, docs) {
+      res.json(docs);
+    }).sort({
+      "createdAt": -1
+    });
+  }]);
+});
+
+
 router.get('/main_list', function(req, res) {
   async.waterfall([function(callback) {
     CommuBeauty.find({
