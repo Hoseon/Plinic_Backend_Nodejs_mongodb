@@ -178,12 +178,12 @@
                                                         <% carezone.forEach(function(post){ %>
                                                             <% if(post.comments) { %>
                                                                 <% post.comments.forEach(function(comment){ %>
-                                                                <tr onclick="window.location = '/carezone/nIndex/<%= post._id%>?<%= urlQuery %>'">
+                                                                <tr onclick="window.location = '/challengeComments/comments/<%= post._id%>/<%= comment._id%>?<%= urlQuery %>'">
                                                                     <td><%= post.numId %></td>
-                                                                    <td class="text-left" data-highlight="<%= search.highlight.title %>">
+                                                                    <td class="text-center" data-highlight="<%= search.highlight.title %>">
                                                                         [<%= post.title %>]
                                                                     </td>
-                                                                    <td><%= comment.comment %></td>
+                                                                    <td style="max-width: 100px;" class="text-truncate align-middle" ><%= comment.comment %></td>
                                                                     <td><%= comment.email %></td>
                                                                     <td><%= post.getFormattedDate(comment.updatedAt) %></td>
                                                                     <td></td>

@@ -48,9 +48,9 @@ var beautyMovieSchema = mongoose.Schema({
     editor: {type: Boolean, default: false}, //에디터추천
   }],
   tabLocation: [{ // 탭명 노출
-    tip: {type: Boolean, default: false},
-    hit: {type: Boolean, default: false},
-    new: {type: Boolean, default: false},
+    tip: {type: Boolean, default: false}, //핫클립
+    hit: {type: Boolean, default: false}, //플리닉
+    new: {type: Boolean, default: false}, //봐야해
   }],
   visible: { type: Boolean, default: true }, //활성화
   seq : { type: Number, default: 1},

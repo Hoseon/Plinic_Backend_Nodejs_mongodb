@@ -83,17 +83,8 @@ const sftpconfig = {
   password: "g100210!!"
 };
 
-router.get("/Main", function (req, res) {
-  return res.render("PlinicAdmin/Contents/Main/index", {});
-});
-//콘텐츠관리 메인 화면
 
-router.get("/Challenge", function (req, res) {
-  return res.render("PlinicAdmin/Contents/ChallengeMgt/index", {});
-});
-//콘텐츠관리 챌린지 화면
-
-router.get('/Challenge/newIndex', function (req, res) {
+router.get('/', function (req, res) {
   var vistorCounter = null;
   var page = Math.max(1, req.query.page) > 1 ? parseInt(req.query.page) : 1;
   var limit = Math.max(1, req.query.limit) > 1 ? parseInt(req.query.limit) : 7;
@@ -144,7 +135,7 @@ router.get('/Challenge/newIndex', function (req, res) {
       success: false,
       message: err
     });
-    return res.render("PlinicAdmin/Contents/ChallengeMgt/index", {
+    return res.render("PlinicAdmin/Contents/Comments/ChallengeComment/index", {
       carezone: carezone,
       user: req.user,
       page: page,
@@ -157,13 +148,12 @@ router.get('/Challenge/newIndex', function (req, res) {
   });
 }); // new index
 
-
-router.get("/Challenge/new", function (req, res) {
+router.get("/new", function (req, res) {
   return res.render("PlinicAdmin/Contents/ChallengeMgt/new", {});
 });
 //콘텐츠관리 챌린지 신규 등록 화면
 
-router.post('/Challenge/', s3upload.fields([
+router.post('/', s3upload.fields([
   { name: 'image' }, { name: 'homeimage' }, { name: 'challenge_image1' }, { name: 'challenge_image2' }, { name: 'challenge_image3' }, { name: 'challenge_image4' }, { name: 'challenge_image5' }]), isLoggedIn, function (req, res, next) {
     async.waterfall([function (callback) {
       CarezoneCounter.findOne({
@@ -226,7 +216,7 @@ router.post('/Challenge/', s3upload.fields([
     });
   }); // create
 
-router.delete('/Challenge/:id', isLoggedIn, function (req, res, next) {
+router.delete('/:id', isLoggedIn, function (req, res, next) {
   console.log(req);
   Carezone.findOneAndRemove({
     _id: req.params.id,
@@ -267,7 +257,7 @@ router.delete('/Challenge/:id', isLoggedIn, function (req, res, next) {
   });
 }); //destroy
 
-router.get("/Challenge/:id", function (req, res) {
+router.get("/:id", function (req, res) {
   Carezone.findById(req.params.id)
     .populate(['author', 'comments.author'])
     .exec(function (err, post) {
@@ -280,35 +270,96 @@ router.get("/Challenge/:id", function (req, res) {
 
       //배너 이미지 가져 오기 20190502
       //res.setHeader('Content-Type', 'image/jpeg');
-      var url = 'https://plinic.s3.ap-northeast-2.amazonaws.com/' + post.filename;
-      var prod_url = 'https://plinic.s3.ap-northeast-2.amazonaws.com/' + post.prodfilename;
-      var homeImage = 'https://plinic.s3.ap-northeast-2.amazonaws.com/' + post.homeimage_filename;
-      var challenge_url1 = 'https://plinic.s3.ap-northeast-2.amazonaws.com/' + post.challenge_image1_filename;
-      var challenge_url2 = 'https://plinic.s3.ap-northeast-2.amazonaws.com/' + post.challenge_image2_filename;
-      var challenge_url3 = 'https://plinic.s3.ap-northeast-2.amazonaws.com/' + post.challenge_image3_filename;
-      var challenge_url4 = 'https://plinic.s3.ap-northeast-2.amazonaws.com/' + post.challenge_image4_filename;
-      var challenge_url5 = 'https://plinic.s3.ap-northeast-2.amazonaws.com/' + post.challenge_image5_filename;
+      // var url = 'https://plinic.s3.ap-northeast-2.amazonaws.com/' + post.filename;
+      // var prod_url = 'https://plinic.s3.ap-northeast-2.amazonaws.com/' + post.prodfilename;
+      // var homeImage = 'https://plinic.s3.ap-northeast-2.amazonaws.com/' + post.homeimage_filename;
+      // var challenge_url1 = 'https://plinic.s3.ap-northeast-2.amazonaws.com/' + post.challenge_image1_filename;
+      // var challenge_url2 = 'https://plinic.s3.ap-northeast-2.amazonaws.com/' + post.challenge_image2_filename;
+      // var challenge_url3 = 'https://plinic.s3.ap-northeast-2.amazonaws.com/' + post.challenge_image3_filename;
+      // var challenge_url4 = 'https://plinic.s3.ap-northeast-2.amazonaws.com/' + post.challenge_image4_filename;
+      // var challenge_url5 = 'https://plinic.s3.ap-northeast-2.amazonaws.com/' + post.challenge_image5_filename;
       //fs.createReadStream(path.join(__dirname, '../uploads/', post.filename)).pipe(res);
       // console.log(post.day);
-      res.render("PlinicAdmin/Contents/ChallengeMgt/show", {
+      res.render("PlinicAdmin/Contents/Comments/ChallengeComment/show", {
         post: post,
-        url: url,
-        prod_url: prod_url,
-        homeImage: homeImage,
-        challenge_url1: challenge_url1,
-        challenge_url2: challenge_url2,
-        challenge_url3: challenge_url3,
-        challenge_url4: challenge_url4,
-        challenge_url5: challenge_url5,
+        // url: url,
+        // prod_url: prod_url,
+        // homeImage: homeImage,
+        // challenge_url1: challenge_url1,
+        // challenge_url2: challenge_url2,
+        // challenge_url3: challenge_url3,
+        // challenge_url4: challenge_url4,
+        // challenge_url5: challenge_url5,
         urlQuery: req._parsedUrl.query,
         user: req.user,
         search: createSearch(req.query)
       });
     });
 });
-//콘텐츠관리 챌린지 Show
+//챌린지댓글 Show
 
-router.get('/Challenge/:id/edit', isLoggedIn, function (req, res) {
+router.get("/comments/:id/:commentId", function (req, res) {
+
+  Carezone.aggregate([
+    { $match: { _id : mongoose.Types.ObjectId(req.params.id)}},
+    { $unwind: "$comments" },
+    { $match: { "comments._id": mongoose.Types.ObjectId(req.params.commentId) } },
+    { "$project": {
+        _id: "$comments._id",
+        title: "$comments.title",
+        body: "$comments.body",
+        name:"$comments.name",
+        comment: "$comments.comment",
+        updatedAt: "$comments.updatedAt",
+        commentId: req.params.id,
+      }
+    }
+    // { $unwind: "$comments" },
+
+  ])
+    .exec(function (err, post) {
+      if (err) return res.json({
+        success: false,
+        message: err
+      });
+      // console.log(post);
+      // res.status(200).json(post);
+      // console.log(post);
+      res.render("PlinicAdmin/Contents/Comments/ChallengeComment/show", {
+        post: post,
+        urlQuery: req._parsedUrl.query,
+        user: req.user,
+        search: createSearch(req.query),
+        postDate: getFormattedDate(post[0].updatedAt),
+      });
+    });
+});
+//챌린지댓글 comments Show
+
+//대댓글 기능 추가 2020-11-23
+router.post('/recomments/:id/', function (req, res) {
+  console.log(req.body.post);
+  var newComment = req.body.post;
+  Carezone.update({
+    "comments._id" : req.params.id
+  }, {
+    $push: {
+      "comments.$.recomments" : newComment
+    }
+  }, function(err, post) {
+    if (err) return res.json({
+      success: false,
+      message: err
+    });
+      
+    res.redirect('/challengeComments/comments/' + req.body.post.commentId + '/' + req.params.id);
+    // return res.status(201).json({
+    //   'msg': '커뮤니티 작성 포인트가 누적되었습니다!!'
+    // });
+  });
+}); //create a recomment
+
+router.get('/:id/edit', isLoggedIn, function (req, res) {
   Carezone.findById(req.params.id, function (err, post) {
     // var url = req.protocol + '://' + req.get('host') + '/carezone_images/' + post._id;
     var url = 'https://plinic.s3.ap-northeast-2.amazonaws.com/' + post.filename;
@@ -390,7 +441,7 @@ router.get('/Challenge/:id/edit', isLoggedIn, function (req, res) {
   });
 }); // 콘텐츠관리 챌린지 edit
 
-router.put('/Challenge/:id', s3upload.fields([{
+router.put('/:id', s3upload.fields([{
   name: 'image'
 }, {
   name: 'prodimage'
@@ -602,3 +653,13 @@ function createSearch(queries) {
     highlight: highlight
   };
 }
+
+function getFormattedDate(date) {
+  return date.getFullYear() + "-" + get2digits(date.getMonth() + 1) + "-" + get2digits(date.getDate());
+};
+
+function get2digits(num) {
+  return ("0" + num).slice(-2);
+}
+
+

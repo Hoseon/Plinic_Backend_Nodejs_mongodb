@@ -13,7 +13,15 @@ var carezoneSchema = mongoose.Schema({
     updatedAt: {type: Date, default:Date.now},
     email: String,
     comment: String,
-    img_url: String
+    img_url: String,
+    title: String,
+    name: String,
+    recomments: [{ //대댓글
+      body: {type:String},
+      email: {type:String},
+      parent_id: {type:String},
+      createdAt: {type:Date, default:Date.now}
+    }],
   }],
   createdAt: {type:Date, default:Date.now},
   updatedAt: Date,
