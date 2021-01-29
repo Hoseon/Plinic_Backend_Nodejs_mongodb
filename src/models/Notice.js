@@ -35,6 +35,21 @@ noticeSchema.methods.getFormattedDate = function (date) {
 noticeSchema.methods.getFormattedTime = function (date) {
   return get2digits(date.getHours()) + ":" + get2digits(date.getMinutes())+ ":" + get2digits(date.getSeconds());
 };
+
+noticeSchema.methods.isEmpty = function (str) {
+  if(typeof str == "undefined" || str == null || str == "")
+      return true;
+  else
+      return false ;
+};
+
+noticeSchema.methods.nvl = function (str, defaultStr) {
+  if(typeof str == "undefined" || str == null || str == "")
+      str = defaultStr ;
+   
+  return str ;
+};
+
 function get2digits(num){
   return ("0" + num).slice(-2);
 }

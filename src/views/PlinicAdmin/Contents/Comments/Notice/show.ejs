@@ -43,42 +43,47 @@
                   내용보기
                 </div>
                 <br>
-                <button type="button" class="w-15 m-1 btn btn-primary btn-sm">작성</button>
-                <button type="button" class="w-15 m-1 btn btn-success btn-sm"
-                  onclick="location.href='/noticeComments/Comments/Notice/edit'">수정</button>
-                <button type="button" class="w-15 m-1 btn btn-success btn-sm"
-                  onclick="location.href='/noticeComments/Comments/Notice/new'">담변</button>
-                <form>
-                  <button type="button" class="w-15 m-1 btn btn-danger btn-sm">삭제</button>
-                </form>
-                <button type="button" class="w-15 m-1 btn btn-primary btn-sm"
-                  onclick="location.href='/noticeComments/Comments/Notice'">목록으로</button>
-
-                <table class="table-bordered table table-striped table-hover">
-                  <tr>
-                    <th class="text-center">제목</th>
-                    <td colspan="3" class="text-left">국민일보 살해 암매장 50대 용의자, 졸고 있던 경찰 탓에 유치장서 숨져</td>
-                  </tr>
-                  <tr>
-                    <th class="text-center">이름</th>
-                    <td class="text-left">efjeifweiokk</td>
-                    <th class="text-center" width="250">작성일</th>
-                    <td width="400" class="text-left">
-                      2018-12-28 17:44:45
-                    </td>
-                  </tr>
-                  <tr>
-                    <th class="col-2" style="text-align: center;">IP주소</th>
-                    <td class="text-left" class="text-left">121.161.30.211</td>
-                    <th class="text-center" width="250"></th>
-                    <td width="400" class="text-left"></td>
-                  </tr>
-                  <tr>
-                    <th class="col-2" style="text-align: center;">첨부파일</th>
-                    <td colspan="3" class="text-left">없음</td>
-                  </tr>
-                </table>
-
+                <div class="panel-body">
+                    <button type="button" class="w-15 m-1 btn btn-primary btn-sm float_left"
+                    onclick="location.href='/noticeComments/new'">작성</button>
+                    <button class="w-15 m-1 btn btn-success btn-sm float_left"
+                      onclick="location.href='/noticeComments/<%=post._id%>/edit'">수정</button>
+                    <button type="button" class="w-15 m-1 btn btn-success btn-sm float_left">담변</button>
+                    <form class="float_left" action="/noticeComments/<%=post._id%>>_method=delete" method="post">
+                      <button type="submit" class="w-15 m-1 btn btn-danger btn-sm">삭제</button>
+                    </form>
+                  <button type="button" class="w-15 m-1 btn btn-primary btn-sm float_left"
+                    onclick="location.href='/noticeComments/'">목록으로</button>
+                  <form role="form" action="/notice" method="post">
+                    <table class="table-bordered table table-striped table-hover">
+                      <tr>
+                        <th class="text-center">제목</th>
+                        <td colspan="3" class="text-left"><%= post.missontitle %></td>
+                      </tr>
+                      <tr>
+                        <th class="text-center">이름</th>
+                        <td class="text-left"><%= post.author.nickname %></td>
+                        <th class="text-center" width="250">작성일</th>
+                        <td width="400" class="text-left">
+                          <%=post.getFormattedDate(post.createdAt)%>
+                        </td>
+                      </tr>
+                      <tr>
+                        <th class="col-2" style="text-align: center;">IP주소</th>
+                        <td class="text-left" class="text-left">-</td>
+                        <th class="text-center" width="250"></th>
+                        <td width="400" class="text-left"></td>
+                      </tr>
+                      <tr>
+                        <th class="col-2" style="text-align: center;">첨부파일</th>
+                        <td colspan="3" class="text-left">없음</td>
+                      </tr>
+                      <tr>
+                        <td colspan="4"><%= post.body %></td>
+                      </tr>
+                    </table>
+                  </form>
+                </div>
                 <div class="comments">
                   <h8>댓글 </h8>
 
