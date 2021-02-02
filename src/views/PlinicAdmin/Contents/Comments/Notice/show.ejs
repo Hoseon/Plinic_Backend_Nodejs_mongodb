@@ -48,17 +48,17 @@
                     onclick="location.href='/noticeComments/new'">작성</button>
                     <button class="w-15 m-1 btn btn-success btn-sm float_left"
                       onclick="location.href='/noticeComments/<%=post._id%>/edit'">수정</button>
-                    <button type="button" class="w-15 m-1 btn btn-success btn-sm float_left">담변</button>
-                    <form class="float_left" action="/noticeComments/<%=post._id%>>_method=delete" method="post">
+                    <button type="button" class="w-15 m-1 btn btn-success btn-sm float_left"
+                      onclick="location.href='/noticeComments/<%=post._id%>/edit'">담변</button>
+                    <form class="float_left" action="/noticeComments/<%=post._id%>?_method=delete" method="post">
                       <button type="submit" class="w-15 m-1 btn btn-danger btn-sm">삭제</button>
                     </form>
                   <button type="button" class="w-15 m-1 btn btn-primary btn-sm float_left"
                     onclick="location.href='/noticeComments/'">목록으로</button>
-                  <form role="form" action="/notice" method="post">
                     <table class="table-bordered table table-striped table-hover">
                       <tr>
                         <th class="text-center">제목</th>
-                        <td colspan="3" class="text-left"><%= post.missontitle %></td>
+                        <td colspan="3" class="text-left"><%= post.title %></td>
                       </tr>
                       <tr>
                         <th class="text-center">이름</th>
@@ -76,33 +76,62 @@
                       </tr>
                       <tr>
                         <th class="col-2" style="text-align: center;">첨부파일</th>
-                        <td colspan="3" class="text-left">없음</td>
+                        <td colspan="3" class="text-left">
+                          <img style="width: 100px;" src="<%= url %>" />
+                        </td>
                       </tr>
                       <tr>
                         <td colspan="4"><%= post.body %></td>
                       </tr>
                     </table>
-                  </form>
                 </div>
-                <div class="comments">
-                  <h8>댓글 </h8>
-
-                  <div class="comment">
-                    <div class="top">
-                      <b>작성자</b>
-
-
-                    </div>
-                    <div class="body">내용</div>
-                  </div>
-
-
-                  <div>이름 관리자</div>
-                  <form action="" method="post">
-                    <textarea class="cvRequired" type="text" name="comment[body]" cvRqErrMsg="comments is empty."
-                      cvRqErrTo="#cvErrTitle"></textarea>
-                    <button type="submit">저장</button>
-                    <div id="cvErrTitle" class="message"></div>
+                <div class="panel-body">
+                  <h8>댓글(<%= post.comments?post.comments.length:"0" %>) </h8>
+                  <% if(post.comments) { %>
+                    <% post.comments.forEach(function(comment) { %>
+                      <div class="comment border">
+                        <div class="row">
+                          <b class="text-left"> <%= post.author.nickname %>
+                            <% if(user && user.equals(post.author._id)) { %>
+                              <form class="float_right" method="post"
+                                action="/noticeComments/<%=post._id%>/comments/<%=comment._id%>?_method=delete&<%= urlQuery %>">
+                                <button type="button" class="w-15 m-1 btn btn-danger btn-sm"
+                                  onclick="confirm('Your comment will be deleted')?this.parentElement.submit():null;">
+                                  x
+                                </button>
+                              </form>
+                            <% } %>
+                          </b>
+                          
+                        </div>
+                        <div class="body border">
+                          <%= comment.body %>
+                        </div>
+                        <div class="panel-body">
+                          <form class="addComment checkValidation" 
+                          action="/noticeComments/<%=post._id%>/recomments?<%= urlQuery %>" method="post">
+                          <input type="hidden" name="id" value="<%=post._id%>" />
+                          <input type="hidden" name="pushtoken" value="<%=post.pushtoken%>" />
+                          <textarea class="cvRequired" type="text" name="recomment[body]" cvRqErrMsg="comments is empty."
+                            cvRqErrTo="#cvErrTitle" <%= user?"":"disabled" %>
+                            placeholder="<%= user?"관리자 댓글달기":"로그인이 필요합니다." %>"></textarea>
+                          <button type="submit" <%= user?"":"disabled" %>>저장</button>
+                          <div id="cvErrTitle" class="message"></div>
+                          </form>
+                        </div>
+                      </div>
+                    <% }) %>
+                  <% } %>
+                  <br>
+                  <form class="addComment checkValidation" 
+                  action="/noticeComments/<%=post._id%>/comments?<%= urlQuery %>" method="post">
+                  <input type="hidden" name="id" value="<%=post._id%>" />
+                  <input type="hidden" name="pushtoken" value="<%=post.pushtoken%>" />
+                  <textarea class="cvRequired" type="text" name="comment[body]" cvRqErrMsg="comments is empty."
+                    cvRqErrTo="#cvErrTitle" <%= user?"":"disabled" %>
+                    placeholder="<%= user?"관리자 댓글달기":"로그인이 필요합니다." %>"></textarea>
+                  <button type="submit" <%= user?"":"disabled" %>>저장</button>
+                  <div id="cvErrTitle" class="message"></div>
                   </form>
                 </div>
 

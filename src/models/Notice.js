@@ -1,7 +1,7 @@
 var mongoose = require('mongoose');
 
 var noticeSchema = mongoose.Schema({
-  category: {type:String, required:true},
+  // category: {type:String, required:true},
   title: {type:String, required:true},
   body: {type:String, required:true},
   author: {type:mongoose.Schema.Types.ObjectId, ref:'user_admin', required:true},
@@ -9,8 +9,24 @@ var noticeSchema = mongoose.Schema({
   numId: {type:Number, required:true},
   comments: [{
     body: {type:String, required:true},
-    author: {type:mongoose.Schema.Types.ObjectId, ref:'user_admin', required:true},
-    createdAt: {type:Date, default:Date.now}
+    // author: {type:mongoose.Schema.Types.ObjectId, ref:'user_admin', required:true},
+    createdAt: {type:Date, default:Date.now},
+    updatedAt: {type: Date, default:Date.now},
+    email: String,
+    comment: String,
+    img_url: String,
+    title: String,
+    name: String,
+    recomments: [{ //대댓글
+      body: {type:String},
+      createdAt: {type:Date, default:Date.now},
+      updatedAt: {type: Date, default:Date.now},
+      email: String,
+      recomment: String,
+      img_url: String,
+      title: String,
+      name: String,
+    }],
   }],
   createdAt: {type:Date, default:Date.now},
   updatedAt: Date,

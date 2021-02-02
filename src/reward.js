@@ -407,7 +407,7 @@ router.post('/:id/comments', function(req, res) {
     });
     res.redirect('/reward/' + req.params.id + "?" + req._parsedUrl.query);
   });
-}); //create a comment
+});
 
 
 router.delete('/:postId/comments/:commentId', function(req, res) {
