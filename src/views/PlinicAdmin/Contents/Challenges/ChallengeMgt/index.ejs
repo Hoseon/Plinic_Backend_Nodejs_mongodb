@@ -8,7 +8,7 @@
 </head>
 <script type="text/javascript" src="/js/jquery-1.10.2.js"></script>
 <body>
-    
+
     <header>
         <% include ../../../../partials/header %>
     </header>
@@ -69,26 +69,26 @@
                                         <td class="align-middle">
                                                 <div class="row mb-3 align-middle">
                                                         <div class="row align-middle">
-                                                            <div class="col align-middle p-0"> 
+                                                            <div class="col align-middle p-0">
                                                                 <span class="input-group-btn">
                                                                     <button type="button" class="btn btn-danger btn-number"  data-type="minus" data-field="seq[<%= index %>]">
                                                                     <span class="glyphicon glyphicon-minus"></span>
                                                                     </button>
-                                                                </span></div>        
+                                                                </span></div>
                                                             <div class="col align-middle p-0">
-                                                                <input type="number" readonly value="<%= post.seq %>" name="seq[<%= index %>]" class="form-control text-center w-100 align-middle" min="1" max="100"></div>        
+                                                                <input type="number" readonly value="<%= post.seq %>" name="seq[<%= index %>]" class="form-control text-center w-100 align-middle" min="1" max="100"></div>
                                                             <div class="col p-0">
                                                                 <span class="input-group-btn">
                                                                     <button type="button" class="btn btn-success btn-number" data-type="plus" data-field="seq[<%= index %>]">
                                                                         <span class="glyphicon glyphicon-plus"></span>
                                                                     </button>
-                                                                </span></div>        
+                                                                </span></div>
                                                         </div>
-                                                </div>        
+                                                </div>
                                                 <div class="row justify-content-center">
                                                         <div class="col-6 p-0 m-0">
                                                             <form name="seqFormSubmit<%= index %>">
-                                                                <button class="btn btn-primary" type="button" 
+                                                                <button class="btn btn-primary" type="button"
                                                                 onclick="seqChange('<%= index %>')">변경하기</button>
                                                                 <input type="hidden" value="<%= post.seq %>" name="seq[<%= index %>]"></div>
                                                                 <input type="hidden" value="<%= post._id %>"  name="seqNumberId[<%= index %>]">
@@ -191,7 +191,7 @@
                                   </form>
                                 </div>
                         </div> -->
-                    </div> 
+                    </div>
                 </div>
             </div>
         </div>
@@ -222,8 +222,8 @@
         var chk = document.getElementsByName("seqNumberId["+seq+"]")[0].value; // 체크박스객체를 담는다
         if(confirm('적용 하시겠습니까?')) {
             var seqFormSubmit = document.getElementsByName("seqFormSubmit"+seq)[0];
-            seqFormSubmit.method = "post"; 
-            seqFormSubmit.target = "_self"; 
+            seqFormSubmit.method = "post";
+            seqFormSubmit.target = "_self";
             seqFormSubmit.action = "/contents/Challenge/SeqUpdate/" + chk + "?_method=put";
             seqFormSubmit.submit();
         }
@@ -237,14 +237,14 @@
         var checkCnt = 0;        //체크된 체크박스의 개수
         var checkLast = '';      //체크된 체크박스 중 마지막 체크박스의 인덱스를 담기위한 변수
         var rowid = '';             //체크된 체크박스의 모든 value 값을 담는다
-        var cnt = 0;                 
+        var cnt = 0;
 
         for(var i=0; i<len; i++){
             if(chk[i].checked == true){
             checkCnt++;        //체크된 체크박스의 개수
             checkLast = i;     //체크된 체크박스의 인덱스
             }
-        } 
+        }
         for(var i=0; i<len; i++){
             if(chk[i].checked == true){  //체크가 되어있는 값 구분
                 checkRow = chk[i].value;
@@ -254,12 +254,12 @@
                     if(i == checkLast){                     //체크된 체크박스 중 마지막 체크박스일 때,
                         rowid += ""+checkRow+"";  //'value'의 형태 (뒤에 ,(콤마)가 붙지않게)
                     }else{
-                        rowid += ""+checkRow+",";	 //'value',의 형태 (뒤에 ,(콤마)가 붙게)         			
+                        rowid += ""+checkRow+",";	 //'value',의 형태 (뒤에 ,(콤마)가 붙게)
                     }
                 }
                 cnt++;
                 checkRow = '';    //checkRow초기화.
-            }   
+            }
             // alert(rowid);    //'value1', 'value2', 'value3' 의 형태로 출력된다.
         }
 
@@ -268,10 +268,11 @@
         if(confirm('정말 삭제하시겠습니까?')) {
             // alert(rowid);
             var theForm = document.frmSubmit;
-            theForm.method = "post"; 
-            theForm.target = "_self"; 
+            theForm.method = "post";
+            theForm.target = "_self";
             theForm.action = "/contents/Challenge/" + rowid + "?_method=delete";
             theForm.submit();
+            $(this).prev().click();
         }
     }
 
@@ -283,8 +284,8 @@
             }
         }
 
-        
-        
+
+
         // alert(rowid);
     }
 
@@ -317,17 +318,17 @@
         $("#contents").addClass("active");
         $('.btn-number').click(function(e){
             e.preventDefault();
-            
+
             fieldName = $(this).attr('data-field');
             type      = $(this).attr('data-type');
             var input = $("input[name='"+fieldName+"']");
             var currentVal = parseInt(input.val());
             if (!isNaN(currentVal)) {
                 if(type == 'minus') {
-                    
+
                     if(currentVal > input.attr('min')) {
                         input.val(currentVal - 1).change();
-                    } 
+                    }
                     if(parseInt(input.val()) == input.attr('min')) {
                         $(this).attr('disabled', true);
                     }
@@ -350,11 +351,11 @@
         $(this).data('oldValue', $(this).val());
         });
         $('.input-number').change(function() {
-        
+
             minValue =  parseInt($(this).attr('min'));
             maxValue =  parseInt($(this).attr('max'));
             valueCurrent = parseInt($(this).val());
-            
+
             name = $(this).attr('name');
             if(valueCurrent >= minValue) {
                 $(".btn-number[data-type='minus'][data-field='"+name+"']").removeAttr('disabled')
@@ -368,14 +369,14 @@
                 alert('Sorry, the maximum value was reached');
                 $(this).val($(this).data('oldValue'));
             }
-            
-            
+
+
         });
         $(".input-number").keydown(function (e) {
                 // Allow: backspace, delete, tab, escape, enter and .
                 if ($.inArray(e.keyCode, [46, 8, 9, 27, 13, 190]) !== -1 ||
                     // Allow: Ctrl+A
-                    (e.keyCode == 65 && e.ctrlKey === true) || 
+                    (e.keyCode == 65 && e.ctrlKey === true) ||
                     // Allow: home, end, left, right
                     (e.keyCode >= 35 && e.keyCode <= 39)) {
                         // let it happen, don't do anything
@@ -386,7 +387,7 @@
                     e.preventDefault();
                 }
             });
-            
+
         });
 </script>
 </html>
