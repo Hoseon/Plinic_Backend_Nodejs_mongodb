@@ -51,6 +51,7 @@ var cookieParser = require('cookie-parser');
 var methodOverride = require('method-override');
 const percentRank = require('percentile-rank');
 var UserSkin = require('./models/UserSkin');
+var Category = require('./models/Category');
 
 var multerS3 = require('multer-s3');
 const AWS = require("aws-sdk");
@@ -1284,7 +1285,7 @@ module.exports = function (app) {
     });
   });
 
-  //근접촬영(눈가) 이미지 업로드 S3 2020-04-16 
+  //근접촬영(눈가) 이미지 업로드 S3 2020-04-16
   app.post('/eyeskin', s3skinupload.single('eyeimage'), (req, res, next) => {
     // console.log(JSON.stringify(req.body));
     // console.log(JSON.stringify(req.file));
@@ -1362,7 +1363,7 @@ module.exports = function (app) {
   });
 
 
-  //근접촬영(두피) 이미지 업로드 S3 2020-04-16 
+  //근접촬영(두피) 이미지 업로드 S3 2020-04-16
   app.post('/hairskin', s3skinupload.single('hairimage'), (req, res, next) => {
     // console.log(JSON.stringify(req.body));
     // console.log(JSON.stringify(req.file));
@@ -1683,7 +1684,7 @@ module.exports = function (app) {
 
   app.get('/Point/getPlinicPoint/', async function(req, res, next) {
     var request1 = require('request');
-    var url = 'http://plinicshop.com:50082/Point/getPointList' 
+    var url = 'http://plinicshop.com:50082/Point/getPointList'
     await request1({
       url: url,
       method: 'GET'
@@ -1707,7 +1708,7 @@ module.exports = function (app) {
     }
     var email = req.params.email
     var request10 = require('request');
-    var url = 'http://plinicshop.com:50082/Point/getUserPoint?id=' + email 
+    var url = 'http://plinicshop.com:50082/Point/getUserPoint?id=' + email
     await request10({
       url: url,
       method: 'GET'
@@ -1849,7 +1850,7 @@ module.exports = function (app) {
     }
     var lat = req.params.lat;
     var lon = req.params.lon;
-    
+
     var request1 = require('request');
     var url1 = 'http://api.openweathermap.org/data/2.5/weather'; /*URL*/
     var queryParams1 = '?' + encodeURIComponent('appid') + '='+'5106b1b8096baed4eb5395318240e46d'; /*API Key*/
@@ -1910,7 +1911,7 @@ module.exports = function (app) {
       } else{
         resultData.uv = JSON.parse(body3);
         setTimeout(() => {
-          return res.status(201).json(resultData);  
+          return res.status(201).json(resultData);
         }, 500);
       }
     })
@@ -2108,7 +2109,7 @@ module.exports = function (app) {
         // console.log(avgForeHeadPoreCount);
         // console.log(average(avgForeHeadPoreSize));
         // console.log(average(avgForeHeadPoreCount));
-  
+
         res.status(200).json({
           "avgCheekPoreSize" : average(avgCheekPoreSize),
           "avgCheekPoreCount" : average(avgCheekPoreCount),
@@ -2127,9 +2128,23 @@ module.exports = function (app) {
     })
   })
 
+  app.post("/categoryIndex", function(req, res, next){
+    let category = Category(req.body);
+    category.save((err, data) =>{
+      if(err) {
+        console.log(err);
+        return res.status(400);
+      }
 
+      if(data) {
+        return res.status(200).json({
+          data
+        })
+      }
+    })
+  });
 
-  //20200902 
+  //20200902
   // 1. Hoseon 이미지 파일을 최초 AWS로 저장하고
   // 2. 저장된 파일은 다시 fileStream을 이용하여 Cafe24서버 내로 저장한다.
   // 3. 그후 피쳐링 API로 두개의 이미지를 전송하여 Diff의 값을 내려 받는다.
@@ -2147,13 +2162,13 @@ module.exports = function (app) {
       }
 
       if(data) {
-        //회원의 정보가 존재 한다면 
+        //회원의 정보가 존재 한다면
         //파일스트림을 생성하여 로컬 서버에 이미지를 저장한다.
         //회원정보의 원본 이미지를 찾아서 비교 분석을 실시 한다.
         const fs2 = require("fs");
         const https = require("https");
         const file = fs2.createWriteStream(__dirname + '/../' + req.file.key);
-        // const featApiUrl = 'http://ec2-3-34-189-215.ap-northeast-2.compute.amazonaws.com/api/'; // 피쳐링 피부분석 API 
+        // const featApiUrl = 'http://ec2-3-34-189-215.ap-northeast-2.compute.amazonaws.com/api/'; // 피쳐링 피부분석 API
         const featApiUrl = 'http://ec2-52-79-142-125.ap-northeast-2.compute.amazonaws.com/api/'; // 지원파트너스 피부분석 API 2020-12-07
         const awsS3Url = 'https://plinic.s3.ap-northeast-2.amazonaws.com/';
         var request22 = require('request');
@@ -2200,7 +2215,7 @@ module.exports = function (app) {
                           'msg' : '데이터 처리 완료'
                         })
                       }
-                    })  
+                    })
                 } else {
                   return res.status(400).json({
                     "msg" : "피부 분석 에러 (볼 부위 실패)"
@@ -2208,7 +2223,7 @@ module.exports = function (app) {
                 }
               }
             });
-            
+
             var form = req22.form();
             form.append('image', fs.readFileSync(__dirname + '/../' + req.file.key), {
               filename: req.file.key.replace('skin/', ''),
@@ -2219,12 +2234,12 @@ module.exports = function (app) {
               contentType: 'image/jpg'
             });
 
-          });  
+          });
         });
       }
     })
     //MongoDB End
-   
+
   })
 
   app.post('/skinAnalySecondForeheadSave', s3skinupload.single('image'), async function(req, res, next) {
@@ -2239,7 +2254,7 @@ module.exports = function (app) {
       }
 
       if(data) {
-        //회원의 정보가 존재 한다면 
+        //회원의 정보가 존재 한다면
         //파일스트림을 생성하여 로컬 서버에 이미지를 저장한다.
         //회원정보의 원본 이미지를 찾아서 비교 분석을 실시 한다.
         const fs2 = require("fs");
@@ -2287,11 +2302,11 @@ module.exports = function (app) {
                         'msg' : '데이터 처리 완료'
                       })
                     }
-                  })  
+                  })
                 } else {
                   return res.status(400).json({
                     "msg" : "피부 분석 에러 발생 (이마 부위 분석 실패)"
-                  })  
+                  })
                 }
               }
             });
@@ -2305,14 +2320,14 @@ module.exports = function (app) {
               contentType: 'image/png'
             });
 
-          });  
+          });
         });
       }
     })
     //MongoDB End
 
 
-   
+
   })
 
   app.get('/postTest2', async function(req, res, next) {
@@ -2342,7 +2357,7 @@ module.exports = function (app) {
 
 
   app.get('/getAllMunjinData/:value', function(req, res) {
-    
+
     if(!req.params.value) {
       return res.status(400).json({
         'msg' : '상위 퍼센트 가져오기 에러입니다.'
@@ -2383,7 +2398,7 @@ module.exports = function (app) {
         }
       });
   });
-  
+
 
   function getFormattedDate(date) {
     return date.getFullYear() + "-" + get2digits(date.getMonth() + 1) + "-" + get2digits(date.getDate());
