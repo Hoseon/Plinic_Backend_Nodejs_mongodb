@@ -1,8 +1,8 @@
 var express = require("express");
 var router = express.Router();
 var mongoose = require("mongoose");
-var Qna = require("../models/Qna");
-var QnaCounter = require("../models/QnaCounter");
+var Product = require("../models/Product");
+var ProductCounter = require("../models/ProductCounter");
 var async = require("async");
 var User_admin = require("../models/User_admin");
 var multer = require("multer");
@@ -16,75 +16,239 @@ var http = require("http");
 var FCM = require("fcm-node");
 var serverKey = "AIzaSyCAcTA318i_SVCMl94e8SFuXHhI5VtXdhU";
 var fcm = new FCM(serverKey);
+var multerS3 = require("multer-s3");
+const AWS = require("aws-sdk");
+AWS.config.loadFromPath(__dirname + "/../config/awsconfig.json");
+let s3 = new AWS.S3();
 
-//let UPLOAD_PATH = "./uploads/"
-
-//multer 선언 이미지 rest api 개발 20190425
-var storage = multer.diskStorage({
-  destination: function (req, file, cb) {
-    cb(null, path.join(__dirname, "../uploads/"));
-    //cb(null, UPLOAD_PATH)
-  },
-  filename: function (req, file, cb) {
-    cb(null, file.fieldname + "-" + Date.now());
-  }
-});
-
-let upload = multer({
-  storage: storage
-});
-
-var sftpUpload = multer({
-  storage: new sftpStorage({
-    sftp: {
-      host: "g1partners1.cafe24.com",
-      // secure: true, // enables FTPS/FTP with TLS
-      port: 3822,
-      user: "g1partners1",
-      password: "g100210!!"
+let s3upload = multer({
+  storage: multerS3({
+    s3: s3,
+    bucket: "plinic",
+    metadata: function(req, file, cb) {
+      console.log(file);
+      cb(null, {
+        fieldName: file.fieldname,
+        filename: file.fieldname + "-" + Date.now()
+      });
     },
-    // basepath: '/www/plinic',
-    destination: function (req, file, cb) {
-      cb(null, "/www/plinic");
-    },
-    filename: function (req, file, cb) {
+    key: function(req, file, cb) {
+      console.log(file);
       cb(null, file.fieldname + "-" + Date.now());
-    }
+    },
+    acl: "public-read"
   })
 });
 
-const sftpconfig = {
-  host: "g1partners1.cafe24.com",
-  port: 3822,
-  user: "g1partners1",
-  password: "g100210!!"
-};
-
-router.get("/Main", function (req, res) {
+router.get("/Main", function(req, res) {
   return res.render("PlinicAdmin/Product/Main/index", {});
 });
 //상품관리 메인 화면
 
 ////////////////////////////////////// 상품 데이터
-router.get("/ProductData/ProductList", function (req, res) {
-return res.render("PlinicAdmin/Product/ProductData/ProductList/index", {});
+router.get("/ProductData/ProductList", function(req, res) {
+  return res.render("PlinicAdmin/Product/ProductData/ProductList/index", {});
 });
 //상품데이터 상품관리 리스트 화면
 
-router.get("/ProductData/ProductRegister", function (req, res) {
-return res.render("PlinicAdmin/Product/ProductData/ProductRegister/index", {});
+router.get("/ProductData/ProductRegister", function(req, res) {
+  return res.render(
+    "PlinicAdmin/Product/ProductData/ProductRegister/index",
+    {}
+  );
 });
 //상품데이터 상품관리 생성 화면
 
-router.get("/ProductData/ProductRegister/edit", function (req, res) {
-return res.render("PlinicAdmin/Product/ProductData/ProductRegister/edit", {});
+router.get("/ProductData/ProductRegister/edit", function(req, res) {
+  return res.render("PlinicAdmin/Product/ProductData/ProductRegister/edit", {});
 });
 //상품데이터 상품관리 수정 화면
 
-router.get("/", function (req, res) {
+router.get("/", function(req, res) {
   return res.render("PlinicAdmin/bootstraptest/index", {});
 });
 // index
+
+router.post("/", s3upload.fields([{ name: "productimage" }, {name: "jepumImage" }, { name: "detailimage" }, { name: "announcement" }]),isLoggedIn, function(req, res, next) {
+    async.waterfall(
+      [
+        function(callback) {
+          ProductCounter.findOne(
+            {
+              name: "product"
+            },
+            function(err, counter) {
+              if (err) callback(err);
+              if (counter) {
+                callback(null, counter);
+              } else {
+                ProductCounter.create(
+                  {
+                    name: "product",
+                    totalCount: 0
+                  },
+                  function(err, counter) {
+                    if (err)
+                      return res.json({
+                        success: false,
+                        message: err
+                      });
+                    callback(null, counter);
+                  }
+                );
+              }
+            }
+          );
+        }
+      ],
+      function(callback, counter) {
+        var newPost = req.body.post;
+        newPost.author = req.user._id;
+        newPost.numId = counter.totalCount + 1;
+        req.body.post.product_num = Date.now();
+        req.body.post.isPlinic = true;
+        req.body.post.filename = req.files["productimage"][0].key;
+        req.body.post.originaFileName = req.files["productimage"][0].originalname;
+        req.body.post.productFileName = req.files["jepumImage"][0].key;
+        req.body.post.productOriginalName = req.files["jepumImage"][0].originalname;
+        req.body.post.detailImageName = req.files["detailimage"][0].key;
+        req.body.post.detailImageOriginalName = req.files["detailimage"][0].originalname;
+        req.body.post.announcementFileName = req.files["announcement"][0].key;
+        req.body.post.announcementOriginalFileName = req.files["announcement"][0].originalname;
+        Product.create(req.body.post, function(err, post) {
+          if (err)
+            return res.json({
+              success: false,
+              message: err
+            });
+          counter.totalCount++;
+          counter.save();
+          res.render("PlinicAdmin/Product/ProductData/ProductList/index", {});
+        });
+      }
+    );
+  }
+); // create
+
+router.get("/getPlinicProduct", function(req, res, next) {
+  async.waterfall([
+    () => {
+      Product.find(
+        {
+          isPlinic: true
+        },
+        (err, docs) => {
+          if (err) res.sendStatus(400);
+
+          if (docs) res.status(201).json(docs);
+        }
+      );
+    }
+  ]);
+});
+
+router.get("/like/:product_num/:email", function(req, res, next) {
+  async.waterfall([
+    function(callback) {
+      Product.findOne(
+        {
+          product_num: req.params.product_num
+        },
+        (err, docs) => {
+          if (err) res.sendStatus(400);
+
+          if (docs) docs.likeCount++;
+          docs.save();
+          callback(null, docs);
+        }
+      );
+    },
+    function(docs, callback) {
+      var email = {
+        email: req.params.email
+      };
+      Product.findOneAndUpdate(
+        {
+          product_num: docs.product_num
+        },
+        {
+          $push: {
+            likeUser: email
+          }
+        },
+        (error, docs2) => {
+          if (error) callback(error);
+          
+          if (docs2) callback(null, docs2);
+        }
+      );
+    },
+    function (docs2, callback) {
+      Product.find({
+        product_num: docs2.product_num
+      }).lean().exec((err, docs3) => {
+        if (err)
+          return res.status(400).json({
+          })
+        if (docs3)
+          res.send(JSON.parse(JSON.stringify(docs3)))
+          // return res.end(JSON.stringify(docs3));
+          // return res.status(200).json({ docs3 });
+      })
+    }
+  ]);
+});
+
+router.get("/dislike/:product_num/:email", function(req, res, next) {
+  async.waterfall([
+    function(callback) {
+      Product.findOne(
+        {
+          product_num: req.params.product_num
+        },
+        (err, docs) => {
+          if (err) res.sendStatus(400);
+
+          if (docs) docs.likeCount--;
+          docs.save();
+          callback(null, docs);
+        }
+      );
+    },
+    function(docs, callback) {
+      var email = {
+        email: req.params.email
+      };
+      Product.findOneAndUpdate(
+        {
+          product_num: docs.product_num
+        },
+        {
+          $pull: {
+            likeUser: email
+          }
+        },
+        (error, docs2) => {
+          if (error) callback(error);
+          if (docs2) callback(null, docs2);
+        }
+      );
+    },
+    function (docs2, callback) {
+      Product.find({
+        product_num: docs2.product_num
+      }).lean().exec((err, docs3) => {
+        if (err)
+          return res.status(400).json({
+          })
+        if (docs3)
+          res.send(JSON.parse(JSON.stringify(docs3)))
+          // return res.end(JSON.stringify(docs3));
+          // return res.status(200).json({ docs3 });
+      })
+    }
+  ]);
+});
 
 function isLoggedIn(req, res, next) {
   if (req.isAuthenticated()) {

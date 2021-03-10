@@ -3,6 +3,7 @@ var Mission = require('../models/Mission');
 var Challenge = require('../models/Challenge');
 var SkinReport = require('../models/SkinReport');
 var ProductsReview = require('../models/ProductsReview');
+var PointLog = require('../models/PointLog');
 var config = require('../config/config');
 
 exports.skinReportSave = (req, res) => {
@@ -50,8 +51,32 @@ exports.skinReportSave = (req, res) => {
                   if(err) {
                     return res.status(400).json(err);
                   } else {
+                    //2021-03-04 
+                    var prePointLog = {
+                      reason: "피부측정",
+                      point: 100,
+                      status : 'SkinReport'
+                    }
+
+                    PointLog.update({
+                      email: req.body.email
+                    }, {
+                        $push: { point: prePointLog },
+                        $inc: { "totalPoint": 100 }
+                      }, (err, result) => {
+                        if (err) {
+                          console.log("피부측정 포인트 적립 에러 발생 : " + req.body.email);
+                          res.status(400).json();
+                        }
+                        if (result) {
+                          // res.status(200).json(result);
+                        } else {
+                          console.log("피부측정 작성 에러 발생 2 : " + req.body.email);
+                          res.status(400).json();
+                        }
+                    });
                     return res.status(201).json({
-                      'msg': '출석체크 되었습니다 <br> 내일 또 출석체크 해주세요!!'
+                      'msg': '피부 측정 완료 <br> 내일 또 해주세요!!'
                     });
                   }
                 });
@@ -114,12 +139,47 @@ exports.registerReview = (req, res) => {
           'msg': '리뷰등록 에러발생'
         });
       }
-      if(data) {
-        return res.status(200).json({
-          'msg': '리뷰가 등록 되었습니다.'
-        });
+      if (data) {
+        //리뷰가 등록 되었을시에 포인트 500P적립 기능 추가 2021-03-04
+        PointLog.findOne({
+          email : req.body.email
+        }, (err, data) => {
+            if (err) {
+              console.log("리뷰 작성 후 포인트 적립 실패(사용자 못찾음) : " + req.body.email + " : " + req.body.review.product_name);
+              res.status(400).json(err);
+            }
+
+            if (data) {
+              var prePointLog = {
+                reason: '화장품 리뷰 작성',
+                point: 500,
+                status: true
+              }
+              PointLog.findOneAndUpdate({
+                email: req.body.email
+              }, {
+                  $push: { point: prePointLog },
+                  $inc: {  "totalPoint": 500 }
+                }, (err, data) => {
+                  if (err) {
+                    console.log("리뷰 작성 후 포인트 적립 실패(포인트 누적 실패) : " + req.body.email + " : " + req.body.review.product_name);
+                    res.status(400).json(err);
+                  }
+
+                  if (data) {
+                    return res.status(200).json({
+                      'msg': '리뷰가 등록 되었습니다.'
+                    });
+                  } else {
+                    console.log("리뷰 작성 후 포인트 적립 실패(포인트 누적 실패)22 : " + req.body.email + " : " + req.body.review.product_name);
+                    res.status(400).json();
+                  }
+                });
+            }
+        })
       }
-      if(err) {
+      if (err) {
+        console.log("리뷰 등록 에러 발생 : " + err);
         return res.status(400).json({
           'msg': '리뷰등록 에러발생'
         });
