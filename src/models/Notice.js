@@ -17,15 +17,12 @@ var noticeSchema = mongoose.Schema({
     img_url: String,
     title: String,
     name: String,
+    pushtoken: String,
     recomments: [{ //대댓글
       body: {type:String},
-      createdAt: {type:Date, default:Date.now},
-      updatedAt: {type: Date, default:Date.now},
-      email: String,
-      recomment: String,
-      img_url: String,
-      title: String,
-      name: String,
+      email: {type:String},
+      parent_id: {type:String},
+      createdAt: {type:Date, default:Date.now}
     }],
   }],
   createdAt: {type:Date, default:Date.now},
@@ -42,6 +39,8 @@ var noticeSchema = mongoose.Schema({
   prodfilename: String,
   prodoriginalname: String,
   proddesc: String,
+  notice: String,
+
 });
 
 noticeSchema.methods.getFormattedDate = function (date) {

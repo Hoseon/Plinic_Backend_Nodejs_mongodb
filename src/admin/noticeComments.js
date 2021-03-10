@@ -9,6 +9,7 @@ var Notice = require("../models/Notice");
 var NoticeCounter = require("../models/NoticeCounter");
 var async = require("async");
 var User_admin = require("../models/User_admin");
+var User = require("../models/user");
 var multer = require("multer");
 // var FTPStorage = require('multer-ftp');
 var sftpStorage = require("multer-sftp");
@@ -17,8 +18,8 @@ var path = require("path");
 var fs = require("fs");
 var del = require("del");
 var http = require("http");
-var FCM = require("fcm-node");
-var serverKey = "AIzaSyCAcTA318i_SVCMl94e8SFuXHhI5VtXdhU";
+var FCM = require('fcm-node');
+var serverKey = 'AIzaSyCAcTA318i_SVCMl94e8SFuXHhI5VtXdhU';
 var fcm = new FCM(serverKey);
 
 var multerS3 = require('multer-s3');
@@ -240,8 +241,10 @@ router.get("/:id", function (req, res) {
         success: false,
         message: err
       });
-      post.views++;
-      post.save();
+      // post.views++;
+      // post.save();
+
+      console.log(post);
 
       //이미지 가져 오기 
       //res.setHeader('Content-Type', 'image/jpeg');
@@ -260,69 +263,35 @@ router.get("/:id", function (req, res) {
     });
 }); //Show
 
-// router.get("/comments/:id/:commentId", function (req, res) {
-
-//   Notice.aggregate([
-//     { $match: { _id : mongoose.Types.ObjectId(req.params.id)}},
-//     { $unwind: "$comments" },
-//     { $match: { "comments._id": mongoose.Types.ObjectId(req.params.commentId) } },
-//     { "$project": {
-//         _id: "$comments._id",
-//         title: "$comments.title",
-//         body: "$comments.body",
-//         name:"$comments.name",
-//         comment: "$comments.comment",
-//         updatedAt: "$comments.updatedAt",
-//         commentId: req.params.id,
-//       }
-//     }
-
-//   ])
-//     .exec(function (err, post) {
-//       if (err) return res.json({
-//         success: false,
-//         message: err
-//       });
-//       res.render("PlinicAdmin/Contents/Comments/Notice/show", {
-//         post: post,
-//         urlQuery: req._parsedUrl.query,
-//         user: req.user,
-//         search: createSearch(req.query),
-//         postDate: getFormattedDate(post[0].updatedAt),
-//       });
-//     });
-// });
-//댓글 comments Show
-
-
-
 router.post('/:id/comments', function(req, res) {
-  var message = { 
-    to: req.body.pushtoken,
-    notification: {
-      title: '문의하신 글에 댓글이 작성되었습니다.',
-      body: req.body.comment.body,
-      sound: "default",
-      click_action: "FCM_PLUGIN_ACTIVITY",
-    },
+// var message = { 
+//     to: req.body.pushtoken,
 
-    data: { 
-      mode: "mynotice",
-      id: req.body.id
-    }
-  };
+//     notification: {
+//       title: '문의하신 글에 댓글이 작성되었습니다.',
+//       body: req.body.comment.body,
+//       sound: "default",
+//       click_action: "FCM_PLUGIN_ACTIVITY",
+//     },
 
-  fcm.send(message, function(err, response) {
-    if (err) {
-      console.log("Something has gone wrong!");
-    } else {
-      console.log("Successfully sent with response: ", response);
-    }
-  });
+//     data: {
+//       mode: "notice",
+//       id: req.body.id
+//     }
+//   };
 
+//   fcm.send(message, function(err, response) {
+//     if (err) {
+//       console.log("Something has gone wrong!");
+//     } else {
+//       console.log("Successfully sent with response: ", response);
+//     }
+//   });
+
+  console.log(req.body);
   var newComment = req.body.comment;
   newComment.author = req.user._id;
-  Notice.update({
+  Notice.findOneAndUpdate({
     _id: req.params.id
   }, {
     $push: {
@@ -335,60 +304,59 @@ router.post('/:id/comments', function(req, res) {
     });
     res.redirect('/noticeComments/' + req.params.id + "?" + req._parsedUrl.query);
   });
-});
-// 댓글 등록
+}); // 댓글 등록
 
+// router.post('/:commentId/:id/recomments/', function (req, res) { //commentId를 가져와야 대댓글을 달 수 있음 > ex) filename 오류 등 show 페이지 관련 오류 뜰 경우 post id인 :id를 하나 더 넣어주는 편법.
+// //commentId/id/recomments 이 부분은 .ejs form 부분 action 부분에 영향. 또 redirect 부분의 req.params.id가 앞서 말한 post id임.
+// var message = { 
+//   to: req.body.pushtoken,
+//   notification: {  // 전달되는 메시지 내용
+//     title: '문의하신 댓글에 답글이 작성되었습니다.',
+//     body: req.body.recomments.body,
+//     sound: "default",
+//     click_action: "FCM_PLUGIN_ACTIVITY",
+//     // click_action: 'http://plinic.com/?req.params.id=${req.params.id}',
+//     // click_action: 'http://plinic.com/'+ "?" + req.params.id,
+//     // click_action: 'http://com.g1p.plinic/?req.params.id=${req.params.id}',
+//     // click_action: 'http://com.g1p.plinic/'+ "?" + req.params.id,
 
-router.post('/:id/recomments', function(req, res) {
-  var message = { 
-    to: req.body.pushtoken,
-    notification: {
-      title: '문의하신 글에 댓글이 작성되었습니다.',
-      body: req.body.recomment.body,
-      sound: "default",
-      click_action: "FCM_PLUGIN_ACTIVITY",
-    },
+//     // click_action: 'com.g1p.plinic/'+ "?" + req.params.id,
 
-    data: { 
-      mode: "mynotice",
-      id: req.body.id
-    }
-  };
+//     // click_action: res.redirect('http://com.g1p.plinic/'+ "?" + req.params.id),
+//     // click_action: "FLUTTER_NOTIFICATION_CLICK",
 
-  fcm.send(message, function(err, response) {
-    if (err) {
-      console.log("Something has gone wrong!");
-    } else {
-      console.log("Successfully sent with response: ", response);
-    }
-  });
+//     // "click_action: ()" : "click_action()",
+//   },
 
-  var newComment = req.body.recomment;
-  newComment.author = req.user._id;
-  Notice.update({
-    _id: req.params.id
-  }, {
-    $push: {
-      recomments: newComment
-    }
-  }, function(err, post) {
-    if (err) return res.json({
-      success: false,
-      message: err
-    });
-    res.redirect('/noticeComments/' + req.params.id + "?" + req._parsedUrl.query);
-  });
-});
+//   // click_action() {
+//   //   if(app) {
 
+//   //   } else {
 
-// router.post('/recomments/:id/', function (req, res) {
-//   console.log(req.body.post);
-//   var newComment = req.body.post;
-//   Notice.update({
-//     "comments._id" : req.params.id
+//   //   }
+//   // },
+
+//   data: { 
+//     mode: "notice",
+//     id: req.params.commentId
+//   }
+// };
+
+// fcm.send(message, function(err, response) {
+//   if (err) {
+//     console.log("Something has gone wrong!");
+//   } else {
+//     console.log("Successfully sent with response: ", response);
+//   }
+// });
+
+//   console.log(req.body);
+//   var newComment = req.body.recomments; //항상 껍데기가 무엇을 감싸는지 확인
+//   Notice.findOneAndUpdate({
+//     'comments._id' : req.params.commentId //comment의 id를 가져와야 한다. > 해당 comment id 아래에 대댓글을 넣기 위한 주소값 같은.
 //   }, {
 //     $push: {
-//       "comments.$.recomments" : newComment
+//       'comments.$.recomments' : newComment //달러 배열
 //     }
 //   }, function(err, post) {
 //     if (err) return res.json({
@@ -396,13 +364,59 @@ router.post('/:id/recomments', function(req, res) {
 //       message: err
 //     });
       
-//     res.redirect('/noticeComments/' + req.body.post.commentId + "?" + req.params.id);
+//     res.redirect('/noticeComments/' + req.params.id + "?" + req._parsedUrl.query);
 //   });
-// });
+// }); // 대댓글
+
+
+router.post('/:commentId/:id/recomments/', function (req, res) { //commentId를 가져와야 대댓글을 달 수 있음 > ex) filename 오류 등 show 페이지 관련 오류 뜰 경우 post id인 :id를 하나 더 넣어주는 편법.
+  //commentId/id/recomments 이 부분은 .ejs form 부분 action 부분에 영향. 또 redirect 부분의 req.params.id가 앞서 말한 post id임.
+  var message = { 
+    to: req.body.pushtoken, //// 전체 body에서 pushtoken을 가져온다.
+    notification: { //// 전달되는 메시지 내용들
+      title: '문의하신 댓글에 답글이 작성되었습니다.', 
+      body: req.body.recomments.body, //// 달린 답글의 내용을 지정한다.
+      sound: "default",
+      click_action: "FCM_PLUGIN_ACTIVITY",
+    },
+    data: { 
+      mode: "notice",
+      id: req.params.commentId     //// 데이터를 notice로 하며 (plinic앱 연계) id 푸쉬를 줘야할 댓글 단 유저의 id로 지정한다.
+    }
+  };
+  fcm.send(message, function(err, response) {
+    if (err) {
+      console.log("Something has gone wrong!");
+    } else {
+      console.log("Successfully sent with response: ", response);
+    }
+  });
+    console.log(req.body);
+    var newComment = req.body.recomments; //항상 껍데기가 무엇을 감싸는지 확인
+    Notice.findOneAndUpdate({
+      'comments._id' : req.params.commentId //comment의 id를 가져와야 한다. > 해당 comment id 아래에 대댓글을 넣기 위한 주소값 같은.
+    }, {
+      $push: {
+        'comments.$.recomments' : newComment //달러 배열
+      }
+    }, function(err, post) {
+      if (err) return res.json({
+        success: false,
+        message: err
+      });
+        
+      res.redirect('/noticeComments/' + req.params.id + "?" + req._parsedUrl.query);
+    });
+  }); // 대댓글
+
+
+
+
+
 
 
 router.delete('/:postId/comments/:commentId', function(req, res) {
-  Notice.update({
+  Notice.findOneAndUpdate({
       _id: req.params.postId
     }, {
       $pull: {
@@ -419,9 +433,28 @@ router.delete('/:postId/comments/:commentId', function(req, res) {
       res.redirect('/noticeComments/' + req.params.postId + "?" +
         req._parsedUrl.query.replace(/_method=(.*?)(&|$)/ig, ""));
     });
-}); 
-//destroy a comment
+}); //댓글 삭제
 
+router.delete('/:commentId/recomments/:recommentId', function(req, res) {
+  Notice.findOneAndUpdate({
+    _id: req.params.commentId,
+  }, {
+    $pull: {
+      recomments: {
+        _id: req.params.recommentId
+        // 'recomments._id' : req.params.recommentId
+      }
+    }
+  },
+  function(err, post) {
+    if(err) return res.json({
+      success: false,
+      message: err
+    });
+    res.redirect('/noticeComments/' + req.params.commentId + "?" +
+      req._parsedUrl.query.replace(/_method=(.*?)(&|$)/ig, ""));
+  });
+}); //대댓글 삭제
 
 router.get('/:id/edit', isLoggedIn, function (req, res) {
   Notice.findById(req.params.id, function (err, post) {

@@ -11,27 +11,25 @@
     <% include partials/top %>
 <!-- main start-->
 
-<!-- views/notice/show.ejs -->
+<!-- views/qna/show.ejs -->
 <div class="show">
   <div class="buttons floats">
-    <% if(user && user.equals(post.author._id)) { %>
-      <form class="float_right" action="/notice/<%=post._id%>?_method=delete" method="post">
+      <form class="float_right" action="/qna/<%=post._id%>?_method=delete" method="post">
         <button type="button" onclick="confirm('Your post will be deleted')?this.parentElement.submit():null;">Delete</button>
       </form>
-      <button class="float_right" onclick="location.href='/notice/<%=post._id%>/edit'">Edit</button>
-    <% } %>
-    <button class="float_left" onclick="location.href='/notice?<%= urlQuery %>'">Back</button>
+      <button class="float_right" onclick="location.href='/qna/<%=post._id%>/edit'">Edit</button>
+    <button class="float_left" onclick="location.href='/qna?<%= urlQuery %>'">Back</button>
   </div>
-  <h3>
-    <%= post.numId %>.
+  <!-- <h3>
+    <%= post.numId %>
     <span class="highlight" data-highlight="<%= search.highlight.title %>">
-      <%= post.title %>
+      [<%= post.select %>]
     </span>
-  </h3>
+  </h3> -->
   <div class="content floats">
     <div class="info float_right">
       <div class="highlight" data-highlight="<%= search.highlight.author %>">
-        Author: <%= post.author.nickname %>
+        Author: <%= post.email %>
       </div>
       <div>
         <%= post.views %> views
@@ -46,19 +44,10 @@
       <% } %>
     </div>
     <h3>공지사항 관리</h3>
-    <div class="body highlight" data-highlight="<%= search.highlight.body %>">공지사항 분류 : <%= post.category %></div>
 
-    <div class="body highlight" data-highlight="<%= search.highlight.body %>">공지사항 제목 : <%= post.title %></div>
+    <div class="body highlight" data-highlight="<%= search.highlight.body %>">문의하기 분류 : <%= post.select %></div>
 
-    <div class="body highlight" data-highlight="<%= search.highlight.body %>">공지사항 본문 : <%= post.body %></div>
-
-    <div class="body highlight" data-highlight="<%= search.highlight.body %>">공지사항 대표 이미지 <img src="<%= url %>"></div>
-
-    <!-- <h3>미션 관리</h3> -->
-    <div class="body highlight" data-highlight="<%= search.highlight.body %>">공지사항 보조제목 : <%= post.missontitle %></div>
-    <div class="body highlight" data-highlight="<%= search.highlight.body %>">공지 종료일 : <%= post.endmission %></div>
-    <div class="body highlight" data-highlight="<%= search.highlight.body %>">공지사항 본문 이미지 <img src="<%= prod_url %>"></div>
-
+    <div class="body highlight" data-highlight="<%= search.highlight.body %>">문의하기 내용 : <%= post.qna %></div>
 
     <div class="comments">
       <h4>Comments (<%= post.comments?post.comments.length:"0" %>)</h4>
@@ -71,7 +60,7 @@
               <%= post.getFormattedDate(comment.createdAt) %>)
               <% if(user && user.equals(comment.author._id)) { %>
                 <form class="delete"  method="post"
-                  action="/notice/<%=post._id%>/comments/<%=comment._id%>?_method=delete&<%= urlQuery %>">
+                  action="/qna/<%=post._id%>/comments/<%=comment._id%>?_method=delete&<%= urlQuery %>">
                   <button type="button"
                     onclick="confirm('Your comment will be deleted')?this.parentElement.submit():null;">
                     x
@@ -84,10 +73,12 @@
         <% }) %>
       <% } %>
       <form class="addComment checkValidation"
-        action="/notice/<%=post._id%>/comments?<%= urlQuery %>" method="post">
+        action="/qna/<%=post._id%>/comments?<%= urlQuery %>" method="post">
+        <input type="hidden" name="id" value="<%=post._id%>" /> <!-- 관리자가 댓글을 작성할시에 푸시 알림 클릭시 해당 창으로 이동 할 수 있도록 조치-->
+        <input type="hidden" name="pushtoken" value="<%=post.pushtoken%>" /> <!-- 관리자가 댓글을 작성할시에 푸시 알림이 가도록 설정 -->
         <textarea class="cvRequired" type="text" name="comment[body]"
           cvRqErrMsg="comments is empty." cvRqErrTo="#cvErrTitle" <%= user?"":"disabled" %>
-          placeholder="<%= user?"Add comment here":"Please login to make a comment" %>"></textarea>
+          placeholder="<%= user?"Add comment here":"로그인 한 후 문의하기 댓글을 작성해주세요.." %>"></textarea>
         <button type="submit" <%= user?"":"disabled" %>>Comment</button>
         <div id="cvErrTitle" class="message"></div>
       </form>
@@ -96,7 +87,7 @@
 </div>
 
 <!-- main end -->
-    </div><!--notice end -->
+    </div><!--qna end -->
     <footer>
       <% include ../partials/footer %>
     </footer>

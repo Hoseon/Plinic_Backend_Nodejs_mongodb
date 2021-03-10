@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <% include ../../../partials/head %>
+    <title></title>
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css' />
+</head>
+
+<script type="text/javascript" src="/js/jquery-1.10.2.js"></script>
+<script>
+            $(document).ready(function(){
+                $(".active").removeClass("active");
+                $("#orders").addClass("active");
+            });
+</script>
+
+<title>Hello, world!</title>
+
+<body>
+    
+    
+    <header>
+        <% include ../../../partials/header %>
+    </header>
+
+
+    <div class="container-fluid">
+        <div class="row">
+            <!-- 3단길이의 첫번째 열 -->
+            <div class="col-md-2">
+                <!-- 사이드 메뉴 시작 -->
+                <% include ../../../partials/oside %>
+                <!-- 사이드 메뉴 종료 -->
+            </div>
+
+
+            <!-- 9단길이의 첫번째 열 -->
+            <div class="col-md-10">
+                <div id="page-inner">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <h1 class="page-header">
+                                주문관리 좌측 메뉴를 선택해주세요. 
+                            </h1>
+                        </div>
+                    </div> 
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+
+</body>
+
+<script src="/js/jquery-1.10.2.js"></script>
+<!-- Bootstrap Js -->
+<script src="/js/bootstrap.min.js"></script>
+<!-- Custom Js -->
+<script src="/js/custom-scripts.js"></script>
+</html>

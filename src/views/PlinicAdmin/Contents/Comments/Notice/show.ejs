@@ -1,6 +1,6 @@
+
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
   <% include ../../../../partials/head %>
     <title></title>
@@ -14,14 +14,10 @@
   });
 </script>
 <title>Hello, world!</title>
-
 <body>
-
   <header>
     <% include ../../../../partials/header %>
   </header>
-
-
   <div class="container-fluid">
     <div class="row">
       <!-- 2단길이의 첫번째 열 -->
@@ -30,8 +26,6 @@
         <% include ../../../../partials/side %>
           <!-- 사이드 메뉴 종료 -->
       </div>
-
-
       <!-- 10단길이의 첫번째 열 -->
       <div class="col-md-10">
         <div id="page-inner">
@@ -42,7 +36,8 @@
                 <div class="panel-heading">
                   내용보기
                 </div>
-                <br>
+                
+
                 <div class="panel-body">
                     <button type="button" class="w-15 m-1 btn btn-primary btn-sm float_left"
                     onclick="location.href='/noticeComments/new'">작성</button>
@@ -85,55 +80,133 @@
                       </tr>
                     </table>
                 </div>
+
+
+
+
+
+
+
+
+
                 <div class="panel-body">
-                  <h8>댓글(<%= post.comments?post.comments.length:"0" %>) </h8>
+
+                  <h4 class="mt-3">댓글</h4>
                   <% if(post.comments) { %>
-                    <% post.comments.forEach(function(comment) { %>
-                      <div class="comment border">
-                        <div class="row">
-                          <b class="text-left"> <%= post.author.nickname %>
-                            <% if(user && user.equals(post.author._id)) { %>
-                              <form class="float_right" method="post"
-                                action="/noticeComments/<%=post._id%>/comments/<%=comment._id%>?_method=delete&<%= urlQuery %>">
-                                <button type="button" class="w-15 m-1 btn btn-danger btn-sm"
-                                  onclick="confirm('Your comment will be deleted')?this.parentElement.submit():null;">
-                                  x
-                                </button>
-                              </form>
-                            <% } %>
-                          </b>
-                          
-                        </div>
-                        <div class="body border">
-                          <%= comment.body %>
-                        </div>
-                        <div class="panel-body">
-                          <form class="addComment checkValidation" 
-                          action="/noticeComments/<%=post._id%>/recomments?<%= urlQuery %>" method="post">
-                          <input type="hidden" name="id" value="<%=post._id%>" />
-                          <input type="hidden" name="pushtoken" value="<%=post.pushtoken%>" />
-                          <textarea class="cvRequired" type="text" name="recomment[body]" cvRqErrMsg="comments is empty."
-                            cvRqErrTo="#cvErrTitle" <%= user?"":"disabled" %>
-                            placeholder="<%= user?"관리자 댓글달기":"로그인이 필요합니다." %>"></textarea>
-                          <button type="submit" <%= user?"":"disabled" %>>저장</button>
-                          <div id="cvErrTitle" class="message"></div>
-                          </form>
+                    <% post.comments.forEach(function(comment, index) { %>
+                      <div class="mt-3 border-bottom">
+                        <div class="border-top pt-1 pb-1">
+                          <div class="row">
+                            <div class="col-3 col-md-2 col-lg-3 pl-4"><%=// post.author.nickname %> <%= comment.email %></div>
+                            <div class="col-9 col-md-10 col-lg-7">
+                              <div class="comment-show">
+                                <div class="comment-text mb-3"><%= comment.body %></div>
+                                <small class="d-block">
+                                  (작성일: <span><%= post.getFormattedTime(comment.createdAt) %>, <%= post.getFormattedDate(comment.createdAt) %> </span>)
+                                </small>
+                              </div>
+                            </div>
+                            <div class="col-lg-2">
+                              <% if(user && user.equals(post.author._id)) { %>
+                                <form class="float_right" method="post"
+                                  action="/noticeComments/<%= post._id %>/comments/<%= comment._id %>?_method=delete&<%= urlQuery %>">
+                                  <button type="button" class="w-15 m-1 btn btn-danger btn-sm"
+                                    onclick="confirm('Your comment will be deleted')?this.parentElement.submit():null;">
+                                    x
+                                  </button>  
+                                </form>
+                              <% } %>
+                            </div>
+                          </div>
                         </div>
                       </div>
+              
+                      <div class="panel-body">
+                        <% if(comment.recomments) { %>
+                          <% comment.recomments.forEach(function(recomments) { %>
+                            <div class="panel-body">
+                              <div class="mt-3 border-bottom">
+                                <div class="border-top pt-1 pb-1">
+                                  <div class="row">
+                                    <div class="col-3 col-md-2 col-lg-3 pl-4"><%=// recomments._id %> <%= recomments.email %></div>
+                                    <div class="col-9 col-md-10 col-lg-7">
+                                      <div class="comment-show">
+                                        <div class="comment-text mb-3"><%= recomments.body %></div>
+                                        <small class="d-block">
+                                          (작성일: <span><%= post.getFormattedTime(recomments.createdAt) %>, <%= post.getFormattedDate(recomments.createdAt) %></span>)
+                                        </small>
+                                      </div>
+                                    </div>
+                                    <div class="col-lg-2">
+                                      <% if(user && user.equals(post.author._id)) { %>
+                                        <form class="float_right" method="post"
+                                          action="/noticeComments/<%= post._id %>/recomments/<%= recomments._id %>?_method=delete&<%= urlQuery %>">
+                                          <button type="button" class="w-15 m-1 btn btn-danger btn-sm"
+                                            onclick="confirm('Your recomment will be deleted')?this.parentElement.submit():null;">
+                                            x
+                                          </button>
+                                        </form>
+                                      <% } %>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          <% }) %>
+                        <% } %>
+                        <div class="container">
+                          <div class="row justufy-content-md-center">
+                            <div class="col-5 mt-3">
+                              <form class="addComment checkValidation"
+                                action="/noticeComments/<%= comment._id %>/<%= post._id %>/recomments/" method="post">
+                                <fieldset>
+                                  <div class="row">
+                                    <input type="hidden" name="recomments[email]" value="<%= user.email %>" />
+                                    <input type="hidden" name="id" value="<%=post._id%>" />
+                                    <input type="hidden" name="pushtoken" value="<%= comment.pushtoken %>" />
+                                    <div class="col-8">
+                                      <textarea type="text" name="recomments[body]" class="form-control" cvRqErrMsg="미션 성공자에게 푸시 알림을 보냅니다."
+                                        cvRqErrTo="#cvErrTitle" <%= user?"":"disabled" %> 
+                                        placeholder="<%= user?"답글 달기":"로그인이 필요합니다." %>"></textarea>
+                                    </div>
+                                    <div class="col-4">
+                                      <button type="submit" class="btn btn-primary h-100 mr-2" <%= user?"":"disabled" %>>저장</button>
+                                    </div>
+                                  </div>
+                                </fieldset>
+                              </form>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+              
                     <% }) %>
                   <% } %>
-                  <br>
-                  <form class="addComment checkValidation" 
-                  action="/noticeComments/<%=post._id%>/comments?<%= urlQuery %>" method="post">
-                  <input type="hidden" name="id" value="<%=post._id%>" />
-                  <input type="hidden" name="pushtoken" value="<%=post.pushtoken%>" />
-                  <textarea class="cvRequired" type="text" name="comment[body]" cvRqErrMsg="comments is empty."
-                    cvRqErrTo="#cvErrTitle" <%= user?"":"disabled" %>
-                    placeholder="<%= user?"관리자 댓글달기":"로그인이 필요합니다." %>"></textarea>
-                  <button type="submit" <%= user?"":"disabled" %>>저장</button>
-                  <div id="cvErrTitle" class="message"></div>
-                  </form>
+              
+                    <div class="mt-3">
+                      <form class="addComment checkValidation"
+                        action="/noticeComments/<%= post._id %>/comments?<%= urlQuery %>" method="post">
+                        <fieldset>
+                          <div class="row">
+                            <input type="hidden" name="comment[email]" value="<%= user.email %>" />
+                            <!-- <input type="hidden" name="id" value="<%=//post._id%>" /> -->
+                            <!-- <input type="hidden" name="pushtoken" value="<%=// post.pushtoken %>" /> -->
+                            <div class="col-8">
+                              <textarea type="text" name="comment[body]" class="form-control" <%= user?"":"disabled" %> 
+                                placeholder="<%= user?"댓글 달기":"로그인이 필요합니다." %>"></textarea>
+                            </div>
+                            <div class="col-4">
+                              <button type="submit" class="btn btn-primary h-100 mr-2" <%= user?"":"disabled" %>>저장</button>
+                            </div>
+                          </div>
+                        </fieldset>
+                      </form>
+                    </div>
+              
                 </div>
+
+
+
 
               </div>
             </div>
@@ -142,16 +215,10 @@
       </div>
     </div>
   </div>
-
-
-
-
 </body>
-
 <script src="/js/jquery-1.10.2.js"></script>
 <!-- Bootstrap Js -->
 <script src="/js/bootstrap.min.js"></script>
 <!-- Custom Js -->
 <script src="/js/custom-scripts.js"></script>
-
 </html>

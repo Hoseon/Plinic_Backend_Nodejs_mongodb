@@ -11,13 +11,13 @@
     <% include partials/top %>
 <!-- main start-->
 
-<!-- views/notice/index.ejs -->
+<!-- views/qna/index.ejs -->
 <div class="edit">
   <div class="buttons">
     <button onclick="history.back()">Back</button>
   </div>
   <h3>공지사항 관리</h3>
-  <form class="checkValidation" action="/notice/<%=post._id%>?_method=put" method="post" enctype="multipart/form-data">
+  <form class="checkValidation" action="/qna/<%=post._id%>?_method=put" method="post" enctype="multipart/form-data">
     <div class="inputs">
       <div class="floats">
         <label>공지사항 분류 : </label>
@@ -86,7 +86,7 @@
 </div>
 
 <!-- main end -->
-    </div><!--notice end -->
+    </div><!--qna end -->
     <footer>
       <% include ../partials/footer %>
     </footer>
