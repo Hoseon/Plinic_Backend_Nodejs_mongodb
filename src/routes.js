@@ -9,8 +9,8 @@ var careZoneController = require('./controller/carezone-controller');
 var rewardController = require('./controller/reward-controller');
 var chulsukController = require('./controller/chulsuk-controller');
 var skinReportController = require('./controller/skinreport-controller');
-// var testController = require('./controller/test-controller');
 var skinAnalyController = require('./controller/skinAnaly-controller');
+var orderController = require('./controller/order-controller');
 
 var passport = require('passport');
 var mysql      = require('mysql');
@@ -123,12 +123,15 @@ routes.post('/registerReview', skinReportController.registerReview);
 routes.post('/productReviewDelete', skinReportController.deleteReview);
 routes.post('/productReviewUpdate', skinReportController.productReviewUpdate);
 
-//결제시 포인트 차감 2021-03-09
-routes.post('/setUserPointLog', userController.setUserPointLog);
+
+routes.post('/setUserPointLog', userController.setUserPointLog); //결제시 포인트 차감 2021-03-09
+routes.post('/setUserOrders', orderController.setUserOrders); //결제 성공시 오더 정보 저장 2021-03-10
 
 
+////GET////////////////////////////////////////////////////////////////////////////////////////////
 
-//routes.get('/auth/kakao', userController.loginUser_Kakao);
+routes.get('/getUserOrders/:email', orderController.getUserOrders); //결제 성공시 오더 정보 가져오기 2021-03-10
+
 
 routes.get('/auth/kakao', passport.authenticate('kakao',{
     failureRedirect: '#!/login'

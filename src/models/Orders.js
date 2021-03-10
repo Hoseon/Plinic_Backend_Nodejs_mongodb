@@ -1,8 +1,9 @@
 var mongoose = require('mongoose');
 
-var addressSchema = mongoose.Schema({
+var orderSchema = mongoose.Schema({
   email: { type: String, required: true },
-  paid_at: { type: String}, //주문일
+  paid_at: { type: Date }, //주문일
+  started_at : { type: Date }, //결제 시작시각
   imp_uid: { type: String },  //주문번호
   status: { type: String}, //주문상태
   name: { type: String}, //상품명
@@ -19,6 +20,7 @@ var addressSchema = mongoose.Schema({
   amount: { type: Number }, //결제금액
   usePoint: { type: Number },//포인트사용
   buyer_name: { type: String }, //주문자
+  buyer_email: { type: String }, //주문자 email
   buyer_tel: { type: String }, //휴대폰
   buyer_postcode: { type: String },//우편번호
   buyer_addr: { type: String },//주소
@@ -45,15 +47,15 @@ var addressSchema = mongoose.Schema({
 
 });
 
-addressSchema.methods.getFormattedDate = function (date) {
+orderSchema.methods.getFormattedDate = function (date) {
   return date.getFullYear() + "-" + get2digits(date.getMonth()+1)+ "-" + get2digits(date.getDate());
 };
 
-addressSchema.methods.getFormattedTime = function (date) {
+orderSchema.methods.getFormattedTime = function (date) {
   return get2digits(date.getHours()) + ":" + get2digits(date.getMinutes())+ ":" + get2digits(date.getSeconds());
 };
 function get2digits(num){
   return ("0" + num).slice(-2);
 }
-var Adress = mongoose.model('address',addressSchema);
-module.exports = Adress;
+var Orders = mongoose.model('orders',orderSchema);
+module.exports = Orders;
