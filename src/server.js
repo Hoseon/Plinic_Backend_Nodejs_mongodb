@@ -12,6 +12,7 @@ var User = require('./models/user');
 var Image = require('./models/image');
 var FtpImage = require('./models/FtpImage');
 var UserImage = require('./models/UserImage');
+var Address = require('./models/Address');
 var Banner = require('./models/Banner');
 var TopBanner = require('./models/TopBanner');
 var Carezone = require('./models/Carezone');
@@ -31,6 +32,7 @@ var Test = require('./models/Test');
 var SkinAnaly = require('./models/SkinAnaly');
 var SkinReport = require('./models/SkinReport');
 var ProductsReview = require('./models/ProductsReview');
+var PointLog = require('./models/PointLog');
 
 const GoogleStrategy = require('passport-google-oauth20');
 var jwt = require('jsonwebtoken');
@@ -1700,6 +1702,31 @@ module.exports = function (app) {
     })
   })
 
+  app.get('/Point/getUserPlinicPointLog/:email', async function(req, res, next) {
+    if (!req.params.email) {
+      console.log("사용자의 포인트를 가져 오지 못함(getUserPlinicPointLog)");
+      return res.status(400).send({
+        'msg': '사용자 정보가 존재하지 않음 플리닉샵 포인트 가져오기'
+      });
+    }
+
+    PointLog.findOne({
+      email: req.params.email
+    }, (err, data) => {
+        if (err) {
+          console.log("사용자 포인트 데이터 가져오기 실패(getUserPlinicPointLog) : " + req.params.email);
+          res.status(400).json(err);
+        }
+
+        if (data) {
+          res.status(200).json(data);
+        } else {
+          console.log("사용자의 포인트가 존재하지 않음222 : " + req.params.email);
+          res.status(400).json();
+        }
+    })
+  })
+
   app.get('/Point/getUserPlinicPoint/:email', async function(req, res, next) {
     if(!req.params.email) {
       return res.status(400).send({
@@ -2399,6 +2426,41 @@ module.exports = function (app) {
       });
   });
 
+  app.get('/getUserAddress/:email', function (req, res, next) {
+    Address.findOne({
+      email: req.params.email,
+    }, function (err, docs) {
+        if (err) {
+          console.log("사용자 배송지 정보 가져오기 에러 : " + req.params.email);
+          return res.status(400).json(err);
+        }
+
+        if (docs) {
+          return res.status(201).json(docs);
+        }
+    })
+  })
+
+  app.get('/getUserPointLog/:email', function (req, res, next) {
+    PointLog.findOne({
+      email: req.params.email,
+    }, function (err, docs) {
+        if (err) {
+          console.log("사용자 포인트 기록 가져 오기 에러 : " + req.params.email);
+          return res.status(400).json(err);
+        }
+
+        if (docs) {
+          return res.status(201).json(docs);
+        } else {
+          console.log("사용자 포인트 기록 가져 오기 에러2 : " + req.params.email);
+          return res.status(400).json();
+        }
+    })
+  })
+
+
+  ///////////////////////////////////////////////////end api////////////////////////////////
 
   function getFormattedDate(date) {
     return date.getFullYear() + "-" + get2digits(date.getMonth() + 1) + "-" + get2digits(date.getDate());

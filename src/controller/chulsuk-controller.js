@@ -1,6 +1,7 @@
 var User = require('../models/user');
 var Mission = require('../models/Mission');
 var Challenge = require('../models/Challenge');
+var PointLog = require('../models/PointLog');
 var Chulsuk = require('../models/Chulsuk');
 var config = require('../config/config');
 
@@ -49,9 +50,72 @@ exports.chulsukSave = (req, res) => {
                   if(err) {
                     return res.status(400).json(err);
                   } else {
-                    return res.status(201).json({
-                      'msg': '출석체크 되었습니다 <br> 내일 또 출석체크 해주세요!!'
+
+                    PointLog.findOne({ email: req.body.email }, (err, findResult) => {
+                      if (err) {
+                        console.log("출석체크 포인트 신규 등록 에러1 : " + req.body.email);
+                        res.status(400).json(err);
+                      }
+    
+                      if (findResult) {
+                        //PointLog에 출석체크 포인트 누적 기록
+                        var userPointLog = {
+                          email: req.body.email,
+                          point: {
+                            point: 10,
+                            reason: '출석체크',
+                            status: true
+                          },
+                          totalPoint: 10
+                        }
+                        let newPointLog = PointLog(userPointLog);
+    
+                        PointLog.findOneAndUpdate({ email: req.body.email }, {
+                          $push: {
+                            point: { point: 10, reason: '출석체크', status: true }
+                          }, $inc: {
+                            "totalPoint": 10
+                          }
+                        }, (err, updateResult) => {
+                          if (err) {
+                            console.log("출석체크 포인트 업데이트 에러1 : " + req.body.email);
+                            res.status(400).json(err);
+                          }
+                            
+                          if (updateResult) {
+                            return res.status(201).json({
+                              'msg': '신규 출석체크 되었습니다 <br> 내일 또 출석체크 해주세요!!'
+                            });
+                          }
+                        });
+                      } else {
+                        //PointLog에 출석체크 포인트 누적 기록
+                        var userPointLog = {
+                          email: req.body.email,
+                          point: {
+                            point: 10,
+                            reason: '출석체크',
+                            status: true
+                          },
+                          totalPoint: 10
+                        }
+                        let newPointLog = PointLog(userPointLog);
+                        newPointLog.save((err, result) => {
+                          if (err) {
+                            console.log("출석체크 포인트 신규 등록 에러1 : " + req.body.email);
+                            res.status(400).json(err);
+                          }
+                          if (result) {
+                            return res.status(201).json({
+                              'msg': '신규 출석체크 되었습니다 <br> 내일 또 출석체크 해주세요!!'
+                            });
+                          }
+                        });
+                      }
                     });
+                    // return res.status(201).json({
+                    //   'msg': '출석체크 되었습니다 <br> 내일 또 출석체크 해주세요!!'
+                    // });
                   }
                 });
               }
@@ -80,9 +144,71 @@ exports.chulsukSave = (req, res) => {
               if(err) {
                 return res.status(400).json(err);
               } else {
-                return res.status(201).json({
-                  'msg': '신규 출석체크 되었습니다 <br> 내일 또 출석체크 해주세요!!'
+                PointLog.findOne({ email: req.body.email }, (err, findResult) => {
+                  if (err) {
+                    console.log("출석체크 포인트 신규 등록 에러1 : " + req.body.email);
+                    res.status(400).json(err);
+                  }
+
+                  if (findResult) {
+                    //PointLog에 출석체크 포인트 누적 기록
+                    var userPointLog = {
+                      email: req.body.email,
+                      point: {
+                        point: 10,
+                        reason: '출석체크',
+                        status: true
+                      },
+                      totalPoint: 10
+                    }
+                    let newPointLog = PointLog(userPointLog);
+
+                    PointLog.findOneAndUpdate({ email: req.body.email }, {
+                      $push: {
+                        point: { point: 10, reason: '출석체크', status: true }
+                      }, $inc: {
+                        "totalPoint": 10
+                      }
+                    }, (err, updateResult) => {
+                      if (err) {
+                        console.log("출석체크 포인트 업데이트 에러1 : " + req.body.email);
+                        res.status(400).json(err);
+                      }
+                        
+                      if (updateResult) {
+                        return res.status(201).json({
+                          'msg': '신규 출석체크 되었습니다 <br> 내일 또 출석체크 해주세요!!'
+                        });
+                      }
+                    });
+                  } else {
+                    //PointLog에 출석체크 포인트 누적 기록
+                    var userPointLog = {
+                      email: req.body.email,
+                      point: {
+                        point: 10,
+                        reason: '출석체크',
+                        status: true
+                      },
+                      totalPoint: 10
+                    }
+                    let newPointLog = PointLog(userPointLog);
+                    newPointLog.save((err, result) => {
+                      if (err) {
+                        console.log("출석체크 포인트 신규 등록 에러1 : " + req.body.email);
+                        res.status(400).json(err);
+                      }
+                      if (result) {
+                        return res.status(201).json({
+                          'msg': '신규 출석체크 되었습니다 <br> 내일 또 출석체크 해주세요!!'
+                        });
+                      }
+                    });
+                  }
                 });
+                // return res.status(201).json({
+                //   'msg': '신규 출석체크 되었습니다 <br> 내일 또 출석체크 해주세요!!'
+                // });
               }
             });
           }
