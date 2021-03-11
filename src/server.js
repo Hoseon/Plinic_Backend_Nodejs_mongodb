@@ -1702,6 +1702,8 @@ module.exports = function (app) {
     })
   })
 
+
+  //2021-03-11 포인트샵제거후 자체 DB에서 가져오기
   app.get('/Point/getUserPlinicPointLog/:email', async function(req, res, next) {
     if (!req.params.email) {
       console.log("사용자의 포인트를 가져 오지 못함(getUserPlinicPointLog)");
