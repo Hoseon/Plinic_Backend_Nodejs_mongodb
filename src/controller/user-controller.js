@@ -2,6 +2,8 @@ var User = require('../models/user');
 var User_Admin = require('../models/User_admin');
 var Mission = require('../models/Mission');
 var Challenge = require('../models/Challenge');
+var Address = require('../models/Address');
+var PointLog = require('../models/PointLog');
 var jwt = require('jsonwebtoken');
 var bcrypt = require('bcrypt-nodejs');
 var config = require('../config/config');
@@ -26,6 +28,7 @@ function createToken(user) {
     pushtoken: user.pushtoken,
     totaluserpoint: user.totaluserpoint,
     ispush: user.ispush,
+    phonenumber: user.phonenumber,
   }, config.jwtSecret, {
     //expiresIn: 200 // 86400 expires in 24 hours
     expiresIn: 86400 // 86400 expires in 24 hours
@@ -172,13 +175,28 @@ exports.registerUser = (req, res) => {
           'msg': '회원가입이 되지 않습니다. <br/> 관리자에게 문의 해주세요.'
         });
       }
-      //플리닉 샵 회원가입
-
-      // return res.status(201).json(user);
-      return res.status(201).json({
-        token: createToken(user)
+      //PointLog에 출석체크 포인트 누적 기록
+      var userPointLog = {
+        email: req.body.email,
+        point: {
+          point: 5000,
+          reason: '신규 회원가입',
+          status: true
+        },
+        totalPoint: 5000
+      }
+      let newPointLog = PointLog(userPointLog);
+      newPointLog.save((err, result) => {
+        if (err) {
+          console.log("신규 회원가입 등록 에러1 : " + req.body.email);
+          res.status(400).json(err);
+        }
+        if (result) {
+          return res.status(201).json({
+            token: createToken(user)
+          });
+        }
       });
-
     });
   });
 };
@@ -220,34 +238,55 @@ exports.registerUserSnS = (req, res) => {
           'msg': '회원가입이 되지 않습니다. <br/> 관리자에게 문의 해주세요.'
         });
       }
-      //플리닉샵 회원가입1
-      request.post({
-        headers: {
-          'Content-Type': 'application/x-www-form-urlencoded'
-        },
-        // url : 'http://localhost/Point/PlinicAddPoint',
-        url: 'https://plinicshop.com/Users/PlinicSNSSignup',
-        body: "id=" + req.body.snsid +
-          "&usrName=" + req.body.name +
-          "&usrPhone=" + req.phonenumber +
-          "&usrEmail=" + req.body.email +
-          "&from=" + req.body.from +
-          "&usrSex=" + req.body.gender +
-          "&usrBirthday=" + req.body.birthday +
-          "&usrSkin=" + req.body.skincomplaint,
-        json: false, //헤더 값을 JSON으로 변경한다
-      }, function (error, response, body) {
-        if (error) {
-          console.log("포인트 포스트 전송 에러 발생" + error);
-        }
-        if (body) {}
-        if (response) {}
-      });
-      // return res.status(201).json(user);
-      return res.status(201).json({
-        'user': user
-      });
+      // //플리닉샵 회원가입1
+      // request.post({
+      //   headers: {
+      //     'Content-Type': 'application/x-www-form-urlencoded'
+      //   },
+      //   // url : 'http://localhost/Point/PlinicAddPoint',
+      //   url: 'https://plinicshop.com/Users/PlinicSNSSignup',
+      //   body: "id=" + req.body.snsid +
+      //     "&usrName=" + req.body.name +
+      //     "&usrPhone=" + req.phonenumber +
+      //     "&usrEmail=" + req.body.email +
+      //     "&from=" + req.body.from +
+      //     "&usrSex=" + req.body.gender +
+      //     "&usrBirthday=" + req.body.birthday +
+      //     "&usrSkin=" + req.body.skincomplaint,
+      //   json: false, //헤더 값을 JSON으로 변경한다
+      // }, function (error, response, body) {
+      //   if (error) {
+      //     console.log("포인트 포스트 전송 에러 발생" + error);
+      //   }
+      //   if (body) {}
+      //   if (response) {}
+      // });
 
+      //PointLog에 출석체크 포인트 누적 기록
+      var userPointLog = {
+        email: req.body.email,
+        point: {
+          point: 5000,
+          reason: '신규 회원가입',
+          status: true
+        },
+        totalPoint: 5000
+      }
+      let newPointLog = PointLog(userPointLog);
+      newPointLog.save((err, result) => {
+        if (err) {
+          console.log("신규 회원가입 등록 에러22(SNS) : " + req.body.email);
+          res.status(400).json(err);
+        }
+        if (result) {
+          return res.status(201).json({
+            'user': user
+          });
+        }
+      });
+      // return res.status(201).json({
+      //   'user': user
+      // });
     });
   });
 };
@@ -413,8 +452,8 @@ exports.billingSchedule = async (req, res) => {
     } // 인증 토큰 Authorization header에 추가
   });
   const paymentData = getPaymentData.data.response; // 조회한 결제 정보
-  console.log("초기 정보  : " + JSON.stringify(getPaymentData.data));
-  console.log("결제 정보 : " + JSON.stringify(paymentData));
+  // console.log("초기 정보  : " + JSON.stringify(getPaymentData.data));
+  // console.log("결제 정보 : " + JSON.stringify(paymentData));
   //------------------------결제 정보 확인 종료  ------------------------------
 
 
@@ -437,7 +476,7 @@ exports.billingSchedule = async (req, res) => {
         }
       });
     } else { //--------------------초기 결제가 아닐대 스케쥴 잡기
-      console.log("다음달 유닉스 시간 : " + Math.floor(new Date(new Date().getDay() + 30).getTime() / 1000))
+      // console.log("다음달 유닉스 시간 : " + Math.floor(new Date(new Date().getDay() + 30).getTime() / 1000))
       axios({
         url: `https://api.iamport.kr/subscribe/payments/schedule`,
         method: "post",
@@ -584,16 +623,37 @@ exports.registerUserSnStoPlinic = (req, res) => {
           'msg': '회원가입이 되지 않습니다. <br/> 관리자에게 문의 해주세요.'
         });
       }
-      // return res.status(201).json(user);
-      return res.status(201).json({
-        'user': user
+
+      var userPointLog = {
+        email: req.body.email,
+        point: {
+          point: 5000,
+          reason: '신규 회원가입',
+          status: true
+        },
+        totalPoint: 5000
+      }
+      let newPointLog = PointLog(userPointLog);
+      newPointLog.save((err, result) => {
+        if (err) {
+          console.log("신규 회원가입 등록 에러22(SNS) : " + req.body.email);
+          res.status(400).json(err);
+        }
+        if (result) {
+          return res.status(201).json({
+            'user': user
+          });
+        }
       });
+
+      // return res.status(201).json(user);
+      // return res.status(201).json({
+      //   'user': user
+      // });
 
     });
   });
 };
-
-
 
 
 exports.loginUser = (req, res) => {
@@ -741,7 +801,6 @@ exports.snsPointUpdate = (req, res) => {
       });
     });
 }
-
 
 exports.challengeUpdate2 = (req, res) => {
   // console.log("start");
@@ -977,10 +1036,6 @@ exports.challengeUpdate2 = (req, res) => {
       // }
     });
 }
-
-
-
-
 
 exports.challengeUpdate = (req, res) => {
   console.log("start");
@@ -1358,8 +1413,6 @@ exports.userPointUpdate = (req, res) => {
     });
 }
 
-
-
 exports.updateUserNickname = (req, res) => {
   User.findOneAndUpdate({
       email: req.body.email
@@ -1616,7 +1669,6 @@ exports.usePointUpdate = (req, res) => {
         userPoint.updatedAt = new Date();
 
 
-
         User.findOneAndUpdate({
           email: req.body.email
         }, {
@@ -1632,29 +1684,69 @@ exports.usePointUpdate = (req, res) => {
             // console.log("tags error : " + err);
             return res.status(400).json(err);
           } else {
-            request.post({
-              headers: {
-                'Content-Type': 'application/x-www-form-urlencoded'
-              },
-              // url : 'http://localhost:50082/Point/PlinicAddPoint',
-              url: 'http://plinicshop.com:50082/Point/PlinicAddPoint',
-              body: 'id=' + req.body.email +
-                "&point=" + usePoints +
-                "&reason=" + "플리닉사용" +
-                "&expire=" + 1096,
-              json: false, //헤더 값을 JSON으로 변경한다
-            }, function (error, response, body) {
-              if (error) {
-                console.log("포인트 포스트 전송 에러 발생" + error);
+            PointLog.findOne({ email: req.body.email }, function (err, pointLogUser) {
+              if (err) {
+                return res.status(400).json(err);
               }
-              if (body) {}
-              if (response) {}
-            });
-            return res.status(201).json({
-              'point': usePoints + 'P 획득 완료!',
-              // 'msg': '오늘 누적 사용시간이 1분30초(90초)을 초과하여 <br>' + getSecondsAsDigitalClock(usePoints) + ' 초만 누적되었습니다.'
-              'msg': '오늘 적립된 포인트 : 90P<br>(최대적립 가능 포인트 : 90P)'
-            });
+
+              if (pointLogUser) {
+                var pointPreLog = {
+                  // email: req.body.email,
+                    point: usePoints,
+                    reason: '플라즈마 케어 포인트 적립',
+                    status: true
+                }
+
+                PointLog.findOneAndUpdate({
+                  email: req.body.email
+                }, {
+                    $push: {
+                      point: pointPreLog
+                    }, $inc: {
+                      "totalPoint": usePoints
+                    }
+                  }, function (err, updateResult) {
+                    if (err) {
+                      console.log("포인트 로그 업데이트 실패1 : " + req.body.email + " : " + usePoints + "P");
+                      res.status(400).json(err);
+                    }
+
+                    if (updateResult) {
+                      return res.status(201).json({
+                        'point': usePoints + 'P 획득 완료!',
+                        'msg': '오늘 적립된 포인트 : ' + (Number(todayPoints) + Number(usePoints)) + 'P <br>(최대적립 가능 포인트 : 90P)'
+                      });
+                    }
+                  });
+              } else {
+                var pointPreLog = {
+                  // email: req.body.email,
+                  point: {
+                    point: usePoints,
+                    reason: '플라즈마 케어 포인트 적립',
+                    status: true
+                  },
+                }
+
+                let newPointLog = PointLog(pointPreLog);
+                newPointLog.email = req.body.email;
+                newPointLog.totalPoint = usePoints;
+                newPointLog.save((err, result) => {
+                  if (err) {
+                    console.log("플라즈마 케어 포인트 적립 실패(PointLogSave) : " + req.body.email);
+                    return res.status(400).json(err);
+                  }
+                  
+                  if (result) {
+                    return res.status(201).json({
+                      'point': usePoints + 'P 획득 완료!',
+                      'msg': '오늘 적립된 포인트 : ' + (Number(todayPoints) + Number(usePoints)) + 'P <br>(최대적립 가능 포인트 : 90P)'
+                    });
+                  }
+                })
+              }
+              
+            })
           }
         });
       } else { //총 사용시간과 현재 사용시간을 합쳐도 1분30초(90초)가 안넘어 갈때
@@ -1674,30 +1766,72 @@ exports.usePointUpdate = (req, res) => {
         }, function (err, post2) {
           if (err) {
             // console.log("tags error : " + err);
+            console.log("플라즈마 케어 포인트 적립 실패 : " + req.body.email);
             return res.status(400).json(err);
           } else {
-            request.post({
-              headers: {
-                'Content-Type': 'application/x-www-form-urlencoded'
-              },
-              // url : 'http://localhost:50082/Point/PlinicAddPoint',
-              url: 'http://plinicshop.com:50082/Point/PlinicAddPoint',
-              body: 'id=' + req.body.email +
-                "&point=" + req.body.points +
-                "&reason=" + "플리닉사용" +
-                "&expire=" + 1096,
-              json: false, //헤더 값을 JSON으로 변경한다
-            }, function (error, response, body) {
-              if (error) {
-                console.log("포인트 포스트 전송 에러 발생" + error);
+            PointLog.findOne({ email: req.body.email }, function (err, pointLogUser) {
+              if (err) {
+                return res.status(400).json(err);
               }
-              if (body) {}
-              if (response) {}
-            });
-            return res.status(201).json({
-              'point': req.body.points + 'P 획득 완료!',
-              'msg': '오늘 적립된 포인트 : ' + (Number(todayPoints) + Number(req.body.points)) + 'P <br>(최대적립 가능 포인트 : 90P)'
-            });
+
+              if (pointLogUser) {
+                var pointPreLog = {
+                  // email: req.body.email,
+                    point: req.body.userpoint.point,
+                    reason: '플라즈마 케어 포인트 적립',
+                    status: true
+                }
+
+                PointLog.findOneAndUpdate({
+                  email: req.body.email
+                }, {
+                    $push: {
+                      point: pointPreLog
+                    }, $inc: {
+                      "totalPoint": req.body.userpoint.point
+                    }
+                  }, function (err, updateResult) {
+                    if (err) {
+                      console.log("포인트 로그 업데이트 실패1 : " + req.body.email + " : " + req.body.userpoint.point + "P");
+                      res.status(400).json(err);
+                    }
+
+                    if (updateResult) {
+                      return res.status(201).json({
+                        'point': req.body.points + 'P 획득 완료!',
+                        'msg': '오늘 적립된 포인트 : ' + (Number(todayPoints) + Number(req.body.points)) + 'P <br>(최대적립 가능 포인트 : 90P)'
+                      });
+                    }
+                  });
+              } else {
+                var pointPreLog = {
+                  // email: req.body.email,
+                  point: {
+                    point: req.body.userpoint.point,
+                    reason: '플라즈마 케어 포인트 적립',
+                    status: true
+                  },
+                }
+
+                let newPointLog = PointLog(pointPreLog);
+                newPointLog.email = req.body.email;
+                newPointLog.totalPoint = req.body.userpoint.point;
+                newPointLog.save((err, result) => {
+                  if (err) {
+                    console.log("플라즈마 케어 포인트 적립 실패(PointLogSave) : " + req.body.email);
+                    return res.status(400).json(err);
+                  }
+                  
+                  if (result) {
+                    return res.status(201).json({
+                      'point': req.body.points + 'P 획득 완료!',
+                      'msg': '오늘 적립된 포인트 : ' + (Number(todayPoints) + Number(req.body.points)) + 'P <br>(최대적립 가능 포인트 : 90P)'
+                    });
+                  }
+                })
+              }
+              
+            })
           }
         });
       }
@@ -1736,27 +1870,6 @@ exports.usePointUpdate = (req, res) => {
       // return res.status(200).json();
     }
   })
-
-  // User.findOneAndUpdate({
-  //     email: req.body.email
-  //   }, {
-  //     $push: {
-  //       userpoint: req.body.userpoint
-  //     },
-  //     $inc: {
-  //       totalusetime: req.body.points,
-  //       totaluserpoint: req.body.points
-  //     }
-  //   },
-  //   function(err, response) {
-  //     if (err) {
-  //       res.json(0);
-  //     } else {
-  //       return res.status(201).json({
-  //         'msg': '사용시간 ' + getSecondsAsDigitalClock(req.body.points) + '초가 누적되었습니다.'
-  //       });
-  //     }
-  //   });
 }
 
 
@@ -2214,7 +2327,185 @@ exports.changePassword = (req, res) => {
   });
 };
 
+exports.addressSave = (req, res) => {
 
+  // console.log("-------------------------------request-------------");
+  // console.log(req.body);
+  // console.log("-------------------------------response-------------");
+
+  if (!req.body.email) {
+    return res.status(400).json({
+      'msg': '회원정보가 존재하지 않습니다.'
+    });
+  }
+
+  Address.findOne({
+    email: req.body.email
+  }, (err, data) => {
+      if (err) { return res.status(400).json({ 'msg': err }) } 
+
+      if (data) {
+        console.log(data);
+        //회원정보가 존재할 경우 //두번째 주소지 등록
+        Address.findOneAndUpdate({
+          email: req.body.email
+        }, {
+          $push: {
+            address: req.body.addr
+          }
+        }, (err, updateData) => {
+            if (err) { console.log("두번째 주소 정보 저장 에러 : " + req.body.email); return res.status(400).json({ 'msg': '주소정보 저장 에러' }) }
+            
+            if (updateData) {
+              return res.status(201).json(updateData);
+            }
+        })
+      } else {
+        let newAddress = Address(req.body);
+        
+        if (isEmpty(data)) {
+          newAddress.address = {
+            isMain: true,
+            name: req.body.addr.name,
+            phonenumber: req.body.addr.phonenumber,
+            address: req.body.addr.address,
+            buildingName: req.body.addr.buildingName,
+            zonecode: req.body.addr.zonecode,
+            desc: req.body.addr.desc
+          }
+        }
+        newAddress.save((err, result) => {
+          if (err) { console.log("주소 정보 저장 에러 : " + req.body.email); return res.status(400).json({ 'msg': '주소정보 저장 에러' }) }
+          
+          if (result) {
+            return res.status(201).json(result);
+          }
+        })
+      }
+  })
+};
+
+exports.setAddressMain = (req, res) => {
+
+  // console.log("-------------------------------request-------------");
+  // console.log(req.body);
+  // console.log("-------------------------------response-------------");
+
+  if (!req.body.email) {
+    return res.status(400).json({
+      'msg': '회원정보가 존재하지 않습니다.'
+    });
+  }
+
+  Address.updateOne({
+    email: req.body.email,
+    'address.isMain' : true
+  }, {
+      $set: { 'address.$.isMain': false }
+  },(err, data) => {
+      if (err) { return res.status(400).json({ 'msg': err }) } 
+
+      if (data) {
+        //우선 기존 main을 true-->false에서 바꾸고
+        //6034a3f0d63b9e80ed4b0b08 이것을 true로 바꿔본다.
+        Address.updateOne({
+          email: req.body.email,
+          'address._id' : req.body.addressId
+        }, {
+          $set: { 'address.$.isMain': true }
+          }, (error, data2) => {
+            if (error) {
+              console.log("주소 main change변경중 에러 : " + req.body.email + ' : ' + req.body.addressId);
+            }
+
+            if (data2) {
+              return res.status(201).json(data2);
+            }
+        })
+        
+      } else {
+        console.log("주소 main변경 사용자 혹은 데이터를 찾지 못함" + req.body.email);
+        return res.status(400).json('error');
+      }
+  })
+};
+
+exports.getIamPortPayment = async (req, res) => {
+
+  //-----------------------초기 세팅 시작 ---------------------------------
+  const {
+    imp_uid,
+    merchant_uid
+  } = req.body;
+  // 액세스 토큰(access token) 발급 받기
+  const getToken = await axios({
+    url: "https://api.iamport.kr/users/getToken",
+    method: "post", // POST method
+    headers: {
+      "Content-Type": "application/json"
+    }, // "Content-Type": "application/json"
+    data: {
+      imp_key: "1961322186640885", // REST API키
+      imp_secret: "IvcgNbZT5D5qVlAO1ge162zjx0Ns2N9Lil15x1ZCE53AqDorTDsZG2je36G5UQQdcSiJTimynp9O3xfW" // REST API Secret
+    }
+  });
+  const {
+    access_token
+  } = getToken.data.response; // 인증 토큰
+  //-----------------------초기 세팅 종료---------------------------------
+
+
+  //------------------------결제 정보 확인 시작  ------------------------------
+  // imp_uid로 아임포트 서버에서 결제 정보 조회
+  /* ...중략 ... */
+  const getPaymentData = await axios({
+    url: `https://api.iamport.kr/payments/` + imp_uid, // imp_uid 전달
+    method: "get", // GET method
+    headers: {
+      "Authorization": access_token
+    } // 인증 토큰 Authorization header에 추가
+  });
+  const paymentData = getPaymentData.data.response; // 조회한 결제 정보
+  // console.log("초기 정보  : " + JSON.stringify(getPaymentData.data));
+  // console.log("결제 정보 : " + JSON.stringify(paymentData));
+  return res.status(201).json(getPaymentData.data.response);
+  //------------------------결제 정보 확인 종료  ------------------------------
+}
+
+exports.setUserPointLog = (req, res) => { //사용자 포인트 차감 저장 로직
+  if (!req.body.point > 0) {
+    // console.log("영보다 작음"); //포인트 결재 없음
+    res.status(200).json();
+  } else {
+    //포인트 결제 존재
+    // console.log("영보다 큼");
+    PointLog.findOneAndUpdate(
+      { email: req.body.email },
+      {
+        $push: {
+          point : req.body.points
+        },
+        $inc: {
+          totalPoint: req.body.point,
+        }
+      }, function (err, result) {
+        if (err) {
+          console.log("사용자 포인트 차감 이력 업데이트 실패1 : " + req.body.email);
+          res.status(400).json();
+        }
+
+        if (result) {
+          res.status(200).json(result);
+        } else {
+          console.log("사용자 포인트 차감 이력 업데이트 실패2 : " + req.body.email);
+          res.status(400).json();
+        }
+      }
+    )
+  }
+
+  
+}
 
 
 function makeRandomStr() {
@@ -2231,4 +2522,11 @@ function getCovertKoreaTime(time) {
   return new Date(
     new Date(time).getTime() - new Date().getTimezoneOffset() * 60000
   )
+}
+
+function isEmpty(str) {
+  if(typeof str == "undefined" || str == null || str == "")
+    return true;
+  else
+    return false ;
 }

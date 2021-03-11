@@ -3,564 +3,612 @@
 
 <head>
     <% include ../../../../partials/head %>
-        <title></title>
-        <link href='http://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css' />
+    <title></title>
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css'/>
+    <link rel="stylesheet" href="/stylesheets/image_upload.css">
 </head>
 <script type="text/javascript" src="/js/jquery-1.10.2.js"></script>
+<script type="text/javascript" src="/js/image_upload.js"></script>
+
 
 <body>
 
-    <header>
-        <% include ../../../../partials/header %>
-    </header>
+<header>
+    <% include ../../../../partials/header %>
+</header>
 
 
-    <div class="container-fluid">
-        <div class="row">
-            <!-- 2단길이의 첫번째 열 -->
-            <div class="col-md-2">
-                <% include ../../../../partials/pside %>
-            </div>
+<div class="container-fluid">
+    <div class="row">
+        <!-- 2단길이의 첫번째 열 -->
+        <div class="col-md-2">
+            <% include ../../../../partials/pside %>
+        </div>
 
-            <!-- 10단길이의 첫번째 열 -->
-            <div class="col-md-10">
-                <div id="page-inner">
-                    <!-- /. ROW  -->
-                    <div class="row">
-                        <form action="" method="post" enctype="multipart/form-adta">
-                            <div class="col-lg-12">
-                                <h1 class="page-header">
-                                    등록/수정
-                                </h1>
-                                <div class="panel panel-default">
-                                    <div class="panel-heading">
-                                        기본정보
-                                    </div>
-                                    <br>
+        <!-- 10단길이의 첫번째 열 -->
+        <div class="col-md-10">
+            <div id="page-inner">
+                <!-- /. ROW  -->
+                <div class="row">
+                    <form action="/product" method="post" enctype="multipart/form-data">
+                        <div class="col-lg-12">
+                            <h1 class="page-header">
+                                등록/수정
+                            </h1>
+                            <div class="panel panel-default">
+                                <div class="panel-heading">
+                                    기본정보
+                                </div>
+                                <br>
 
-                                    <div class="form-group row">
-                                        <label class="col-sm-2 text-center control-label" for="name">제조사</label>
-                                        <div class="col-sm-10 controls">
-                                            <input name="name" id="name" class="form-control" value=""
-                                                data-validate="data">
-                                        </div>
-                                    </div>
-                                    <div class="form-group row">
-                                        <label class="col-sm-2 text-center control-label" for="name">원산지</label>
-                                        <div class="col-sm-10 controls">
-                                            <input name="name" id="name" class="form-control" value=""
-                                                data-validate="data">
-                                        </div>
-                                    </div>
-                                    <div class="form-group row">
-                                        <label class="col-sm-2 text-center control-label" for="name">상품 주문코드</label>
-                                        <div class="col-sm-4 controls">
-                                            <input class="form-control" type="text" placeholder="1608180764"
-                                                aria-label="readonly input example" readonly>
-                                        </div>
-                                    </div>
-                                    <div class="form-group row">
-                                        <div class="col-sm-2 text-center">
-                                            <button class="btn btn-default btn-icon btn-sm " type="button"><span
-                                                    class="entypo-check">⚙ </span>상품 카테고리</button>
-                                        </div>
-                                        <div class="col-sm-2 controls">
-                                            <button class="btn btn-default btn-icon btn-sm " type="button">✓사용</button>
-                                            <button type="button" class="btn btn-info btn-sm">✗사용안함</button>
-                                        </div>
-                                    </div>
-                                    <div class="form-group row">
-                                        <label class="col-sm-2 text-center control-label" for="name"><span
-                                                class="input_title_cion" style="color: red;">* </span>상품명</label>
-                                        <div class="col-sm-10 controls">
-                                            <input name="name" id="name" class="form-control" placeholder="필수입력"
-                                                value="" data-validate="data">
-                                        </div>
-                                    </div>
-                                    <div class="form-group row">
-                                        <label class="col-sm-2 text-center control-label" for="name">소비자가</label>
-                                        <div class="col-sm-5 controls">
-                                            <input name="name" id="name" class="form-control" value=""
-                                                data-validate="data">
-                                        </div>
-                                    </div>
-                                    <div class="form-group row">
-                                        <label class="col-sm-2 text-center control-label" for="name">용량 및 중량</label>
-                                        <div class="col-sm-3 controls">
-                                            <input name="name" id="name" class="form-control" value=""
-                                                data-validate="data">
-                                        </div>
-                                    </div>
-                                    <div class="form-group row">
-                                        <label class="col-sm-2 text-center control-label" for="name">주요 효능</label>
-                                        <div class="col-sm-3 controls">
-                                            <input name="name" id="name" class="form-control" value=""
-                                                data-validate="data">
-                                        </div>
-                                    </div>
-                                    <div class="form-group row">
-                                        <label class="col-sm-2 text-center control-label" for="name">전성분</label>
-                                        <div class="col-sm-3 controls">
-                                            <input name="name" id="name" class="form-control" value=""
-                                                data-validate="data">
-                                        </div>
-                                    </div>
-                                    <div class="form-group row">
-                                        <label class="col-sm-2 text-center control-label" for="name">대표 이미지</label>
-                                        <div class="col-sm-3 controls">
-                                            <div class="imgUp">
-                                                <div class="imagePreview"></div>
-                                                <label class="btn btn-primary">
-                                                    Upload
-                                                    <input name="homeimage" type="file"
-                                                        class="uploadFile img form-control" value="Upload Photo"
-                                                        style="width: 0px;height: 0px;overflow: hidden;" required
-                                                        accept=".jpg, .jpeg, .png">
-                                                </label>
-                                            </div>
-                                            <label class="col-sm-7 text-left control-label" style="margin-left:-15px;"
-                                                for="name">이미지 사이즈 300*300</label>
-                                        </div>
-                                    </div>
-                                    <div class="form-group row">
-                                        <label class="col-sm-2 text-center control-label" for="name">단종 정보</label>
-                                        <div class="col-sm-3 controls">
-                                            <input class="form-check-input" type="checkbox" id="inlineCheckbox1"
-                                                value="option1">
-                                            <label class="form-check-label" for="inlineCheckbox1">단종 제품 시 체크</label>
-                                        </div>
-                                    </div>
-                                    <div class="form-group row">
-                                        <label class="col-sm-2 text-center control-label" for="name">추천 노출 위치</label>
-                                        <div class="col-2">
-                                            <input class="form-check-input" type="checkbox" id="inlineCheckbox2"
-                                                value="option2">
-                                            <label class="form-check-label" for="inlineCheckbox2">메인 홈</label>
-                                        </div>
-                                        <div class="col-2">
-                                            <input class="form-check-input" type="checkbox" id="inlineCheckbox3"
-                                                value="option3">
-                                            <label class="form-check-label" for="inlineCheckbox3">모공 크기</label>
-                                        </div>
-                                        <div class="col-2">
-                                            <input class="form-check-input" type="checkbox" id="inlineCheckbox4"
-                                                value="option4">
-                                            <label class="form-check-label" for="inlineCheckbox4">모공 수</label>
-                                        </div>
-                                        <div class="col-2">
-                                            <input class="form-check-input" type="checkbox" id="inlineCheckbox5"
-                                                value="option5">
-                                            <label class="form-check-label" for="inlineCheckbox5">피부 톤</label>
-                                        </div>
-                                    </div>
-                                    <div class="form-group row">
-                                        <label class="col-sm-2 text-center control-label" for="name"></label>
-                                        <div class="col-2">
-                                            <input class="form-check-input" type="checkbox" id="inlineCheckbox6"
-                                                value="option6">
-                                            <label class="form-check-label" for="inlineCheckbox6">피부 톤</label>
-                                        </div>
-                                        <div class="col-2">
-                                            <input class="form-check-input" type="checkbox" id="inlineCheckbox7"
-                                                value="option7">
-                                            <label class="form-check-label" for="inlineCheckbox7">클린 지수</label>
-                                        </div>
-                                        <div class="col-2">
-                                            <input class="form-check-input" type="checkbox" id="inlineCheckbox8"
-                                                value="option8">
-                                            <label class="form-check-label" for="inlineCheckbox8">생활 문진</label>
-                                        </div>
-                                        <div class="col-2">
-                                            <input class="form-check-input" type="checkbox" id="inlineCheckbox9"
-                                                value="option9">
-                                            <label class="form-check-label" for="inlineCheckbox9">노출 카테고리1</label>
-                                        </div>
-                                    </div>
-                                    <div class="form-group row">
-                                        <label class="col-sm-2 text-center control-label" for="name">상품 페이지 노출</label>
-                                        <div class="col-2">
-                                            <input class="form-check-input" type="checkbox" id="inlineCheckbox10"
-                                                value="option10">
-                                            <label class="form-check-label" for="inlineCheckbox10">노출1</label>
-                                        </div>
-                                        <div class="col-2">
-                                            <input class="form-check-input" type="checkbox" id="inlineCheckbox11"
-                                                value="option11">
-                                            <label class="form-check-label" for="inlineCheckbox11">노출2</label>
-                                        </div>
-                                        <div class="col-2">
-                                            <input class="form-check-input" type="checkbox" id="inlineCheckbox12"
-                                                value="option12">
-                                            <label class="form-check-label" for="inlineCheckbox12">뷰티템</label>
-                                        </div>
-                                        <div class="col-2">
-                                            <input class="form-check-input" type="checkbox" id="inlineCheckbox13"
-                                                value="option13">
-                                            <label class="form-check-label" for="inlineCheckbox13">뷰티템</label>
-                                        </div>
+                                <div class="form-group row">
+                                    <label class="col-sm-2 text-center control-label" for="name"><span
+                                                class="input_title_cion" style="color: red;">* </span>제조사</label>
+                                    <div class="col-sm-10 controls">
+                                        <input name="post[brand_name]" id="name" class="form-control" value=""
+                                               data-validate="data">
                                     </div>
                                 </div>
-                                <div class="accordion-item">
-                                    <h2 class="accordion-header" id="headingOne">
-                                        <button class="accordion-button" type="button" data-bs-toggle="collapse"
-                                            data-bs-target="#collapseOne" aria-expanded="true"
-                                            aria-controls="collapseOne">
-                                            판매할 상품 정보 등록
+                                <div class="form-group row">
+                                    <label class="col-sm-2 text-center control-label" for="name"><span
+                                                class="input_title_cion" style="color: red;">* </span>원산지</label>
+                                    <div class="col-sm-10 controls">
+                                        <input name="post[madein]" id="name" class="form-control" value=""
+                                               data-validate="data">
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-sm-2 text-center control-label" for="name">상품 주문코드</label>
+                                    <div class="col-sm-4 controls">
+                                        <input class="form-control" type="text" placeholder="1608180764"
+                                               aria-label="readonly input example" readonly>
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <div class="col-sm-2 text-center">
+                                        <button class="btn btn-default btn-icon btn-sm " type="button"><span
+                                                    class="entypo-check">⚙ </span>상품 카테고리
                                         </button>
-                                    </h2>
-                                    <div id="collapseOne" class="accordion-collapse collapse show"
-                                        aria-labelledby="headingOne" data-bs-parent="#accordionExample">
-                                        <div class="accordion-body">
-                                            <div class="form-group row">
-                                                <label class="col-sm-2 text-center control-label" for="name">탭 명</label>
-                                                <div class="col-sm-3 controls">
-                                                    <select class="form-select" aria-label="Default select example">
-                                                        <option selected>투데이</option>
-                                                        <option value="1">넥스트</option>
-                                                        <option value="2">화장품</option>
-                                                        <option value="3">기기</option>
-                                                    </select>
-                                                </div>
-                                            </div>
-                                            <div class="form-group row">
-                                                <label class="col-sm-2 text-center control-label" for="name">결제
-                                                    수단</label>
-                                                <div class="col-1">
-                                                    <input class="form-check-input" type="checkbox"
-                                                        id="inlineCheckbox14" value="option14">
-                                                    <label class="form-check-label" for="inlineCheckbox14">신용카드</label>
-                                                </div>
-                                                <div class="col-1">
-                                                    <input class="form-check-input" type="checkbox"
-                                                        id="inlineCheckbox15" value="option15">
-                                                    <label class="form-check-label" for="inlineCheckbox15">무통장
-                                                        입금</label>
-                                                </div>
-                                                <div class="col-sm-12">
-                                                    <label class="col-sm-2 text-left control-label" for="name"></label>
-                                                    <label class="col-sm-7 text-left control-label" for="name">선택하지 않을
-                                                        경우 기본
-                                                        환경설정의 결제수단을 사용합니다.</label>
-                                                </div>
-                                            </div>
-                                            <div class="form-group row">
-                                                <label class="col-sm-2 text-center control-label" for="name"><span
-                                                        class="input_title_cion" style="color: red;">* </span>판매
-                                                    가격</label>
-                                                <div class="col-sm-3 controls">
-                                                    <input name="price" id="price" class="form-control" value=""
-                                                        data-validate="data">
-                                                </div>
-                                                <div class="col-sm-1">원</div>
-                                            </div>
-                                            <div class="form-group row">
-                                                <label class="col-sm-2 text-center control-label" for="name">할인율</label>
-                                                <div class="col-sm-3 controls">
-                                                    <input name="sale" id="sale" class="form-control" value=""
-                                                        data-validate="data">
-                                                </div>
-                                                <div class="col-sm-1">%</div>
-                                            </div>
-
-                                            <div class="accordion2" id="accordionExample2">
-                                                <div class="accordion-item2">
-                                                    <h2 class="accordion-header2" id="headingOne2">
-                                                        <button class="accordion-button" type="button"
-                                                            data-bs-toggle="collapse" data-bs-target="#collapseOne2"
-                                                            aria-expanded="true" aria-controls="collapseOne2">
-                                                            단일옵션 설정
-                                                        </button>
-                                                    </h2>
-                                                    <div id="collapseOne2" class="accordion-collapse collapse show"
-                                                        aria-labelledby="headingOne" data-bs-parent="#accordionExample">
-                                                        <div class="accordion-body">
-                                                            <div class="row">
-                                                                <div class="col-sm-2 controls">
-                                                                    <button class="btn btn-default btn-icon btn-sm "
-                                                                        type="button">✓사용</button>
-                                                                    <button type="button"
-                                                                        class="btn btn-info btn-sm">✗사용안함</button>
-                                                                </div>
-                                                            </div>
-                                                            <br>
-                                                            <div class="row">
-                                                                <div class="panel-body"
-                                                                    style="padding-top:0px;padding-bottom:15px;">
-                                                                    <div
-                                                                        class="table-responsive dataTables_wrapper form-inline">
-                                                                        <table
-                                                                            class="table table-bordered  table-condensed table-hover  text-center">
-                                                                            <thead>
-                                                                                <tr>
-                                                                                    <th class="text-center">옵션명</th>
-                                                                                    <th class="text-center">옵션값</th>
-                                                                                    <th class="text-center">추가금액</th>
-                                                                                    <th class="text-center">공급가</th>
-                                                                                    <th class="text-center">재고수량</th>
-                                                                                    <th class="text-center">통보수량</th>
-                                                                                    <th class="text-center">사용여부</th>
-                                                                                    <th class="text-center">관리</th>
-                                                                                </tr>
-                                                                            </thead>
-                                                                            <tbody>
-                                                                                <tr>
-                                                                                    <td rowspan="2"
-                                                                                        class="align-middle text-center"
-                                                                                        width=100>
-                                                                                        <input type="text" id="number"
-                                                                                            class="form-control"
-                                                                                            style="width: 150px;">
-                                                                                        <br><br><br>
-                                                                                        <button class="btn btn-info"
-                                                                                            type="button">✓옵션추가</button>
-                                                                                    </td>
-                                                                                    <td>
-                                                                                        <div>
-                                                                                            <input name="text" id="text"
-                                                                                                class="form-control"
-                                                                                                value=""
-                                                                                                data-validate="data">
-                                                                                        </div>
-                                                                                    </td>
-                                                                                    <td>
-                                                                                        <input name="text" id="text"
-                                                                                            class="form-control"
-                                                                                            value=""
-                                                                                            data-validate="data">
-                                                                                    </td>
-                                                                                    <td>
-                                                                                        <input name="text" id="text"
-                                                                                            class="form-control"
-                                                                                            value=""
-                                                                                            data-validate="data">
-                                                                                    </td>
-                                                                                    <td>
-                                                                                        <input name="text" id="text"
-                                                                                            class="form-control"
-                                                                                            placeholder="999" value=""
-                                                                                            data-validate="data">
-                                                                                    </td>
-                                                                                    <td>
-                                                                                        <input name="text" id="text"
-                                                                                            class="form-control"
-                                                                                            placeholder="999" value=""
-                                                                                            data-validate="data">
-                                                                                    </td>
-                                                                                    <td>
-                                                                                        <div>
-                                                                                            <select class="form-select"
-                                                                                                aria-label="Default select example">
-                                                                                                <option selected>선택
-                                                                                                </option>
-                                                                                                <option value="1">사용함
-                                                                                                </option>
-                                                                                                <option value="2">사용안함
-                                                                                                </option>
-                                                                                            </select>
-                                                                                        </div>
-                                                                                    </td>
-                                                                                    <td class="center">
-                                                                                        <button class="btn btn-info"
-                                                                                            type="button">✓추가</button>
-                                                                                    </td>
-                                                                                </tr>
-                                                                                <tr>
-                                                                                    <td colspan="7" height=50>
-
-                                                                                    </td>
-                                                                                </tr>
-                                                                            </tbody>
-                                                                        </table>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-
-                                            <div class="accordion" id="accordionExample3">
-                                                <div class="accordion-item">
-                                                    <h2 class="accordion-header" id="headingOne3">
-                                                        <button class="accordion-button" type="button"
-                                                            data-bs-toggle="collapse" data-bs-target="#collapseOne3"
-                                                            aria-expanded="true" aria-controls="collapseOne3">
-                                                            포인트 설정
-                                                        </button>
-                                                    </h2>
-                                                    <div id="collapseOne3" class="accordion-collapse collapse show"
-                                                        aria-labelledby="headingOne" data-bs-parent="#accordionExample">
-                                                        <div class="accordion-body">
-                                                            <div class="form-group row">
-                                                                <div class="col-sm-2 controls">
-                                                                    <button class="btn btn-default btn-icon btn-sm "
-                                                                        type="button">✓사용</button>
-                                                                    <button type="button"
-                                                                        class="btn btn-info btn-sm">✗사용안함</button>
-                                                                </div>
-
-                                                                <div class="col-sm-2 controls">
-                                                                    <label class="form-check-label"
-                                                                        for="inlineCheckbox15">최대
-                                                                        사용가능 포인트는</label>
-                                                                </div>
-                                                                <div class="col-sm-2 controls">
-                                                                    <input name="number" id="number"
-                                                                        class="form-control" value=""
-                                                                        data-validate="data">
-                                                                </div>
-                                                                <div class="col-sm-1">%</div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-
-                                            <br><br>
-                                            <div class="form-group row">
-                                                <label class="col-sm-2 text-center control-label" for="name">상품
-                                                    품절</label>
-                                                <div class="col-1">
-                                                    <input class="form-check-input" type="checkbox"
-                                                        id="inlineCheckbox16" value="option16">
-                                                    <label class="form-check-label" for="inlineCheckbox16">품절</label>
-                                                </div>
-                                                <div class="col-sm-12">
-                                                    <label class="col-sm-2 text-left control-label" for="name"></label>
-                                                    <label class="col-sm-7 text-left control-label" for="name">상품이 품절인
-                                                        경우</label>
-                                                </div>
-                                            </div>
-                                            <div class="form-group row">
-                                                <label class="col-sm-2 text-center control-label" for="name">상품
-                                                    비공개</label>
-                                                <div class="col-1">
-                                                    <input class="form-check-input" type="checkbox"
-                                                        id="inlineCheckbox17" value="option17">
-                                                    <label class="form-check-label" for="inlineCheckbox17">비공개</label>
-                                                </div>
-                                                <div class="col-sm-12">
-                                                    <label class="col-sm-2 text-left control-label" for="name"></label>
-                                                    <label class="col-sm-7 text-left control-label" for="name">상품이 목록에
-                                                        표시
-                                                        안함</label>
-                                                </div>
-                                            </div>
-                                            <div class="form-group row">
-                                                <label class="col-sm-2 text-center control-label" for="name">배송지
-                                                    입력</label>
-                                                <div class="col-2">
-                                                    <input class="form-check-input" type="checkbox"
-                                                        id="inlineCheckbox18" value="option18">
-                                                    <label class="form-check-label" for="inlineCheckbox18">배송지
-                                                        미입력</label>
-                                                </div>
-                                                <div class="col-sm-12">
-                                                    <label class="col-sm-2 text-left control-label" for="name"></label>
-                                                    <label class="col-sm-7 text-left control-label" for="name">상품 주문시
-                                                        배송지를
-                                                        입력하지 않을 경우</label>
-                                                </div>
-                                            </div>
-                                            <div class="form-group row">
-                                                <label class="col-sm-2 text-center control-label" for="name">배송비
-                                                    유형</label>
-                                                <div class="col-sm-3 controls">
-                                                    <select class="form-select" aria-label="Default select example">
-                                                        <option selected>쇼핑몰 기본설정 사용</option>
-                                                        <option value="1">사용함</option>
-                                                        <option value="2">사용안함</option>
-                                                    </select>
-                                                </div>
-                                            </div>
-                                            <div class="accordion" id="accordionExample4">
-                                                <div class="accordion-item">
-                                                    <h2 class="accordion-header" id="headingOne4">
-                                                        <button class="accordion-button" type="button"
-                                                            data-bs-toggle="collapse" data-bs-target="#collapseOne4"
-                                                            aria-expanded="true" aria-controls="collapseOne4">
-                                                            상세 페이지 이미지
-                                                        </button>
-                                                    </h2>
-                                                    <div id="collapseOne4" class="accordion-collapse collapse show"
-                                                        aria-labelledby="headingOne" data-bs-parent="#accordionExample">
-                                                        <div class="accordion-body">
-                                                            <div class="imgUp">
-                                                                <div class="imagePreview"></div>
-                                                                <label class="btn btn-primary">
-                                                                    Upload
-                                                                    <input name="homeimage" type="file"
-                                                                        class="uploadFile img form-control"
-                                                                        value="Upload Photo"
-                                                                        style="width: 0px;height: 0px;overflow: hidden;"
-                                                                        required accept=".jpg, .jpeg, .png">
-                                                                </label>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <br>
-                                            <div class="accordion" id="accordionExample4">
-                                                <div class="accordion-item">
-                                                    <h2 class="accordion-header" id="headingOne4">
-                                                        <button class="accordion-button" type="button"
-                                                            data-bs-toggle="collapse" data-bs-target="#collapseOne4"
-                                                            aria-expanded="true" aria-controls="collapseOne4">
-                                                            상품 고시정보 이미지
-                                                        </button>
-                                                    </h2>
-                                                    <div id="collapseOne4" class="accordion-collapse collapse show"
-                                                        aria-labelledby="headingOne" data-bs-parent="#accordionExample">
-                                                        <div class="accordion-body">
-                                                            <div class="imgUp">
-                                                                <div class="imagePreview"></div>
-                                                                <label class="btn btn-primary">
-                                                                    Upload
-                                                                    <input name="homeimage" type="file"
-                                                                        class="uploadFile img form-control"
-                                                                        value="Upload Photo"
-                                                                        style="width: 0px;height: 0px;overflow: hidden;"
-                                                                        required accept=".jpg, .jpeg, .png">
-                                                                </label>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <br>
-                                            <div class="form-group row">
-                                                <label class="col-sm-2 text-center control-label" for="name">상품
-                                                    설명</label>
-                                                <div class="form-floating col-md-10">
-                                                    <textarea class="form-control" placeholder="Leave a comment here"
-                                                        id="floatingTextarea" style="height: 100px"></textarea>
-                                                </div>
-                                            </div>
-                                            <div class="form-group row">
-                                                <label class="col-sm-2 text-center control-label" for="name">교환 및
-                                                    반품</label>
-                                                <div class="form-floating col-md-10">
-                                                    <textarea class="form-control" placeholder="Leave a comment here"
-                                                        id="floatingTextarea2" style="height: 100px"></textarea>
-                                                </div>
-                                            </div>
-                                        </div>
+                                    </div>
+                                    <div class="col-sm-2 controls">
+                                        <button class="btn btn-default btn-icon btn-sm " type="button">✓사용</button>
+                                        <button type="button" class="btn btn-info btn-sm">✗사용안함</button>
                                     </div>
                                 </div>
-                                <div class="d-grid gap-2 d-md-block text-center">
-                                    <button type="submit"
-                                        class="w-15 m-1 btn btn-primary btn btn-danger btn-sm">저장</button>
-                                    <button type="reset" class="w-15 m-1 btn btn-primary btn btn-primary btn-sm"
-                                        onclick="location.href='/product/ProductData/ProductList'">목록</button>
+                                <div class="form-group row">
+                                    <label class="col-sm-2 text-center control-label" for="name"><span
+                                                class="input_title_cion" style="color: red;">* </span>상품명</label>
+                                    <div class="col-sm-10 controls">
+                                        <input name="post[product_name]" id="name" class="form-control"
+                                               placeholder="필수입력"
+                                               value="" data-validate="data">
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-sm-2 text-center control-label" for="name"><span
+                                                class="input_title_cion" style="color: red;">* </span>소비자가</label>
+                                    <div class="col-sm-5 controls">
+                                        <input type="number" name="post[price]" id="name" class="form-control" value=""
+                                               data-validate="data">
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-sm-2 text-center control-label" for="name"><span
+                                                class="input_title_cion" style="color: red;">* </span>용량 및 중량</label>
+                                    <div class="col-sm-3 controls">
+                                        <input name="post[weight]" id="name" class="form-control" value=""
+                                               data-validate="data">
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-sm-2 text-center control-label" for="name"><span
+                                                class="input_title_cion" style="color: red;">* </span>주요 효능</label>
+                                    <div class="col-sm-3 controls">
+                                        <input name="post[function]" id="name" class="form-control" value=""
+                                               data-validate="data">
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-sm-2 text-center control-label" for="name"><span
+                                                class="input_title_cion" style="color: red;">* </span>전성분</label>
+                                    <div class="col-sm-3 controls">
+                                        <input name="name" id="name" class="form-control" value=""
+                                               data-validate="data">
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-sm-2 text-center control-label" for="name"><span
+                                                class="input_title_cion" style="color: red;">* </span>대표 이미지</label>
+                                    <div class="col-sm-3 controls">
+                                        <div class="w-25 imgUp">
+                                            <div class="imagePreview img-fluid"></div>
+                                            <label class="btn btn-primary">
+                                                Upload
+                                                <input name="productimage" type="file"
+                                                       class="uploadFile img form-control" value="Upload Photo"
+                                                       style="width: 0px;height: 0px;overflow: hidden;" required
+                                                       accept=".jpg, .jpeg, .png">
+                                            </label>
+                                        </div>
+                                        <label class="col-sm-7 text-left control-label" style="margin-left:-15px;"
+                                               for="name">이미지 사이즈 300*300</label>
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-sm-2 text-center control-label" for="name"><span
+                                                class="input_title_cion" style="color: red;">* </span>상품 이미지</label>
+                                    <div class="col-sm-3 controls">
+                                        <div class="w-25 imgUp">
+                                            <div class="imagePreview img-fluid"></div>
+                                            <label class="btn btn-primary">
+                                                Upload
+                                                <input name="jepumImage" type="file"
+                                                       class="uploadFile img form-control" value="Upload Photo"
+                                                       style="width: 0px;height: 0px;overflow: hidden;" required
+                                                       accept=".jpg, .jpeg, .png">
+                                            </label>
+                                        </div>
+                                        <label class="col-sm-7 text-left control-label" style="margin-left:-15px;"
+                                               for="name">이미지 사이즈 300*300</label>
+                                    </div>
+                                </div>
+
+                                <div class="form-group row">
+                                    <label class="col-sm-2 text-center control-label" for="name">단종 정보</label>
+                                    <div class="col-sm-3 controls">
+                                        <input class="form-check-input" type="checkbox" id="inlineCheckbox1"
+                                               value="option1">
+                                        <label class="form-check-label" for="inlineCheckbox1">단종 제품 시 체크</label>
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-sm-2 text-center control-label" for="name"><span
+                                                class="input_title_cion" style="color: red;">* </span>추천 노출 위치</label>
+                                    <div class="col-2">
+                                        <input class="form-check-input" type="checkbox" id="inlineCheckbox2"
+                                               value="option2">
+                                        <label class="form-check-label" for="inlineCheckbox2">메인 홈</label>
+                                    </div>
+                                    <div class="col-2">
+                                        <input class="form-check-input" type="checkbox" id="inlineCheckbox3"
+                                               value="option3">
+                                        <label class="form-check-label" for="inlineCheckbox3">모공 크기</label>
+                                    </div>
+                                    <div class="col-2">
+                                        <input class="form-check-input" type="checkbox" id="inlineCheckbox4"
+                                               value="option4">
+                                        <label class="form-check-label" for="inlineCheckbox4">모공 수</label>
+                                    </div>
+                                    <div class="col-2">
+                                        <input class="form-check-input" type="checkbox" id="inlineCheckbox5"
+                                               value="option5">
+                                        <label class="form-check-label" for="inlineCheckbox5">피부 톤</label>
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-sm-2 text-center control-label" for="name"></label>
+                                    <div class="col-2">
+                                        <input class="form-check-input" type="checkbox" id="inlineCheckbox6"
+                                               value="option6">
+                                        <label class="form-check-label" for="inlineCheckbox6">피부 톤</label>
+                                    </div>
+                                    <div class="col-2">
+                                        <input class="form-check-input" type="checkbox" id="inlineCheckbox7"
+                                               value="option7">
+                                        <label class="form-check-label" for="inlineCheckbox7">클린 지수</label>
+                                    </div>
+                                    <div class="col-2">
+                                        <input class="form-check-input" type="checkbox" id="inlineCheckbox8"
+                                               value="option8">
+                                        <label class="form-check-label" for="inlineCheckbox8">생활 문진</label>
+                                    </div>
+                                    <div class="col-2">
+                                        <input class="form-check-input" type="checkbox" id="inlineCheckbox9"
+                                               value="option9">
+                                        <label class="form-check-label" for="inlineCheckbox9">노출 카테고리1</label>
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-sm-2 text-center control-label" for="name">상품 페이지 노출</label>
+                                    <div class="col-2">
+                                        <input class="form-check-input" type="checkbox" id="inlineCheckbox10"
+                                               value="option10">
+                                        <label class="form-check-label" for="inlineCheckbox10">노출1</label>
+                                    </div>
+                                    <div class="col-2">
+                                        <input class="form-check-input" type="checkbox" id="inlineCheckbox11"
+                                               value="option11">
+                                        <label class="form-check-label" for="inlineCheckbox11">노출2</label>
+                                    </div>
+                                    <div class="col-2">
+                                        <input class="form-check-input" type="checkbox" id="inlineCheckbox12"
+                                               value="option12">
+                                        <label class="form-check-label" for="inlineCheckbox12">뷰티템</label>
+                                    </div>
+                                    <div class="col-2">
+                                        <input class="form-check-input" type="checkbox" id="inlineCheckbox13"
+                                               value="option13">
+                                        <label class="form-check-label" for="inlineCheckbox13">뷰티템</label>
+                                    </div>
                                 </div>
                             </div>
-                        </form>
-                    </div>
+                            <div class="accordion-item">
+                                <h2 class="accordion-header" id="headingOne">
+                                    <button class="accordion-button" type="button" data-bs-toggle="collapse"
+                                            data-bs-target="#collapseOne" aria-expanded="true"
+                                            aria-controls="collapseOne">
+                                        판매할 상품 정보 등록
+                                    </button>
+                                </h2>
+                                <div id="collapseOne" class="accordion-collapse collapse show"
+                                     aria-labelledby="headingOne" data-bs-parent="#accordionExample">
+                                    <div class="accordion-body">
+                                        <div class="form-group row">
+                                            <label class="col-sm-2 text-center control-label" for="name"><span
+                                                        class="input_title_cion" style="color: red;">* </span>탭
+                                                명</label>
+                                            <div class="col-sm-3 controls">
+                                                <select name="post[tab]" class="form-select"
+                                                        aria-label="Default select example">
+                                                    <option selected>투데이</option>
+                                                    <option value="넥스트">넥스트</option>
+                                                    <option value="화장품">화장품</option>
+                                                    <option value="기기">기기</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="form-group row">
+                                            <label class="col-sm-2 text-center control-label" for="name"><span
+                                                        class="input_title_cion" style="color: red;">* </span>결제
+                                                수단</label>
+                                            <div class="col-1">
+                                                <input class="form-check-input" type="checkbox"
+                                                       id="inlineCheckbox14" name="post[payment]" value="신용카드">
+                                                <label class="form-check-label" for="inlineCheckbox14">신용카드</label>
+                                            </div>
+                                            <div class="col-1">
+                                                <input class="form-check-input" type="checkbox"
+                                                       id="inlineCheckbox15" name="post[payment]" value="무통장">
+                                                <label class="form-check-label" for="inlineCheckbox15">무통장
+                                                    입금</label>
+                                            </div>
+                                            <div class="col-sm-12">
+                                                <label class="col-sm-2 text-left control-label" for="name"></label>
+                                                <label class="col-sm-7 text-left control-label" for="name">선택하지 않을
+                                                    경우 기본
+                                                    환경설정의 결제수단을 사용합니다.</label>
+                                            </div>
+                                        </div>
+                                        <div class="form-group row">
+                                            <label class="col-sm-2 text-center control-label" for="name"><span
+                                                        class="input_title_cion" style="color: red;">* </span>판매
+                                                가격</label>
+                                            <div class="col-sm-3 controls">
+                                                <input type="number" name="post[Amount]" id="price" class="form-control"
+                                                       value=""
+                                                       data-validate="data">
+                                            </div>
+                                            <div class="col-sm-1">원</div>
+                                        </div>
+                                        <div class="form-group row">
+                                            <label class="col-sm-2 text-center control-label" for="name"><span
+                                                        class="input_title_cion"
+                                                        style="color: red;">* </span>할인율</label>
+                                            <div class="col-sm-3 controls">
+                                                <input type="number" name="post[saleAmount]" id="sale"
+                                                       class="form-control" value=""
+                                                       data-validate="data">
+                                            </div>
+                                            <div class="col-sm-1">%</div>
+                                        </div>
+
+                                        <div class="accordion2" id="accordionExample2">
+                                            <div class="accordion-item2">
+                                                <h2 class="accordion-header2" id="headingOne2">
+                                                    <button class="accordion-button" type="button"
+                                                            data-bs-toggle="collapse" data-bs-target="#collapseOne2"
+                                                            aria-expanded="true" aria-controls="collapseOne2">
+                                                        단일옵션 설정
+                                                    </button>
+                                                </h2>
+                                                <div id="collapseOne2" class="accordion-collapse collapse show"
+                                                     aria-labelledby="headingOne" data-bs-parent="#accordionExample">
+                                                    <div class="accordion-body">
+                                                        <div class="row">
+                                                            <div class="col-sm-2 controls">
+                                                                <button class="btn btn-default btn-icon btn-sm "
+                                                                        type="button">✓사용
+                                                                </button>
+                                                                <button type="button"
+                                                                        class="btn btn-info btn-sm">✗사용안함
+                                                                </button>
+                                                            </div>
+                                                        </div>
+                                                        <br>
+                                                        <div class="row">
+                                                            <div class="panel-body"
+                                                                 style="padding-top:0px;padding-bottom:15px;">
+                                                                <div
+                                                                        class="table-responsive dataTables_wrapper form-inline">
+                                                                    <table
+                                                                            class="table table-bordered  table-condensed table-hover  text-center">
+                                                                        <thead>
+                                                                        <tr>
+                                                                            <th class="text-center">옵션명</th>
+                                                                            <th class="text-center">옵션값</th>
+                                                                            <th class="text-center">추가금액</th>
+                                                                            <th class="text-center">공급가</th>
+                                                                            <th class="text-center">재고수량</th>
+                                                                            <th class="text-center">통보수량</th>
+                                                                            <th class="text-center">사용여부</th>
+                                                                            <th class="text-center">관리</th>
+                                                                        </tr>
+                                                                        </thead>
+                                                                        <tbody>
+                                                                        <tr>
+                                                                            <td rowspan="2"
+                                                                                class="align-middle text-center"
+                                                                                width=100>
+                                                                                <input type="text" id="number"
+                                                                                       class="form-control"
+                                                                                       style="width: 150px;">
+                                                                                <br><br><br>
+                                                                                <button class="btn btn-info"
+                                                                                        type="button">✓옵션추가
+                                                                                </button>
+                                                                            </td>
+                                                                            <td>
+                                                                                <div>
+                                                                                    <input name="text" id="text"
+                                                                                           class="form-control"
+                                                                                           value=""
+                                                                                           data-validate="data">
+                                                                                </div>
+                                                                            </td>
+                                                                            <td>
+                                                                                <input name="text" id="text"
+                                                                                       class="form-control"
+                                                                                       value=""
+                                                                                       data-validate="data">
+                                                                            </td>
+                                                                            <td>
+                                                                                <input name="text" id="text"
+                                                                                       class="form-control"
+                                                                                       value=""
+                                                                                       data-validate="data">
+                                                                            </td>
+                                                                            <td>
+                                                                                <input name="text" id="text"
+                                                                                       class="form-control"
+                                                                                       placeholder="999" value=""
+                                                                                       data-validate="data">
+                                                                            </td>
+                                                                            <td>
+                                                                                <input name="text" id="text"
+                                                                                       class="form-control"
+                                                                                       placeholder="999" value=""
+                                                                                       data-validate="data">
+                                                                            </td>
+                                                                            <td>
+                                                                                <div>
+                                                                                    <select class="form-select"
+                                                                                            aria-label="Default select example">
+                                                                                        <option selected>선택
+                                                                                        </option>
+                                                                                        <option value="1">사용함
+                                                                                        </option>
+                                                                                        <option value="2">사용안함
+                                                                                        </option>
+                                                                                    </select>
+                                                                                </div>
+                                                                            </td>
+                                                                            <td class="center">
+                                                                                <button class="btn btn-info"
+                                                                                        type="button">✓추가
+                                                                                </button>
+                                                                            </td>
+                                                                        </tr>
+                                                                        <tr>
+                                                                            <td colspan="7" height=50>
+
+                                                                            </td>
+                                                                        </tr>
+                                                                        </tbody>
+                                                                    </table>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="accordion" id="accordionExample3">
+                                            <div class="accordion-item">
+                                                <h2 class="accordion-header" id="headingOne3">
+                                                    <button class="accordion-button" type="button"
+                                                            data-bs-toggle="collapse" data-bs-target="#collapseOne3"
+                                                            aria-expanded="true" aria-controls="collapseOne3">
+                                                        포인트 설정
+                                                    </button>
+                                                </h2>
+                                                <div id="collapseOne3" class="accordion-collapse collapse show"
+                                                     aria-labelledby="headingOne" data-bs-parent="#accordionExample">
+                                                    <div class="accordion-body">
+                                                        <div class="form-group row">
+                                                            <div class="col-sm-2 controls">
+                                                                <button class="btn btn-default btn-icon btn-sm "
+                                                                        type="button">✓사용
+                                                                </button>
+                                                                <button type="button"
+                                                                        class="btn btn-info btn-sm">✗사용안함
+                                                                </button>
+                                                            </div>
+
+                                                            <div class="col-sm-2 controls">
+                                                                <label class="form-check-label"
+                                                                       for="inlineCheckbox15">최대
+                                                                    사용가능 포인트는</label>
+                                                            </div>
+                                                            <div class="col-sm-2 controls">
+                                                                <input name="post[maxPercent]" id="number"
+                                                                       class="form-control" value=""
+                                                                       data-validate="data">
+                                                            </div>
+                                                            <div class="col-sm-1">%</div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <br><br>
+                                        <div class="form-group row">
+                                            <label class="col-sm-2 text-center control-label" for="name">상품
+                                                품절</label>
+                                            <div class="col-1">
+                                                <input class="form-check-input" type="checkbox"
+                                                       id="inlineCheckbox16" value="option16">
+                                                <label class="form-check-label" for="inlineCheckbox16">품절</label>
+                                            </div>
+                                            <div class="col-sm-12">
+                                                <label class="col-sm-2 text-left control-label" for="name"></label>
+                                                <label class="col-sm-7 text-left control-label" for="name">상품이 품절인
+                                                    경우</label>
+                                            </div>
+                                        </div>
+                                        <div class="form-group row">
+                                            <label class="col-sm-2 text-center control-label" for="name">상품
+                                                비공개</label>
+                                            <div class="col-1">
+                                                <input class="form-check-input" type="checkbox"
+                                                       id="inlineCheckbox17" value="option17">
+                                                <label class="form-check-label" for="inlineCheckbox17">비공개</label>
+                                            </div>
+                                            <div class="col-sm-12">
+                                                <label class="col-sm-2 text-left control-label" for="name"></label>
+                                                <label class="col-sm-7 text-left control-label" for="name">상품이 목록에
+                                                    표시
+                                                    안함</label>
+                                            </div>
+                                        </div>
+                                        <div class="form-group row">
+                                            <label class="col-sm-2 text-center control-label" for="name">배송지
+                                                입력</label>
+                                            <div class="col-2">
+                                                <input class="form-check-input" type="checkbox"
+                                                       id="inlineCheckbox18" value="option18">
+                                                <label class="form-check-label" for="inlineCheckbox18">배송지
+                                                    미입력</label>
+                                            </div>
+                                            <div class="col-sm-12">
+                                                <label class="col-sm-2 text-left control-label" for="name"></label>
+                                                <label class="col-sm-7 text-left control-label" for="name">상품 주문시
+                                                    배송지를
+                                                    입력하지 않을 경우</label>
+                                            </div>
+                                        </div>
+                                        <div class="form-group row">
+                                            <label class="col-sm-2 text-center control-label" for="name">배송비
+                                                유형</label>
+                                            <div class="col-sm-3 controls">
+                                                <select class="form-select" aria-label="Default select example">
+                                                    <option selected>쇼핑몰 기본설정 사용</option>
+                                                    <option value="1">사용함</option>
+                                                    <option value="2">사용안함</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="accordion" id="accordionExample4">
+                                            <div class="accordion-item">
+                                                <h2 class="accordion-header" id="headingOne4">
+                                                    <button class="accordion-button" type="button"
+                                                            data-bs-toggle="collapse" data-bs-target="#collapseOne4"
+                                                            aria-expanded="true" aria-controls="collapseOne4">
+                                                        상세 페이지 이미지
+                                                    </button>
+                                                </h2>
+                                                <div id="collapseOne4" class="accordion-collapse collapse show"
+                                                     aria-labelledby="headingOne" data-bs-parent="#accordionExample">
+                                                    <div class="accordion-body">
+                                                        <div class="w-25 imgUp">
+                                                            <div class="imagePreview"></div>
+                                                            <label class="btn btn-primary">
+                                                                Upload
+                                                                <input name="detailimage" type="file"
+                                                                       class="uploadFile img form-control"
+                                                                       value="Upload Photo"
+                                                                       style="width: 0px;height: 0px;overflow: hidden;"
+                                                                       required accept=".jpg, .jpeg, .png">
+                                                            </label>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <br>
+                                        <div class="accordion" id="accordionExample4">
+                                            <div class="accordion-item">
+                                                <h2 class="accordion-header" id="headingOne4">
+                                                    <button class="accordion-button" type="button"
+                                                            data-bs-toggle="collapse" data-bs-target="#collapseOne4"
+                                                            aria-expanded="true" aria-controls="collapseOne4">
+                                                        상품 고시정보 이미지
+                                                    </button>
+                                                </h2>
+                                                <div id="collapseOne4" class="accordion-collapse collapse show"
+                                                     aria-labelledby="headingOne" data-bs-parent="#accordionExample">
+                                                    <div class="accordion-body">
+                                                        <div class="w-25 imgUp">
+                                                            <div class="imagePreview"></div>
+                                                            <label class="btn btn-primary">
+                                                                Upload
+                                                                <input name="announcement" type="file"
+                                                                       class="uploadFile img form-control"
+                                                                       value="Upload Photo"
+                                                                       style="width: 0px;height: 0px;overflow: hidden;"
+                                                                       required accept=".jpg, .jpeg, .png">
+                                                            </label>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <br>
+                                        <div class="form-group row">
+                                            <label class="col-sm-2 text-center control-label" for="name">상품
+                                                설명</label>
+                                            <div class="form-floating col-md-10">
+                                                    <textarea class="form-control" placeholder="Leave a comment here"
+                                                              id="floatingTextarea" style="height: 100px"></textarea>
+                                            </div>
+                                        </div>
+                                        <div class="form-group row">
+                                            <label class="col-sm-2 text-center control-label" for="name">교환 및
+                                                반품</label>
+                                            <div class="form-floating col-md-10">
+                                                    <textarea class="form-control" placeholder="Leave a comment here"
+                                                              id="floatingTextarea2" style="height: 100px"></textarea>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="d-grid gap-2 d-md-block text-center">
+                                <button type="submit"
+                                        class="w-15 m-1 btn btn-primary btn btn-danger btn-sm">저장
+                                </button>
+                                <button type="reset" class="w-15 m-1 btn btn-primary btn btn-primary btn-sm"
+                                        onclick="location.href='/product/ProductData/ProductList'">목록
+                                </button>
+                            </div>
+                        </div>
+                    </form>
                 </div>
             </div>
         </div>
     </div>
+</div>
 </body>
 <script src="/js/custom-scripts.js"></script>
 <script src="/js/jquery-1.10.2.js"></script>

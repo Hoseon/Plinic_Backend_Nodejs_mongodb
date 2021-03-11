@@ -4,7 +4,7 @@ var productsReviewSchema = mongoose.Schema({
   email: {type:String, required:true}, //출석체크 등록 email
   content: {type: String}, //리뷰내용
   rating: {type: Number}, //별점수
-  product_num: {type: String}, //최초 등록 날짜
+  product_num: { type: String }, //Product ID와 매칭
   product_name: {type: String}, //최초 등록 날짜
   createdAt: {type:Date, default:Date.now}, //최초 등록 날짜
   updatedAt: Date, //마지막 출석체크 날짜(업데이트 날짜)

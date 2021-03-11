@@ -9,8 +9,8 @@ var careZoneController = require('./controller/carezone-controller');
 var rewardController = require('./controller/reward-controller');
 var chulsukController = require('./controller/chulsuk-controller');
 var skinReportController = require('./controller/skinreport-controller');
-// var testController = require('./controller/test-controller');
 var skinAnalyController = require('./controller/skinAnaly-controller');
+var orderController = require('./controller/order-controller');
 
 var passport = require('passport');
 var mysql      = require('mysql');
@@ -50,6 +50,9 @@ routes.post('/missionsave', userController.missionSave);
 routes.post('/challengeupdate', userController.challengeUpdate);//20200210 챌린지 3분 이상 사용시 14주 도전중 1주 추가
 routes.post('/challengeupdate2', userController.challengeUpdate2);//20200210 챌린지 3분 이상 사용시 14주 도전중 1주 추가
 routes.post('/challengesave', userController.challengeSave); //챌린지를 시작하면 기존 v2를 놔두고 새롭게 챌린지 collection(table)을 만들어서 사용한다.
+routes.post('/addressSave', userController.addressSave); // 회원의 주소록 정보 저장
+routes.post('/setAddressMain', userController.setAddressMain); // 회원의 대표 주소록 정보 저장
+routes.post('/getIamPortPayment', userController.getIamPortPayment); // 회원의 대표 주소록 정보 저장
 
 //피부분석 데이터 저장
 routes.post('/saveskinanaly',skinAnalyController.skinAnalySave)
@@ -121,7 +124,14 @@ routes.post('/productReviewDelete', skinReportController.deleteReview);
 routes.post('/productReviewUpdate', skinReportController.productReviewUpdate);
 
 
-//routes.get('/auth/kakao', userController.loginUser_Kakao);
+routes.post('/setUserPointLog', userController.setUserPointLog); //결제시 포인트 차감 2021-03-09
+routes.post('/setUserOrders', orderController.setUserOrders); //결제 성공시 오더 정보 저장 2021-03-10
+
+
+////GET////////////////////////////////////////////////////////////////////////////////////////////
+
+routes.get('/getUserOrders/:email', orderController.getUserOrders); //결제 성공시 오더 정보 가져오기 2021-03-10
+
 
 routes.get('/auth/kakao', passport.authenticate('kakao',{
     failureRedirect: '#!/login'
@@ -144,19 +154,25 @@ routes.get('/daumjuso', function(req,res){
   res.sendfile(__dirname + '/commons/juso.html');
 });
 
+routes.get('/daumPost', function(req,res){
+  res.sendfile(__dirname + '/commons/post.html');
+});
+
 var juso = null;
 routes.post('/daumjuso', function(req,res) {
 	juso = null;
 	juso = req.body
-  // console.log("받은 데이터는? " + JSON.stringify(juso));
+  console.log("받은 데이터는? " + JSON.stringify(juso));
 })
 
 routes.get('/daumjuso/mobile', function(req,res) {
-  // console.log("데이터 없음 : " + juso);
   if(juso){
-    // console.log("데이터 있음 :" + juso)
-    res.send(juso);
+    console.log("데이터 있음 :" + juso)
+    res.status(200).send(juso);
     juso = null;
+  } else {
+    console.log("데이터 없음없으므음음음음");
+    res.status(400).send(null);
   }
 });
 

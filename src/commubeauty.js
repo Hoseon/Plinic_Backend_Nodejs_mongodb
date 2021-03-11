@@ -126,7 +126,7 @@ router.get('/postNewList', function(req, res) {
     }, function(err, docs) {
       res.json(docs);
     }).sort({
-      "editorUpdateAt": -1
+      "seq": 1,
     });
   }]);
 });
@@ -139,7 +139,7 @@ router.get('/getpostHitList3ea', function(req, res) {
     }, function(err, docs) {
       res.json(docs);
     }).sort({
-      "editorUpdateAt": -1
+      "seq": 1
     }).limit(3);
   }]);
 });
@@ -152,7 +152,7 @@ router.get('/postTipList3ea', function(req, res) {
     }, function(err, docs) {
       res.json(docs);
     }).sort({
-      "editorUpdateAt": -1
+      "seq": 1
     }).limit(3);
   }]);
 });

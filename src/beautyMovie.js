@@ -431,7 +431,9 @@ router.get('/list', function(req, res) {
   var result = [];
   var count = 0;
   async.waterfall([function(callback) {
-    BeautyMovie.find(function(err, docs) {
+    BeautyMovie.find({
+      'tabLocation.new' : true
+    },function(err, docs) {
       if(err) {
         res.status(400).json(err);
       }
@@ -459,6 +461,8 @@ router.get('/list', function(req, res) {
           });
         });
       }
+    }).sort({
+      "seq" : 1
     });
   }]);
 });

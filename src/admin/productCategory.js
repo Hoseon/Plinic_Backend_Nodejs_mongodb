@@ -1,76 +1,193 @@
 var express = require("express");
 var router = express.Router();
 var mongoose = require("mongoose");
-var Qna = require("../models/Qna");
-var QnaCounter = require("../models/QnaCounter");
 var async = require("async");
 var User_admin = require("../models/User_admin");
-var multer = require("multer");
-// var FTPStorage = require('multer-ftp');
-var sftpStorage = require("multer-sftp");
-let Client = require("ssh2-sftp-client");
 var path = require("path");
 var fs = require("fs");
 var del = require("del");
 var http = require("http");
-var FCM = require("fcm-node");
-var serverKey = "AIzaSyCAcTA318i_SVCMl94e8SFuXHhI5VtXdhU";
-var fcm = new FCM(serverKey);
+var Category = require('../models/Category');
 
-//let UPLOAD_PATH = "./uploads/"
-
-//multer 선언 이미지 rest api 개발 20190425
-var storage = multer.diskStorage({
-  destination: function (req, file, cb) {
-    cb(null, path.join(__dirname, "../uploads/"));
-    //cb(null, UPLOAD_PATH)
-  },
-  filename: function (req, file, cb) {
-    cb(null, file.fieldname + "-" + Date.now());
-  }
-});
-
-let upload = multer({
-  storage: storage
-});
-
-var sftpUpload = multer({
-  storage: new sftpStorage({
-    sftp: {
-      host: "g1partners1.cafe24.com",
-      // secure: true, // enables FTPS/FTP with TLS
-      port: 3822,
-      user: "g1partners1",
-      password: "g100210!!"
-    },
-    // basepath: '/www/plinic',
-    destination: function (req, file, cb) {
-      cb(null, "/www/plinic");
-    },
-    filename: function (req, file, cb) {
-      cb(null, file.fieldname + "-" + Date.now());
-    }
-  })
-});
-
-const sftpconfig = {
-  host: "g1partners1.cafe24.com",
-  port: 3822,
-  user: "g1partners1",
-  password: "g100210!!"
-};
 
 router.get("/ProductData/ProductCategory", function (req, res) {
-  return res.render("PlinicAdmin/Product/ProductData/ProductCategory/index", {});
+  async.waterfall([function(callback) {
+    Category.find(function(err, data){
+      if(err) return res.status(400);
+
+      if(data)
+        return res.render("PlinicAdmin/Product/ProductData/ProductCategory/index",
+            {
+              data: data,
+              lastNumber: data.length + 1
+            });
+    })
+  }])
 });
 //상품데이터 카테고리 화면
-
-
 
 router.get("/", function (req, res) {
   return res.render("PlinicAdmin/bootstraptest/index", {});
 });
 // index
+
+router.post("/", (req, res)=> {
+  console.log(req.body.post);
+  async.waterfall([()=>{
+    let newCategory = Category(req.body.post);
+
+    newCategory.save((err, result)=>{
+      if(err)
+        return res.status(400).json({
+          "msg" : "업데이트 실패"
+        })
+
+      if(result)
+        Category.find(function(err, data){
+          if(err) return res.status(400);
+
+          if(data)
+            return res.render("PlinicAdmin/Product/ProductData/ProductCategory/index",
+                {
+                  data: data,
+                  lastNumber: data.length + 1
+                });
+        })
+    })
+  }])
+});
+
+router.delete('/:id', isLoggedIn, function (req, res, next) {
+  async.waterfall([()=>{
+    Category.findOneAndRemove({
+      _id : req.params.id
+    },(err, result)=>{
+      if(err)
+        return res.status(400);
+
+      if(result)
+
+        Category.find(function(err, data){
+          if(err) return res.status(400);
+
+          if(data)
+            return res.render("PlinicAdmin/Product/ProductData/ProductCategory/index",
+                {
+                  data: data,
+                  lastNumber: data.length + 1
+                });
+        })
+    })
+  }])
+}); //destroy
+
+router.put('/:id', isLoggedIn, function (req, res, next) {
+  console.log(req.body.post);
+  async.waterfall([()=> {
+    Category.findOneAndUpdate({
+      _id : req.params.id
+    },{
+      $push: {
+        smallCategory : req.body.post
+      },
+    },function(err, result){
+      if(err)
+        return res.status(400);
+
+      if(result)
+        Category.find(function(err, data){
+          if(err) return res.status(400);
+
+          if(data)
+            return res.render("PlinicAdmin/Product/ProductData/ProductCategory/index",
+                {
+                  data: data,
+                  lastNumber: data.length + 1
+                });
+        })
+    })
+  }])
+})
+
+router.put('/bigUpdate/:id', isLoggedIn, function (req, res, next) {
+  console.log(req.body.post);
+  async.waterfall([()=> {
+    Category.findOneAndUpdate({
+      _id : req.params.id
+    }, req.body.post, function(err, result){
+      if(err)
+        return res.status(400);
+
+      if(result)
+        Category.find(function(err, data){
+          if(err) return res.status(400);
+
+          if(data)
+            return res.render("PlinicAdmin/Product/ProductData/ProductCategory/index",
+                {
+                  data: data,
+                  lastNumber: data.length + 1
+                });
+        })
+    })
+  }])
+})
+
+router.put('/smallUpdate/:id', isLoggedIn, function (req, res, next) {
+  async.waterfall([()=> {
+    Category.findOneAndUpdate({
+      'smallCategory._id' : req.params.id
+    },{
+      $pull: {
+        smallCategory: {
+          _id: req.params.id
+        }
+      }
+    },function(err, result){
+      if(err)
+        return res.status(400);
+
+      if(result)
+        Category.find(function(err, data){
+          if(err) return res.status(400);
+
+          if(data)
+            return res.render("PlinicAdmin/Product/ProductData/ProductCategory/index",
+                {
+                  data: data,
+                  lastNumber: data.length + 1
+                });
+        })
+    })
+  }])
+})
+
+router.put('/smallUpdateName/:id', isLoggedIn, function (req, res, next) {
+  async.waterfall([()=> {
+    Category.updateOne({
+      'smallCategory._id' : req.params.id
+    }, {
+      $set: {
+        "smallCategory.$" : req.body.post
+      }
+    }, function(err, result){
+      if(err)
+        return res.status(400);
+
+      if(result)
+        Category.find(function(err, data){
+          if(err) return res.status(400);
+
+          if(data)
+            return res.render("PlinicAdmin/Product/ProductData/ProductCategory/index",
+                {
+                  data: data,
+                  lastNumber: data.length + 1
+                });
+        })
+    })
+  }])
+})
 
 function isLoggedIn(req, res, next) {
   if (req.isAuthenticated()) {

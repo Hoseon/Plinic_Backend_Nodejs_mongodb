@@ -1,6 +1,7 @@
 var User = require('../models/user');
 var SkinQna = require('../models/SkinQna');
 var Tags = require('../models/Tags');
+var PointLog = require('../models/PointLog');
 var SkinQnaCounter = require('../models/SkinQnaCounter');
 var jwt = require('jsonwebtoken');
 var async = require('async');
@@ -22,9 +23,9 @@ function createToken(user) {
 exports.skinQnaSave = (req, res) => {
 
   // console.log("-------------------------------request-------------");
-  console.log("qna email -------------------------------- : " + req.body.email);
-  console.log("qna-------------------------------- : " + req.body.select);
-  console.log("qna-------------------------------- : " + req.body.tags);
+  // console.log("qna email -------------------------------- : " + req.body.email);
+  // console.log("qna-------------------------------- : " + req.body.select);
+  // console.log("qna-------------------------------- : " + req.body.tags);
   // console.log("qna-------------------------------- : " + JSON.stringify(req.body.qna));
   // //return res.status(400).json({ 'msg': '문의하기가 등록되었습니다. <br /><br /> 곧 관리자에게 Email로 답변을 받을 수 있습니다.' });
   //console.log("-------------------------------response-------------" + res.body.id);
@@ -75,7 +76,7 @@ exports.skinQnaSave = (req, res) => {
           if (result) {
             for(var i =0; i< result.userpoint.length; i++) {
               if (getFormattedDate(new Date(result.userpoint[i].updatedAt)) == getFormattedDate(new Date())) {
-                if(result.userpoint[i].status=="skinqna") {
+                if(result.userpoint[i].status=="skinqna" || result.userpoint[i].status=="뷰티플 글쓰기 작성") {
                   return res.status(400);
                   //         // 'msg': '하루 한번만 포인트가 누적됩니다!!'
                 }
@@ -98,6 +99,29 @@ exports.skinQnaSave = (req, res) => {
                   // 'msg': '커뮤니티 작성 포인트가 누적되었습니다111!!'
                 // });
               }
+              });
+            var prePointLog = {
+              reason: "뷰티플 글쓰기 작성",
+              point: 50,
+              status : 'skinqna'
+            }
+            //포인트 로그 플리닉샵 --> 플리닉으로 변경 2021-03-04
+            PointLog.update({
+              email: req.body.email
+            }, {
+                $push: { point: prePointLog },
+                $inc: { "totalPoint": 50 }
+              }, (err, result) => {
+                if (err) {
+                  console.log("글쓰기 포인트 적립 에러 발생 : " + req.body.email);
+                  res.status(400).json();
+                }
+                if (result) {
+                  // res.status(200).json(result);
+                } else {
+                  console.log("글쓰기 포인트 적립 에러 발생 2 : " + req.body.email);
+                  res.status(400).json();
+                }
             });
           } else {
             // //검색결과가 없으면 신규 등록
@@ -246,6 +270,31 @@ exports.replySave = (req, res) => {
       console.log("tags error : " + err);
       return res.status(400).json(err);
     } else {
+      //2021-03-04 게시글 댓글 작성시 포인트 적립 5포인트
+      var prePointLog = {
+        reason: "게시글 댓글 작성",
+        point: 5,
+        status : 'skinqnaReply'
+      }
+      //포인트 로그 플리닉샵 --> 플리닉으로 변경 2021-03-04
+      PointLog.update({
+        email: req.body.email
+      }, {
+          $push: { point: prePointLog },
+          $inc: { "totalPoint": 5 }
+        }, (err, result) => {
+          if (err) {
+            console.log("게시글 댓글 작성 포인트 적립 에러 발생 : " + req.body.email);
+            res.status(400).json();
+          }
+          if (result) {
+            // res.status(200).json(result);
+          } else {
+            console.log("게시글 댓글 작성 에러 발생 2 : " + req.body.email);
+            res.status(400).json();
+          }
+      });
+
       // console.log("result tags : " + JSON.stringify(post2));
       return res.status(201).json(post2);
     }

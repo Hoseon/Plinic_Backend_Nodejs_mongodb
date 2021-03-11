@@ -2,453 +2,543 @@
 <html lang="en">
 
 <head>
-  <% include ../../../../partials/head %>
+    <% include ../../../../partials/head %>
     <title></title>
-    <link href='http://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css' />
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css'/>
 
     <style>
-      .accordion-header {
-        margin-bottom: 0;
-        display: flex;
-        justify-content: space-between;
-        flex-wrap: wrap;
-        cursor: pointer;
-        position: relative;
-        display: flex;
-        align-items: center;
-        width: 100%;
-        padding: 1rem 1.25rem;
-        font-size: 1rem;
-        border: 1px solid rgba(0,0,0,.125);
-        border-radius: 0;
-        overflow-anchor: none;
-      }
+        .accordion-header {
+            margin-bottom: 0;
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            cursor: pointer;
+            position: relative;
+            display: flex;
+            align-items: center;
+            width: 100%;
+            padding: 1rem 1.25rem;
+            font-size: 1rem;
+            border: 1px solid rgba(0, 0, 0, .125);
+            border-radius: 0;
+            overflow-anchor: none;
+        }
 
-      .accordion-header2 {
-        margin-bottom: 0;
-        display: flex;
-        justify-content: space-between;
-        flex-wrap: wrap;
-        cursor: pointer;
-        position: relative;
-        display: flex;
-        align-items: center;
-        width: 100%;
-        padding: 1rem 1.25rem;
-        font-size: 1rem;
-        border: 1px solid rgba(0,0,0,.125);
-        border-radius: 0;
-        overflow-anchor: none;
-      }
+        .accordion-header2 {
+            margin-bottom: 0;
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            cursor: pointer;
+            position: relative;
+            display: flex;
+            align-items: center;
+            width: 100%;
+            padding: 1rem 1.25rem;
+            font-size: 1rem;
+            border: 1px solid rgba(0, 0, 0, .125);
+            border-radius: 0;
+            overflow-anchor: none;
+        }
 
-      .accordion-header3 {
-        margin-bottom: 0;
-        display: flex;
-        justify-content: space-between;
-        flex-wrap: wrap;
-        cursor: pointer;
-        position: relative;
-        display: flex;
-        align-items: center;
-        width: 100%;
-        padding: 1rem 1.25rem;
-        font-size: 1rem;
-        border: 1px solid rgba(0,0,0,.125);
-        border-radius: 0;
-        overflow-anchor: none;
-      }
+        .accordion-header3 {
+            margin-bottom: 0;
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            cursor: pointer;
+            position: relative;
+            display: flex;
+            align-items: center;
+            width: 100%;
+            padding: 1rem 1.25rem;
+            font-size: 1rem;
+            border: 1px solid rgba(0, 0, 0, .125);
+            border-radius: 0;
+            overflow-anchor: none;
+        }
 
-      .accordion-button:not(.collapsed)::after {
-        display: none;
-      }
+        .accordion-button:not(.collapsed)::after {
+            display: none;
+        }
 
-      .accordion-button::after {
-        display: none;
-      }
+        .accordion-button::after {
+            display: none;
+        }
 
-      .accordion-item:first-of-type .accordion-button {
-        display: contents;
-        border-top-left-radius: .25rem;
-        border-top-right-radius: .25rem;
-      }
+        .accordion-item:first-of-type .accordion-button {
+            display: contents;
+            border-top-left-radius: .25rem;
+            border-top-right-radius: .25rem;
+        }
 
-      .accordion-button:not(.collapsed) {
-        color: #0c63e4;
-        background-color: #e7f1ff;
-      }
+        .accordion-button:not(.collapsed) {
+            color: #0c63e4;
+            background-color: #e7f1ff;
+        }
 
-      .letter-row {
-        margin-bottom: 0;
-        display: flex;
-        justify-content: space-between;
-        flex-wrap: wrap;
-        cursor: pointer;
-        position: relative;
-        display: flex;
-        align-items: center;
-        width: 100%;
-        padding: 1rem 1.25rem;
-        font-size: 1rem;
-        border: 1px solid rgba(0,0,0,.125);
-        background-color: #f5f5f5;
-        border-radius: 0;
-        overflow-anchor: none;
-      }
+        .letter-row {
+            margin-bottom: 0;
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            cursor: pointer;
+            position: relative;
+            display: flex;
+            align-items: center;
+            width: 100%;
+            padding: 1rem 1.25rem;
+            font-size: 1rem;
+            border: 1px solid rgba(0, 0, 0, .125);
+            background-color: #f5f5f5;
+            border-radius: 0;
+            overflow-anchor: none;
+        }
 
-      .accordion-item:last-of-type .accordion-collapse {
-        border-top-left-radius: .25rem;
-        border-top-right-radius: .25rem;
-        border-bottom-width: 0;
-      }
-      
+        .accordion-item:last-of-type .accordion-collapse {
+            border-top-left-radius: .25rem;
+            border-top-right-radius: .25rem;
+            border-bottom-width: 0;
+        }
+
     </style>
 
 </head>
 <script type="text/javascript" src="/js/jquery-1.10.2.js"></script>
 <script>
-  $(document).ready(function () {
-    $(".active").removeClass("active");
-    $("#products").addClass("active");
+    $(document).ready(function () {
+        $(".active").removeClass("active");
+        $("#products").addClass("active");
 
-    // $("#challBtn").bind("click");
-    // $("#challBtn").trigger("click");
-    // $("#challBtn").removeClass("collapsed");
-    // $("#challBtn").attr('aria-expanded', 'true');
-    $("#forms-collapse3").addClass('show');
-
-
+        // $("#challBtn").bind("click");
+        // $("#challBtn").trigger("click");
+        // $("#challBtn").removeClass("collapsed");
+        // $("#challBtn").attr('aria-expanded', 'true');
+        $("#forms-collapse3").addClass('show');
 
 
-    $('.btn-number').click(function (e) {
-      e.preventDefault();
+        $('.btn-number').click(function (e) {
+            e.preventDefault();
 
-      fieldName = $(this).attr('data-field');
-      type = $(this).attr('data-type');
-      var input = $("input[name='" + fieldName + "']");
-      var currentVal = parseInt(input.val());
-      if (!isNaN(currentVal)) {
-        if (type == 'minus') {
+            fieldName = $(this).attr('data-field');
+            type = $(this).attr('data-type');
+            var input = $("input[name='" + fieldName + "']");
+            var currentVal = parseInt(input.val());
+            if (!isNaN(currentVal)) {
+                if (type == 'minus') {
 
-          if (currentVal > input.attr('min')) {
-            input.val(currentVal - 1).change();
-          }
-          if (parseInt(input.val()) == input.attr('min')) {
-            $(this).attr('disabled', true);
-          }
+                    if (currentVal > input.attr('min')) {
+                        input.val(currentVal - 1).change();
+                    }
+                    if (parseInt(input.val()) == input.attr('min')) {
+                        $(this).attr('disabled', true);
+                    }
 
-        } else if (type == 'plus') {
+                } else if (type == 'plus') {
 
-          if (currentVal < input.attr('max')) {
-            input.val(currentVal + 1).change();
-          }
-          if (parseInt(input.val()) == input.attr('max')) {
-            $(this).attr('disabled', true);
-          }
+                    if (currentVal < input.attr('max')) {
+                        input.val(currentVal + 1).change();
+                    }
+                    if (parseInt(input.val()) == input.attr('max')) {
+                        $(this).attr('disabled', true);
+                    }
 
-        }
-      } else {
-        input.val(0);
-      }
+                }
+            } else {
+                input.val(0);
+            }
+        });
+        $('.input-number').focusin(function () {
+            $(this).data('oldValue', $(this).val());
+        });
+        $('.input-number').change(function () {
+
+            minValue = parseInt($(this).attr('min'));
+            maxValue = parseInt($(this).attr('max'));
+            valueCurrent = parseInt($(this).val());
+
+            name = $(this).attr('name');
+            if (valueCurrent >= minValue) {
+                $(".btn-number[data-type='minus'][data-field='" + name + "']").removeAttr('disabled')
+            } else {
+                alert('Sorry, the minimum value was reached');
+                $(this).val($(this).data('oldValue'));
+            }
+            if (valueCurrent <= maxValue) {
+                $(".btn-number[data-type='plus'][data-field='" + name + "']").removeAttr('disabled')
+            } else {
+                alert('Sorry, the maximum value was reached');
+                $(this).val($(this).data('oldValue'));
+            }
+
+
+        });
+        $(".input-number").keydown(function (e) {
+            // Allow: backspace, delete, tab, escape, enter and .
+            if ($.inArray(e.keyCode, [46, 8, 9, 27, 13, 190]) !== -1 ||
+                // Allow: Ctrl+A
+                (e.keyCode == 65 && e.ctrlKey === true) ||
+                // Allow: home, end, left, right
+                (e.keyCode >= 35 && e.keyCode <= 39)) {
+                // let it happen, don't do anything
+                return;
+            }
+            // Ensure that it is a number and stop the keypress
+            if ((e.shiftKey || (e.keyCode < 48 || e.keyCode > 57)) && (e.keyCode < 96 || e.keyCode > 105)) {
+                e.preventDefault();
+            }
+        });
+
     });
-    $('.input-number').focusin(function () {
-      $(this).data('oldValue', $(this).val());
-    });
-    $('.input-number').change(function () {
-
-      minValue = parseInt($(this).attr('min'));
-      maxValue = parseInt($(this).attr('max'));
-      valueCurrent = parseInt($(this).val());
-
-      name = $(this).attr('name');
-      if (valueCurrent >= minValue) {
-        $(".btn-number[data-type='minus'][data-field='" + name + "']").removeAttr('disabled')
-      } else {
-        alert('Sorry, the minimum value was reached');
-        $(this).val($(this).data('oldValue'));
-      }
-      if (valueCurrent <= maxValue) {
-        $(".btn-number[data-type='plus'][data-field='" + name + "']").removeAttr('disabled')
-      } else {
-        alert('Sorry, the maximum value was reached');
-        $(this).val($(this).data('oldValue'));
-      }
-
-
-    });
-    $(".input-number").keydown(function (e) {
-      // Allow: backspace, delete, tab, escape, enter and .
-      if ($.inArray(e.keyCode, [46, 8, 9, 27, 13, 190]) !== -1 ||
-        // Allow: Ctrl+A
-        (e.keyCode == 65 && e.ctrlKey === true) ||
-        // Allow: home, end, left, right
-        (e.keyCode >= 35 && e.keyCode <= 39)) {
-        // let it happen, don't do anything
-        return;
-      }
-      // Ensure that it is a number and stop the keypress
-      if ((e.shiftKey || (e.keyCode < 48 || e.keyCode > 57)) && (e.keyCode < 96 || e.keyCode > 105)) {
-        e.preventDefault();
-      }
-    });
-
-  });
 </script>
 
 <body>
-
-  <header>
+<header>
     <% include ../../../../partials/header %>
-  </header>
+</header>
 
 
-  <div class="container-fluid">
+<div class="container-fluid">
     <div class="row">
-      <!-- 2단길이의 첫번째 열 -->
-      <div class="col-md-2">
-        <% include ../../../../partials/pside %>
-      </div>
-
-      <!-- 10단길이의 첫번째 열 -->
-      <div class="col-md-10">
-        <div id="page-inner">
-          <div class="row">
-            <div class="col-md-12">
-              <h1 class="page-header">
-                상품 카테고리
-                <!-- <small> 챌린지 관리 Sub제목</small> -->
-              </h1>
-            </div>
-          </div>
-
-          <div class="accordion" id="accordionExample">
-            <div class="accordion-item">
-              <h2 class="accordion-header2" id="headingOne">
-                <button class="accordion-button col-md-4" type="button" data-bs-toggle="collapse"
-                  data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
-                  분류 설정
-                </button>
-                <button class="btn btn-primary" type="button">대분류 추가</button>
-              </h2>
-              <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne"
-                data-bs-parent="#accordionExample">
-                <div class="accordion-body">
-
-                  <div class="panel panel-default">
-                    <div class="panel-heading">
-                      <div class="container">
-                        <div class="row">
-                          <div class="col-md-4" style="padding-top:8px; margin-left:-20px;">MONCLER</div>
-                          <div class="col-md-3 ms-auto" style="padding-left:86px;">
-                            <button class="btn btn-primary me-md-2" type="button">추가</button>
-                            <button class="btn btn-info me-md-2" type="button">수정</button>
-                            <button class="btn btn-danger" type="button">삭제</button>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-
-                    <div class="panel-heading">
-                      <div class="container">
-                        <div class="row">
-                          <div class="col-md-4" style="padding-top:8px; margin-left:-20px;">BURBERRY</div>
-                          <div class="col-md-3 ms-auto" style="padding-left:86px;">
-                            <button class="btn btn-primary me-md-2" type="button">추가</button>
-                            <button class="btn btn-info me-md-2" type="button">수정</button>
-                            <button class="btn btn-danger" type="button">삭제</button>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-
-                    <div class="accordion accordion-flush" id="accordionFlushExample">
-                      <div class="accordion-item">
-                        <h2 class="accordion-header" id="flush-headingOne">
-                          <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
-                            data-bs-target="#flush-collapseOne" aria-expanded="false" aria-controls="flush-collapseOne">
-                            GUCCI
-                          </button>
-                          <div class="col-md-3 ms-auto" style="padding-left:86px;">
-                            <button class="btn btn-primary me-md-2" type="button">추가</button>
-                            <button class="btn btn-info me-md-2" type="button">수정</button>
-                            <button class="btn btn-danger" type="button">삭제</button>
-                          </div>
-                        </h2>
-                        <div id="flush-collapseOne" class="accordion-collapse collapse"
-                          aria-labelledby="flush-headingOne" data-bs-parent="#accordionFlushExample">
-                          <div class="accordion-body">
-
-                            <div class="accordion2" id="accordionExample2">
-                              <div class="accordion-item2">
-                                <h2 class="accordion-header2" id="headingOne2">
-                                  <button class="accordion-button" type="button" data-bs-toggle="collapse"
-                                    data-bs-target="#collapseOne2" aria-expanded="true" aria-controls="collapseOne2">
-                                    가방
-                                  </button>
-                                  <div class="col-md-3 ms-auto" style="padding-left:86px;">
-                                    <button class="btn btn-primary me-md-2" type="button">추가</button>
-                                    <button class="btn btn-info me-md-2" type="button">수정</button>
-                                    <button class="btn btn-danger" type="button">삭제</button>
-                                  </div>
-                                </h2>
-                                <div id="collapseOne2" class="accordion-collapse collapse show"
-                                  aria-labelledby="headingOne2" data-bs-parent="#accordionExample2">
-                                  <div class="accordion-body">
-
-                                    <div class="panel-heading">
-                                      <div class="container">
-                                        <div class="letter-row">
-                                          <div class="col-md-4" style="padding-top:8px; margin-left:-20px;">핸드백</div>
-                                          <div class="col-md-3 ms-auto" style="padding-left:86px;">
-                                            <button class="btn btn-primary me-md-2" type="button">추가</button>
-                                            <button class="btn btn-info me-md-2" type="button">수정</button>
-                                            <button class="btn btn-danger" type="button">삭제</button>
-                                          </div>
-                                        </div>
-                                      </div>
-                                    </div>
-
-                                    <div class="panel-heading">
-                                      <div class="container">
-                                        <div class="letter-row">
-                                          <div class="col-md-4" style="padding-top:8px; margin-left:-20px;">장지갑</div>
-                                          <div class="col-md-3 ms-auto" style="padding-left:86px;">
-                                            <button class="btn btn-primary me-md-2" type="button">추가</button>
-                                            <button class="btn btn-info me-md-2" type="button">수정</button>
-                                            <button class="btn btn-danger" type="button">삭제</button>
-                                          </div>
-                                        </div>
-                                      </div>
-                                    </div>
-
-                                  </div>
-                                </div>
-                              </div>
-                            </div>
-
-                            <div class="accordion3" id="accordionExample3">
-                              <div class="accordion-item3">
-                                <h2 class="accordion-header3" id="headingOne3">
-                                  <button class="accordion-button" type="button" data-bs-toggle="collapse"
-                                    data-bs-target="#collapseOne3" aria-expanded="true" aria-controls="collapseOne3">
-                                    신발
-                                  </button>
-                                  <div class="col-md-3 ms-auto" style="padding-left:86px;">
-                                    <button class="btn btn-primary me-md-2" type="button">추가</button>
-                                    <button class="btn btn-info me-md-2" type="button">수정</button>
-                                    <button class="btn btn-danger" type="button">삭제</button>
-                                  </div>
-                                </h2>
-                                <div id="collapseOne3" class="accordion-collapse collapse show"
-                                  aria-labelledby="headingOne3" data-bs-parent="#accordionExample3">
-                                  <div class="accordion-body">
-
-                                    <div class="panel-heading">
-                                      <div class="container">
-                                        <div class="letter-row">
-                                          <div class="col-md-4" style="padding-top:8px; margin-left:-20px;">구두</div>
-                                          <div class="col-md-3 ms-auto" style="padding-left:86px;">
-                                            <button class="btn btn-primary me-md-2" type="button">추가</button>
-                                            <button class="btn btn-info me-md-2" type="button">수정</button>
-                                            <button class="btn btn-danger" type="button">삭제</button>
-                                          </div>
-                                        </div>
-                                      </div>
-                                    </div>
-
-                                    <div class="panel-heading">
-                                      <div class="container">
-                                        <div class="letter-row">
-                                          <div class="col-md-4" style="padding-top:8px; margin-left:-20px;">장화</div>
-                                          <div class="col-md-3 ms-auto" style="padding-left:86px;">
-                                            <button class="btn btn-primary me-md-2" type="button">추가</button>
-                                            <button class="btn btn-info me-md-2" type="button">수정</button>
-                                            <button class="btn btn-danger" type="button">삭제</button>
-                                          </div>
-                                        </div>
-                                      </div>
-                                    </div>
-
-                                  </div>
-                                </div>
-                              </div>
-                            </div>
-
-
-
-
-
-
-
-
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-
-                    <div class="panel panel-default">
-                      <div class="panel-heading">
-                        <div class="container">
-                          <div class="row">
-                            <div class="col-md-4" style="padding-top:8px; margin-left:-20px;">ROGER VIVIER</div>
-                            <div class="col-md-3 ms-auto" style="padding-left:86px;">
-                              <button class="btn btn-primary me-md-2" type="button">추가</button>
-                              <button class="btn btn-info me-md-2" type="button">수정</button>
-                              <button class="btn btn-danger" type="button">삭제</button>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-
-                      <div class="panel-heading">
-                        <div class="container">
-                          <div class="row">
-                            <div class="col-md-4" style="padding-top:8px; margin-left:-20px;">SAINT LAURENT</div>
-                            <div class="col-md-3 ms-auto" style="padding-left:86px;">
-                              <button class="btn btn-primary me-md-2" type="button">추가</button>
-                              <button class="btn btn-info me-md-2" type="button">수정</button>
-                              <button class="btn btn-danger" type="button">삭제</button>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-
-                      <div class="panel-heading">
-                        <div class="container">
-                          <div class="row">
-                            <div class="col-md-4" style="padding-top:8px; margin-left:-20px;">개인 오더</div>
-                            <div class="col-md-3 ms-auto" style="padding-left:86px;">
-                              <button class="btn btn-primary me-md-2" type="button">추가</button>
-                              <button class="btn btn-info me-md-2" type="button">수정</button>
-                              <button class="btn btn-danger" type="button">삭제</button>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-
-
-
-                    </div>
-                  </div>
-
-
-                </div>
-              </div>
-            </div>
-          </div>
-
-
-
+        <!-- 2단길이의 첫번째 열 -->
+        <div class="col-md-2">
+            <% include ../../../../partials/pside %>
         </div>
-      </div>
-    </div>
-  </div>
+
+        <!-- 10단길이의 첫번째 열 -->
+        <div class="col-md-10">
+            <div id="page-inner">
+                <div class="row">
+                    <div class="col-md-12">
+                        <h1 class="page-header">
+                            상품 카테고리
+                            <!-- <small> 챌린지 관리 Sub제목</small> -->
+                        </h1>
+                    </div>
+                </div>
+
+                <div class="accordion" id="accordionExample">
+                    <div class="accordion-item">
+                        <h2 class="accordion-header2" id="headingOne">
+                            <button class="accordion-button col-md-4" type="button" data-bs-toggle="collapse"
+                                    data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                                분류 설정
+                            </button>
+                            <button class="btn btn-primary" type="button" data-bs-toggle="modal"
+                                    data-bs-target="#bigCode" data-bs-whatever="@mdo">대분류 추가
+                            </button>
+                        </h2>
+                        <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne"
+                             data-bs-parent="#accordionExample">
+                            <div class="accordion-body">
+
+                                <div class="panel panel-default">
+
+                                    <% data.forEach(function(post, index){ %>
+                                    <div class="accordion accordion-flush" id="accordionFlushExample">
+                                        <div class="accordion-item">
+
+                                            <h2 class="accordion-header" id="flush-headingOne">
+                                                <button class="accordion-button collapsed" type="button"
+                                                        data-bs-toggle="collapse"
+                                                        data-bs-target="#flush-collapseOne<%= index %>"
+                                                        aria-expanded="false" aria-controls="flush-collapseOne">
+                                                    <div style="color: red"><%= post.bigCode %></div>
+                                                    &nbsp;&nbsp;&nbsp; <%= post.bigCategoryName %>
+                                                </button>
+                                                <div class="col-md-3 ms-auto" style="padding-left:86px;">
+                                                    <form class="float-start m-1">
+                                                        <button class="btn btn-primary" type="button"
+                                                                data-bs-toggle="modal"
+                                                                data-bs-target="#smallCode<%= index %>"
+                                                                data-bs-whatever="@mdo">추가
+                                                        </button>
+                                                    </form>
+                                                    <form class="float-start m-1">
+                                                        <button class="btn btn-info" type="button"
+                                                                data-bs-toggle="modal"
+                                                                data-bs-target="#bigCodeUpdate<%= index %>"
+                                                                data-bs-whatever="@mdo">수정
+                                                        </button>
+                                                    </form>
+                                                    <form class="float-start m-1" id="bigDel" method="post"
+                                                          action='/productCategory/<%= post._id %>/?_method=delete'>
+                                                        <button class="btn btn-danger" type="submit">삭제</button>
+                                                    </form>
+                                                </div>
+                                            </h2>
+                                            <div id="flush-collapseOne<%= index %>" class="accordion-collapse collapse"
+                                                 aria-labelledby="flush-headingOne"
+                                                 data-bs-parent="#accordionFlushExample">
+                                                <div class="accordion-body">
 
 
+                                                    <% post.smallCategory.forEach(function(smallPost, index2){ %>
+                                                    <div class="accordion2" id="accordionExample2">
+                                                        <div class="accordion-item2">
+                                                            <h2 class="accordion-header2" id="headingOne2">
+                                                                <div class="accordion-button" type="button"
+                                                                     data-bs-toggle="collapse"
+                                                                     data-bs-target="#collapseOne2" aria-expanded="true"
+                                                                     aria-controls="collapseOne2">
+                                                                    <div style="color: mediumpurple"><%= smallPost.smallCode %></div>
+                                                                    &nbsp;&nbsp;&nbsp;<%= smallPost.smallCategoryName %>
+                                                                </div>
+                                                                <div class="col-md-3 ms-auto"
+                                                                     style="padding-left:86px;">
+                                                                    <form class="float_right" id="smallDel"
+                                                                          class="flex-end" method="post"
+                                                                          action="/productCategory/smallUpdate/<%= smallPost._id %>/?_method=put">
+                                                                        <button class="btn btn-danger" type="submit">
+                                                                            삭제
+                                                                        </button>
+                                                                    </form>
+                                                                    <form class="float_right">
+                                                                        <button class="btn btn-info me-md-2"
+                                                                                data-bs-toggle="modal"
+                                                                                data-bs-target="#smallCodeUpdate<%=smallPost.smallCode%>"
+                                                                                type="button">수정
+                                                                        </button>
+                                                                    </form>
+                                                                </div>
+                                                            </h2>
+                                                        </div>
+                                                    </div>
+
+                                                    <!--중분류 모달 수정 창-->
+                                                    <div class="modal" id="smallCodeUpdate<%=smallPost.smallCode%>" tabindex="-1"
+                                                         aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                                        <div class="modal-dialog">
+                                                            <form id="updateForm" method="post"
+                                                                  action="/productCategory/smallUpdateName/<%= smallPost._id %>/?_method=put">
+                                                                <div class="modal-content">
+                                                                    <div class="modal-header">
+                                                                        <h5 class="modal-title" id="exampleModalLabel">
+                                                                            중분류 수정</h5>
+                                                                        <button type="button" class="btn-close"
+                                                                                data-bs-dismiss="modal"
+                                                                                aria-label="Close"></button>
+                                                                    </div>
+                                                                    <div class="modal-body">
+                                                                        <div class="mb-3">
+                                                                            <label for="recipient-name"
+                                                                                   class="col-form-label">중분류
+                                                                                코드(숫자만)</label>
+                                                                            <input type="number" class="form-control"
+                                                                                   id="" name="post[smallCode]"
+                                                                                   value="<%= smallPost.smallCode %>"
+                                                                                   readonly/>
+                                                                        </div>
+                                                                        <div class="mb-3">
+                                                                            <label for="message-text"
+                                                                                   class="col-form-label">카테고리
+                                                                                타이틀</label>
+                                                                            <input type="text" class="form-control"
+                                                                                   id=""
+                                                                                   name="post[smallCategoryName]"
+                                                                                   value="<%= smallPost.smallCategoryName %>"/>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="modal-footer">
+                                                                        <button type="button" class="btn btn-secondary"
+                                                                                data-bs-dismiss="modal">닫기
+                                                                        </button>
+                                                                        <button type="submit" class="btn btn-primary">
+                                                                            저장
+                                                                        </button>
+                                                                    </div>
+                                                                </div>
+                                                            </form>
+                                                        </div>
+                                                    </div>
+                                                    <% }) %>
+                                                </div>
+                                            </div>
+                                            <!--대분류 모달 수정 창-->
+                                            <div class="modal" id="bigCodeUpdate<%= index %>" tabindex="-1"
+                                                 aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                                <div class="modal-dialog">
+                                                    <form id="updateForm" method="post"
+                                                          action="/productCategory/bigUpdate/<%= post._id %>/?_method=put">
+                                                        <div class="modal-content">
+                                                            <div class="modal-header">
+                                                                <h5 class="modal-title" id="exampleModalLabel">대분류
+                                                                    수정</h5>
+                                                                <button type="button" class="btn-close"
+                                                                        data-bs-dismiss="modal"
+                                                                        aria-label="Close"></button>
+                                                            </div>
+                                                            <div class="modal-body">
+                                                                <div class="mb-3">
+                                                                    <label for="recipient-name" class="col-form-label">대분류
+                                                                        코드(숫자만)</label>
+                                                                    <input type="number" class="form-control" id=""
+                                                                           name="post[bigCode]" value="<%=post.bigCode%>" readonly>
+                                                                </div>
+                                                                <div class="mb-3">
+                                                                    <label for="message-text" class="col-form-label">카테고리
+                                                                        타이틀</label>
+                                                                    <input type="text" class="form-control" id=""
+                                                                           name="post[bigCategoryName]" value="<%=post.bigCategoryName%>"/>
+                                                                </div>
+                                                            </div>
+                                                            <div class="modal-footer">
+                                                                <button type="button" class="btn btn-secondary"
+                                                                        data-bs-dismiss="modal">닫기
+                                                                </button>
+                                                                <button type="submit" class="btn btn-primary">저장
+                                                                </button>
+                                                            </div>
+                                                        </div>
+                                                    </form>
+                                                </div>
+                                            </div>
+
+                                            <!--중분류 모달 창-->
+                                            <div class="modal" id="smallCode<%= index %>" tabindex="-1"
+                                                 aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                                <div class="modal-dialog">
+                                                    <form id="updateForm" method="post"
+                                                          action="/productCategory/<%= post._id %>/?_method=put">
+                                                        <div class="modal-content">
+                                                            <div class="modal-header">
+                                                                <h5 class="modal-title" id="exampleModalLabel">중분류
+                                                                    추가</h5>
+                                                                <button type="button" class="btn-close"
+                                                                        data-bs-dismiss="modal"
+                                                                        aria-label="Close"></button>
+                                                            </div>
+                                                            <div class="modal-body">
+                                                                <div class="mb-3">
+                                                                    <label for="recipient-name" class="col-form-label">중분류
+                                                                        코드(숫자만)</label>
+                                                                    <input type="number" class="form-control" id=""
+                                                                           name="post[smallCode]">
+                                                                </div>
+                                                                <div class="mb-3">
+                                                                    <label for="message-text" class="col-form-label">카테고리
+                                                                        타이틀</label>
+                                                                    <input type="text" class="form-control" id=""
+                                                                           name="post[smallCategoryName]"/>
+                                                                </div>
+                                                            </div>
+                                                            <div class="modal-footer">
+                                                                <button type="button" class="btn btn-secondary"
+                                                                        data-bs-dismiss="modal">닫기
+                                                                </button>
+                                                                <button type="submit" class="btn btn-primary">저장
+                                                                </button>
+                                                            </div>
+                                                        </div>
+                                                    </form>
+                                                </div>
+                                            </div>
+                                            <% }) %>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!--대분류 모달 창-->
+        <div class="modal" id="bigCode" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <form id="myForm" name="bigFrmSave" action="/productCategory" method="post">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalLabel">대분류 추가</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="mb-3">
+                                <label for="recipient-name" class="col-form-label">대분류 코드(숫자)</label>
+                                <input type="number" class="form-control" id="bigCode" name="post[bigCode]"
+                                       value="<%= lastNumber %>"/>
+                            </div>
+                            <div class="mb-3">
+                                <label for="message-text" class="col-form-label">카테고리 타이틀</label>
+                                <input class="form-control" id="bigCategoryName" name="post[bigCategoryName]"/>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
+                            <button type="submit" class="btn btn-primary">저장</button>
+                        </div>
+                    </div>
+            </div>
+        </div>
 
 
 </body>
 <script src="/js/custom-scripts.js"></script>
 <script src="/js/jquery-1.10.2.js"></script>
 <script src="/js/bootstrap.min.js"></script>
+<script>
+
+    $(document).ready(function () {
+        $("#myForm").submit(function () {
+            if ($('#bigCategoryName').val() == '') {
+                alert("카테고리 이름을 정해주세요.");
+                return false;
+            }
+            // var name = $("#name").val();
+            // $("#inputData").append('<p>' + '이름: '+ name + '</p>');
+            // var email = $("#email").val();
+            // $("#inputData").append('<p>' + '이메일: ' + email + '</p>');
+            // return false;
+            // var scrollHeight = $(document).height();
+            // $('body,html').animate({
+            //   scrollTop: scrollHeight
+            // }, 800)
+            alert("저장되었습니다.")
+        }); // 대분류 생성 submit()
+
+        $("#myFormBigUpdate").submit(function () {
+            if ($('#bigCategoryName').val() == '') {
+                alert("카테고리 이름을 정해주세요.");
+                return false;
+            }
+            alert("저장되었습니다.")
+        }); // 대분류 생성 submit()
+
+        $("#bigDel").submit(function () {
+            // var name = $("#name").val();
+            // $("#inputData").append('<p>' + '이름: '+ name + '</p>');
+            // var email = $("#email").val();
+            // $("#inputData").append('<p>' + '이메일: ' + email + '</p>');
+            // return false;
+            // var scrollHeight = $(document).height();
+            // $('body,html').animate({
+            //   scrollTop: scrollHeight
+            // }, 800)
+            alert("삭제 되었습니다.");
+        }); // 대분류 삭제 Submit
+
+        $("#updateForm").submit(function () {
+            alert("저장되었습니다.");
+        })
+
+        $("#smallDel").submit(function () {
+            alert("삭제 되었습니다.");
+        })
+
+    }); // end ready()
+
+    function seqChange(seq) {
+        // var chk = document.getElementsByName("quant["+seq+"]")[0].value; // 체크박스객체를 담는다
+        // var chk = document.getElementsByName("seqNumberId["+seq+"]")[0].value; // 체크박스객체를 담는다
+        if (confirm('적용 하시겠습니까?')) {
+            var bigFrmSave = document.bigFrmSave;
+            bigFrmSave.method = "post";
+            bigFrmSave.target = "_self";
+            bigFrmSave.action = "/productCategory";
+            bigFrmSave.submit();
+        }
+    }
+</script>
 
 </html>

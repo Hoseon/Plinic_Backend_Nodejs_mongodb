@@ -3,6 +3,7 @@ var router = express.Router();
 var mongoose = require('mongoose');
 var SkinQna = require('./models/SkinQna');
 var Tags = require('./models/Tags');
+var PointLog = require('./models/PointLog');
 var SkinQnaCounter = require('./models/SkinQnaCounter');
 var async = require('async');
 var User_admin = require('./models/User_admin');
@@ -378,11 +379,8 @@ router.post('/', s3upload.fields([{
             if (result) {
               for(var i =0; i< result.userpoint.length; i++) {
                 if (getFormattedDate(new Date(result.userpoint[i].updatedAt)) == getFormattedDate(new Date())) {
-                  if(result.userpoint[i].status=="skinqna") {
+                  if(result.userpoint[i].status=="skinqna" || result.userpoint[i].status=="뷰티플 글쓰기 작성") {
                     return res.status(400);
-                    // return res.status(400).json({
-                            // 'msg': '하루 한번만 포인트가 누적됩니다!!'
-                    // });
                   }
                 }
               }
@@ -403,6 +401,30 @@ router.post('/', s3upload.fields([{
                     // 'msg': '커뮤니티 작성 포인트가 누적되었습니다111!!'
                   // });
                 }
+                });
+              
+              var prePointLog = {
+                reaso: "뷰티플 글쓰기 작성",
+                point: 50,
+                status : true
+              }
+
+              PointLog.update({
+                email: req.body.email
+              }, {
+                  $push: { point: prePointLog },
+                  $inc: { "totalPoint": 50 }
+                }, (err, result) => {
+                  if (err) {
+                    console.log("글쓰기 포인트 적립 에러 발생 : " + req.body.email);
+                    res.status(400).json();
+                  }
+                  if (result) {
+                    res.status(200).json(result);
+                  } else {
+                    console.log("글쓰기 포인트 적립 에러 발생 2 : " + req.body.email);
+                    res.status(400).json();
+                  }
               });
             } else {
               // //검색결과가 없으면 신규 등록
