@@ -7,8 +7,222 @@
         <link href='http://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css' />
 </head>
 <script type="text/javascript" src="/js/jquery-1.10.2.js"></script>
+<body>
+
+    <header>
+        <% include ../../../../partials/header %>
+    </header>
+
+
+    <div class="container-fluid">
+        <div class="row">
+            <!-- 2단길이의 첫번째 열 -->
+            <div class="col-md-2">
+                <% include ../../../../partials/side %>
+            </div>
+
+            <!-- 10단길이의 첫번째 열 -->
+            <div class="col-md-10">
+                <div id="page-inner">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <h1 class="page-header">
+                                공지사항 게시판
+                                <!-- <small> 챌린지 관리 Sub제목</small> -->
+                            </h1>
+                        </div>
+                    </div>
+
+                    <div class="accordion" id="accordionExample">
+                        <div class="accordion-item">
+                            <h2 class="accordion-header" id="headingOne">
+                                <button class="accordion-button" type="button" data-bs-toggle="collapse"
+                                    data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                                    목록
+                                </button>
+                            </h2>
+                            <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne"
+                                data-bs-parent="#accordionExample">
+                                <div class="accordion-body">
+
+                                    <div class="admin_top_info">
+                                        0 항목, 1/1 페이지
+                                    </div>
+                                    <div class="admin_search_container">
+                                        <input type="hidden" name="table" value="notice">
+                                        <input type="hidden" name="mode" value="">
+                                        <input type="hidden" name="pg" value="">
+                                        <select name="opr">
+                                            <option value="vsubject">제목</option>
+                                            <option value="vname">작성자</option>
+                                            <option value="vcontent">내용</option>
+                                        </select>
+                                        <input type="text" name="keyword" size="15" value="">
+                                        <input type="submit" value="검색" class="btn btn-primary">
+
+                                    </div>
+                                    <div class="panel-body" style="padding-top:0px;padding-bottom:15px;">
+                                        <div class="table-responsive dataTables_wrapper form-inline">
+                                            <table
+                                                class="table table-bordered  table-condensed table-hover  text-center">
+                                                <thead>
+                                                    <tr>
+                                                        <th class="text-center">No</th>
+                                                        <th class="text-center" width="700">제목</th>
+                                                        <th class="text-center" width="300">작성자</th>
+                                                        <th class="text-center">작성일</th>
+                                                        <th class="text-center">첨부</th>
+                                                        <th class="text-center">✓</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                <%if(post != null && post != undefined) {%>
+                                                    <% post.forEach(function(post2, index){ %>
+                                                            <tr>
+                                                                <td class="align-middle"><%=post2.numId%></td>
+                                                                <td class="align-middle text-center" onclick="window.location = '/noticeComments/<%= post2._id %>?<%= urlQuery %>'"><u><%= post2.title %></u></td>
+                                                                <td class="align-middle"><%=//post2.author.nickname%><%= post2.email %></td>
+                                                                <td class="align-middle"><%=post2.getFormattedDate(post2.createdAt)%></td>
+                                                                <td class="align-middle"><img style="max-width: 120px;" src="https://plinic.s3.ap-northeast-2.amazonaws.com/<%= post2.filename %>" class="img-thumbnail" alt="..."></td>
+                                                                <td class="align-middle">
+                                                                    <div>
+                                                                        <input type="checkbox" onclick="selectCheckRow(this)" name="del_unit[]" value="<%= post2._id %>">
+                                                                    </div>
+                                                                </td>
+                                                            </tr>
+                                                    <%})%>
+                                                <%} else {%>
+                                                   
+                                                <% }%>
+                                                    
+                                                </tbody>
+                                            </table>
+
+                                            <div class="row">
+                                                <div class="col-md-4 d-grid gap-2 d-md-block">
+                                                    <button class="btn btn-primary float_left" type="button"
+                                                        onclick="location.href='/noticeComments/new'">작성</button>
+                                                    <form class="float_left" name="frmSubmit">
+                                                        <button class="btn btn-primary btn btn-danger" type="button" onclick="selectDelRow(this)">삭제</button>
+                                                    </form>
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <nav aria-label="Page navigation example">
+                                                        <ul class="pagination pagination-sm justify-content-center">
+                                                            <%
+                                                                var offset = 4;
+                                                                var partialQuery;
+                                                                if(urlQuery) partialQuery = "&"+urlQuery.replace(/page=(.*?)(&|$)/ig,"");
+                                                            %>
+                    
+                                                            <li class="page-item disabled">
+                                                                <a class="page-link" href="#" aria-label="Previous">
+                                                                    <span aria-hidden="true">&laquo;</span>
+                                                                </a>
+                                                            </li>
+                    
+                                                            <% for(i=1;i<=maxPage;i++){ %>
+                    
+                                                                <% if(i<=offset || i>maxPage-offset || (i>=page-(offset-1) && i<=page+(offset-1))){ %>
+                                                                    <% if(i != page){ %>
+                                                                        <li class="page-item"><a class="page-link" href="/noticeComments/?page=<%= i %><%= partialQuery %>"><%= i %></a></li>
+                                                                    <% } else { %>
+                                                                        <li class="page-item" name="currentPage" aria-current="page"><a class="page-link" href="#"><%= i %></a></li>
+                                                                    <% } %>
+                                                                <% } else if(i == offset+1 || i == maxPage-offset){ %>
+                                                                        <li>...</li>
+                                                                <% } %>
+                                                            <%}%>
+                                                            <li class="page-item disabled">
+                                                            <a class="page-link" href="#" aria-label="Next">
+                                                                <span aria-hidden="true">&raquo;</span>
+                                                            </a>
+                                                            </li>
+                                                        </ul>
+                                                    </nav>
+                                                </div>
+
+
+
+
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+
+</body>
+<script src="/js/custom-scripts.js"></script>
+<script src="/js/jquery-1.10.2.js"></script>
+<script src="/js/bootstrap.min.js"></script>
+<script src="/js/jquery.tablednd.0.7.min.js"></script>
+
 <script>
+    function  selectDelRow(chk) {
+
+        var chk = document.getElementsByName("del_unit[]");
+        var len = chk.length;
+        var checkRow = '';
+        var checkCnt = 0;
+        var checkLast = '';
+        var rowid = '';
+        var cnt = 0;
+
+        for(var i=0; i<len; i++) {
+            if(chk[i].checked == true) {
+                checkCnt++;
+                checkLast = i;
+            }
+        }
+        for(var i=0; i<len; i++) {
+            if(chk[i].checked == true) {
+                checkRow = chk[i].value;
+                if(checkCnt == 1) {
+                    rowid += ""+checkRow+"";
+                } else {
+                    if(i == checkLast) {
+                        rowid += ""+checkRow+"";
+                    } else {
+                        rowid += ""+checkRow+",";
+                    }
+                }
+                cnt++;
+                checkRow = '';
+            }
+        }
+
+        if(confirm('정말 삭제하시겠습니까?')) {
+            var theForm = document.frmSubmit;
+            theForm.method = "post";
+            theForm.target = "_self";
+            theForm.action = "/noticeComments/" + rowid + "?_method=delete";
+            theForm.submit();
+        }
+
+    }
+
+    function selectCheckRow(chk) {
+        var obj = document.getElementsByName("del_unit[]");
+        for(var i=0; i < obj.length; i++) {
+            if(obj[i] != chk) {
+                obj[i].checked = false;
+            }
+        }
+    }
+
     $(document).ready(function () {
+        $('li[aria-current="page"]').addClass("active");
         $(".active").removeClass("active");
         $("#contents").addClass("active");
 
@@ -95,146 +309,4 @@
 
     });
 </script>
-
-<body>
-
-    <header>
-        <% include ../../../../partials/header %>
-    </header>
-
-
-    <div class="container-fluid">
-        <div class="row">
-            <!-- 2단길이의 첫번째 열 -->
-            <div class="col-md-2">
-                <% include ../../../../partials/side %>
-            </div>
-
-            <!-- 10단길이의 첫번째 열 -->
-            <div class="col-md-10">
-                <div id="page-inner">
-                    <div class="row">
-                        <div class="col-md-12">
-                            <h1 class="page-header">
-                                공지사항 게시판
-                                <!-- <small> 챌린지 관리 Sub제목</small> -->
-                            </h1>
-                        </div>
-                    </div>
-
-                    <div class="accordion" id="accordionExample">
-                        <div class="accordion-item">
-                            <h2 class="accordion-header" id="headingOne">
-                                <button class="accordion-button" type="button" data-bs-toggle="collapse"
-                                    data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
-                                    목록
-                                </button>
-                            </h2>
-                            <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne"
-                                data-bs-parent="#accordionExample">
-                                <div class="accordion-body">
-
-                                    <div class="admin_top_info">
-                                        0 항목, 1/1 페이지
-                                    </div>
-                                    <div class="admin_search_container">
-                                        <input type="hidden" name="table" value="notice">
-                                        <input type="hidden" name="mode" value="">
-                                        <input type="hidden" name="pg" value="">
-                                        <select name="opr">
-                                            <option value="vsubject">제목</option>
-                                            <option value="vname">작성자</option>
-                                            <option value="vcontent">내용</option>
-                                        </select>
-                                        <input type="text" name="keyword" size="15" value="">
-                                        <input type="submit" value="검색" class="btn btn-primary">
-
-                                    </div>
-                                    <div class="panel-body" style="padding-top:0px;padding-bottom:15px;">
-                                        <div class="table-responsive dataTables_wrapper form-inline">
-                                            <table
-                                                class="table table-bordered  table-condensed table-hover  text-center">
-                                                <thead>
-                                                    <tr>
-                                                        <th class="text-center">No</th>
-                                                        <th class="text-center" width="700">제목</th>
-                                                        <th class="text-center" width="300">작성자</th>
-                                                        <th class="text-center">작성일</th>
-                                                        <th class="text-center">첨부</th>
-                                                        <th class="text-center">✓</th>
-                                                    </tr>
-                                                </thead>
-                                                <tbody>
-                                                <%if(post != null && post != undefined) {%>
-                                                    <% post.forEach(function(post2, index){ %>
-                                                        <tr>
-                                                            <td><%=post2.numId%></td>
-                                                            <td onclick="window.location = '/noticeComments/<%= post2._id %>?<%= urlQuery %>'" class="align-middle"><u><%= post2.missontitle %></u></td>
-                                                            <td><%=post2.author.nickname%></td>
-                                                            <td><%=post2.getFormattedDate(post2.createdAt)%></td>
-                                                            <td></td>
-                                                            <td class="text-center">
-                                                                <input type="checkbox" class="form-check-input"
-                                                                    id="exampleCheck1">
-                                                            </td>
-                                                        </tr>
-                                                    <%})%>
-                                                <%} else {%>
-                                                   
-                                                <% }%>
-                                                    
-                                                </tbody>
-                                            </table>
-
-                                            <div class="panel-body">
-                                                <button class="btn btn-primary float_left" type="button"
-                                                    onclick="location.href='/noticeComments/new'">작성</button>
-                                                <form class="float_left" action="" method="">
-                                                    <button class="btn btn-primary btn btn-danger"
-                                                        type="button">삭제</button>
-                                                </form>
-                                                <div class="col-auto">
-                                                    <nav aria-label="Page navigation example">
-                                                        <ul class="pagination pagination-sm justify-content-center">
-                                                            <li class="page-item">
-                                                                <a class="page-link" href="#" aria-label="Previous">
-                                                                    <span aria-hidden="true">&laquo;</span>
-                                                                </a>
-                                                            </li>
-                                                            <li class="page-item"><a class="page-link" href="#">1</a>
-                                                            </li>
-                                                            <li class="page-item"><a class="page-link" href="#">2</a>
-                                                            </li>
-                                                            <li class="page-item"><a class="page-link" href="#">3</a>
-                                                            </li>
-                                                            <li class="page-item">
-                                                                <a class="page-link" href="#" aria-label="Next">
-                                                                    <span aria-hidden="true">&raquo;</span>
-                                                                </a>
-                                                            </li>
-                                                        </ul>
-                                                    </nav>
-                                                </div>
-                                            </div>
-
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                </div>
-            </div>
-        </div>
-    </div>
-
-
-
-
-</body>
-<script src="/js/custom-scripts.js"></script>
-<script src="/js/jquery-1.10.2.js"></script>
-<script src="/js/bootstrap.min.js"></script>
-
 </html>

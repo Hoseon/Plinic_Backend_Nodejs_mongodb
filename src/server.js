@@ -931,7 +931,11 @@ module.exports = function (app) {
   app.use('/productTransCost', require('./admin/productTransCost'));
   //상품문의 관리
   app.use('/productQnA', require('./admin/productQnA'));
-
+  
+  // 주문관리
+  app.use('/orders', require('./admin/orders'));
+  // 고객운영관리
+  app.use('/members', require('./admin/members'));
 
 
   app.get('/ejs', (req, res) => {
