@@ -933,6 +933,8 @@ module.exports = function (app) {
   app.use('/orders', require('./admin/orders'));
   // 고객운영관리
   app.use('/members', require('./admin/members'));
+  // 기본 알람
+  app.use('/alarm', require('./admin/alarm'));
 
 
   app.get('/ejs', (req, res) => {
