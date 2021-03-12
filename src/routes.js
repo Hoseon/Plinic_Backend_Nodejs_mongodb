@@ -131,6 +131,7 @@ routes.post('/setUserOrders', orderController.setUserOrders); //결제 성공시
 ////GET////////////////////////////////////////////////////////////////////////////////////////////
 
 routes.get('/getUserOrders/:email', orderController.getUserOrders); //결제 성공시 오더 정보 가져오기 2021-03-10
+routes.get('/getUserOrdersTrackingInfo/:email/:t_invoice', orderController.getUserOrdersTrackingInfo); //결제 성공시 오더 정보 가져오기 2021-03-10
 
 
 routes.get('/auth/kakao', passport.authenticate('kakao',{
