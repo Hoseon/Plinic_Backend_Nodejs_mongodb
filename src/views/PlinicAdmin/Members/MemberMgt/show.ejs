@@ -1,0 +1,666 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <% include ../../../partials/head %>
+    <title></title>
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css' />
+
+    <!-- <meta name="viewport" content="width=device-width, initial-scale=1"> -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+    <!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script> -->
+    <!-- <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script> -->
+
+    <!-- <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-BmbxuPwQa2lc/FVzBcNJ7UAyJxM6wuqIj61tLrc4wSX0szH/Ev+nYRRuWlolflfl" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/js/bootstrap.bundle.min.js" integrity="sha384-b5kHyXgcpbZJO/tY9Ul7kGkf1S0CWuKcCD38l8YkeH8z8QjE0GmW1gYU5S9FOnJ0" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.6.0/dist/umd/popper.min.js" integrity="sha384-KsvD1yqQ1/1+IA7gi3P0tyJcT3vR+NdBTt13hSJ2lnve8agRGXTTyNaBYmCR/Nwi" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/js/bootstrap.min.js" integrity="sha384-nsg8ua9HAw1y0W1btsyWgBklPnCUAFLuTMS2G72MMONqmOymq585AcH49TLBQObG" crossorigin="anonymous"></script> -->
+
+</head>
+<script type="text/javascript" src="/js/jquery-1.10.2.js"></script>
+
+<body>
+
+  <header>
+    <% include ../../../partials/header %>
+  </header>
+
+
+  <div class="container-fluid">
+    <div class="row">
+      <!-- 2단길이의 첫번째 열 -->
+      <div class="col-md-2">
+        <% include ../../../partials/mside %>
+      </div>
+
+      <!-- 10단길이의 첫번째 열 -->
+      <div class="col-md-10">
+        <div id="page-inner">
+
+          <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne"
+            data-bs-parent="#accordionExample">
+            <div class="accordion-body">
+              <div class="panel-body">
+                <div class="row">
+                  <div class="panel-body">
+                    <div class="panel-body">
+                      <div class="col-sm-2">
+                        <img width="146" height="146"
+                          src="https://plinic.s3.ap-northeast-2.amazonaws.com/image-1593492322970" class="img-thumbnail"
+                          alt="...">
+                      </div>
+                      <div class="col-sm-7">
+                        <ul class="row g-4 align-items-left">
+                          <li class="col-6 text-center" style="padding-top: 15px;">
+                            <img class="bi x0 y0 w1 h0" alt=""
+                              src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABMAAAAYCAIAAACX9VFYAAAACXBIWXMAABYlAAAWJQFJUiTwAAAA9ElEQVQ4y62UsQ2EMAxFrVO6dEhImYIJKFkiQ+CGkjE8Qwagp/QetAjadC5yBacDkePIRfe6RPr5+U5sEBEiMsZAAsYYIhKREAIQEfwIEYUQINHt5CwikMc0TQ/I5d9KRGRmZkbEH9J778MBEamqKs55VjrnQoRz7l55Mtzw3t/U1lqrtY4jaK2ttTc5Mz0BYBiG+LiPm/+rbeJ7XipT/q2Kd5umKcvyvVzXdRzHm4TMfFVbZj72435bRNw6/Qsi8o79UlprQzLbDMnpz6Io9ngAwMwphsuyGGO2aaL6vm/btq5rItrPu6DrunmeiUgpBdlT8wm1t21/1HefmAAAAABJRU5ErkJggg==" />
+                            <span>닉네임</span>
+                          </li>
+                          <li class="col-6 text-center">
+                            <img class="bi x0 y0 w1 h1" alt="" style="padding-bottom:10px;"
+                              src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABMAAAATCAIAAAD9MqGbAAAACXBIWXMAABYlAAAWJQFJUiTwAAAA6ElEQVQ4y62TsY3FIAyG/aIMYYYIG0RKwRIswQ6wAivRI5EBoKFJGzoicUUk9O5dIHfRfRVg/5bBP1AacM4ZY6UNtALee2PMvfI2r5RijPHe1+0AAAAQY7TWnusQglKKEEIIUUqt63qeW2tjjFB5r+qco5TCDyilzrnmPVNKiAgNEDGldK0UQkAXIcS18rLPj56/KRlj56vCL8g5b9vGOc85D/M8wzMedzvUwLIsfeVnwj9M5aETjDFa6+phKSUiIqKUsmq01u/e7jk+59xx/Ks1yRDCvu/TNN1P5a8/+9Vxz3Ec4zi2ol9esymMNZ+oqAAAAABJRU5ErkJggg==" />
+                            <span>피부타입</span>
+                          </li>
+                          <li class="col-6 text-center">
+                            <img class="bi x0 y0 w0 h1" alt="" style="padding-bottom: 10px;"
+                              src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAATCAIAAAAF0lpsAAAACXBIWXMAABYlAAAWJQFJUiTwAAABFElEQVQ4y6VSu5HEIAzlZimAUMHWQBU0QRNkLsA1UINKIHLqChgHznBMrEyBLuBm72bWZxvvC6WZp/fRg5m11uu6EpHqBwAMwzBNk4oxqo8RY3wYY5Zl+ZDIGKNEJKUEAPcoACClJCLKOVdKYeZxHHtZxnFk5lKKc+7/0SGOzr9EIuKBUwBAxPNAvPe1ViIKIbxvQwhEVGv13l+tszm11raJtbZ56X6XGKOIMDMiIiIzi0gfi7U259yOe++JiIi8901mzvkl8wjteM55N0gAaDcQ8Tzm0yCbzJ3IAWCe51b89QTaE8zz/KP9vaCuNH+rZObdl7mO9lyqy86BTSUi93z9dSciXyLSRtu23SB6Pp9aa6XUNwFB8ZFl+l5kAAAAAElFTkSuQmCC" />
+                            <span>ID@gmail.com</span>
+                          </li>
+                          <li class="col-6 text-center" style="padding-top: 15px;">
+                            <img class="bi x0 y0 w1 h0" alt=""
+                              src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAYCAIAAAB8wupbAAAACXBIWXMAABYlAAAWJQFJUiTwAAAA20lEQVQ4y+WUvRGEIBBGv3MuM7EAIwvYAoxpwiboYYuhIQJCNzHCxMB8L/B+OEWHi+9FsHyPYYYFaIKIMDMRiYiIEBEzi0iawXvknMOLTXhPnXN7gZmRsBMAMPNH8N7jm6MAwHv/FIioRCAiVcVx4UzY6lUIAcWEEKplWcqFcRxv67rO87xbaNsWwDRNu3pd1/fsTsco0kspP9IwDBV+5P+Evu+rpmnKha7r8s13hojk2zvLs72zDyjL5wGpqrX2Om2tvfoEjv2W+TVUNcbIzMaYLWeMYeYYY5p5AHP+9D7fAoGMAAAAAElFTkSuQmCC" />
+                            <span>2020-03-15(가입 일자)</span>
+                          </li>
+                        </ul>
+                      </div>
+                      <div class="col-sm-3">
+                        <div class="panel-body">
+                          <button type="button" class="btn btn-dark" data-toggle="modal" data-target="#myModal">포인트 지급</button>
+                          <div class="modal fade" id="myModal" role="dialog">
+                            <div class="modal-dialog">
+                            <!--모달 창 시작-->
+                              <div class="modal-content">
+                                <div class="modal-header">
+                                  <h2 class="modal-title">회원 개별 포인트 지급</h2>
+                                  <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                </div>
+                                <div class="modal-body">
+                                  <form>
+                                    <div class="mb-3">
+                                      <div class="form-group row">
+                                        <label class="col-sm-3 text-center control-label" for="name">적립 포인트</label>
+                                        <div class="col-sm-5 controls">
+                                          <input name="name" id="name" class="form-control" value=""
+                                            data-validate="data">
+                                        </div>
+                                        <span class="col-sm-1">p</span>
+                                      </div>
+                                    </div>
+                                    <div style="height: 0.1px; width: 100%; display: block;background-color: #c4c4c4;"></div>
+                                    <div class="mb-3">
+                                      <br>
+                                      <div class="form-group row">
+                                        <label class="col-sm-3 text-center control-label" for="name">받는 사람</label>
+                                        <div class="col-sm-3 controls">
+                                          <input class="form-check-input" type="checkbox" id="inlineCheckbox1"
+                                            value="option1">
+                                          <label class="form-check-label" for="inlineCheckbox1">개별 지급</label>
+                                        </div>
+                                      </div>
+                                      <div class="form-group row">
+                                        <label class="col-sm-3 text-center control-label" for="name"></label>
+                                        <div class="col-sm-5 controls"> 
+                                          <input type="search" class="form-control ds-input" id="search-input" 
+                                          placeholder="Search docs..." aria-label="Search docs for..." 
+                                          autocomplete="off" data-bd-docs-version="5.0" 
+                                          spellcheck="false" role="combobox" aria-autocomplete="list" 
+                                          aria-expanded="false" aria-owns="algolia-autocomplete-listbox-0" dir="auto" 
+                                          style="position: relative; vertical-align: top;">
+                                        </div>
+                                        <div class="col-sm-1">
+                                          <img class="bi x0 y0 w0 h0" alt="" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAIAAABvFaqvAAAACXBIWXMAABYlAAAWJQFJUiTwAAABmklEQVQ4y62UsY7CMAyGfSgPYYmFgQUhRWJCyobUhYk5L5GFJ8jDREjsqEuZiJC69gWyJ2u3VOoNvuuVEqCg+7e6zmc7sQ3trbz3Wussy+BXiCiltNa2TwX9D2NMd55zLqWUUnaWLMuccy9AMUbKgnN+H7yua6014R6l9gMiijEmxvgopnOO3KqqSoOoIq11+0ree0RERO/9EOS9p/qf5NKXtRYAlFJDEBWfzPaRqMBB4MnlcgGAxWIBo7Xb7QCgLMu+cVIUBeecMTYetFqtAOB8Pt+AAGC5XMI7mk6nADCfz4egf9EEEQ+Hw1tnrtdrArTZbAAghDAeRNcshLixUl8YY0a+fYyRxjjR2dQXTwayLxrje2egIaJ18bK5aZiSntBvfEQ8nU5JRF3Xg5UyYP3to6qqEJE2iTHGWuucc84ZY7odQg5JFgyGWymVfCkppXOuW1v3rK+2bQdnmqYpy/J4PK7Xa7IIIWazWfd3u90WRdGx8jxnjEH7vpJ5fQK6ZymlPpw1xlie5x0rhJC4o/Fqmma/34cQhBDfsq5ti4GhlNQAAAAASUVORK5CYII="/>
+                                        </div>
+                                      </div>
+                                      <div class="form-group row">
+                                        <label class="col-sm-3 text-center control-label" for="name"></label>
+                                        <div class="col-sm-3 controls">
+                                          <input class="form-check-input" type="checkbox" id="inlineCheckbox1"
+                                            value="option1">
+                                          <label class="form-check-label" for="inlineCheckbox1">전체 사용자</label>
+                                        </div>
+                                      </div>
+                                      <div class="form-group row">
+                                        <label class="col-sm-3 text-center control-label" for="name"></label>
+                                        <div class="col-sm-3 controls">
+                                          <input class="form-check-input" type="checkbox" id="inlineCheckbox1"
+                                            value="option1">
+                                          <label class="form-check-label" for="inlineCheckbox1">고정 그룹</label>
+                                        </div>
+                                      </div>
+                                      <div class="form-group row">
+                                        <label class="col-sm-3 text-center control-label" for="name"></label>
+                                        <div class="col-sm-5 controls">
+                                          <select class="form-select" aria-label="Default select example">
+                                            <option selected>Open this select menu</option>
+                                            <option value="1">One</option>
+                                            <option value="2">Two</option>
+                                            <option value="3">Three</option>
+                                          </select>
+                                        </div>
+                                      </div>
+                                      <div class="form-group row">
+                                        <label class="col-sm-3 text-center control-label" for="name"></label>
+                                        <div class="col-sm-3 controls">
+                                          <input class="form-check-input" type="checkbox" id="inlineCheckbox1"
+                                            value="option1">
+                                          <label class="form-check-label" for="inlineCheckbox1">비고정 그룹</label>
+                                        </div>
+                                      </div>
+                                      <div class="form-group row">
+                                        <label class="col-sm-3 text-center control-label" for="name"></label>
+                                        <div class="col-sm-5 controls">
+                                          <select class="form-select" aria-label="Default select example">
+                                            <option selected>Open this select menu</option>
+                                            <option value="1">One</option>
+                                            <option value="2">Two</option>
+                                            <option value="3">Three</option>
+                                          </select>
+                                        </div>
+                                        <div class="col-sm-4 controls">
+                                          <button class="btn btn-primary btn-sm">새 그룹 추가</button>
+                                        </div>
+                                      </div>
+                                      <div class="form-group row">
+                                        <label class="col-sm-3 text-center control-label" for="name">내용</label>
+                                        <div class="col-sm-7 controls">
+                                          <textarea class="form-control" id="message-text" style="height: 100px"></textarea>
+                                        </div>
+                                      </div>
+                                    </div>
+                                  </form>
+                                </div>
+                                <div class="modal-footer">
+                                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">취소</button>
+                                  <button type="button" class="btn btn-primary">포인트 지급</button>
+                                </div>
+                              </div>
+                              <!--모달 창 끝-->
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <section class="profile-info-tabs" style="margin-bottom: 2px;">
+                  <div class="panel-body">
+                    <div class="col-sm-12">
+                      <ul class="nav nav-tabs">
+                        <li class="active">
+                          <a href="#home" class="btn btn-light" data-toggle="tab">회원 정보</a>
+                        </li>
+                        <li>
+                          <a href="#home2" class="btn btn-light" data-toggle="tab">통합 주문내역</a>
+                        </li>
+                        <li>
+                          <a href="#home3" class="btn btn-light" data-toggle="tab">포인트 내역</a>
+                        </li>
+                        <li>
+                          <a href="#home4" class="btn btn-light" data-toggle="tab">챌린지 내역</a>
+                        </li>
+                        <li>
+                          <a href="#home5" class="btn btn-light" data-toggle="tab">게시글 내역</a>
+                        </li>
+                      </ul>
+                    </div>
+                  </div>
+                </section>
+                <div class="row">
+                  <div class="tab-content">
+                    <div class="tab-pane active" id="home">
+                      <div class="panel-body">
+                        <div class="col-md-12">
+                          <div class="tabs-vertical-env">
+                            <div class="tab-content">
+                              <table class="table-bordered table table-striped table-hover">
+                                <tr>
+                                  <th class="text-center" style="padding-top: 15px;">아이디</th>
+                                  <td class="text-left" style="padding-top: 15px;">ID@gmail.com</td>
+                                  <th class="text-center" width="250" style="padding-top: 15px;">비밀번호</th>
+                                  <td width="400">
+                                    <span class="float_left" style="padding-top: 10px;">****** 노출없음</span>
+                                    <form class="float_right" action="" method="post">
+                                      <button type="submit" class="w-15 m-1 btn btn-light btn-sm">임시 비밀번호 생성</button>
+                                    </form>
+                                  </td>
+                                </tr>
+                                <tr>
+                                  <th class="col-2" style="text-align: center;">닉네임</th>
+                                  <td class="text-left" class="text-left">닉네임</td>
+                                  <th class="text-center" width="250">생년월일</th>
+                                  <td width="400" class="text-left"></td>
+                                </tr>
+                                <tr>
+                                  <th class="col-2" style="text-align: center;">피부 타입</th>
+                                  <td class="text-left" class="text-left"></td>
+                                  <th class="text-center" width="250">적립금</th>
+                                  <td width="400" class="text-left"></td>
+                                </tr>
+                                <tr>
+                                  <th class="col-2" style="text-align: center;">가입 일자</th>
+                                  <td class="text-left" class="text-left">2020-03-15</td>
+                                  <th class="text-center" width="250">최종 방문일</th>
+                                  <td width="400" class="text-left"></td>
+                                </tr>
+                                <tr>
+                                  <th class="text-center" style="padding-top:40px;">주소</th>
+                                  <td colspan="3" class="text-left" height="100"></td>
+                                </tr>
+                                <tr>
+                                  <th class="text-center">연락처</th>
+                                  <td colspan="3" class="text-left"></td>
+                                </tr>
+                                <tr>
+                                  <th class="text-center" style="padding-top:40px;">메모</th>
+                                  <td colspan="3" class="text-left" height="100"></td>
+                                </tr>
+                              </table>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="tab-pane active" id="home2">
+                      <div class="panel-body">
+                        <div class="col-md-12">
+                          <div class="tabs-vertical-env">
+                            <div class="tab-content">
+                              <div class="row">
+                                <div class="col-auto me-auto"></div>
+                                <div class="col-auto">
+                                  <table class="table-bordered table table-striped table-hover">
+                                    <thead>
+                                      <tr class="text-center">
+                                        <th scope="col">총 주문상품</th>
+                                        <th scope="col">발송 완료</th>
+                                        <th scope="col">상품 취소</th>
+                                        <th scope="col">발송 완료 Total 금액</th>
+                                      </tr>
+                                    </thead>
+                                    <tbody>
+                                      <tr>
+                                        <td>12</td>
+                                        <td class="text-center" style="color: blue;">10</td>
+                                        <td style="color: red;">2</td>
+                                        <td>425,000원</td>
+                                      </tr>
+                                    </tbody>
+                                  </table>
+                                </div>
+                              </div>
+                              <table class="table table-bordered  table-condensed table-hover  text-center">
+                                <thead>
+                                  <tr>
+                                    <th rowspan="2" style="padding-bottom: 22px;"><input class="form-check-input"
+                                        type="checkbox" value="" id="flexCheckDisabled" disabled></th>
+                                    <th colspan="1" class="text-center">주문일</th>
+                                    <th rowspan="2" class="text-center" style="padding-bottom: 20px;">주문 상태</th>
+                                    <th rowspan="2" class="text-center" style="padding-bottom: 20px;">상품명</th>
+                                    <th rowspan="2" class="text-center" style="padding-bottom: 20px;">수량</th>
+                                    <th colspan="1" class="text-center">택배사</th>
+                                    <th rowspan="2" class="text-center" style="padding-bottom: 20px;">주문자</th>
+                                    <th rowspan="2" class="text-center" style="padding-bottom: 20px;">결제 방법</th>
+                                    <th colspan="1" class="text-center">결제 금액</th>
+                                    <th rowspan="2" class="text-center" style="padding-bottom: 20px;">보기</th>
+                                  </tr>
+                                  <tr>
+                                    <th class="text-center">주문 번호</th>
+                                    <th class="text-center">운송장 번호</th>
+                                    <th class="text-center">포인트 사용</th>
+                                  </tr>
+                                </thead>
+                                <tbody>
+                                  <tr>
+                                    <th rowspan="2" style="padding-top: 25px;"><input class="form-check-input"
+                                        type="checkbox" value="" id="flexCheckDisabled" disabled></th>
+                                    <th colspan="1" class="text-center" style="padding-top: 10px;">2021-03-05 11:00:12</th>
+                                    <th rowspan="2" class="text-center" style="padding-top: 30px;">결제 확인중</th>
+                                    <th rowspan="2" class="text-center" style="padding-top: 30px;">뷰셀리온 콜라겐 드링크 5000 -4주분(20ml x28병)</th>
+                                    <th rowspan="2" class="text-center" style="padding-top: 30px;">2</th>
+                                    <th colspan="1" class="text-center" style="padding-top: 10px;">CJ택배</th>
+                                    <th rowspan="2" class="text-center" style="padding-top: 30px;">이요진</th>
+                                    <th rowspan="2" class="text-center" style="padding-top: 30px;">카드 결제</th>
+                                    <th colspan="1" class="text-center" style="padding-top: 10px;">25,000원</th>
+                                    <th rowspan="2" class="text-center" style="padding-top: 30px;" 
+                                      onclick="location.href='/orders/OrderMgt/show'">보기
+                                    </th>
+                                  </tr>
+                                  <tr>
+                                    <th class="text-center" style="padding-top: 10px;">2150643124512</th>
+                                    <th class="text-center" style="padding-top: 10px;">2012542658462</th>
+                                    <th class="text-center" style="padding-top: 10px;">4500P</th>
+                                  </tr>
+                                </tbody>
+                                <tfoot>
+                                  <th class="text-center" colspan="5">합계</th>
+                                  <th class="text-center">총 결제 금액:<span>1,500,000</span></th>
+                                  <th class="text-center" colspan="2">총 입금액:<span>950,000</span></th>
+                                  <th class="text-center" colspan="2">미수금:<span>550,000</span></th>
+                                </tfoot>
+                              </table>
+                            </div>
+                          </div>
+                        </div>
+                        <div class="row">
+                          <div class="col-auto me-auto"></div>
+                          <div class="col-auto">
+                            <nav aria-label="Page navigation example">
+                              <ul class="pagination pagination-sm">
+                                <li class="page-item">
+                                  <a class="page-link" href="#" aria-label="Previous">
+                                    <span aria-hidden="true">&laquo;</span>
+                                  </a>
+                                </li>
+                                <li class="page-item"><a class="page-link" href="#">1</a>
+                                </li>
+                                <li class="page-item"><a class="page-link" href="#">2</a>
+                                </li>
+                                <li class="page-item"><a class="page-link" href="#">3</a>
+                                </li>
+                                <li class="page-item">
+                                  <a class="page-link" href="#" aria-label="Next">
+                                    <span aria-hidden="true">&raquo;</span>
+                                  </a>
+                                </li>
+                              </ul>
+                            </nav>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="tab-pane active" id="home3">
+                      <div class="panel-body">
+                        <div class="col-md-12">
+                          <div class="tabs-vertical-env">
+                            <div class="tab-content">
+                              <table class="table table-bordered  table-condensed table-hover  text-center">
+                                <thead>
+                                  <tr>
+                                    <th class="text-center"><input type="checkbox" name="del_unit[]"></th>
+                                    <th class="text-center">회원 아이디</th>
+                                    <th class="text-center">적립일자 내용</th>
+                                    <th class="text-center">포인트 내용</th>
+                                    <th class="text-center">포인트</th>
+                                    <th class="text-center">현재 포인트</th>
+                                    <th class="text-center" width="300">메모</th>
+                                  </tr>
+                                </thead>
+                                <tbody>
+                                  <tr>
+                                    <td class="align-middle">
+                                      <div>
+                                        <input type="checkbox" name="del_unit[]">
+                                      </div>
+                                    </td>
+                                    <td class="align-middle text-center">ID@gmail.com</td>
+                                    <td class="align-middle text-center">2021-03-31</td>
+                                    <td class="align-middle">리뷰 글 등록</td>
+                                    <td class="align-middle">500</td>
+                                    <td class="align-middle">5,500</td>
+                                    <td class="align-middle"></td>
+                                  </tr>
+                                </tbody>
+                              </table>
+                            </div>
+                          </div>
+                        </div>
+                        <div class="row">
+                          <div class="col-auto me-auto"></div>
+                          <div class="col-auto">
+                            <nav aria-label="Page navigation example">
+                              <ul class="pagination pagination-sm">
+                                <li class="page-item">
+                                  <a class="page-link" href="#" aria-label="Previous">
+                                    <span aria-hidden="true">&laquo;</span>
+                                  </a>
+                                </li>
+                                <li class="page-item"><a class="page-link" href="#">1</a>
+                                </li>
+                                <li class="page-item"><a class="page-link" href="#">2</a>
+                                </li>
+                                <li class="page-item"><a class="page-link" href="#">3</a>
+                                </li>
+                                <li class="page-item">
+                                  <a class="page-link" href="#" aria-label="Next">
+                                    <span aria-hidden="true">&raquo;</span>
+                                  </a>
+                                </li>
+                              </ul>
+                            </nav>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="tab-pane active" id="home4">
+                      <div class="panel-body">
+                        <div class="col-md-12">
+                          <div class="tabs-vertical-env">
+                            <div class="tab-content">
+                              <table class="table table-bordered  table-condensed table-hover  text-center">
+                                <thead>
+                                  <tr>
+                                    <th class="text-center"><input type="checkbox" name="del_unit[]"></th>
+                                    <th class="text-center">챌린지 명</th>
+                                    <th class="text-center">챌린지 설명</th>
+                                    <th class="text-center">시작 날짜</th>
+                                    <th class="text-center">성공 유무</th>
+                                  </tr>
+                                </thead>
+                                <tbody>
+                                  <tr>
+                                    <td class="align-middle">
+                                      <div>
+                                        <input type="checkbox" name="del_unit[]">
+                                      </div>
+                                    </td>
+                                    <td class="align-middle text-center">[화요일]텐션 앰플 챌린지</td>
+                                    <td class="align-middle text-center">플리닉을 매일 사용하면 증정!</td>
+                                    <td class="align-middle">2021-03-21</td>
+                                    <td class="align-middle">성공 / 진행중 / 실패</td>
+                                  </tr>
+                                </tbody>
+                              </table>
+                            </div>
+                          </div>
+                        </div>
+                        <div class="row">
+                          <div class="col-auto me-auto"></div>
+                          <div class="col-auto">
+                            <nav aria-label="Page navigation example">
+                              <ul class="pagination pagination-sm">
+                                <li class="page-item">
+                                  <a class="page-link" href="#" aria-label="Previous">
+                                    <span aria-hidden="true">&laquo;</span>
+                                  </a>
+                                </li>
+                                <li class="page-item"><a class="page-link" href="#">1</a>
+                                </li>
+                                <li class="page-item"><a class="page-link" href="#">2</a>
+                                </li>
+                                <li class="page-item"><a class="page-link" href="#">3</a>
+                                </li>
+                                <li class="page-item">
+                                  <a class="page-link" href="#" aria-label="Next">
+                                    <span aria-hidden="true">&raquo;</span>
+                                  </a>
+                                </li>
+                              </ul>
+                            </nav>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="tab-pane active" id="home5">
+                      <div class="panel-body">
+                        <div class="col-md-12">
+                          <div class="tabs-vertical-env">
+                            <div class="tab-content">
+                              <table class="table table-bordered  table-condensed table-hover  text-center">
+                                <thead>
+                                  <tr>
+                                    <th class="text-center"><input class="form-check-input" type="checkbox"
+                                      value="" id="flexCheckDisabled" disabled></th>
+                                    <th class="text-center">제목</th>
+                                    <th class="text-center">내용</th>
+                                    <th class="text-center">글쓴이</th>
+                                    <th class="text-center">조회</th>
+                                    <th class="text-center">날짜</th>
+                                    <th class="text-center">관리</th>
+                                  </tr>
+                                </thead>
+                                <tbody>
+                                  <tr>
+                                    <td><input class="form-check-input" type="checkbox" 
+                                      value="" id="flexCheckDisabled" disabled></td>
+                                    <td class="text-center">피부 고민이 있어여~</td>
+                                    <td>요즘 어쩌고 저쩌고~</td>
+                                    <td>홍길동</td>
+                                    <td>4</td>
+                                    <td>2020-03-15</td>
+                                    <td class="center">
+                                      <div class="row">
+                                        <div class="col-7">
+                                          <button class="btn btn-primary" type="button">댓글 달기</button>
+                                        </div>
+                                        <div class="col-1">
+                                          <form>
+                                          <button class="btn btn-primary btn btn-danger"
+                                            type="button">삭제</button>
+                                          </form>
+                                        </div>
+                                      </div>
+                                    </td>
+                                  </tr>
+                                </tbody>
+                              </table>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+
+                  </div>
+                </div>
+
+
+
+
+              </div>
+            </div>
+
+
+
+
+
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+
+
+</body>
+<script src="/js/custom-scripts.js"></script>
+<script src="/js/jquery-1.10.2.js"></script>
+<script src="/js/bootstrap.min.js"></script>
+<script>
+  $(document).ready(function () {
+    $(".active").removeClass("active");
+    $("#members").addClass("active");
+    $("#forms-collapse1").addClass('show');
+
+    $('.btn-number').click(function (e) {
+      e.preventDefault();
+
+      fieldName = $(this).attr('data-field');
+      type = $(this).attr('data-type');
+      var input = $("input[name='" + fieldName + "']");
+      var currentVal = parseInt(input.val());
+      if (!isNaN(currentVal)) {
+        if (type == 'minus') {
+
+          if (currentVal > input.attr('min')) {
+            input.val(currentVal - 1).change();
+          }
+          if (parseInt(input.val()) == input.attr('min')) {
+            $(this).attr('disabled', true);
+          }
+
+        } else if (type == 'plus') {
+
+          if (currentVal < input.attr('max')) {
+            input.val(currentVal + 1).change();
+          }
+          if (parseInt(input.val()) == input.attr('max')) {
+            $(this).attr('disabled', true);
+          }
+
+        }
+      } else {
+        input.val(0);
+      }
+    });
+    $('.input-number').focusin(function () {
+      $(this).data('oldValue', $(this).val());
+    });
+    $('.input-number').change(function () {
+
+      minValue = parseInt($(this).attr('min'));
+      maxValue = parseInt($(this).attr('max'));
+      valueCurrent = parseInt($(this).val());
+
+      name = $(this).attr('name');
+      if (valueCurrent >= minValue) {
+        $(".btn-number[data-type='minus'][data-field='" + name + "']").removeAttr('disabled')
+      } else {
+        alert('Sorry, the minimum value was reached');
+        $(this).val($(this).data('oldValue'));
+      }
+      if (valueCurrent <= maxValue) {
+        $(".btn-number[data-type='plus'][data-field='" + name + "']").removeAttr('disabled')
+      } else {
+        alert('Sorry, the maximum value was reached');
+        $(this).val($(this).data('oldValue'));
+      }
+
+
+    });
+    $(".input-number").keydown(function (e) {
+      // Allow: backspace, delete, tab, escape, enter and .
+      if ($.inArray(e.keyCode, [46, 8, 9, 27, 13, 190]) !== -1 ||
+        // Allow: Ctrl+A
+        (e.keyCode == 65 && e.ctrlKey === true) ||
+        // Allow: home, end, left, right
+        (e.keyCode >= 35 && e.keyCode <= 39)) {
+        // let it happen, don't do anything
+        return;
+      }
+      // Ensure that it is a number and stop the keypress
+      if ((e.shiftKey || (e.keyCode < 48 || e.keyCode > 57)) && (e.keyCode < 96 || e.keyCode > 105)) {
+        e.preventDefault();
+      }
+    });
+
+  });
+</script>
+
+</html>

@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <% include ../../../partials/head %>
+        <title></title>
+        <link href='http://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css' />
+</head>
+<script type="text/javascript" src="/js/jquery-1.10.2.js"></script>
+
+<body>
+
+    <header>
+        <% include ../../../partials/header %>
+    </header>
+
+
+    <div class="container-fluid">
+        <div class="row">
+            <!-- 2단길이의 첫번째 열 -->
+            <div class="col-md-2">
+                <% include ../../../partials/oside %>
+            </div>
+
+            <!-- 10단길이의 첫번째 열 -->
+            <div class="col-md-10">
+                <div id="page-inner">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <h1 class="page-header">
+                                상세검색
+                                <!-- <small> 챌린지 관리 Sub제목</small> -->
+                            </h1>
+                        </div>
+                    </div>
+
+                    <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne"
+                        data-bs-parent="#accordionExample">
+                        <div class="accordion-body">
+                            <form action="" id="">
+                                <table class="table-bordered table table-striped table-hover">
+                                    <tr>
+                                        <th class="text-center" style="padding-top: 15px;">기간</th>
+                                        <td colspan="3">
+                                            <div class="row g-4 align-self-center">
+                                                <div class="col-2">
+                                                    <select class="form-select" aria-label="Default select example">
+                                                        <option selected>주문일</option>
+                                                        <option value="1">배송 완료일</option>
+                                                        <option value="2">취소 완료일</option>
+                                                        <option value="3">반품 요청일</option>
+                                                        <option value="4">반품 완료일</option>
+                                                        <option value="5">교환 요청일</option>
+                                                        <option value="6">교환 완료일</option>
+                                                    </select>
+                                                </div>
+                                                <div class="col-5">
+                                                    <a href="#" class="btn btn-default btn-sm">전체</a>
+                                                    <a href="#" class="btn btn-default btn-sm">오늘</a>
+                                                    <a href="#" class="btn btn-default btn-sm">3일</a>
+                                                    <a href="#" class="btn btn-default btn-sm">7일</a>
+                                                    <a href="#" class="btn btn-default btn-sm">1개월</a>
+                                                    <a href="#" class="btn btn-default btn-sm">3개월</a>
+                                                    <a href="#" class="btn btn-default btn-sm">1년</a>
+                                                </div>
+                                                <div class="col-2">
+                                                    <input type="date" id="date" style="height:25px;">
+                                                </div>
+                                                <div class="col-1">
+                                                    ~
+                                                </div>
+                                                <div class="col-2">
+                                                    <input type="date" id="date" style="height:25px;">
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td rowspan="3">
+                                            <div class="justify-content-center">
+                                                <button class="btn btn-info" style="margin-top: 56px;" type="button">검색</button>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th class="text-center" style="padding-top: 20px;">검색 조건</th>
+                                        <td colspan="3">
+                                            <div class="row g-4 align-self-center">
+                                                <div class="col-2">
+                                                    <select class="form-select" aria-label="Default select example">
+                                                        <option selected>주문 번호</option>
+                                                        <option value="1">주문자 아이디</option>
+                                                        <option value="2">주문자 연락처</option>
+                                                        <option value="3">주문자명</option>
+                                                        <option value="4">수신자명</option>
+                                                        <option value="5">주문 상품명</option>
+                                                        <option value="6">운송장 번호</option>
+                                                    </select>
+                                                </div>
+                                                <div class="col-5">
+                                                    <input name="s_od_name" class="form-control" type="text" value>
+                                                </div>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th class="col-2" style="text-align: center; padding-top: 15px;">주문 상태</th>
+                                        <td colspan="3">
+                                            <div class="row g-4 align-self-center">
+                                                <div class="col-2">
+                                                    <select class="form-select" aria-label="Default select example">
+                                                        <option selected>주문 관리</option>
+                                                        <option value="1">취소 관리</option>
+                                                        <option value="2">반품 관리</option>
+                                                        <option value="3">교환 관리</option>
+                                                    </select>
+                                                </div>
+                                                <div class="col-10">
+                                                    <div class="row g-4 align-items-center" style="padding-top: 12px;">
+                                                        <div class="col-2">
+                                                            <input class="form-check-input" type="checkbox"
+                                                                id="inlineCheckbox1" value="option1">
+                                                            <label class="form-check-label"
+                                                                for="inlineCheckbox1">결제 확인중</label>
+                                                        </div>
+                                                        <div class="col-2">
+                                                            <input class="form-check-input" type="checkbox"
+                                                                id="inlineCheckbox2" value="option2">
+                                                            <label class="form-check-label"
+                                                                for="inlineCheckbox2">결제 확인</label>
+                                                        </div>
+                                                        <div class="col-2">
+                                                            <input class="form-check-input" type="checkbox"
+                                                                id="inlineCheckbox3" value="option3">
+                                                            <label class="form-check-label" for="inlineCheckbox3">배송 준비중</label>
+                                                        </div>
+                                                        <div class="col-2">
+                                                            <input class="form-check-input" type="checkbox"
+                                                                id="inlineCheckbox4" value="option4">
+                                                            <label class="form-check-label" for="inlineCheckbox4">배송중</label>
+                                                        </div>
+                                                        <div class="col-2">
+                                                            <input class="form-check-input" type="checkbox"
+                                                                id="inlineCheckbox5" value="option5">
+                                                            <label class="form-check-label" for="inlineCheckbox5">배송 완료</label>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </table>
+
+                                <div class="accordion-body">
+                                    <div class="row g-4 align-items-left">
+                                        <div class="col-2">
+                                            <select class="form-select form-select-sm"
+                                                aria-label=".form-select-sm example">
+                                                <option selected>주문 상태</option>
+                                                <option value="1">결제 확인중</option>
+                                                <option value="2">결제 확인</option>
+                                                <option value="3">배송 준비중</option>
+                                                <option value="4">배송중</option>
+                                                <option value="5">배송 완료</option>
+                                                <option value="6">취소 요청</option>
+                                                <option value="7">취소 처리중</option>
+                                                <option value="8">취소 완료</option>
+                                                <option value="9">반품 요청</option>
+                                                <option value="10">반품 처리중</option>
+                                                <option value="11">반품 완료</option>
+                                                <option value="12">교환 요청</option>
+                                                <option value="13">교환중</option>
+                                                <option value="14">교환 완료</option>
+                                            </select>
+                                        </div>
+                                        <div class="col-9">
+                                            <button class="btn btn-info btn-sm" type="button"><span
+                                                    class="entypo-check"></span>선택 주문상태 변경</button>
+                                            <button type="button" class="btn btn-warning btn-sm">선택 SMS 발송</button>
+                                            <button class="btn btn-primary btn-sm" type="button"><span
+                                                    class="entypo-check"></span>선택 현금영수증 발행</button>
+                                            <button type="button" class="btn btn-success btn-sm">Excel Download</button>
+                                        </div>
+                                        <div class="col-1">
+                                            <button type="button" class="btn btn-danger btn-sm">🗑 주문 삭제</button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="table-responsive">
+                                    <table class="table table-bordered  table-condensed table-hover  text-center">
+                                        <thead>
+                                            <tr>
+                                                <th rowspan="2"><input class="form-check-input" type="checkbox"
+                                                    value="" id="flexCheckDisabled" disabled></th>
+                                                <th colspan="1">주문일</th>
+                                                <th rowspan="2" style="padding-bottom: 20px;">주문 상태</th>
+                                                <th rowspan="2" style="padding-bottom: 20px;">상품명</th>
+                                                <th rowspan="2" style="padding-bottom: 20px;">수량</th>
+                                                <th colspan="1">택배사</th>
+                                                <th rowspan="2" style="padding-bottom: 20px;">주문자</th>
+                                                <th rowspan="2" style="padding-bottom: 20px;">결제 방법</th>
+                                                <th colspan="1">결제 금액</th>
+                                                <th rowspan="2" style="padding-bottom: 20px;">보기</th>
+                                            </tr>
+                                            <tr>
+                                                <th>주문 번호</th>
+                                                <th>운송장 번호</th>
+                                                <th>포인트 사용</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <th rowspan="2" style="padding-top: 20px;"><input class="form-check-input" type="checkbox"
+                                                    value="" id="flexCheckDisabled" disabled></th>
+                                                <th colspan="1" style="padding-top: 15px;">2021-03-05 11:00:12</th>
+                                                <th rowspan="2" style="padding-top: 40px;">결제 확인</th>
+                                                <th rowspan="2" style="padding-top: 40px;" onclick="location.href='/orders/OrderMgt/show'">뷰셀리온 콜라겐 드링크 5000 -4주분(20ml x28병)</th>
+                                                <th rowspan="2" style="padding-top: 40px;">2</th>
+                                                <th colspan="1" >
+                                                    <select class="form-select" aria-label="Default select example">
+                                                        <option selected>cj 택배</option>
+                                                        <option value="1">우체국 택배</option>
+                                                        <option value="2">한진 택배</option>
+                                                        <option value="3">로젠 택배</option>
+                                                    </select>
+                                                </th>
+                                                <th rowspan="2" style="padding-top: 40px;">이요진</th>
+                                                <th rowspan="2" style="padding-top: 40px;">카드 결제</th>
+                                                <th colspan="1" style="padding-top: 15px;">25,000원</th>
+                                                <th rowspan="2" style="padding-top: 40px;">보기</th>
+                                            </tr>
+                                            <tr>
+                                                <th style="padding-top: 15px;">2150643124512</th>
+                                                <th>
+                                                    <input name="s_od_name" class="form-control" type="text" value>
+                                                </th>
+                                                <th style="padding-top: 15px;">4500P</th>
+                                            </tr>
+                                        </tbody>
+                                        <tfoot>
+                                            <th colspan="5">합계</th>
+                                            <th>총 결제 금액:<span>1,500,000</span></th>
+                                            <th colspan="2">총 입금액:<span>950,000</span></th>
+                                            <th colspan="2">미수금:<span>550,000</span></th>
+                                        </tfoot>
+                                    </table>
+                                </div>
+                            </form>
+                            <div class="row">
+                                <div class="col-auto me-auto"></div>
+                                <div class="col-auto">
+                                    <nav aria-label="Page navigation example">
+                                        <ul class="pagination pagination-sm">
+                                            <li class="page-item">
+                                                <a class="page-link" href="#" aria-label="Previous">
+                                                    <span aria-hidden="true">&laquo;</span>
+                                                </a>
+                                            </li>
+                                            <li class="page-item"><a class="page-link" href="#">1</a>
+                                            </li>
+                                            <li class="page-item"><a class="page-link" href="#">2</a>
+                                            </li>
+                                            <li class="page-item"><a class="page-link" href="#">3</a>
+                                            </li>
+                                            <li class="page-item">
+                                                <a class="page-link" href="#" aria-label="Next">
+                                                    <span aria-hidden="true">&raquo;</span>
+                                                </a>
+                                            </li>
+                                        </ul>
+                                    </nav>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+
+</body>
+<script src="/js/custom-scripts.js"></script>
+<script src="/js/jquery-1.10.2.js"></script>
+<script src="/js/bootstrap.min.js"></script>
+<script>
+    $(document).ready(function () {
+        $(".active").removeClass("active");
+        $("#orders").addClass("active");
+        $("#forms-collapse1").addClass('show');
+
+        $('.btn-number').click(function (e) {
+            e.preventDefault();
+
+            fieldName = $(this).attr('data-field');
+            type = $(this).attr('data-type');
+            var input = $("input[name='" + fieldName + "']");
+            var currentVal = parseInt(input.val());
+            if (!isNaN(currentVal)) {
+                if (type == 'minus') {
+
+                    if (currentVal > input.attr('min')) {
+                        input.val(currentVal - 1).change();
+                    }
+                    if (parseInt(input.val()) == input.attr('min')) {
+                        $(this).attr('disabled', true);
+                    }
+
+                } else if (type == 'plus') {
+
+                    if (currentVal < input.attr('max')) {
+                        input.val(currentVal + 1).change();
+                    }
+                    if (parseInt(input.val()) == input.attr('max')) {
+                        $(this).attr('disabled', true);
+                    }
+
+                }
+            } else {
+                input.val(0);
+            }
+        });
+        $('.input-number').focusin(function () {
+            $(this).data('oldValue', $(this).val());
+        });
+        $('.input-number').change(function () {
+
+            minValue = parseInt($(this).attr('min'));
+            maxValue = parseInt($(this).attr('max'));
+            valueCurrent = parseInt($(this).val());
+
+            name = $(this).attr('name');
+            if (valueCurrent >= minValue) {
+                $(".btn-number[data-type='minus'][data-field='" + name + "']").removeAttr('disabled')
+            } else {
+                alert('Sorry, the minimum value was reached');
+                $(this).val($(this).data('oldValue'));
+            }
+            if (valueCurrent <= maxValue) {
+                $(".btn-number[data-type='plus'][data-field='" + name + "']").removeAttr('disabled')
+            } else {
+                alert('Sorry, the maximum value was reached');
+                $(this).val($(this).data('oldValue'));
+            }
+
+
+        });
+        $(".input-number").keydown(function (e) {
+            // Allow: backspace, delete, tab, escape, enter and .
+            if ($.inArray(e.keyCode, [46, 8, 9, 27, 13, 190]) !== -1 ||
+                // Allow: Ctrl+A
+                (e.keyCode == 65 && e.ctrlKey === true) ||
+                // Allow: home, end, left, right
+                (e.keyCode >= 35 && e.keyCode <= 39)) {
+                // let it happen, don't do anything
+                return;
+            }
+            // Ensure that it is a number and stop the keypress
+            if ((e.shiftKey || (e.keyCode < 48 || e.keyCode > 57)) && (e.keyCode < 96 || e.keyCode > 105)) {
+                e.preventDefault();
+            }
+        });
+
+    });
+</script>
+
+</html>

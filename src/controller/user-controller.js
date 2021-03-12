@@ -1636,6 +1636,7 @@ exports.usePointUpdate = (req, res) => {
     var usePoints = 0;
 
     // 오늘 사용했던 시간 + 현재 사용한 시간이 1분30초(90P초가 넘는지 확인 하는 로직)
+      console.log("플리닉 케어 사용자 적립 확인 : " + req.body.email);
     for (var i = 0; i < result.userpoint.length; i++) {
       if (getFormattedDate(result.userpoint[i].updatedAt) == getFormattedDate(new Date())) {
         //날짜가 오늘이여야 하고
