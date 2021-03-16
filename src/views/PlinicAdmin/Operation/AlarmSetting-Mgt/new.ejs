@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <% include ../../../partials/head %>
+    <title></title>
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css' />
+</head>
+<script type="text/javascript" src="/js/jquery-1.10.2.js"></script>
+<script>
+        $(document).ready(function(){
+            $(".active").removeClass("active");
+            $("#members").addClass("active");
+        });
+</script>
+<title>Hello, world!</title>
+
+<body>
+    
+    <header>
+        <% include ../../../partials/header %>
+    </header>
+
+
+    <div class="container-fluid">
+        <div class="row">
+            <!-- 2단길이의 첫번째 열 -->
+            <div class="col-md-2">
+                <!-- 사이드 메뉴 시작 -->
+                <% include ../../../partials/mside %>
+                <!-- 사이드 메뉴 종료 -->
+            </div>
+
+
+            <!-- 10단길이의 첫번째 열 -->
+            <div class="col-md-10">
+                <div id="page-inner">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <h1 class="page-header">
+                                알림 보내기
+                            </h1>
+                        </div>
+                    </div>
+                    <div class="panel-body">
+                        <div class="col-md-12">
+                            <div class="col-5">
+                                <small style="color: #6c757d;">※사용자가 앱을 사용하지 않을 때에도 기기 홈 화면에 표시됩니다. 예약발송 포함 30개로 제한됩니다. 너무 많은 알람을 보내지 않도록 주의하세요 ※</small>
+                            </div>
+                            <br><br>
+                            <div class="form-group row">
+                                <label class="col-sm-1 text-center control-label" for="name"><span
+                                        class="input_title_cion" style="color: red;">* </span>제목</label>
+                                <div class="col-sm-6 controls">
+                                    <input name="price" id="price" class="form-control" value=""
+                                        data-validate="data">
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-sm-1 text-center control-label" for="name"><span
+                                    class="input_title_cion" style="color: red;">* </span>내용</label>
+                                <div class="form-floating col-md-6">
+                                    <textarea class="form-control" placeholder="Leave a comment here"
+                                        id="floatingTextarea" style="height: 150px"></textarea>
+                                </div>
+                            </div>
+                            <div style="height: 0.1px; width: 100%; display: block;background-color: #c4c4c4;"></div>
+                            <br><br>
+                            <div class="form-group row">
+                                <label class="col-sm-1 text-center control-label" for="name"><span
+                                    class="input_title_cion" style="color: red;">* </span>받는 사람</label>
+                                <div class="form-floating col-md-6">
+                                    알림을 받는 사람을 설정할 수 있습니다.
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-sm-1 text-center control-label" for="name"></label>
+                                <div class="form-floating col-md-6">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault1">
+                                        <label class="form-check-label" for="flexRadioDefault1">
+                                          전체 사용자
+                                        </label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault2" checked>
+                                        <label class="form-check-label" for="flexRadioDefault2">
+                                          고정 그룹
+                                        </label>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-8">
+                                            <select class="form-select" aria-label="Default select example">
+                                                <option selected></option>
+                                                <option value="1">One</option>
+                                                <option value="2">Two</option>
+                                                <option value="3">Three</option>
+                                            </select>
+                                        </div>
+                                        <div class="col-2"></div>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault3" checked>
+                                        <label class="form-check-label" for="flexRadioDefault3">
+                                          비고정 그룹
+                                        </label>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-8">
+                                            <select class="form-select" aria-label="Default select example">
+                                                <option selected>그룹명</option>
+                                                <option value="1">One</option>
+                                                <option value="2">Two</option>
+                                                <option value="3">Three</option>
+                                            </select>
+                                        </div>
+                                        <div class="col-2">
+                                            <button type="button" class="btn btn-primary" onclick="">새 그룹 추가</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div style="height: 0.1px; width: 100%; display: block;background-color: #c4c4c4;"></div>
+                            <br><br>
+                            <div class="form-group row">
+                                <label class="col-sm-1 text-center control-label" for="name"><span
+                                        class="input_title_cion" style="color: red;">* </span>연결 페이지</label>
+                                <div class="col-sm-6 controls">
+                                    <select class="form-select" aria-label="Default select example">
+                                        <option selected></option>
+                                        <option value="1">홈</option>
+                                        <option value="2">뷰티풀-포스트</option>
+                                        <option value="3">뷰티풀-톡</option>
+                                        <option value="5">뷰티풀-비디오</option>
+                                        <option value="6">챌린지</option>
+                                        <option value="7">포인트존</option>
+                                        <option value="8">피부케어</option>
+                                        <option value="9">출석체크</option>
+                                        <option value="10">알림함</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <br>
+                            <div style="height: 0.1px; width: 100%; display: block;background-color: #c4c4c4;"></div>
+                            <br><br>
+                            <div class="form-group row">
+                                <label class="col-sm-1 text-center control-label" for="name"><span
+                                        class="input_title_cion">* </span>알림 일정</label>
+                                <div class="col-sm-6 controls">
+                                    이 알림을 바로 보내겠습니까?
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-sm-1 text-center control-label" for="name"></label>
+                                <div class="col-sm-6 controls">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="flexRadioDefault2" id="flexRadioDefault4" checked>
+                                        <label class="form-check-label" for="flexRadioDefault4">
+                                          예 - 바로전송
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-sm-1 text-center control-label" for="name"></label>
+                                <div class="col-sm-6 controls">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="flexRadioDefault2" id="flexRadioDefault5" checked>
+                                        <label class="form-check-label" for="flexRadioDefault5">
+                                          알림함에만 노출 (고객 푸시알림 없음)
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-sm-1 text-center control-label" for="name"></label>
+                                <div class="col-sm-6 controls">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="flexRadioDefault2" id="flexRadioDefault6" checked>
+                                        <label class="form-check-label" for="flexRadioDefault6">
+                                          예약 전송
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                            <br><br><br>
+                            <div class="form-group row">
+                                <label class="col-sm-1 text-center control-label" for="name"></label>
+                                <div class="col-sm-6 controls">
+                                    <span>예약 설정</span>
+                                    <br><br>
+                                    <div class="row">
+                                        <div class="col-4">
+                                            <input type="date" id="date" style="height:25px;">
+                                        </div>
+                                        <div class="col-4">
+                                            <input type="time" id="time" style="height:25px;">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <br><br>
+                            <div style="height: 0.1px; width: 100%; display: block;background-color: #c4c4c4;"></div>
+                            <br><br>
+                        </div>
+                    </div>
+                    <div class="panel-body">
+                        <div class="text-center">
+                            <button type="submit" class="w-15 m-1 btn btn-info btn-sm">알림 보내기</button>
+                            <button type="button" class="w-15 m-1 btn btn-light btn-sm">취소</button>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+
+
+
+</body>
+
+<script src="/js/jquery-1.10.2.js"></script>
+<!-- Bootstrap Js -->
+<script src="/js/bootstrap.min.js"></script>
+<!-- Custom Js -->
+<script src="/js/custom-scripts.js"></script>
+</html>
