@@ -209,8 +209,18 @@ router.get('/giveupchallenge/:id', function(req, res) {
     Challenge.findOneAndRemove({
       email: req.params.id,
       missioncomplete: false
-    }, function(err, docs) {
-      res.json(docs);
+    }, function (err, docs) {
+        if (err) {
+          console.log("미션 포기 실패 : " + req.params.id);
+          res.sendStatus(400);
+        }
+
+        if (docs) {
+          res.json(docs);
+        } else {
+          console.log("미션 포기 실패2 : " + req.params.id);
+          res.sendStatus(404);
+        }
     });
   }]);
 });
@@ -307,8 +317,18 @@ router.get('/challengeusetime2/:id/:email', function(req, res) {
     Challenge.findOne({
       missionID: req.params.id,
       email: req.params.email
-    }, function(err, docs) {
-      res.json(docs);
+    }, function (err, docs) {
+        if (err) {
+          console.log("챌린지 성공횟수 가져오기 에러 : " + req.params.email + " : " + req.params.id);
+          res.sendStatus(400);
+        }
+
+        if (docs) {
+          res.json(docs);
+        } else {
+          console.log("챌린지 성공횟수 가져오기 에러2 : " + req.params.email + " : " + req.params.id);
+          res.sendStatus(400);
+        }
     });
   }]);
 });

@@ -869,13 +869,15 @@ exports.challengeUpdate2 = (req, res) => {
                 return res.status(400).json(err);
               } else {
                 return res.status(201).json({
-                  'msg': '오늘 사용시간 2분을 초과 하여 <br> 챌린지 도전에 성공하였습니다.'
+                  // 'msg': '오늘 사용시간 2분을 초과 하여 <br> 챌린지 도전에 성공하였습니다.'
+                  'msg': '사용시간 2분이상이 확인되어<br>오늘 챌린지 도전에 성공하였습니다.'
                 });
               }
             })
           } else {
             return res.status(201).json({
-              'msg': '오늘 사용시간 2분을 초과 하여 <br> 챌린지 도전에 성공하였습니다!.'
+              // 'msg': '오늘 사용시간 2분을 초과 하여 <br> 챌린지 도전에 성공하였습니다!.'
+              'msg': '사용시간 2분이상이 확인되어<br>오늘 챌린지 도전에 성공하였습니다.'
             });
           }
         } else {
@@ -1636,6 +1638,7 @@ exports.usePointUpdate = (req, res) => {
     var usePoints = 0;
 
     // 오늘 사용했던 시간 + 현재 사용한 시간이 1분30초(90P초가 넘는지 확인 하는 로직)
+      console.log("플리닉 케어 사용자 적립 확인 : " + req.body.email);
     for (var i = 0; i < result.userpoint.length; i++) {
       if (getFormattedDate(result.userpoint[i].updatedAt) == getFormattedDate(new Date())) {
         //날짜가 오늘이여야 하고

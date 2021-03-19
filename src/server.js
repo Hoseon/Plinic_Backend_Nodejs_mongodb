@@ -931,8 +931,19 @@ module.exports = function (app) {
   app.use('/productTransCost', require('./admin/productTransCost'));
   //상품문의 관리
   app.use('/productQnA', require('./admin/productQnA'));
-
-
+  
+  // 주문관리
+  app.use('/orders', require('./admin/orders'));
+  // 고객운영관리
+  app.use('/members', require('./admin/members'));
+  // 기본 알람
+  app.use('/alarm', require('./admin/alarm'));
+  // 그룹/개별 알림
+  app.use('/alarmSetting', require('./admin/alarmSetting'));
+  // 그룹 관리
+  app.use('/groups', require('./admin/groups'));
+  // 포인트 설정
+  app.use('/pointSetting', require('./admin/pointSetting'));
 
   app.get('/ejs', (req, res) => {
     res.render('home');
@@ -2460,6 +2471,23 @@ module.exports = function (app) {
         }
     })
   })
+
+  //화장품 리뷰 가져 오기 2021-03-17 3건씩 가져 오기
+  app.get('/getProductReview2/:product_num/:page', function (req, res, next) {
+    // console.log(req.params.page);
+    // console.log(req.params.product_num);
+    var page = Number(req.params.page);
+    ProductsReview.find({
+      product_num: req.params.product_num
+      },
+      function (err, docs) {
+        if (err) {
+          res.sendStatus(400);
+        } else {
+          res.json(docs);
+        }
+      }).skip((page-1)*3).limit(3);
+  });
 
 
   ///////////////////////////////////////////////////end api////////////////////////////////
