@@ -3,20 +3,20 @@
 
 <head>
     <% include ../../../partials/head %>
-    <title></title>
-    <link href='http://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css' />
+        <title></title>
+        <link href='http://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css' />
 </head>
 <script type="text/javascript" src="/js/jquery-1.10.2.js"></script>
 <script>
-        $(document).ready(function(){
-            $(".active").removeClass("active");
-            $("#members").addClass("active");
-        });
+    $(document).ready(function () {
+        $(".active").removeClass("active");
+        $("#members").addClass("active");
+    });
 </script>
 <title>Hello, world!</title>
 
 <body>
-    
+
     <header>
         <% include ../../../partials/header %>
     </header>
@@ -28,7 +28,7 @@
             <div class="col-md-2">
                 <!-- 사이드 메뉴 시작 -->
                 <% include ../../../partials/mside %>
-                <!-- 사이드 메뉴 종료 -->
+                    <!-- 사이드 메뉴 종료 -->
             </div>
 
 
@@ -42,44 +42,46 @@
                             </h1>
                         </div>
                     </div>
-                    <div class="panel-body">
-                        <div class="col-md-12">
-                            <div class="col-5">
-                                <small style="color: #6c757d;">특정 그룹은 임의로 설정해야 가능합니다.</small>
-                            </div>
-                            <br><br>
-                            <div class="form-group row">
-                                <label class="col-sm-3 text-center control-label" for="name"><span
-                                        class="input_title_cion" style="color: red;">* </span>그룹 명</label>
-                                <div class="col-sm-6 controls">
-                                    <input name="text" id="text1" class="form-control" value=""
-                                        data-validate="data">
+                    <form method="" action="">
+                        <div class="panel-body">
+                            <div class="col-md-12">
+                                <div class="col-5">
+                                    <small style="color: #6c757d;">특정 그룹은 임의로 설정해야 가능합니다.</small>
+                                </div>
+                                <br><br>
+                                <div class="form-group row">
+                                    <label class="col-sm-3 text-center control-label" for="name"><span
+                                            class="input_title_cion" style="color: red;">* </span>그룹 명</label>
+                                    <div class="col-sm-6 controls">
+                                        <input name="text" id="text1" class="form-control" value=""
+                                            data-validate="data">
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-sm-3 text-center control-label" for="name"><span
+                                            class="input_title_cion" style="color: red;">* </span>회원 아이디</label>
+                                    <div class="col-sm-6 controls">
+                                        <input type="search" class="form-control ds-input" id="search-input"
+                                            placeholder="Search docs..." aria-label="Search docs for..."
+                                            autocomplete="off" data-bd-docs-version="5.0" spellcheck="false"
+                                            role="combobox" aria-autocomplete="list" aria-expanded="false"
+                                            aria-owns="algolia-autocomplete-listbox-0" dir="auto"
+                                            style="position: relative; vertical-align: top;">
+                                    </div>
+                                </div>
+                                <div class="panel-body">
+                                    <span>abcdefrg@gmail.com</span>
+                                    <button type="button" class="btn-close" aria-label="Close"></button>
                                 </div>
                             </div>
-                            <div class="form-group row">
-                                <label class="col-sm-3 text-center control-label" for="name"><span
-                                    class="input_title_cion" style="color: red;">* </span>회원 아이디</label>
-                                <div class="col-sm-6 controls">
-                                    <input type="search" class="form-control ds-input" id="search-input" 
-                                    placeholder="Search docs..." aria-label="Search docs for..." 
-                                    autocomplete="off" data-bd-docs-version="5.0" 
-                                    spellcheck="false" role="combobox" aria-autocomplete="list" 
-                                    aria-expanded="false" aria-owns="algolia-autocomplete-listbox-0" dir="auto" 
-                                    style="position: relative; vertical-align: top;">
-                                </div>
-                            </div>
-                            <div class="panel-body">
-                                <span>abcdefrg@gmail.com</span>
-                                <button type="button" class="btn-close" aria-label="Close"></button>
+                        </div>
+                        <div class="panel-body">
+                            <div class="text-center">
+                                <button type="button" class="w-15 m-1 btn btn-light btn-sm">취소</button>
+                                <button type="submit" class="w-15 m-1 btn btn-info btn-sm">그룹 만들기</button>
                             </div>
                         </div>
-                    </div>
-                    <div class="panel-body">
-                        <div class="text-center">
-                            <button type="button" class="w-15 m-1 btn btn-light btn-sm">취소</button>
-                            <button type="submit" class="w-15 m-1 btn btn-info btn-sm">그룹 만들기</button>
-                        </div>
-                    </div>
+                    </form>
                 </div>
 
             </div>
@@ -96,4 +98,5 @@
 <script src="/js/bootstrap.min.js"></script>
 <!-- Custom Js -->
 <script src="/js/custom-scripts.js"></script>
+
 </html>

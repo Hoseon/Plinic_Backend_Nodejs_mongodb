@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <% include ../../../partials/head %>
+        <title></title>
+        <link href='http://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css' />
+
+        <!-- <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css"> -->
+
+</head>
+<script type="text/javascript" src="/js/jquery-1.10.2.js"></script>
+<script>
+    $(document).ready(function () {
+        $(".active").removeClass("active");
+        $("#members").addClass("active");
+
+        // $("#challBtn").bind("click");
+        // $("#challBtn").trigger("click");
+        // $("#challBtn").removeClass("collapsed");
+        // $("#challBtn").attr('aria-expanded', 'true');
+        $("#forms-collapse5").addClass('show');
+
+
+
+
+        $('.btn-number').click(function (e) {
+            e.preventDefault();
+
+            fieldName = $(this).attr('data-field');
+            type = $(this).attr('data-type');
+            var input = $("input[name='" + fieldName + "']");
+            var currentVal = parseInt(input.val());
+            if (!isNaN(currentVal)) {
+                if (type == 'minus') {
+
+                    if (currentVal > input.attr('min')) {
+                        input.val(currentVal - 1).change();
+                    }
+                    if (parseInt(input.val()) == input.attr('min')) {
+                        $(this).attr('disabled', true);
+                    }
+
+                } else if (type == 'plus') {
+
+                    if (currentVal < input.attr('max')) {
+                        input.val(currentVal + 1).change();
+                    }
+                    if (parseInt(input.val()) == input.attr('max')) {
+                        $(this).attr('disabled', true);
+                    }
+
+                }
+            } else {
+                input.val(0);
+            }
+        });
+        $('.input-number').focusin(function () {
+            $(this).data('oldValue', $(this).val());
+        });
+        $('.input-number').change(function () {
+
+            minValue = parseInt($(this).attr('min'));
+            maxValue = parseInt($(this).attr('max'));
+            valueCurrent = parseInt($(this).val());
+
+            name = $(this).attr('name');
+            if (valueCurrent >= minValue) {
+                $(".btn-number[data-type='minus'][data-field='" + name + "']").removeAttr('disabled')
+            } else {
+                alert('Sorry, the minimum value was reached');
+                $(this).val($(this).data('oldValue'));
+            }
+            if (valueCurrent <= maxValue) {
+                $(".btn-number[data-type='plus'][data-field='" + name + "']").removeAttr('disabled')
+            } else {
+                alert('Sorry, the maximum value was reached');
+                $(this).val($(this).data('oldValue'));
+            }
+
+
+        });
+        $(".input-number").keydown(function (e) {
+            // Allow: backspace, delete, tab, escape, enter and .
+            if ($.inArray(e.keyCode, [46, 8, 9, 27, 13, 190]) !== -1 ||
+                // Allow: Ctrl+A
+                (e.keyCode == 65 && e.ctrlKey === true) ||
+                // Allow: home, end, left, right
+                (e.keyCode >= 35 && e.keyCode <= 39)) {
+                // let it happen, don't do anything
+                return;
+            }
+            // Ensure that it is a number and stop the keypress
+            if ((e.shiftKey || (e.keyCode < 48 || e.keyCode > 57)) && (e.keyCode < 96 || e.keyCode > 105)) {
+                e.preventDefault();
+            }
+        });
+
+    });
+</script>
+
+<body>
+
+    <header>
+        <% include ../../../partials/header %>
+    </header>
+
+
+    <div class="container-fluid">
+        <div class="row">
+            <!-- 2단길이의 첫번째 열 -->
+            <div class="col-md-2">
+                <% include ../../../partials/mside %>
+            </div>
+
+            <!-- 10단길이의 첫번째 열 -->
+            <div class="col-md-10">
+                <div id="page-inner">
+                    <div class="panel-body">
+                        <div class="col-md-12">
+                            <p class="fs-2" style="margin: 0;">포인트 설정</p>
+                            <div class="form-group row">
+                                <p class="col-sm-3 text-center fs-6" style="color: #6c757d;">회원가입 시</p>
+                                <div class="col-sm-4 controls">
+                                    <input name="text" id="text1" class="form-control" value="5000"
+                                        data-validate="data">
+                                </div>
+                                <span class="col-sm-1">p</span>
+                            </div>
+                        </div>
+                    </div>
+                    <form method="" action="">
+                        <div class="panel-body">
+                            <div class="col-md-12">
+                                <p class="fs-2" style="margin: 0;">리뷰글 등록시</p>
+                                <div style="height: 0.1px; width: 100%; display: block;background-color: black;"></div>
+                                <div class="form-group row" style="padding-top: 20px; margin: 0;">
+                                    <p class="col-sm-3 text-left fs-6" style="color: #6c757d;">리뷰글 등록 적립금 지급</p>
+                                    <div class="col-sm-1" style="padding-top: 10px;">
+                                        <input class="form-check-input" type="radio" name="flexRadioDefault"
+                                            id="flexRadioDefault1">
+                                        <label class="form-check-label" for="flexRadioDefault1">
+                                            사용
+                                        </label>
+                                    </div>
+                                    <div class="col-sm-2" style="padding-top: 10px;">
+                                        <input class="form-check-input" type="radio" name="flexRadioDefault"
+                                            id="flexRadioDefault2" checked>
+                                        <label class="form-check-label" for="flexRadioDefault2">
+                                            미사용
+                                        </label>
+                                    </div>
+                                </div>
+                                <div style="height: 0.1px; width: 100%; display: block;background-color: #f1f1f1;">
+                                </div>
+                                <div class="form-group row" style="padding-top: 20px; margin: 0;">
+                                    <p class="col-sm-3 text-left fs-6" style="color: #6c757d;">적립금 설정</p>
+                                    <div class="col-sm-4 controls">
+                                        <input name="text" id="text2" class="form-control" value="500"
+                                            data-validate="data">
+                                    </div>
+                                    <span class="col-sm-1">p</span>
+                                </div>
+                                <div style="height: 0.1px; width: 100%; display: block;background-color: #f1f1f1;">
+                                </div>
+                                <div class="form-group row" style="padding-top: 20px; margin: 0;">
+                                    <p class="col-sm-3 text-left fs-6" style="color: #6c757d;">1일 최대 적립 횟수</p>
+                                    <div class="col-sm-4 controls">
+                                        <input name="text" id="text3" class="form-control" value="2"
+                                            data-validate="data">
+                                        <div class="text-center" style="color: #6c757d;">※0으로 입력시 무제한으로 적립됩니다※</div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-md-12">
+                                <p class="fs-2" style="margin: 0;">게시글 등록시</p>
+                                <div style="height: 0.1px; width: 100%; display: block; background-color: black;"></div>
+                                <div class="form-group row" style="padding-top: 20px; margin: 0;">
+                                    <p class="col-sm-3 text-left fs-6" style="color: #6c757d;">게시글 등록 적립금 지급</p>
+                                    <div class="col-sm-1" style="padding-top: 10px;">
+                                        <input class="form-check-input" type="radio" name="flexRadioDefault2"
+                                            id="flexRadioDefault1">
+                                        <label class="form-check-label" for="flexRadioDefault1">
+                                            사용
+                                        </label>
+                                    </div>
+                                    <div class="col-sm-2" style="padding-top: 10px;">
+                                        <input class="form-check-input" type="radio" name="flexRadioDefault2"
+                                            id="flexRadioDefault2" checked>
+                                        <label class="form-check-label" for="flexRadioDefault2">
+                                            미사용
+                                        </label>
+                                    </div>
+                                </div>
+                                <div style="height: 0.1px; width: 100%; display: block;background-color: #f1f1f1;">
+                                </div>
+                                <div class="form-group row" style="padding-top: 20px; margin: 0;">
+                                    <p class="col-sm-3 text-left fs-6" style="color: #6c757d;">적립금 설정</p>
+                                    <div class="col-sm-4 controls">
+                                        <input name="text" id="text2" class="form-control" value="50"
+                                            data-validate="data">
+                                    </div>
+                                    <span class="col-sm-1">p</span>
+                                </div>
+                                <div style="height: 0.1px; width: 100%; display: block;background-color: #f1f1f1;">
+                                </div>
+                                <div class="form-group row" style="padding-top: 20px; margin: 0;">
+                                    <p class="col-sm-3 text-left fs-6" style="color: #6c757d;">1일 최대 적립 횟수</p>
+                                    <div class="col-sm-4 controls">
+                                        <input name="text" id="text3" class="form-control" value="2"
+                                            data-validate="data">
+                                        <div class="text-center" style="color: #6c757d;">※0으로 입력시 무제한으로 적립됩니다※</div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-md-12">
+                                <p class="fs-2" style="margin: 0;">댓글 등록시</p>
+                                <div style="height: 0.1px; width: 100%; display: block; background-color: black;"></div>
+                                <div class="form-group row" style="padding-top: 20px; margin: 0;">
+                                    <p class="col-sm-3 text-left fs-6" style="color: #6c757d;">댓글 등록 적립금 지급</p>
+                                    <div class="col-sm-1" style="padding-top: 10px;">
+                                        <input class="form-check-input" type="radio" name="flexRadioDefault3"
+                                            id="flexRadioDefault1">
+                                        <label class="form-check-label" for="flexRadioDefault1">
+                                            사용
+                                        </label>
+                                    </div>
+                                    <div class="col-sm-2" style="padding-top: 10px;">
+                                        <input class="form-check-input" type="radio" name="flexRadioDefault3"
+                                            id="flexRadioDefault2" checked>
+                                        <label class="form-check-label" for="flexRadioDefault2">
+                                            미사용
+                                        </label>
+                                    </div>
+                                </div>
+                                <div style="height: 0.1px; width: 100%; display: block;background-color: #f1f1f1;">
+                                </div>
+                                <div class="form-group row" style="padding-top: 20px; margin: 0;">
+                                    <p class="col-sm-3 text-left fs-6" style="color: #6c757d;">적립금 설정</p>
+                                    <div class="col-sm-4 controls">
+                                        <input name="text" id="text2" class="form-control" value="5"
+                                            data-validate="data">
+                                    </div>
+                                    <span class="col-sm-1">p</span>
+                                </div>
+                                <div style="height: 0.1px; width: 100%; display: block;background-color: #f1f1f1;">
+                                </div>
+                                <div class="form-group row" style="padding-top: 20px; margin: 0;">
+                                    <p class="col-sm-3 text-left fs-6" style="color: #6c757d;">1일 최대 적립 횟수</p>
+                                    <div class="col-sm-4 controls">
+                                        <input name="text" id="text3" class="form-control" value="50"
+                                            data-validate="data">
+                                        <div class="text-center" style="color: #6c757d;">※0으로 입력시 무제한으로 적립됩니다※</div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-md-12">
+                                <p class="fs-2" style="margin: 0;">SNS 공유시</p>
+                                <div style="height: 0.1px; width: 100%; display: block; background-color: black;"></div>
+                                <div class="form-group row" style="padding-top: 20px; margin: 0;">
+                                    <p class="col-sm-3 text-left fs-6" style="color: #6c757d;">SNS공유 적립금 지급</p>
+                                    <div class="col-sm-1" style="padding-top: 10px;">
+                                        <input class="form-check-input" type="radio" name="flexRadioDefault4"
+                                            id="flexRadioDefault1">
+                                        <label class="form-check-label" for="flexRadioDefault1">
+                                            사용
+                                        </label>
+                                    </div>
+                                    <div class="col-sm-2" style="padding-top: 10px;">
+                                        <input class="form-check-input" type="radio" name="flexRadioDefault4"
+                                            id="flexRadioDefault2" checked>
+                                        <label class="form-check-label" for="flexRadioDefault2">
+                                            미사용
+                                        </label>
+                                    </div>
+                                </div>
+                                <div style="height: 0.1px; width: 100%; display: block;background-color: #f1f1f1;">
+                                </div>
+                                <div class="form-group row" style="padding-top: 20px; margin: 0;">
+                                    <p class="col-sm-3 text-left fs-6" style="color: #6c757d;">적립금 설정</p>
+                                    <div class="col-sm-4 controls">
+                                        <input name="text" id="text2" class="form-control" value="20"
+                                            data-validate="data">
+                                    </div>
+                                    <span class="col-sm-1">p</span>
+                                </div>
+                                <div style="height: 0.1px; width: 100%; display: block;background-color: #f1f1f1;">
+                                </div>
+                                <div class="form-group row" style="padding-top: 20px; margin: 0;">
+                                    <p class="col-sm-3 text-left fs-6" style="color: #6c757d;">1일 최대 적립 횟수</p>
+                                    <div class="col-sm-4 controls">
+                                        <input name="text" id="text3" class="form-control" value="5"
+                                            data-validate="data">
+                                        <div class="text-center" style="color: #6c757d;">※0으로 입력시 무제한으로 적립됩니다※</div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-md-12">
+                                <p class="fs-2" style="margin: 0;">피부 케어시</p>
+                                <div style="height: 0.1px; width: 100%; display: block; background-color: black;"></div>
+                                <div class="form-group row" style="padding-top: 20px; margin: 0;">
+                                    <p class="col-sm-3 text-left fs-6" style="color: #6c757d;">피부 케어 적립금 지급</p>
+                                    <div class="col-sm-1" style="padding-top: 10px;">
+                                        <input class="form-check-input" type="radio" name="flexRadioDefault5"
+                                            id="flexRadioDefault1">
+                                        <label class="form-check-label" for="flexRadioDefault1">
+                                            사용
+                                        </label>
+                                    </div>
+                                    <div class="col-sm-2" style="padding-top: 10px;">
+                                        <input class="form-check-input" type="radio" name="flexRadioDefault5"
+                                            id="flexRadioDefault2" checked>
+                                        <label class="form-check-label" for="flexRadioDefault2">
+                                            미사용
+                                        </label>
+                                    </div>
+                                </div>
+                                <div style="height: 0.1px; width: 100%; display: block;background-color: #f1f1f1;">
+                                </div>
+                                <div class="form-group row" style="padding-top: 20px; margin: 0;">
+                                    <p class="col-sm-3 text-left fs-6" style="color: #6c757d;">적립금 설정</p>
+                                    <div class="col-sm-4 controls">
+                                        <input name="text" id="text2" class="form-control" value="90"
+                                            data-validate="data">
+                                    </div>
+                                    <span class="col-sm-1">p</span>
+                                </div>
+                            </div>
+
+                            <div class="col-md-12">
+                                <p class="fs-2" style="margin: 0;">피부 측정시</p>
+                                <div style="height: 0.1px; width: 100%; display: block; background-color: black;"></div>
+                                <div class="form-group row" style="padding-top: 20px; margin: 0;">
+                                    <p class="col-sm-3 text-left fs-6" style="color: #6c757d;">피부 측정 적립금 지급</p>
+                                    <div class="col-sm-1" style="padding-top: 10px;">
+                                        <input class="form-check-input" type="radio" name="flexRadioDefault6"
+                                            id="flexRadioDefault1">
+                                        <label class="form-check-label" for="flexRadioDefault1">
+                                            사용
+                                        </label>
+                                    </div>
+                                    <div class="col-sm-2" style="padding-top: 10px;">
+                                        <input class="form-check-input" type="radio" name="flexRadioDefault6"
+                                            id="flexRadioDefault2" checked>
+                                        <label class="form-check-label" for="flexRadioDefault2">
+                                            미사용
+                                        </label>
+                                    </div>
+                                </div>
+                                <div style="height: 0.1px; width: 100%; display: block;background-color: #f1f1f1;">
+                                </div>
+                                <div class="form-group row" style="padding-top: 20px; margin: 0;">
+                                    <p class="col-sm-3 text-left fs-6" style="color: #6c757d;">적립금 설정</p>
+                                    <div class="col-sm-4 controls">
+                                        <input name="text" id="text2" class="form-control" value="100"
+                                            data-validate="data">
+                                    </div>
+                                    <span class="col-sm-1">p</span>
+                                </div>
+                            </div>
+
+                            <div class="col-md-12">
+                                <p class="fs-2" style="margin: 0;">출석 체크시</p>
+                                <div style="height: 0.1px; width: 100%; display: block; background-color: black;"></div>
+                                <div class="form-group row" style="padding-top: 20px; margin: 0;">
+                                    <p class="col-sm-3 text-left fs-6" style="color: #6c757d;">출석 체크 적립금 지급</p>
+                                    <div class="col-sm-1" style="padding-top: 10px;">
+                                        <input class="form-check-input" type="radio" name="flexRadioDefault7"
+                                            id="flexRadioDefault1">
+                                        <label class="form-check-label" for="flexRadioDefault1">
+                                            사용
+                                        </label>
+                                    </div>
+                                    <div class="col-sm-2" style="padding-top: 10px;">
+                                        <input class="form-check-input" type="radio" name="flexRadioDefault7"
+                                            id="flexRadioDefault2" checked>
+                                        <label class="form-check-label" for="flexRadioDefault2">
+                                            미사용
+                                        </label>
+                                    </div>
+                                </div>
+                                <div style="height: 0.1px; width: 100%; display: block;background-color: #f1f1f1;">
+                                </div>
+                                <div class="form-group row" style="padding-top: 20px; margin: 0;">
+                                    <p class="col-sm-3 text-left fs-6" style="color: #6c757d;">적립금 설정</p>
+                                    <div class="col-sm-4 controls">
+                                        <input name="text" id="text2" class="form-control" value="10"
+                                            data-validate="data">
+                                    </div>
+                                    <span class="col-sm-1">p</span>
+                                </div>
+                            </div>
+
+                            <div class="col-md-12">
+                                <div class="panel-body">
+                                    <div class="d-grid gap-2 d-md-block text-center">
+                                        <button type="submit" class="w-15 m-1 btn btn-primary btn-sm">저장</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    </div>
+
+
+</body>
+<script src="/js/custom-scripts.js"></script>
+<script src="/js/jquery-1.10.2.js"></script>
+<script src="/js/bootstrap.min.js"></script>
+
+</html>

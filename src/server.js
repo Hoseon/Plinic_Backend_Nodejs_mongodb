@@ -942,6 +942,8 @@ module.exports = function (app) {
   app.use('/alarmSetting', require('./admin/alarmSetting'));
   // 그룹 관리
   app.use('/groups', require('./admin/groups'));
+  // 포인트 설정
+  app.use('/pointSetting', require('./admin/pointSetting'));
 
   app.get('/ejs', (req, res) => {
     res.render('home');
