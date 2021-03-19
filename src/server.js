@@ -936,7 +936,14 @@ module.exports = function (app) {
   app.use('/orders', require('./admin/orders'));
   // 고객운영관리
   app.use('/members', require('./admin/members'));
-
+  // 기본 알람
+  app.use('/alarm', require('./admin/alarm'));
+  // 그룹/개별 알림
+  app.use('/alarmSetting', require('./admin/alarmSetting'));
+  // 그룹 관리
+  app.use('/groups', require('./admin/groups'));
+  // 포인트 설정
+  app.use('/pointSetting', require('./admin/pointSetting'));
 
   app.get('/ejs', (req, res) => {
     res.render('home');

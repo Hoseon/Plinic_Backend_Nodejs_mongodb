@@ -60,20 +60,15 @@ const sftpconfig = {
   password: "g100210!!"
 };
 
-router.get("/Main", function (req, res) {
-  return res.render("PlinicAdmin/Operation/Main/index", {});
+router.get("/GroupMgt", function (req, res) {
+  return res.render("PlinicAdmin/Operation/GroupMgt/index", {});
 });
-//고객 관리 메인 화면
+// 그룹 관리 리스트 화면
 
-router.get("/MemberMgt", function (req, res) {
-  return res.render("PlinicAdmin/Operation/MemberMgt/index", {});
+router.get("/GroupMgt/new", function (req, res) {
+  return res.render("PlinicAdmin/Operation/GroupMgt/new", {});
 });
-//고객 관리 회원 리스트 화면
-
-router.get("/MemberMgt/show", function (req, res) {
-  return res.render("PlinicAdmin/Operation/MemberMgt/show", {});
-});
-//고객 관리 show 화면
+// 그룹 만들기 화면
 
 router.get("/", function (req, res) {
   return res.render("PlinicAdmin/bootstraptest/index", {});

@@ -37,7 +37,7 @@
                     <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne"
                         data-bs-parent="#accordionExample">
                         <div class="accordion-body">
-                            <form action="" id="">
+                            <form method="" action="">
                                 <table class="table-bordered table table-striped table-hover">
                                     <tr>
                                         <th class="text-center" style="padding-top: 15px;">기간</th>
@@ -76,7 +76,8 @@
                                         </td>
                                         <td rowspan="3">
                                             <div class="justify-content-center">
-                                                <button class="btn btn-info" style="margin-top: 56px;" type="button">검색</button>
+                                                <button class="btn btn-info" style="margin-top: 56px;"
+                                                    type="button">검색</button>
                                             </div>
                                         </td>
                                     </tr>
@@ -118,29 +119,32 @@
                                                         <div class="col-2">
                                                             <input class="form-check-input" type="checkbox"
                                                                 id="inlineCheckbox1" value="option1">
-                                                            <label class="form-check-label"
-                                                                for="inlineCheckbox1">결제 확인중</label>
+                                                            <label class="form-check-label" for="inlineCheckbox1">결제
+                                                                확인중</label>
                                                         </div>
                                                         <div class="col-2">
                                                             <input class="form-check-input" type="checkbox"
                                                                 id="inlineCheckbox2" value="option2">
-                                                            <label class="form-check-label"
-                                                                for="inlineCheckbox2">결제 확인</label>
+                                                            <label class="form-check-label" for="inlineCheckbox2">결제
+                                                                확인</label>
                                                         </div>
                                                         <div class="col-2">
                                                             <input class="form-check-input" type="checkbox"
                                                                 id="inlineCheckbox3" value="option3">
-                                                            <label class="form-check-label" for="inlineCheckbox3">배송 준비중</label>
+                                                            <label class="form-check-label" for="inlineCheckbox3">배송
+                                                                준비중</label>
                                                         </div>
                                                         <div class="col-2">
                                                             <input class="form-check-input" type="checkbox"
                                                                 id="inlineCheckbox4" value="option4">
-                                                            <label class="form-check-label" for="inlineCheckbox4">배송중</label>
+                                                            <label class="form-check-label"
+                                                                for="inlineCheckbox4">배송중</label>
                                                         </div>
                                                         <div class="col-2">
                                                             <input class="form-check-input" type="checkbox"
                                                                 id="inlineCheckbox5" value="option5">
-                                                            <label class="form-check-label" for="inlineCheckbox5">배송 완료</label>
+                                                            <label class="form-check-label" for="inlineCheckbox5">배송
+                                                                완료</label>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -180,7 +184,9 @@
                                             <button type="button" class="btn btn-success btn-sm">Excel Download</button>
                                         </div>
                                         <div class="col-1">
-                                            <button type="button" class="btn btn-danger btn-sm">🗑 주문 삭제</button>
+                                            <form name="frmSubmit">
+                                                <button type="button" class="btn btn-danger btn-sm">🗑 주문 삭제</button>
+                                            </form>
                                         </div>
                                     </div>
                                 </div>
@@ -188,8 +194,8 @@
                                     <table class="table table-bordered  table-condensed table-hover  text-center">
                                         <thead>
                                             <tr>
-                                                <th rowspan="2"><input class="form-check-input" type="checkbox"
-                                                    value="" id="flexCheckDisabled" disabled></th>
+                                                <th rowspan="2"><input class="form-check-input" type="checkbox" value=""
+                                                        id="flexCheckDisabled" disabled></th>
                                                 <th colspan="1">주문일</th>
                                                 <th rowspan="2" style="padding-bottom: 20px;">주문 상태</th>
                                                 <th rowspan="2" style="padding-bottom: 20px;">상품명</th>
@@ -208,13 +214,16 @@
                                         </thead>
                                         <tbody>
                                             <tr>
-                                                <th rowspan="2" style="padding-top: 20px;"><input class="form-check-input" type="checkbox"
-                                                    value="" id="flexCheckDisabled" disabled></th>
+                                                <th rowspan="2" style="padding-top: 20px;"><input
+                                                        class="form-check-input" type="checkbox" value=""
+                                                        id="flexCheckDisabled" disabled></th>
                                                 <th colspan="1" style="padding-top: 15px;">2021-03-05 11:00:12</th>
                                                 <th rowspan="2" style="padding-top: 40px;">결제 확인</th>
-                                                <th rowspan="2" style="padding-top: 40px;" onclick="location.href='/orders/OrderMgt/show'">뷰셀리온 콜라겐 드링크 5000 -4주분(20ml x28병)</th>
+                                                <th rowspan="2" style="padding-top: 40px;"
+                                                    onclick="location.href='/orders/OrderMgt/show'">뷰셀리온 콜라겐 드링크 5000
+                                                    -4주분(20ml x28병)</th>
                                                 <th rowspan="2" style="padding-top: 40px;">2</th>
-                                                <th colspan="1" >
+                                                <th colspan="1">
                                                     <select class="form-select" aria-label="Default select example">
                                                         <option selected>cj 택배</option>
                                                         <option value="1">우체국 택배</option>

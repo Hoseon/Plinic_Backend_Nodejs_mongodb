@@ -60,20 +60,25 @@ const sftpconfig = {
   password: "g100210!!"
 };
 
-router.get("/Main", function (req, res) {
-  return res.render("PlinicAdmin/Operation/Main/index", {});
+router.get("/PointSetting-Mgt", function (req, res) {
+  return res.render("PlinicAdmin/Operation/PointSetting-Mgt/index", {});
 });
-//고객 관리 메인 화면
+// 포인트 설정 리스트 화면
 
-router.get("/MemberMgt", function (req, res) {
-  return res.render("PlinicAdmin/Operation/MemberMgt/index", {});
+router.get("/PointSetting-Mgt/new", function (req, res) {
+  return res.render("PlinicAdmin/Operation/PointSetting-Mgt/new", {});
 });
-//고객 관리 회원 리스트 화면
+// 회원 개별 포인트 지급 화면
 
-router.get("/MemberMgt/show", function (req, res) {
-  return res.render("PlinicAdmin/Operation/MemberMgt/show", {});
-});
-//고객 관리 show 화면
+// router.get("/GroupMgt/new", function (req, res) {
+//   return res.render("PlinicAdmin/Operation/GroupMgt/new", {});
+// });
+// // 그룹 만들기 화면
+
+// router.get("/AlarmSetting-Mgt/show", function (req, res) {
+//   return res.render("PlinicAdmin/Operation/AlarmSetting-Mgt/show", {});
+// });
+// // 알람 보내기 show 화면
 
 router.get("/", function (req, res) {
   return res.render("PlinicAdmin/bootstraptest/index", {});
