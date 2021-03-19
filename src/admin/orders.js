@@ -1,10 +1,9 @@
 var express = require("express");
 var router = express.Router();
 var mongoose = require("mongoose");
-var Qna = require("../models/Qna");
-var QnaCounter = require("../models/QnaCounter");
 var async = require("async");
 var User_admin = require("../models/User_admin");
+var Orders = require("../models/Orders");
 var multer = require("multer");
 // var FTPStorage = require('multer-ftp');
 var sftpStorage = require("multer-sftp");
@@ -65,10 +64,77 @@ router.get("/Main", function (req, res) {
 });
 //주문 관리 메인 화면
 
-router.get("/OrderMgt", function (req, res) {
-  return res.render("PlinicAdmin/Orders/OrderMgt/index", {});
-});
+// router.get("/OrderMgt", function (req, res) {
+//   return res.render("PlinicAdmin/Orders/OrderMgt/index", {});
+// });
 //주문 관리 리스트 화면
+
+router.get('/OrderMgt', function (req, res) {
+  var vistorCounter = null;
+  var page = Math.max(1, req.query.page) > 1 ? parseInt(req.query.page) : 1;
+  var limit = Math.max(1, req.query.limit) > 1 ? parseInt(req.query.limit) : 7;
+  var search = createSearch(req.query);
+  async.waterfall([
+    // function (callback) {
+    // OrdersCounter.findOne({
+    //   name: "carezone"
+    // }, function (err, counter) {
+    //   if (err) callback(err);
+    //   vistorCounter = counter;
+    //   callback(null);
+    // });
+    // },
+    function (callback) {
+    if (!search.findUser) return callback(null);
+    User_admin.find(search.findUser, function (err, users) {
+      if (err) callback(err);
+      var or = [];
+      users.forEach(function (user) {
+        or.push({
+          author: mongoose.Types.ObjectId(user._id)
+        });
+      });
+      if (search.findPost.$or) {
+        search.findPost.$or = search.findPost.$or.concat(or);
+      } else if (or.length > 0) {
+        search.findPost = {
+          $or: or
+        };
+      }
+      callback(null);
+    });
+  }, function (callback) {
+    if (search.findUser && !search.findPost.$or) return callback(null, null, 0);
+    Orders.count(search.findPost, function (err, count) {
+      if (err) callback(err);
+      skip = (page - 1) * limit;
+      maxPage = Math.ceil(count / limit);
+      callback(null, skip, maxPage);
+    });
+  }, function (skip, maxPage, callback) {
+    if (search.findUser && !search.findPost.$or) return callback(null, [], 0);
+    Orders.find(search.findPost).sort({ "seq": 1 }).populate("author").sort({ "seq": 1, "updatedAt": -1 }).skip(skip).limit(limit).exec(function (err, orders) {
+      if (err) callback(err);
+      callback(null, orders, maxPage);
+    });
+  }], function (err, orders, maxPage) {
+    if (err) return res.json({
+      success: false,
+      message: err
+    });
+    return res.render("PlinicAdmin/Orders/OrderMgt/index", {
+      orders: orders,
+      user: req.user,
+      page: page,
+      maxPage: maxPage,
+      urlQuery: req._parsedUrl.query,
+      search: search,
+      counter: vistorCounter,
+      postsMessage: req.flash("postsMessage")[0]
+    });
+  });
+}); // new index
+
 
 router.get("/OrderMgt/show", function (req, res) {
   return res.render("PlinicAdmin/Orders/OrderMgt/show", {});
@@ -79,6 +145,11 @@ router.get("/", function (req, res) {
   return res.render("PlinicAdmin/bootstraptest/index", {});
 });
 // index
+
+
+
+
+
 
 function isLoggedIn(req, res, next) {
   if (req.isAuthenticated()) {

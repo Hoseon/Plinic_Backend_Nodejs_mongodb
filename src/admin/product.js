@@ -135,7 +135,26 @@ router.get("/getPlinicProduct", function(req, res, next) {
     () => {
       Product.find(
         {
-          isPlinic: true
+          isPlinic: true,
+          tab: '투데이'
+        },
+        (err, docs) => {
+          if (err) res.sendStatus(400);
+
+          if (docs) res.status(201).json(docs);
+        }
+      );
+    }
+  ]);
+});
+
+router.get("/getPlinicProductCosmetic", function(req, res, next) {
+  async.waterfall([
+    () => {
+      Product.find(
+        {
+          isPlinic: true,
+          tab: '화장품'
         },
         (err, docs) => {
           if (err) res.sendStatus(400);
@@ -155,11 +174,18 @@ router.get("/like/:product_num/:email", function(req, res, next) {
           product_num: req.params.product_num
         },
         (err, docs) => {
-          if (err) res.sendStatus(400);
+          if (err) {
+            res.sendStatus(400);
+          }
 
-          if (docs) docs.likeCount++;
-          docs.save();
-          callback(null, docs);
+          if (docs) {
+            docs.likeCount++;
+            docs.save();
+            callback(null, docs);
+          } else {
+            res.sendStatus(404);
+          }
+          
         }
       );
     },

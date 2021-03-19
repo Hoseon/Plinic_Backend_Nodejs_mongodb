@@ -2465,6 +2465,23 @@ module.exports = function (app) {
     })
   })
 
+  //화장품 리뷰 가져 오기 2021-03-17 3건씩 가져 오기
+  app.get('/getProductReview2/:product_num/:page', function (req, res, next) {
+    // console.log(req.params.page);
+    // console.log(req.params.product_num);
+    var page = Number(req.params.page);
+    ProductsReview.find({
+      product_num: req.params.product_num
+      },
+      function (err, docs) {
+        if (err) {
+          res.sendStatus(400);
+        } else {
+          res.json(docs);
+        }
+      }).skip((page-1)*3).limit(3);
+  });
+
 
   ///////////////////////////////////////////////////end api////////////////////////////////
 

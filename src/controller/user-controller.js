@@ -869,13 +869,15 @@ exports.challengeUpdate2 = (req, res) => {
                 return res.status(400).json(err);
               } else {
                 return res.status(201).json({
-                  'msg': '오늘 사용시간 2분을 초과 하여 <br> 챌린지 도전에 성공하였습니다.'
+                  // 'msg': '오늘 사용시간 2분을 초과 하여 <br> 챌린지 도전에 성공하였습니다.'
+                  'msg': '사용시간 2분이상이 확인되어<br>오늘 챌린지 도전에 성공하였습니다.'
                 });
               }
             })
           } else {
             return res.status(201).json({
-              'msg': '오늘 사용시간 2분을 초과 하여 <br> 챌린지 도전에 성공하였습니다!.'
+              // 'msg': '오늘 사용시간 2분을 초과 하여 <br> 챌린지 도전에 성공하였습니다!.'
+              'msg': '사용시간 2분이상이 확인되어<br>오늘 챌린지 도전에 성공하였습니다.'
             });
           }
         } else {

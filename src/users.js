@@ -115,8 +115,17 @@ router.get('/mymainproductlist/:email', function(req,res){
   async.waterfall([function(callback){
     User2.find({
       email : req.params.email
-    },function(err, docs){
-      res.json(docs[0].mainproduct);
+    }, function (err, docs) {
+        if (err) {
+          console.log("메인 화장품 가져오기 에러 : " + req.param.email);
+          res.sendStatus(400);
+        }
+
+        if (docs.length > 0) {
+          res.json(docs[0].mainproduct);
+        } else {
+          res.sendStatus(404);
+        }
     }).sort({"_id" : -1});
   }])
 });
@@ -125,8 +134,17 @@ router.get('/mysubproductlist/:email', function(req,res){
   async.waterfall([function(callback){
     User2.find({
       email : req.params.email
-    },function(err, docs){
-      res.json(docs[0].subproduct);
+    }, function (err, docs) {
+        if (err) {
+          console.log("서브 화장품 가져오기 에러 : " + req.params.email);
+          res.sendStatus(400);
+        }
+
+        if (docs.length > 0) {
+          res.json(docs[0].subproduct);
+        } else {
+          res.sendStatus(404);
+        }
     }).sort({"_id" : -1});
   }])
 });
