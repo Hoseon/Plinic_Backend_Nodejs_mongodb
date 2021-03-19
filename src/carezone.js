@@ -205,6 +205,22 @@ router.get('/giveupmission/:id', function(req, res) {
 router.get('/giveupchallenge/:id', function(req, res) {
   //var carezonelist = null;
   //console.log("chkmission" +req.params.id);
+
+  Challenge.findOne({
+    email: req.params.id
+  }, function (err, docs) {
+      if (err) {
+        console.log("포기전에 챌릭지 이력 가져오기 에러 : " + req.params.id);
+      }
+      
+      if (docs) {
+        console.log("포기전 미션 이력 : ");
+        console.log(JSON.stringify(docs));
+      } else {
+        console.log("포기전에 챌릭지 이력 가져오기 에러22 : " + req.params.id);
+      }
+  });
+
   async.waterfall([function(callback) {
     Challenge.findOneAndRemove({
       email: req.params.id,
@@ -218,7 +234,7 @@ router.get('/giveupchallenge/:id', function(req, res) {
         if (docs) {
           res.json(docs);
         } else {
-          console.log("미션 포기 실패2 : " + req.params.id);
+          console.log("미션 포기 실패2 : " + req.params.id + " : Time " + getCovertKoreaTime(Date.now()));
           res.sendStatus(404);
         }
     });
