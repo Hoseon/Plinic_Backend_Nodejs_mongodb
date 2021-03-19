@@ -2482,11 +2482,57 @@ module.exports = function (app) {
       },
       function (err, docs) {
         if (err) {
+          console.log("리뷰데이터 3건씩 가져오기 에러 : " + req.parmas.product_num);
           res.sendStatus(400);
         } else {
-          res.json(docs);
+          if (docs) {
+            res.json(docs);
+          } else {
+            console.log("리뷰데이터 3건씩 가져오기 에러2 : " + req.parmas.product_num);
+            res.sendStatus(400);            
+          }
         }
-      }).skip((page-1)*3).limit(3);
+      }).sort({ "createdAt": -1 }).skip((page - 1) * 3).limit(3);
+    //"createdAt" : -1 최신순
+    //"rating": -1 별점 높은 순
+    //"rating": 1 별점 낮은 순
+  });
+
+  //화장품 리뷰 가져 오기 2021-03-17 3건씩 가져 오기
+  app.get('/getProductReview3/:product_num/:page/:sort', function (req, res, next) {
+    // console.log(req.params.page);
+    // console.log(req.params.product_num);
+
+    var sort = {}; 
+
+    if (req.params.sort == 'createdAt') {
+      sort = { 'createdAt' : -1 }
+    } else if (req.params.sort == 'highRating') {
+      sort = { 'rating' : -1 }
+    } else if (req.params.sort == 'lowRating') {
+      sort = { 'rating' : 1 }
+    }
+    
+    var page = Number(req.params.page);
+    ProductsReview.find({
+      product_num: req.params.product_num
+      },
+      function (err, docs) {
+        if (err) {
+          console.log("리뷰데이터 3건씩 가져오기 에러 : " + req.parmas.product_num);
+          res.sendStatus(400);
+        } else {
+          if (docs) {
+            res.json(docs);
+          } else {
+            console.log("리뷰데이터 3건씩 가져오기 에러2 : " + req.parmas.product_num);
+            res.sendStatus(400);            
+          }
+        }
+      }).sort(sort).skip((page - 1) * 3).limit(3);
+    //"createdAt" : -1 최신순
+    //"rating": -1 별점 높은 순
+    //"rating": 1 별점 낮은 순
   });
 
 
