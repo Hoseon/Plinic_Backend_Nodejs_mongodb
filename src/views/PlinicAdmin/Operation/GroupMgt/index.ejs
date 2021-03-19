@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <% include ../../../partials/head %>
+        <title></title>
+        <link href='http://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css' />
+</head>
+<script type="text/javascript" src="/js/jquery-1.10.2.js"></script>
+<script>
+    $(document).ready(function () {
+        $(".active").removeClass("active");
+        $("#members").addClass("active");
+
+        // $("#challBtn").bind("click");
+        // $("#challBtn").trigger("click");
+        // $("#challBtn").removeClass("collapsed");
+        // $("#challBtn").attr('aria-expanded', 'true');
+        $("#forms-collapse4").addClass('show');
+
+
+
+
+        $('.btn-number').click(function (e) {
+            e.preventDefault();
+
+            fieldName = $(this).attr('data-field');
+            type = $(this).attr('data-type');
+            var input = $("input[name='" + fieldName + "']");
+            var currentVal = parseInt(input.val());
+            if (!isNaN(currentVal)) {
+                if (type == 'minus') {
+
+                    if (currentVal > input.attr('min')) {
+                        input.val(currentVal - 1).change();
+                    }
+                    if (parseInt(input.val()) == input.attr('min')) {
+                        $(this).attr('disabled', true);
+                    }
+
+                } else if (type == 'plus') {
+
+                    if (currentVal < input.attr('max')) {
+                        input.val(currentVal + 1).change();
+                    }
+                    if (parseInt(input.val()) == input.attr('max')) {
+                        $(this).attr('disabled', true);
+                    }
+
+                }
+            } else {
+                input.val(0);
+            }
+        });
+        $('.input-number').focusin(function () {
+            $(this).data('oldValue', $(this).val());
+        });
+        $('.input-number').change(function () {
+
+            minValue = parseInt($(this).attr('min'));
+            maxValue = parseInt($(this).attr('max'));
+            valueCurrent = parseInt($(this).val());
+
+            name = $(this).attr('name');
+            if (valueCurrent >= minValue) {
+                $(".btn-number[data-type='minus'][data-field='" + name + "']").removeAttr('disabled')
+            } else {
+                alert('Sorry, the minimum value was reached');
+                $(this).val($(this).data('oldValue'));
+            }
+            if (valueCurrent <= maxValue) {
+                $(".btn-number[data-type='plus'][data-field='" + name + "']").removeAttr('disabled')
+            } else {
+                alert('Sorry, the maximum value was reached');
+                $(this).val($(this).data('oldValue'));
+            }
+
+
+        });
+        $(".input-number").keydown(function (e) {
+            // Allow: backspace, delete, tab, escape, enter and .
+            if ($.inArray(e.keyCode, [46, 8, 9, 27, 13, 190]) !== -1 ||
+                // Allow: Ctrl+A
+                (e.keyCode == 65 && e.ctrlKey === true) ||
+                // Allow: home, end, left, right
+                (e.keyCode >= 35 && e.keyCode <= 39)) {
+                // let it happen, don't do anything
+                return;
+            }
+            // Ensure that it is a number and stop the keypress
+            if ((e.shiftKey || (e.keyCode < 48 || e.keyCode > 57)) && (e.keyCode < 96 || e.keyCode > 105)) {
+                e.preventDefault();
+            }
+        });
+
+    });
+
+    var myModal = new bootstrap.Modal(document.getElementById('myModal'), {
+        keyboard: false
+    });
+    
+</script>
+
+<body>
+
+    <header>
+        <% include ../../../partials/header %>
+    </header>
+
+
+    <div class="container-fluid">
+        <div class="row">
+            <!-- 2단길이의 첫번째 열 -->
+            <div class="col-md-2">
+                <% include ../../../partials/mside %>
+            </div>
+
+            <!-- 10단길이의 첫번째 열 -->
+            <div class="col-md-10">
+                <div id="page-inner">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <h1 class="page-header">
+                                그룹 관리
+                            </h1>
+                        </div>
+                    </div>
+                    <div class="panel-body">
+                        <div class="col-md-12">
+                            <button type="button" class="btn btn-primary"
+                                onclick="location.href='/groups/GroupMgt/new'">그룹 만들기</button>
+                            <br><br>
+                            <div class="tabs-vertical-env">
+                                <div class="tab-content">
+                                    <table class="table table-bordered  table-condensed table-hover  text-center">
+                                        <thead>
+                                            <tr>
+                                                <th width="50"><input class="form-check-input" type="checkbox" value=""
+                                                    id="flexCheckDisabled" disabled></th>
+                                                <th class="text-center">그룹 이름</th>
+                                                <th class="text-center">인원</th>
+                                                <th class="text-center">관리</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td class="align-middle text-center"></td>
+                                                <td class="align-middle text-center" data-toggle="modal"
+                                                    data-target="#myModal">
+                                                    플리닉 관리자
+                                                </td>
+                                                <td class="align-middle text-center">4</td>
+                                                <td class="align-middle text-center" data-toggle="modal"
+                                                    data-target="#myModal2">삭제</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+    </div>
+    <!-- 모달 창 시작 -->
+    <div class="modal" tabindex="-1" id="myModal">
+        <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">플리닉 관리자 - 그룹 명</h5>
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <div class="form-group row">
+                            <small class="col-sm-4 text-center" style="color: #6c757d; padding-bottom: 10px;">그룹 인원
+                                4명</small>
+                            <div class="col-sm-8 controls">
+                            </div>
+                            <label class="col-sm-4 text-center control-label" for="name">
+                                <button type="button"
+                                    class="btn btn-primary btn-sm" data-toggle="modal"
+                                    data-target="#myModal3">추가</button></label>
+                            <div class="col-sm-8 controls">
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-sm-6 text-center control-label" for="name2">abcdefrg@gmail.com</div>
+                            <div class="col-sm-4 controls">홍길동</div>
+                            <div class="col-sm-2">
+                                <form name="frmSubmit">
+                                    <!-- <button class="text-center" type="button" style="color: #6c757d;" >
+                                        삭제
+                                    </button> -->
+                                    <a class="text-center" type="button" style="color: #6c757d;" href="#">삭제</a>
+                                </form>
+                            </div>
+                            <div style="margin: 0 auto; height: 0.1px; width: 90%; display: block; background-color: #c4c4c4;"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-toggle="modal" data-target="#myModal2">그룹 삭제</button>
+                    <button type="button" class="btn btn-primary">확인</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- 모달 창 끝 -->
+
+    <!-- 모달 창 시작 -->
+    <div class="modal" tabindex="-1" id="myModal2">
+        <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+            <div class="modal-content">
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <h2 class="modal-title">한 번 삭제하면 복구되지 않습니다.</h2>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <form name="frmSubmit">
+                        <button type="button" class="btn btn-secondary">삭제</button>
+                    </form>
+                    <button type="button" class="btn btn-primary">닫기</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- 모달 창 끝 -->
+
+    <!-- 모달 창 시작 -->
+    <div class="modal" tabindex="-1" id="myModal3">
+        <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+            <div class="modal-content">
+                <form method="" action="">
+                    <div class="modal-header">
+                        <h2 class="modal-title">회원 검색</h2>
+                        <button type="button" class="close btn-close" data-dismiss="modal">&times;</button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="mb-3">
+                            <div class="form-group row">
+                                <label class="col-sm-3 text-center control-label" for="name"><span
+                                        class="input_title_cion" style="color: red;">* </span>회원 아이디</label>
+                                <div class="col-sm-9 controls">
+                                    <input type="search" class="form-control ds-input" id="search-input"
+                                        placeholder="Search docs..." aria-label="Search docs for..." autocomplete="off"
+                                        data-bd-docs-version="5.0" spellcheck="false" role="combobox"
+                                        aria-autocomplete="list" aria-expanded="false"
+                                        aria-owns="algolia-autocomplete-listbox-0" dir="auto"
+                                        style="position: relative; vertical-align: top;">
+                                </div>
+                            </div>
+                            <div class="panel-body">
+                                <span>abcdefrg@gmail.com</span>
+                                <button type="button" class="btn-close" aria-label="Close"></button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <div class="text-center">
+                            <button type="button" class="btn btn-secondary">닫기</button>
+                            <button type="submit" class="btn btn-primary">회원 추가</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <!-- 모달 창 끝 -->
+
+    <!-- <div class="modal fade" id="myModal" role="dialog">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <form method="" action="">
+                    <div class="modal-header">
+                        <h2 class="modal-title">플리닉 관리자 - 그룹 명</h2>
+                        <button type="button" class="close btn-close" data-dismiss="modal">&times;</button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="mb-3">
+                            <div class="form-group row">
+                                <small class="col-sm-4 text-center" style="color: #6c757d; padding-bottom: 10px;">그룹 인원
+                                    4명</small>
+                                <div class="col-sm-8 controls">
+                                </div>
+                                <label class="col-sm-4 text-center control-label" for="name"><button type="button"
+                                        class="btn btn-primary btn-sm" data-toggle="modal"
+                                        data-target="#myModal3">추가</button></label>
+                                <div class="col-sm-8 controls">
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <div class="col-sm-6 text-center control-label" for="name">abcdefrg@gmail.com</div>
+                                <div class="col-sm-4 controls">홍길동</div>
+                                <div class="col-sm-2">
+                                    <a class="text-center" style="color: #6c757d;">삭제</a>
+                                </div>
+                                <div
+                                    style="margin:0 auto; height:0.1px; width: 90%; display: block; background-color: #c4c4c4;">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-toggle="modal" data-target="#myModal2">그룹
+                            삭제</button>
+                        <button type="button" class="btn btn-primary">확인</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div> -->
+    <!-- <div class="modal fade" id="myModal2" role="dialog">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-body">
+                    <h2 class="modal-title">한 번 삭제하면 복구되지 않습니다.</h2>
+                </div>
+                <div class="modal-footer">
+                    <form name="frmSubmit">
+                        <button type="button" class="btn btn-secondary">삭제</button>
+                    </form>
+                    <button type="button" class="btn btn-primary">닫기</button>
+                </div>
+            </div>
+        </div>
+    </div> -->
+    <!-- <div class="modal fade" id="myModal3" role="dialog">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <form method="" action="">
+                    <div class="modal-header">
+                        <h2 class="modal-title">회원 검색</h2>
+                        <button type="button" class="close btn-close" data-dismiss="modal">&times;</button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="mb-3">
+                            <div class="form-group row">
+                                <label class="col-sm-3 text-center control-label" for="name"><span
+                                        class="input_title_cion" style="color: red;">* </span>회원 아이디</label>
+                                <div class="col-sm-9 controls">
+                                    <input type="search" class="form-control ds-input" id="search-input"
+                                        placeholder="Search docs..." aria-label="Search docs for..." autocomplete="off"
+                                        data-bd-docs-version="5.0" spellcheck="false" role="combobox"
+                                        aria-autocomplete="list" aria-expanded="false"
+                                        aria-owns="algolia-autocomplete-listbox-0" dir="auto"
+                                        style="position: relative; vertical-align: top;">
+                                </div>
+                            </div>
+                            <div class="panel-body">
+                                <span>abcdefrg@gmail.com</span>
+                                <button type="button" class="btn-close" aria-label="Close"></button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <div class="text-center">
+                            <button type="button" class="btn btn-secondary">닫기</button>
+                            <button type="submit" class="btn btn-primary">회원 추가</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div> -->
+</body>
+<script src="/js/custom-scripts.js"></script>
+<script src="/js/jquery-1.10.2.js"></script>
+<script src="/js/bootstrap.min.js"></script>
+
+</html>

@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <% include ../../../partials/head %>
+        <title></title>
+        <link href='http://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css' />
+</head>
+<script type="text/javascript" src="/js/jquery-1.10.2.js"></script>
+<script>
+    $(document).ready(function () {
+        $(".active").removeClass("active");
+        $("#members").addClass("active");
+        $("#forms-collapse5").addClass('show');
+    });
+</script>
+<title>Hello, world!</title>
+
+<body>
+
+    <header>
+        <% include ../../../partials/header %>
+    </header>
+
+
+    <div class="container-fluid">
+        <div class="row">
+            <!-- 2단길이의 첫번째 열 -->
+            <div class="col-md-2">
+                <!-- 사이드 메뉴 시작 -->
+                <% include ../../../partials/mside %>
+                    <!-- 사이드 메뉴 종료 -->
+            </div>
+
+
+            <!-- 10단길이의 첫번째 열 -->
+            <div class="col-md-10">
+                <div id="page-inner">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <h1 class="page-header">
+                                회원 개별 포인트 지급
+                            </h1>
+                        </div>
+                    </div>
+                    <form method="" action="">
+                        <div class="panel-body">
+                            <div class="col-md-12">
+                                <div class="mb-3">
+                                    <div class="form-group row">
+                                        <label class="col-sm-3 text-center control-label" for="name">적립 포인트</label>
+                                        <div class="col-sm-5 controls">
+                                            <input name="name" id="name" class="form-control" value=""
+                                                data-validate="data">
+                                        </div>
+                                        <span class="col-sm-1">p</span>
+                                    </div>
+                                </div>
+                                <div style="height: 0.1px; width: 100%; display: block;background-color: #f1f1f1;">
+                                </div>
+                                <div class="mb-3">
+                                    <br>
+                                    <div class="form-group row">
+                                        <label class="col-sm-3 text-center control-label" for="name">받는 사람</label>
+                                        <div class="col-sm-5 controls">
+                                            <input type="search" class="form-control ds-input" id="search-input"
+                                                placeholder="Search docs..." aria-label="Search docs for..."
+                                                autocomplete="off" data-bd-docs-version="5.0" spellcheck="false"
+                                                role="combobox" aria-autocomplete="list" aria-expanded="false"
+                                                aria-owns="algolia-autocomplete-listbox-0" dir="auto"
+                                                style="position: relative; vertical-align: top;">
+                                        </div>
+                                        <div class="col-sm-1">
+                                            <img class="bi x0 y0 w0 h0" alt=""
+                                                src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAIAAABvFaqvAAAACXBIWXMAABYlAAAWJQFJUiTwAAABmklEQVQ4y62UsY7CMAyGfSgPYYmFgQUhRWJCyobUhYk5L5GFJ8jDREjsqEuZiJC69gWyJ2u3VOoNvuuVEqCg+7e6zmc7sQ3trbz3Wussy+BXiCiltNa2TwX9D2NMd55zLqWUUnaWLMuccy9AMUbKgnN+H7yua6014R6l9gMiijEmxvgopnOO3KqqSoOoIq11+0ree0RERO/9EOS9p/qf5NKXtRYAlFJDEBWfzPaRqMBB4MnlcgGAxWIBo7Xb7QCgLMu+cVIUBeecMTYetFqtAOB8Pt+AAGC5XMI7mk6nADCfz4egf9EEEQ+Hw1tnrtdrArTZbAAghDAeRNcshLixUl8YY0a+fYyRxjjR2dQXTwayLxrje2egIaJ18bK5aZiSntBvfEQ8nU5JRF3Xg5UyYP3to6qqEJE2iTHGWuucc84ZY7odQg5JFgyGWymVfCkppXOuW1v3rK+2bQdnmqYpy/J4PK7Xa7IIIWazWfd3u90WRdGx8jxnjEH7vpJ5fQK6ZymlPpw1xlie5x0rhJC4o/Fqmma/34cQhBDfsq5ti4GhlNQAAAAASUVORK5CYII=" />
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-sm-3 text-center control-label" for="name"></label>
+                                        <div class="col-sm-3 controls">
+                                            <input class="form-check-input" type="checkbox" id="inlineCheckbox1"
+                                                value="option1">
+                                            <label class="form-check-label" for="inlineCheckbox1">전체 사용자</label>
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-sm-3 text-center control-label" for="name"></label>
+                                        <div class="col-sm-3 controls">
+                                            <input class="form-check-input" type="checkbox" id="inlineCheckbox1"
+                                                value="option1">
+                                            <label class="form-check-label" for="inlineCheckbox1">고정 그룹</label>
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-sm-3 text-center control-label" for="name"></label>
+                                        <div class="col-sm-5 controls">
+                                            <select class="form-select" aria-label="Default select example">
+                                                <option selected>Open this select menu</option>
+                                                <option value="1">One</option>
+                                                <option value="2">Two</option>
+                                                <option value="3">Three</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-sm-3 text-center control-label" for="name"></label>
+                                        <div class="col-sm-3 controls">
+                                            <input class="form-check-input" type="checkbox" id="inlineCheckbox1"
+                                                value="option1">
+                                            <label class="form-check-label" for="inlineCheckbox1">비고정 그룹</label>
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-sm-3 text-center control-label" for="name"></label>
+                                        <div class="col-sm-5 controls">
+                                            <select class="form-select" aria-label="Default select example">
+                                                <option selected>Open this select menu</option>
+                                                <option value="1">One</option>
+                                                <option value="2">Two</option>
+                                                <option value="3">Three</option>
+                                            </select>
+                                        </div>
+                                        <div class="col-sm-4 controls">
+                                            <button type="button" class="btn btn-primary btn-sm"
+                                                onclick="location.href='/groups/GroupMgt/new'">그룹 추가</button>
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-sm-3 text-center control-label" for="name">내용</label>
+                                        <div class="col-sm-7 controls">
+                                            <textarea class="form-control" id="message-text"
+                                                style="height: 100px"></textarea>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="panel-body">
+                            <div class="text-center">
+                                <button type="button" class="w-15 m-1 btn btn-light btn-sm">취소</button>
+                                <button type="submit" class="w-15 m-1 btn btn-info btn-sm">포인트 지급</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+
+
+
+</body>
+
+<script src="/js/jquery-1.10.2.js"></script>
+<!-- Bootstrap Js -->
+<script src="/js/bootstrap.min.js"></script>
+<!-- Custom Js -->
+<script src="/js/custom-scripts.js"></script>
+
+</html>
