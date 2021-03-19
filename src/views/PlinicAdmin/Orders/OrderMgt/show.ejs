@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <% include ../../../partials/head %>
+    <title></title>
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css' />
+</head>
+<script type="text/javascript" src="/js/jquery-1.10.2.js"></script>
+
+<body>
+
+  <header>
+    <% include ../../../partials/header %>
+  </header>
+
+
+  <div class="container-fluid">
+    <div class="row">
+      <!-- 2단길이의 첫번째 열 -->
+      <div class="col-md-2">
+        <% include ../../../partials/oside %>
+      </div>
+
+      <!-- 10단길이의 첫번째 열 -->
+      <div class="col-md-10">
+        <div id="page-inner">
+          <div class="row">
+            <div class="col-md-12">
+              <h1 class="page-header">
+                제품 상세페이지
+                <!-- <small> 챌린지 관리 Sub제목</small> -->
+              </h1>
+            </div>
+          </div>
+
+          <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne"
+            data-bs-parent="#accordionExample">
+            <form action="" method="post">
+              <div class="accordion-body">
+                <div class="form-group row">
+                  <label class="col-sm-1 text-center control-label" for="name">주문 정보</label>
+                  <div class="col-sm-11 controls">
+                  </div>
+                </div>
+                <table class="table-bordered table table-striped table-hover">
+                  <tr>
+                    <th class="text-center">주문 번호</th>
+                    <td class="text-left">1234567891</td>
+                  </tr>
+                  <tr>
+                    <th class="text-center">주문 일자</th>
+                    <td class="text-left">2021-03-05 11:00:12</td>
+                  </tr>
+                  <tr>
+                    <th class="text-center">주문 상태</th>
+                    <td class="text-left">결제확인</td>
+                  </tr>
+                </table>
+
+                <div class="form-group row">
+                  <label class="col-sm-1 text-center control-label" for="name">주문 상품</label>
+                  <div class="col-sm-11 controls">
+                  </div>
+                </div>
+                <table class="table-hover">
+                  <thead>
+                    <tr class="text-center">
+                      <th scioe="col">이미지</th>
+                      <th scope="col" width=700>상품명</th>
+                      <th scope="col">상품 금액</th>
+                      <th scope="col">배송비</th>
+                      <th scope="col">수량</th>
+                      <th scope="col">상품 합계금액</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr class="text-center">
+                      <td><img style="max-width:120px;"
+                          src="https://plinic.s3.ap-northeast-2.amazonaws.com/image-1593492322970"></td>
+                      <td>뷰셀리온 콜라겐드링크 5000 4주분(20mlx28병)</td>
+                      <td>25,000원</td>
+                      <td>0원</td>
+                      <td>2</td>
+                      <td>50,000원</td>
+                    </tr>
+                  </tbody>
+                  <tfoot>
+                    <tr class="text-right">
+                      <td colspan="6">
+                        <span>상품 합계(<span style="color: red;">50,000원</span>)-</span>
+                        <span>포인트 사용금액(<span style="color: red;">10,000원</span>)+</span>
+                        <span>배송비(<span style="color: red;">0원</span>)=</span>
+                        <span>최종 금액<span style="color: red;">40,000원</span></span>
+                      </td>
+                    </tr>
+                  </tfoot>
+                </table>
+                <br>
+
+                <div class="form-group row">
+                  <label class="col-sm-1 text-center control-label" for="name">결제 정보</label>
+                  <div class="col-sm-11 controls">
+                  </div>
+                </div>
+                <table class="table-bordered table table-striped table-hover">
+                  <tr>
+                    <th class="text-center" width=300>결제 수단</th>
+                    <td colspan="3" class="text-left">카드 결제</td>
+                  </tr>
+                  <tr>
+                    <th class="text-center" width=300>입금 계좌</th>
+                    <td class="text-left"></td>
+                    <th class="text-center" width=300>입금자명</th>
+                    <td class="text-left"></td>
+                  </tr>
+                </table>
+
+                <div class="form-group row">
+                  <label class="col-sm-1 text-center control-label" for="name">주문자 정보</label>
+                  <div class="col-sm-11 controls">
+                  </div>
+                </div>
+                <table class="table-bordered table table-striped table-hover">
+                  <tr>
+                    <th class="text-center" width=300>주문자명</th>
+                    <td class="text-left">이요진</td>
+                    <th class="text-center" width=300>휴대폰</th>
+                    <td class="text-left">010-1245-4585</td>
+                  </tr>
+                  <tr>
+                    <th class="text-center" width=300>우편 번호</th>
+                    <td colspan="3" class="text-left">134-707</td>
+                  </tr>
+                  <tr>
+                    <th class="text-center" width=300>주소</th>
+                    <td colspan="3" class="text-left">서울시 송파구 소파대로 453 레이크빌 빌딩 402호</td>
+                  </tr>
+                  <tr>
+                    <th class="text-center" width=300>주문 취소 사유</th>
+                    <td colspan="3" class="text-left"></td>
+                  </tr>
+                </table>
+                <br><br>
+
+                <div class="form-group row">
+                  <label class="col-sm-1 text-center control-label" for="name">관리자 메모</label>
+                  <div class="col-sm-11 controls">
+                  </div>
+                </div>
+                <div style="height: 0.1px;width: 100%; display: block;background-color: black;"></div>
+                <br>
+
+                <div class="form-floating col-md-12">
+                  <textarea class="form-control" id="floatingTextarea"
+                    style="height: 200px"></textarea>
+                </div>
+
+                <br><br><br>
+                <div class="panel-body">
+                  <div class="d-grid gap-2 d-md-block text-center">
+                    <button type="submit"
+                        class="w-15 m-1 btn btn-info btn-sm">저장하기</button>
+                    <button type="reset" class="w-15 m-1 btn btn-secondary btn-sm"
+                        onclick="location.href='/orders/OrderMgt'">목록</button>
+                  </div>
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+
+
+</body>
+<script src="/js/custom-scripts.js"></script>
+<script src="/js/jquery-1.10.2.js"></script>
+<script src="/js/bootstrap.min.js"></script>
+<script>
+  $(document).ready(function () {
+    $(".active").removeClass("active");
+    $("#orders").addClass("active");
+    $("#forms-collapse1").addClass('show');
+
+    $('.btn-number').click(function (e) {
+      e.preventDefault();
+
+      fieldName = $(this).attr('data-field');
+      type = $(this).attr('data-type');
+      var input = $("input[name='" + fieldName + "']");
+      var currentVal = parseInt(input.val());
+      if (!isNaN(currentVal)) {
+        if (type == 'minus') {
+
+          if (currentVal > input.attr('min')) {
+            input.val(currentVal - 1).change();
+          }
+          if (parseInt(input.val()) == input.attr('min')) {
+            $(this).attr('disabled', true);
+          }
+
+        } else if (type == 'plus') {
+
+          if (currentVal < input.attr('max')) {
+            input.val(currentVal + 1).change();
+          }
+          if (parseInt(input.val()) == input.attr('max')) {
+            $(this).attr('disabled', true);
+          }
+
+        }
+      } else {
+        input.val(0);
+      }
+    });
+    $('.input-number').focusin(function () {
+      $(this).data('oldValue', $(this).val());
+    });
+    $('.input-number').change(function () {
+
+      minValue = parseInt($(this).attr('min'));
+      maxValue = parseInt($(this).attr('max'));
+      valueCurrent = parseInt($(this).val());
+
+      name = $(this).attr('name');
+      if (valueCurrent >= minValue) {
+        $(".btn-number[data-type='minus'][data-field='" + name + "']").removeAttr('disabled')
+      } else {
+        alert('Sorry, the minimum value was reached');
+        $(this).val($(this).data('oldValue'));
+      }
+      if (valueCurrent <= maxValue) {
+        $(".btn-number[data-type='plus'][data-field='" + name + "']").removeAttr('disabled')
+      } else {
+        alert('Sorry, the maximum value was reached');
+        $(this).val($(this).data('oldValue'));
+      }
+
+
+    });
+    $(".input-number").keydown(function (e) {
+      // Allow: backspace, delete, tab, escape, enter and .
+      if ($.inArray(e.keyCode, [46, 8, 9, 27, 13, 190]) !== -1 ||
+        // Allow: Ctrl+A
+        (e.keyCode == 65 && e.ctrlKey === true) ||
+        // Allow: home, end, left, right
+        (e.keyCode >= 35 && e.keyCode <= 39)) {
+        // let it happen, don't do anything
+        return;
+      }
+      // Ensure that it is a number and stop the keypress
+      if ((e.shiftKey || (e.keyCode < 48 || e.keyCode > 57)) && (e.keyCode < 96 || e.keyCode > 105)) {
+        e.preventDefault();
+      }
+    });
+
+  });
+</script>
+
+</html>

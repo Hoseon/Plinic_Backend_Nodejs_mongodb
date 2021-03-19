@@ -57,6 +57,37 @@ exports.getUserOrders = (req, res) => {
   }) 
 };
 
+exports.getUserOrdersTrackingInfo = (req, res) => {
+  // console.log(req.params.email);
+  // console.log(req.params.t_invoice);
+  var request = require('request');
+
+  var url = 'http://info.sweettracker.co.kr/api/v1/trackingInfo';
+  var queryParams = '?' + encodeURIComponent('t_key') + '=9Y2nG9CuZ4yYA2PvxmN11Q'; /* Service Key*/
+  queryParams += '&' + encodeURIComponent('t_code') + '=' + encodeURIComponent('04'); /* 한 페이지 결과 수 */
+  queryParams += '&' + encodeURIComponent('t_invoice') + '=' + encodeURIComponent('638456129441'); /* 한 페이지 결과 수 */
+
+  request({
+    url: url + queryParams,
+    method: 'GET'
+  }, function (error, response, body) {
+    if (error) {
+      console.log("배송 정보 가져 오기 실패1 : " + req.params.email);
+      console.log("배송 정보 가져 오기 실패2 : " + req.params.t_invoice);
+      res.status(400).json(error);
+    }
+    // console.log('Status', response.statusCode);
+    // console.log('Headers', JSON.stringify(response.headers));
+    // console.log('Reponse received', body);
+      if (body) {
+        res.send(body);
+      } else {
+        console.log("배송 정보 가져 오기 실패3 : " + req.body.email);
+        console.log("배송 정보 가져 오기 실패4 : " + req.body.t_invoice);
+      }
+  });
+};
+
 function createToken(user) {
   return jwt.sign(
     {

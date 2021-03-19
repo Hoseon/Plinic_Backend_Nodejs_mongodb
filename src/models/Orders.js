@@ -44,7 +44,10 @@ var orderSchema = mongoose.Schema({
   vbank_issued_at: { type: String },
   vbank_name: { type: String },
   vbank_num: { type: String },
-
+  product_name: { type: String },
+  product_num: { type: String },
+  productFileName: { type: String },
+  invoiceNo: {type: String},
 });
 
 orderSchema.methods.getFormattedDate = function (date) {

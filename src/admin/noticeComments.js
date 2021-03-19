@@ -9,6 +9,7 @@ var Notice = require("../models/Notice");
 var NoticeCounter = require("../models/NoticeCounter");
 var async = require("async");
 var User_admin = require("../models/User_admin");
+var User = require("../models/user");
 var multer = require("multer");
 // var FTPStorage = require('multer-ftp');
 var sftpStorage = require("multer-sftp");
@@ -17,8 +18,8 @@ var path = require("path");
 var fs = require("fs");
 var del = require("del");
 var http = require("http");
-var FCM = require("fcm-node");
-var serverKey = "AIzaSyCAcTA318i_SVCMl94e8SFuXHhI5VtXdhU";
+var FCM = require('fcm-node');
+var serverKey = 'AIzaSyCAcTA318i_SVCMl94e8SFuXHhI5VtXdhU';
 var fcm = new FCM(serverKey);
 
 var multerS3 = require('multer-s3');
@@ -95,7 +96,7 @@ router.get('/', function (req, res) {
 
   async.waterfall([function (callback) {
     NoticeCounter.findOne({
-      name: "carezone"
+      name: "notice"
     }, function (err, counter) {
       if (err) callback(err);
       vistorCounter = counter;
@@ -130,17 +131,17 @@ router.get('/', function (req, res) {
     });
   }, function (skip, maxPage, callback) {
     if (search.findUser && !search.findPost.$or) return callback(null, [], 0);
-    Notice.find(search.findPost).sort({ "seq": 1 }).populate("author").sort({ "seq": 1, "updatedAt": -1 }).skip(skip).limit(limit).exec(function (err, carezone) {
+    Notice.find(search.findPost).sort({ "seq": 1 }).populate("author").sort({ "seq": 1, "updatedAt": -1 }).skip(skip).limit(limit).exec(function (err, notice) {
       if (err) callback(err);
-      callback(null, carezone, maxPage);
+      callback(null, notice, maxPage);
     });
-  }], function (err, carezone, maxPage) {
+  }], function (err, notice, maxPage) {
     if (err) return res.json({
       success: false,
       message: err
     });
     return res.render("PlinicAdmin/Contents/Comments/Notice/index", {
-      post : carezone,
+      post : notice,
       user: req.user,
       page: page,
       maxPage: maxPage,
@@ -158,71 +159,49 @@ router.get('/new', isLoggedIn, function(req, res) {
   });
 }); // new
 
-router.post("/noticeComments/",s3upload.single("image"),isLoggedIn,function(req, res, next) {
-
-  showLocation = req.body.showLocation
-  req.body.post.filename = req.file.key;
-  req.body.post.originalName = req.file.originalname;
-  async.waterfall(
-    [
-      function(callback) {
-        NoticeCounter.findOne(
-          {
-            name: "/"
-          },
-          function(err, counter) {
-            if (err) callback(err);
-            if (counter) {
-              callback(null, counter);
-            } else {
-              NoticeCounter.create(
-                {
-                  name: "/",
-                  totalCount: 0
-                },
-                function(err, counter) {
-                  if (err)
-                    return res.json({
-                      success: false,
-                      message: err
-                    });
-                  callback(null, counter);
-                }
-              );
-            }
-          }
-        );
-      }
-    ],
-    function(callback, counter) {
+router.post('/', s3upload.fields([
+  { name: 'image' }]), isLoggedIn, function (req, res, next) {
+    async.waterfall([function (callback) {
+      NoticeCounter.findOne({
+        name: "noticeComments"
+      }, function (err, counter) {
+        if (err) callback(err);
+        if (counter) {
+          callback(null, counter);
+        } else {
+          NoticeCounter.create({
+            name: "noticeComments",
+            totalCount: 0
+          }, function (err, counter) {
+            if (err) return res.json({
+              success: false,
+              message: err
+            });
+            callback(null, counter);
+          });
+        }
+      });
+    }], function (callback, counter) {
       var newPost = req.body.post;
       newPost.author = req.user._id;
       newPost.numId = counter.totalCount + 1;
-      req.body.post.filename = req.file.key;
-      req.body.post.originalName = req.file.originalname;
-      req.body.post.showLocation = req.body.showLocation;
-      req.body.post.tabLocation = req.body.tabLocation;
-      Notice.create(req.body.post, function(err, post) {
-        if (err) {
-          console.log("공지사항 등록 에러");
-          console.log(err);
-          return res.json({
-            success: false,
-            message: err
-          });
-        }
+      req.body.post.filename = req.files['image'][0].key;
+      req.body.post.originalName = req.files['image'][0].originalname;
+      Notice.create(req.body.post, function (err, post) {
+        if (err) return res.json({
+          success: false,
+          message: err
+        });
         counter.totalCount++;
         counter.save();
-        res.redirect("/noticeComments/");
+        res.redirect('/noticeComments/');
       });
-    }
-  );
-}
-); // create
+    });
+  }); // create
 
 router.delete('/:id', isLoggedIn, function (req, res, next) {
   console.log(req);
-  Carezone.findOneAndRemove({
+  Notice.findOneAndRemove({
     _id: req.params.id,
     // author: req.user._id
   }, function (err, post) {
@@ -239,13 +218,6 @@ router.delete('/:id', isLoggedIn, function (req, res, next) {
       Delete: { // required
         Objects: [ // required
           { Key: post.filename },
-          { Key: post.prodfilename },
-          { Key: post.homeimage },
-          { Key: post.challenge_image1_filename },
-          { Key: post.challenge_image2_filename },
-          { Key: post.challenge_image3_filename },
-          { Key: post.challenge_image4_filename },
-          { Key: post.challenge_image5_filename }
         ]
       }
     };
@@ -257,7 +229,7 @@ router.delete('/:id', isLoggedIn, function (req, res, next) {
       }
       else console.log("케어존 수정 이전 파일 삭제 완료 : " + JSON.stringify(data));
     });
-    res.redirect('/contents/Challenge/newIndex');
+    res.redirect('/noticeComments/');
   });
 }); //destroy
 
@@ -269,31 +241,21 @@ router.get("/:id", function (req, res) {
         success: false,
         message: err
       });
-      post.views++;
-      post.save();
+      // post.views++;
+      // post.save();
 
-      //배너 이미지 가져 오기 20190502
+      console.log(post);
+
+      //이미지 가져 오기 
       //res.setHeader('Content-Type', 'image/jpeg');
       var url = 'https://plinic.s3.ap-northeast-2.amazonaws.com/' + post.filename;
       var prod_url = 'https://plinic.s3.ap-northeast-2.amazonaws.com/' + post.prodfilename;
-      var homeImage = 'https://plinic.s3.ap-northeast-2.amazonaws.com/' + post.homeimage_filename;
-      var challenge_url1 = 'https://plinic.s3.ap-northeast-2.amazonaws.com/' + post.challenge_image1_filename;
-      var challenge_url2 = 'https://plinic.s3.ap-northeast-2.amazonaws.com/' + post.challenge_image2_filename;
-      var challenge_url3 = 'https://plinic.s3.ap-northeast-2.amazonaws.com/' + post.challenge_image3_filename;
-      var challenge_url4 = 'https://plinic.s3.ap-northeast-2.amazonaws.com/' + post.challenge_image4_filename;
-      var challenge_url5 = 'https://plinic.s3.ap-northeast-2.amazonaws.com/' + post.challenge_image5_filename;
       //fs.createReadStream(path.join(__dirname, '../uploads/', post.filename)).pipe(res);
       // console.log(post.day);
       res.render("PlinicAdmin/Contents/Comments/Notice/show", {
         post: post,
         url: url,
         prod_url: prod_url,
-        homeImage: homeImage,
-        challenge_url1: challenge_url1,
-        challenge_url2: challenge_url2,
-        challenge_url3: challenge_url3,
-        challenge_url4: challenge_url4,
-        challenge_url5: challenge_url5,
         urlQuery: req._parsedUrl.query,
         user: req.user,
         search: createSearch(req.query)
@@ -301,51 +263,239 @@ router.get("/:id", function (req, res) {
     });
 }); //Show
 
+router.post('/:id/comments', function(req, res) {
+// var message = { 
+//     to: req.body.pushtoken,
+
+//     notification: {
+//       title: '문의하신 글에 댓글이 작성되었습니다.',
+//       body: req.body.comment.body,
+//       sound: "default",
+//       click_action: "FCM_PLUGIN_ACTIVITY",
+//     },
+
+//     data: {
+//       mode: "notice",
+//       id: req.body.id
+//     }
+//   };
+
+//   fcm.send(message, function(err, response) {
+//     if (err) {
+//       console.log("Something has gone wrong!");
+//     } else {
+//       console.log("Successfully sent with response: ", response);
+//     }
+//   });
+
+  console.log(req.body);
+  var newComment = req.body.comment;
+  newComment.author = req.user._id;
+  Notice.findOneAndUpdate({
+    _id: req.params.id
+  }, {
+    $push: {
+      comments: newComment
+    }
+  }, function(err, post) {
+    if (err) return res.json({
+      success: false,
+      message: err
+    });
+    res.redirect('/noticeComments/' + req.params.id + "?" + req._parsedUrl.query);
+  });
+}); // 댓글 등록
+
+// router.post('/:commentId/:id/recomments/', function (req, res) { //commentId를 가져와야 대댓글을 달 수 있음 > ex) filename 오류 등 show 페이지 관련 오류 뜰 경우 post id인 :id를 하나 더 넣어주는 편법.
+// //commentId/id/recomments 이 부분은 .ejs form 부분 action 부분에 영향. 또 redirect 부분의 req.params.id가 앞서 말한 post id임.
+// var message = { 
+//   to: req.body.pushtoken,
+//   notification: {  // 전달되는 메시지 내용
+//     title: '문의하신 댓글에 답글이 작성되었습니다.',
+//     body: req.body.recomments.body,
+//     sound: "default",
+//     click_action: "FCM_PLUGIN_ACTIVITY",
+//     // click_action: 'http://plinic.com/?req.params.id=${req.params.id}',
+//     // click_action: 'http://plinic.com/'+ "?" + req.params.id,
+//     // click_action: 'http://com.g1p.plinic/?req.params.id=${req.params.id}',
+//     // click_action: 'http://com.g1p.plinic/'+ "?" + req.params.id,
+
+//     // click_action: 'com.g1p.plinic/'+ "?" + req.params.id,
+
+//     // click_action: res.redirect('http://com.g1p.plinic/'+ "?" + req.params.id),
+//     // click_action: "FLUTTER_NOTIFICATION_CLICK",
+
+//     // "click_action: ()" : "click_action()",
+//   },
+
+//   // click_action() {
+//   //   if(app) {
+
+//   //   } else {
+
+//   //   }
+//   // },
+
+//   data: { 
+//     mode: "notice",
+//     id: req.params.commentId
+//   }
+// };
+
+// fcm.send(message, function(err, response) {
+//   if (err) {
+//     console.log("Something has gone wrong!");
+//   } else {
+//     console.log("Successfully sent with response: ", response);
+//   }
+// });
+
+//   console.log(req.body);
+//   var newComment = req.body.recomments; //항상 껍데기가 무엇을 감싸는지 확인
+//   Notice.findOneAndUpdate({
+//     'comments._id' : req.params.commentId //comment의 id를 가져와야 한다. > 해당 comment id 아래에 대댓글을 넣기 위한 주소값 같은.
+//   }, {
+//     $push: {
+//       'comments.$.recomments' : newComment //달러 배열
+//     }
+//   }, function(err, post) {
+//     if (err) return res.json({
+//       success: false,
+//       message: err
+//     });
+      
+//     res.redirect('/noticeComments/' + req.params.id + "?" + req._parsedUrl.query);
+//   });
+// }); // 대댓글
+
+
+router.post('/:commentId/:id/recomments/', function (req, res) { //commentId를 가져와야 대댓글을 달 수 있음 > ex) filename 오류 등 show 페이지 관련 오류 뜰 경우 post id인 :id를 하나 더 넣어주는 편법.
+  //commentId/id/recomments 이 부분은 .ejs form 부분 action 부분에 영향. 또 redirect 부분의 req.params.id가 앞서 말한 post id임.
+  var message = { 
+    to: req.body.pushtoken, //// 전체 body에서 pushtoken을 가져온다.
+    notification: { //// 전달되는 메시지 내용들
+      title: '문의하신 댓글에 답글이 작성되었습니다.', 
+      body: req.body.recomments.body, //// 달린 답글의 내용을 지정한다.
+      sound: "default",
+      click_action: "FCM_PLUGIN_ACTIVITY",
+    },
+    data: { 
+      mode: "notice",
+      id: req.params.commentId     //// 데이터를 notice로 하며 (plinic앱 연계) id 푸쉬를 줘야할 댓글 단 유저의 id로 지정한다.
+    }
+  };
+  fcm.send(message, function(err, response) {
+    if (err) {
+      console.log("Something has gone wrong!");
+    } else {
+      console.log("Successfully sent with response: ", response);
+    }
+  });
+    console.log(req.body);
+    var newComment = req.body.recomments; //항상 껍데기가 무엇을 감싸는지 확인
+    Notice.findOneAndUpdate({
+      'comments._id' : req.params.commentId //comment의 id를 가져와야 한다. > 해당 comment id 아래에 대댓글을 넣기 위한 주소값 같은.
+    }, {
+      $push: {
+        'comments.$.recomments' : newComment //달러 배열
+      }
+    }, function(err, post) {
+      if (err) return res.json({
+        success: false,
+        message: err
+      });
+        
+      res.redirect('/noticeComments/' + req.params.id + "?" + req._parsedUrl.query);
+    });
+  }); // 대댓글
+
+
+
+
+
+
+
+router.delete('/:postId/comments/:commentId', function(req, res) {
+  Notice.findOneAndUpdate({
+      _id: req.params.postId
+    }, {
+      $pull: {
+        comments: {
+          _id: req.params.commentId
+        }
+      }
+    },
+    function(err, post) {
+      if (err) return res.json({
+        success: false,
+        message: err
+      });
+      res.redirect('/noticeComments/' + req.params.postId + "?" +
+        req._parsedUrl.query.replace(/_method=(.*?)(&|$)/ig, ""));
+    });
+}); //댓글 삭제
+
+router.delete('/:commentId/recomments/:recommentId', function(req, res) {
+  Notice.findOneAndUpdate({
+    _id: req.params.commentId,
+  }, {
+    $pull: {
+      recomments: {
+        _id: req.params.recommentId
+        // 'recomments._id' : req.params.recommentId
+      }
+    }
+  },
+  function(err, post) {
+    if(err) return res.json({
+      success: false,
+      message: err
+    });
+    res.redirect('/noticeComments/' + req.params.commentId + "?" +
+      req._parsedUrl.query.replace(/_method=(.*?)(&|$)/ig, ""));
+  });
+}); //대댓글 삭제
+
+router.get('/:id/edit', isLoggedIn, function (req, res) {
+  Notice.findById(req.params.id, function (err, post) {
+    // var url = req.protocol + '://' + req.get('host') + '/carezone_images/' + post._id;
+    var url = 'https://plinic.s3.ap-northeast-2.amazonaws.com/' + post.filename;
+    // var prod_url = req.protocol + '://' + req.get('host') + '/prod_images/' + post._id;
+    var prod_url = 'https://plinic.s3.ap-northeast-2.amazonaws.com/' + post.prodfilename;
+
+    var prefilename = post.filename; //이전 파일들은 삭제
+    var preoriginalName = post.originalName; //이전 파일들은 삭제
+
+    var preprodfilename = post.prodfilename;
+    var preprodoriginalname = post.prodoriginalname;
+
+    if (err) return res.json({
+      success: false,
+      message: err
+    });
+    res.render("PlinicAdmin/Contents/Comments/Notice/edit", {
+      post: post,
+      prefilename: prefilename,
+      preoriginalName: preoriginalName,
+      preprodfilename: preprodfilename,
+      preprodoriginalname: preprodoriginalname,
+      url: url,
+      prod_url: prod_url,
+      user: req.user
+    });
+  });
+}); // 콘텐츠관리 챌린지 edit
+
 router.put('/:id', s3upload.fields([{
   name: 'image'
 }, {
   name: 'prodimage'
-}, {
-  name: 'homeimage'
-}, {
-  name: 'challenge_image1'
-}, {
-  name: 'challenge_image2'
-}, {
-  name: 'challenge_image3'
-}, {
-  name: 'challenge_image4'
-}, {
-  name: 'challenge_image5'
 }]), isLoggedIn, function (req, res, next) {
   req.body.post.updatedAt = Date.now();
   req.body.post.filename = req.files['image'][0].key;
   req.body.post.originalName = req.files['image'][0].originalname;
   // req.body.post.prodfilename = req.files['prodimage'][0].key;
   // req.body.post.prodoriginalname = req.files['prodimage'][0].originalname;
-  req.body.post.homeimage_filename = req.files['homeimage'][0].key;
-  req.body.post.homeimage_originalname = req.files['homeimage'][0].originalname;
-  req.body.post.challenge_image1_filename = req.files['challenge_image1'][0].key;
-  req.body.post.challenge_image1_originalname = req.files['challenge_image1'][0].originalname;
-
-  if (req.files['challenge_image2']) {
-    req.body.post.challenge_image2_filename = req.files['challenge_image2'][0].key;
-    req.body.post.challenge_image2_originalname = req.files['challenge_image2'][0].originalname;
-  }
-  if (req.files['challenge_image3']) {
-    req.body.post.challenge_image3_filename = req.files['challenge_image3'][0].key;
-    req.body.post.challenge_image3_originalname = req.files['challenge_image3'][0].originalname;
-  }
-
-  if (req.files['challenge_image4']) {
-    req.body.post.challenge_image4_filename = req.files['challenge_image4'][0].key;
-    req.body.post.challenge_image4_originalname = req.files['challenge_image4'][0].originalname;
-  }
-
-  if (req.files['challenge_image5']) {
-    req.body.post.challenge_image5_filename = req.files['challenge_image5'][0].key;
-    req.body.post.challenge_image5_originalname = req.files['challenge_image5'][0].originalname;
-  }
 
   var params = {
     Bucket: 'plinic',
@@ -357,24 +507,6 @@ router.put('/:id', s3upload.fields([{
         {
           Key: req.body.preprodfilename // required
         },
-        {
-          Key: req.body.pre_challenge1_filename // required
-        },
-        {
-          Key: req.body.pre_challenge2_filename // required
-        },
-        {
-          Key: req.body.pre_challenge3_filename // required
-        },
-        {
-          Key: req.body.pre_challenge4_filename // required
-        },
-        {
-          Key: req.body.pre_challenge5_filename // required
-        },
-        {
-          Key: req.body.pre_challenge5_filename // required
-        },
 
       ]
     }
@@ -385,7 +517,7 @@ router.put('/:id', s3upload.fields([{
       res.status(500);
     }
     else console.log("케어존 수정 이전 파일 삭제 완료 : " + JSON.stringify(data));
-    Carezone.findOneAndUpdate({
+    Notice.findOneAndUpdate({
       _id: req.params.id,
       // author: req.user._id
     }, req.body.post, function (err, post) {
@@ -397,7 +529,7 @@ router.put('/:id', s3upload.fields([{
         success: false,
         message: "No data found to update"
       });
-      res.redirect('/contents/Challenge/' + req.params.id);
+      res.redirect('/noticeComments/' + req.params.id);
     });
   });
 }); //update
