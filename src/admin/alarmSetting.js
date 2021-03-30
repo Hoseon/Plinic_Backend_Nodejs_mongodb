@@ -60,25 +60,20 @@ const sftpconfig = {
   password: "g100210!!"
 };
 
-router.get("/AlarmSetting-Mgt", function (req, res) {
+router.get("/", function (req, res) {
   return res.render("PlinicAdmin/Operation/AlarmSetting-Mgt/index", {});
 });
 // 그룹/개별 알림 관리 리스트 화면
 
-router.get("/AlarmSetting-Mgt/new", function (req, res) {
+router.get("/new", function (req, res) {
   return res.render("PlinicAdmin/Operation/AlarmSetting-Mgt/new", {});
 });
 // 알림 보내기 화면
 
-router.get("/AlarmSetting-Mgt/show", function (req, res) {
+router.get("/show", function (req, res) {
   return res.render("PlinicAdmin/Operation/AlarmSetting-Mgt/show", {});
 });
 // 알람 보내기 show 화면
-
-router.get("/", function (req, res) {
-  return res.render("PlinicAdmin/bootstraptest/index", {});
-});
-// index
 
 function isLoggedIn(req, res, next) {
   if (req.isAuthenticated()) {

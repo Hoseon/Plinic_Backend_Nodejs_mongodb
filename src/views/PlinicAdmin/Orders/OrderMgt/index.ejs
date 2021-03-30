@@ -29,7 +29,6 @@
                         <div class="col-md-12">
                             <h1 class="page-header">
                                 상세검색
-                                <!-- <small> 챌린지 관리 Sub제목</small> -->
                             </h1>
                         </div>
                     </div>
@@ -37,247 +36,300 @@
                     <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne"
                         data-bs-parent="#accordionExample">
                         <div class="accordion-body">
-                            <form method="" action="">
-                                <table class="table-bordered table table-striped table-hover">
-                                    <tr>
-                                        <th class="text-center" style="padding-top: 15px;">기간</th>
-                                        <td colspan="3">
-                                            <div class="row g-4 align-self-center">
-                                                <div class="col-2">
-                                                    <select class="form-select" aria-label="Default select example">
-                                                        <option selected>주문일</option>
-                                                        <option value="1">배송 완료일</option>
-                                                        <option value="2">취소 완료일</option>
-                                                        <option value="3">반품 요청일</option>
-                                                        <option value="4">반품 완료일</option>
-                                                        <option value="5">교환 요청일</option>
-                                                        <option value="6">교환 완료일</option>
-                                                    </select>
-                                                </div>
-                                                <div class="col-5">
-                                                    <a href="#" class="btn btn-default btn-sm">전체</a>
-                                                    <a href="#" class="btn btn-default btn-sm">오늘</a>
-                                                    <a href="#" class="btn btn-default btn-sm">3일</a>
-                                                    <a href="#" class="btn btn-default btn-sm">7일</a>
-                                                    <a href="#" class="btn btn-default btn-sm">1개월</a>
-                                                    <a href="#" class="btn btn-default btn-sm">3개월</a>
-                                                    <a href="#" class="btn btn-default btn-sm">1년</a>
-                                                </div>
-                                                <div class="col-2">
-                                                    <input type="date" id="date" style="height:25px;">
-                                                </div>
-                                                <div class="col-1">
-                                                    ~
-                                                </div>
-                                                <div class="col-2">
-                                                    <input type="date" id="date" style="height:25px;">
-                                                </div>
+                            <!-- <form method="" action=""> -->
+                            <table class="table-bordered table table-striped table-hover">
+                                <tr>
+                                    <th class="text-center" style="padding-top: 15px;">기간</th>
+                                    <td colspan="3">
+                                        <div class="row g-4 align-self-center">
+                                            <div class="col-2">
+                                                <select class="form-select" aria-label="Default select example">
+                                                    <option selected>주문일</option>
+                                                    <option value="1">배송 완료일</option>
+                                                    <option value="2">취소 완료일</option>
+                                                    <option value="3">반품 요청일</option>
+                                                    <option value="4">반품 완료일</option>
+                                                    <option value="5">교환 요청일</option>
+                                                    <option value="6">교환 완료일</option>
+                                                </select>
                                             </div>
-                                        </td>
-                                        <td rowspan="3">
-                                            <div class="justify-content-center">
-                                                <button class="btn btn-info" style="margin-top: 56px;"
-                                                    type="button">검색</button>
+                                            <div class="col-5">
+                                                <a href="#" class="btn btn-default btn-sm">전체</a>
+                                                <a href="#" class="btn btn-default btn-sm">오늘</a>
+                                                <a href="#" class="btn btn-default btn-sm">3일</a>
+                                                <a href="#" class="btn btn-default btn-sm">7일</a>
+                                                <a href="#" class="btn btn-default btn-sm">1개월</a>
+                                                <a href="#" class="btn btn-default btn-sm">3개월</a>
+                                                <a href="#" class="btn btn-default btn-sm">1년</a>
                                             </div>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <th class="text-center" style="padding-top: 20px;">검색 조건</th>
-                                        <td colspan="3">
-                                            <div class="row g-4 align-self-center">
-                                                <div class="col-2">
-                                                    <select class="form-select" aria-label="Default select example">
-                                                        <option selected>주문 번호</option>
-                                                        <option value="1">주문자 아이디</option>
-                                                        <option value="2">주문자 연락처</option>
-                                                        <option value="3">주문자명</option>
-                                                        <option value="4">수신자명</option>
-                                                        <option value="5">주문 상품명</option>
-                                                        <option value="6">운송장 번호</option>
-                                                    </select>
-                                                </div>
-                                                <div class="col-5">
-                                                    <input name="s_od_name" class="form-control" type="text" value>
-                                                </div>
+                                            <div class="col-2">
+                                                <input type="date" id="date" style="height:25px;">
                                             </div>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <th class="col-2" style="text-align: center; padding-top: 15px;">주문 상태</th>
-                                        <td colspan="3">
-                                            <div class="row g-4 align-self-center">
-                                                <div class="col-2">
-                                                    <select class="form-select" aria-label="Default select example">
-                                                        <option selected>주문 관리</option>
-                                                        <option value="1">취소 관리</option>
-                                                        <option value="2">반품 관리</option>
-                                                        <option value="3">교환 관리</option>
-                                                    </select>
-                                                </div>
-                                                <div class="col-10">
-                                                    <div class="row g-4 align-items-center" style="padding-top: 12px;">
-                                                        <div class="col-2">
-                                                            <input class="form-check-input" type="checkbox"
-                                                                id="inlineCheckbox1" value="option1">
-                                                            <label class="form-check-label" for="inlineCheckbox1">결제
-                                                                확인중</label>
-                                                        </div>
-                                                        <div class="col-2">
-                                                            <input class="form-check-input" type="checkbox"
-                                                                id="inlineCheckbox2" value="option2">
-                                                            <label class="form-check-label" for="inlineCheckbox2">결제
-                                                                확인</label>
-                                                        </div>
-                                                        <div class="col-2">
-                                                            <input class="form-check-input" type="checkbox"
-                                                                id="inlineCheckbox3" value="option3">
-                                                            <label class="form-check-label" for="inlineCheckbox3">배송
-                                                                준비중</label>
-                                                        </div>
-                                                        <div class="col-2">
-                                                            <input class="form-check-input" type="checkbox"
-                                                                id="inlineCheckbox4" value="option4">
-                                                            <label class="form-check-label"
-                                                                for="inlineCheckbox4">배송중</label>
-                                                        </div>
-                                                        <div class="col-2">
-                                                            <input class="form-check-input" type="checkbox"
-                                                                id="inlineCheckbox5" value="option5">
-                                                            <label class="form-check-label" for="inlineCheckbox5">배송
-                                                                완료</label>
-                                                        </div>
+                                            <div class="col-1">
+                                                ~
+                                            </div>
+                                            <div class="col-2">
+                                                <input type="date" id="date2" style="height:25px;">
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td rowspan="3">
+                                        <div class="justify-content-center">
+                                            <button class="btn btn-info" style="margin-top: 56px;"
+                                                type="button">검색</button>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th class="text-center" style="padding-top: 20px;">검색 조건</th>
+                                    <td colspan="3">
+                                        <div class="row g-4 align-self-center">
+                                            <div class="col-2">
+                                                <select class="form-select" aria-label="Default select example">
+                                                    <option selected>주문 번호</option>
+                                                    <option value="1">주문자 아이디</option>
+                                                    <option value="2">주문자 연락처</option>
+                                                    <option value="3">주문자명</option>
+                                                    <option value="4">수신자명</option>
+                                                    <option value="5">주문 상품명</option>
+                                                    <option value="6">운송장 번호</option>
+                                                </select>
+                                            </div>
+                                            <div class="col-5">
+                                                <input name="s_od_name" class="form-control" type="text" value>
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th class="col-2" style="text-align: center; padding-top: 15px;">주문 상태</th>
+                                    <td colspan="3">
+                                        <div class="row g-4 align-self-center">
+                                            <div class="col-2">
+                                                <select class="form-select" aria-label="Default select example">
+                                                    <option selected>주문 관리</option>
+                                                    <option value="1">취소 관리</option>
+                                                    <option value="2">반품 관리</option>
+                                                    <option value="3">교환 관리</option>
+                                                </select>
+                                            </div>
+                                            <div class="col-10">
+                                                <div class="row g-4 align-items-center" style="padding-top: 12px;">
+                                                    <div class="col-2">
+                                                        <input class="form-check-input" type="checkbox"
+                                                            id="inlineCheckbox1" value="option1">
+                                                        <label class="form-check-label" for="inlineCheckbox1">결제
+                                                            확인중</label>
+                                                    </div>
+                                                    <div class="col-2">
+                                                        <input class="form-check-input" type="checkbox"
+                                                            id="inlineCheckbox2" value="option2">
+                                                        <label class="form-check-label" for="inlineCheckbox2">결제
+                                                            확인</label>
+                                                    </div>
+                                                    <div class="col-2">
+                                                        <input class="form-check-input" type="checkbox"
+                                                            id="inlineCheckbox3" value="option3">
+                                                        <label class="form-check-label" for="inlineCheckbox3">배송
+                                                            준비중</label>
+                                                    </div>
+                                                    <div class="col-2">
+                                                        <input class="form-check-input" type="checkbox"
+                                                            id="inlineCheckbox4" value="option4">
+                                                        <label class="form-check-label"
+                                                            for="inlineCheckbox4">배송중</label>
+                                                    </div>
+                                                    <div class="col-2">
+                                                        <input class="form-check-input" type="checkbox"
+                                                            id="inlineCheckbox5" value="option5">
+                                                        <label class="form-check-label" for="inlineCheckbox5">배송
+                                                            완료</label>
                                                     </div>
                                                 </div>
                                             </div>
-                                        </td>
-                                    </tr>
-                                </table>
-
-                                <div class="accordion-body">
-                                    <div class="row g-4 align-items-left">
-                                        <div class="col-2">
+                                        </div>
+                                    </td>
+                                </tr>
+                            </table>
+                            <!-- </form> -->
+                            <div class="accordion-body">
+                                <div class="row justify-content-center">
+                                    <form id="myForm" name="statusFormSubmit" style="text-align: center;">
+                                        <div class="col-2" style="float: left;">
                                             <select class="form-select form-select-sm"
-                                                aria-label=".form-select-sm example">
+                                                aria-label=".form-select-sm example" id="status" name="post[status]">
                                                 <option selected>주문 상태</option>
-                                                <option value="1">결제 확인중</option>
-                                                <option value="2">결제 확인</option>
-                                                <option value="3">배송 준비중</option>
-                                                <option value="4">배송중</option>
-                                                <option value="5">배송 완료</option>
-                                                <option value="6">취소 요청</option>
-                                                <option value="7">취소 처리중</option>
-                                                <option value="8">취소 완료</option>
-                                                <option value="9">반품 요청</option>
-                                                <option value="10">반품 처리중</option>
-                                                <option value="11">반품 완료</option>
-                                                <option value="12">교환 요청</option>
-                                                <option value="13">교환중</option>
-                                                <option value="14">교환 완료</option>
+                                                <option value="ready">ready</option>
+                                                <option value="paid">paid</option>
                                             </select>
                                         </div>
-                                        <div class="col-9">
-                                            <button class="btn btn-info btn-sm" type="button"><span
-                                                    class="entypo-check"></span>선택 주문상태 변경</button>
-                                            <button type="button" class="btn btn-warning btn-sm">선택 SMS 발송</button>
+                                        <br>
+                                        <div class="col-8" style="float: left; margin-top: -23px;">
+                                            <button class="btn btn-info btn-sm" type="button"
+                                                onclick="statusChange(this)"><span class="entypo-check">선택 주문상태 변경</span></button>
+                                            <button type="button" class="btn btn-warning btn-sm">선택 SMS
+                                                발송</button>
                                             <button class="btn btn-primary btn-sm" type="button"><span
-                                                    class="entypo-check"></span>선택 현금영수증 발행</button>
-                                            <button type="button" class="btn btn-success btn-sm">Excel Download</button>
+                                                    class="entypo-check">선택 현금영수증 발행</span></button>
+                                            <button type="button" class="btn btn-success btn-sm">Excel
+                                                Download</button>
                                         </div>
-                                        <div class="col-1">
-                                            <form name="frmSubmit">
-                                                <button type="button" class="btn btn-danger btn-sm">🗑 주문 삭제</button>
-                                            </form>
-                                        </div>
-                                    </div>
+                                    </form>
+
+                                    <form name="frmSubmit" style="text-align: right;">
+                                        <button type="button" class="btn btn-danger btn-sm"
+                                            onclick="selectDelRow(this)">🗑 주문 삭제</button>
+                                    </form>
                                 </div>
-                                <div class="table-responsive">
-                                    <table class="table table-bordered  table-condensed table-hover  text-center">
-                                        <thead>
-                                            <tr>
-                                                <th rowspan="2"><input class="form-check-input" type="checkbox" value=""
-                                                        id="flexCheckDisabled" disabled></th>
-                                                <th colspan="1">주문일</th>
-                                                <th rowspan="2" style="padding-bottom: 20px;">주문 상태</th>
-                                                <th rowspan="2" style="padding-bottom: 20px;">상품명</th>
-                                                <th rowspan="2" style="padding-bottom: 20px;">수량</th>
-                                                <th colspan="1">택배사</th>
-                                                <th rowspan="2" style="padding-bottom: 20px;">주문자</th>
-                                                <th rowspan="2" style="padding-bottom: 20px;">결제 방법</th>
-                                                <th colspan="1">결제 금액</th>
-                                                <th rowspan="2" style="padding-bottom: 20px;">보기</th>
-                                            </tr>
-                                            <tr>
-                                                <th>주문 번호</th>
-                                                <th>운송장 번호</th>
-                                                <th>포인트 사용</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <tr>
-                                                <th rowspan="2" style="padding-top: 20px;"><input
-                                                        class="form-check-input" type="checkbox" value=""
-                                                        id="flexCheckDisabled" disabled></th>
-                                                <th colspan="1" style="padding-top: 15px;">2021-03-05 11:00:12</th>
-                                                <th rowspan="2" style="padding-top: 40px;">결제 확인</th>
-                                                <th rowspan="2" style="padding-top: 40px;"
-                                                    onclick="location.href='/orders/OrderMgt/show'">뷰셀리온 콜라겐 드링크 5000
-                                                    -4주분(20ml x28병)</th>
-                                                <th rowspan="2" style="padding-top: 40px;">2</th>
-                                                <th colspan="1">
-                                                    <select class="form-select" aria-label="Default select example">
-                                                        <option selected>cj 택배</option>
-                                                        <option value="1">우체국 택배</option>
-                                                        <option value="2">한진 택배</option>
-                                                        <option value="3">로젠 택배</option>
-                                                    </select>
-                                                </th>
-                                                <th rowspan="2" style="padding-top: 40px;">이요진</th>
-                                                <th rowspan="2" style="padding-top: 40px;">카드 결제</th>
-                                                <th colspan="1" style="padding-top: 15px;">25,000원</th>
-                                                <th rowspan="2" style="padding-top: 40px;">보기</th>
-                                            </tr>
-                                            <tr>
-                                                <th style="padding-top: 15px;">2150643124512</th>
-                                                <th>
-                                                    <input name="s_od_name" class="form-control" type="text" value>
-                                                </th>
-                                                <th style="padding-top: 15px;">4500P</th>
-                                            </tr>
-                                        </tbody>
-                                        <tfoot>
-                                            <th colspan="5">합계</th>
-                                            <th>총 결제 금액:<span>1,500,000</span></th>
-                                            <th colspan="2">총 입금액:<span>950,000</span></th>
-                                            <th colspan="2">미수금:<span>550,000</span></th>
-                                        </tfoot>
-                                    </table>
-                                </div>
+                            </div>
+                            <div class="table-responsive">
+                                <table class="table table-bordered  table-condensed table-hover  text-center">
+                                    <thead>
+                                        <tr>
+                                            <th rowspan="2">
+                                                <input class="form-check-input" type="checkbox" value=""
+                                                    id="flexCheckDisabled" disabled>
+                                            </th>
+                                            <th colspan="1">주문일</th>
+                                            <th rowspan="2" style="padding-bottom: 20px;">주문 상태</th>
+                                            <th rowspan="2" style="padding-bottom: 20px;">상품명</th>
+                                            <th rowspan="2" style="padding-bottom: 20px;">수량</th>
+                                            <th colspan="1">택배사</th>
+                                            <th rowspan="2" style="padding-bottom: 20px;">주문자</th>
+                                            <th rowspan="2" style="padding-bottom: 20px;">결제 방법</th>
+                                            <th colspan="1">결제 금액</th>
+                                            <th rowspan="2" style="padding-bottom: 20px;">보기</th>
+                                        </tr>
+                                        <tr>
+                                            <th>주문 번호</th>
+                                            <th>운송장 번호</th>
+                                            <th>포인트 사용</th>
+                                        </tr>
+                                    </thead>
+                                    <% if(orders==null || orders.length==0) { %>
+                                        <tr class="noData">
+                                            <td colspan="5">There is no data to show :(</td>
+                                        </tr>
+                                        <% } %>
+                                            <% orders.forEach(function(post, index){ %>
+                                                <input type="hidden" name="id" value="<%=post._id%>" />
+                                                <form action="/orders/<%= post._id %>/deliverNoUpdate" method="post"
+                                                    name="formname">
+                                                    <tbody>
+                                                        <tr>
+                                                            <th rowspan="2" style="padding-top: 40px;">
+                                                                <input class="form-check-input" type="checkbox"
+                                                                    value="<%= post._id %>" name="del_unit[]"
+                                                                    onclick="selectCheckRow(this)">
+                                                            </th>
+                                                            <th colspan="1" style="padding-top: 15px;">
+                                                                <%= post.getFormattedDate(post.paid_at) %>
+                                                                    <%= post.getFormattedTime(post.paid_at) %>
+                                                            </th>
+                                                            <th rowspan="2" style="padding-top: 40px;">
+                                                                <%= post.status %>
+                                                            </th>
+                                                            <th rowspan="2" style="padding-top: 40px;"
+                                                                onclick="window.location = '/orders/<%= post._id %>?<%= urlQuery %>'">
+                                                                <%= post.name %>
+                                                            </th>
+                                                            <th rowspan="2" style="padding-top: 40px;">
+                                                                <%= post.productCount %>개
+                                                            </th>
+                                                            <th colspan="1">
+                                                                <select class="form-select" name="post[deliverCompany]"
+                                                                    aria-label="Default select example"
+                                                                    value="<%= post.deliverCompany %>">
+                                                                    <option selected>cj 택배</option>
+                                                                    <option value="우체국 택배">우체국 택배</option>
+                                                                    <option value="한진 택배">한진 택배</option>
+                                                                    <option value="로젠 택배">로젠 택배</option>
+                                                                </select>
+                                                            </th>
+                                                            <th rowspan="2" style="padding-top: 40px;">
+                                                                <%= post.buyer_name %>
+                                                            </th>
+                                                            <th rowspan="2" style="padding-top: 40px;">
+                                                                <%= post.pay_method %>
+                                                            </th>
+                                                            <th colspan="1" style="padding-top: 15px;">
+                                                                <%= post.amount.toLocaleString() %>원
+                                                            </th>
+                                                            <th rowspan="2" style="padding-top: 40px;"></th>
+                                                        </tr>
+                                                        <tr>
+                                                            <th style="padding-top: 15px;" name="post[imp_uid]">
+                                                                <%= post.imp_uid %>
+                                                            </th>
+                                                            <th>
+                                                                <input name="post[deliverNo]" class="form-control"
+                                                                    type="number" value="<%= post.deliverNo %>">
+                                                            </th>
+                                                            <th style="padding-top: 15px;">
+                                                                <%= post.usePoint.toLocaleString() %>P
+                                                            </th>
+                                                        </tr>
+                                                    </tbody>
+                                                </form>
+                                                <% }) %>
+                                                    <tfoot>
+                                                        <th colspan="5" style="padding-top: 5px;">합계</th>
+                                                        <th>총 결제 금액:<span>1,500,000</span></th>
+                                                        <th colspan="2">총 입금액:<span>950,000</span></th>
+                                                        <th colspan="2">미수금:<span>550,000</span></th>
+                                                    </tfoot>
+                                </table>
+                            </div>
+
                             </form>
                             <div class="row">
                                 <div class="col-auto me-auto"></div>
                                 <div class="col-auto">
                                     <nav aria-label="Page navigation example">
-                                        <ul class="pagination pagination-sm">
-                                            <li class="page-item">
-                                                <a class="page-link" href="#" aria-label="Previous">
-                                                    <span aria-hidden="true">&laquo;</span>
-                                                </a>
-                                            </li>
-                                            <li class="page-item"><a class="page-link" href="#">1</a>
-                                            </li>
-                                            <li class="page-item"><a class="page-link" href="#">2</a>
-                                            </li>
-                                            <li class="page-item"><a class="page-link" href="#">3</a>
-                                            </li>
-                                            <li class="page-item">
-                                                <a class="page-link" href="#" aria-label="Next">
-                                                    <span aria-hidden="true">&raquo;</span>
-                                                </a>
-                                            </li>
+                                        <ul class="pagination pagination-sm justify-content-center">
+                                            <% var offset=4; var partialQuery; if(urlQuery) partialQuery="&"
+                                                +urlQuery.replace(/page=(.*?)(&|$)/ig,""); %>
+
+                                                <li class="page-item disabled">
+                                                    <a class="page-link" href="#" aria-label="Previous">
+                                                        <span aria-hidden="true">&laquo;</span>
+                                                    </a>
+                                                </li>
+
+                                                <% for(i=1;i<=maxPage;i++){ %>
+
+                                                    <% if(i<=offset || i>maxPage-offset || (i>=page-(offset-1) && i
+                                                        <=page+(offset-1))){ %>
+                                                            <% if(i !=page){ %>
+                                                                <!-- <li>[<a href="/carezone?page=<%= i %><%= partialQuery %>"> <%= i %> </a>]</li> -->
+                                                                <li class="page-item"><a class="page-link"
+                                                                        href="/orders/?page=<%= i %><%= partialQuery %>">
+                                                                        <%= i %>
+                                                                    </a></li>
+                                                                <% } else { %>
+                                                                    <li class="page-item" name="currentPage"
+                                                                        aria-current="page"><a class="page-link"
+                                                                            href="#">
+                                                                            <%= i %>
+                                                                        </a></li>
+                                                                    <% } %>
+                                                                        <% } else if(i==offset+1 || i==maxPage-offset){
+                                                                            %>
+                                                                            <li>...</li>
+                                                                            <% } %>
+                                                                                <%}%>
+                                                                                    <li class="page-item disabled">
+                                                                                        <a class="page-link" href="#"
+                                                                                            aria-label="Next">
+                                                                                            <span
+                                                                                                aria-hidden="true">&raquo;</span>
+                                                                                        </a>
+                                                                                    </li>
                                         </ul>
                                     </nav>
                                 </div>
                             </div>
+
                         </div>
                     </div>
                 </div>
@@ -293,7 +345,129 @@
 <script src="/js/jquery-1.10.2.js"></script>
 <script src="/js/bootstrap.min.js"></script>
 <script>
+
+    function press(f) {
+        if (f.keyCode == 13) {
+            formname.submit();
+        }
+    }
+
+    function statusChange(chk) {
+        var chk = document.getElementsByName("del_unit[]"); // 체크박스객체를 담는다
+        var len = chk.length;    //체크박스의 전체 개수
+        var checkRow = '';      //체크된 체크박스의 value를 담기위한 변수
+        var checkCnt = 0;        //체크된 체크박스의 개수
+        var checkLast = '';      //체크된 체크박스 중 마지막 체크박스의 인덱스를 담기위한 변수
+        var rowid = '';             //체크된 체크박스의 모든 value 값을 담는다
+        var cnt = 0;
+
+        for (var i = 0; i < len; i++) {
+            if (chk[i].checked == true) {
+                checkCnt++;        //체크된 체크박스의 개수
+                checkLast = i;     //체크된 체크박스의 인덱스
+            }
+        }
+        for (var i = 0; i < len; i++) {
+            if (chk[i].checked == true) {  //체크가 되어있는 값 구분
+                checkRow = chk[i].value;
+                if (checkCnt == 1) {                            //체크된 체크박스의 개수가 한 개 일때,
+                    rowid += "" + checkRow + "";        //'value'의 형태 (뒤에 ,(콤마)가 붙지않게)
+                } else {                                            //체크된 체크박스의 개수가 여러 개 일때,
+                    if (i == checkLast) {                     //체크된 체크박스 중 마지막 체크박스일 때,
+                        rowid += "" + checkRow + "";  //'value'의 형태 (뒤에 ,(콤마)가 붙지않게)
+                    } else {
+                        rowid += "" + checkRow + ",";	 //'value',의 형태 (뒤에 ,(콤마)가 붙게)
+                    }
+                }
+                cnt++;
+                checkRow = '';    //checkRow초기화.
+            }
+            // alert(rowid);    //'value1', 'value2', 'value3' 의 형태로 출력된다.
+        }
+
+        if (confirm('적용 하시겠습니까?')) {
+            // alert(rowid);
+            var statusFormSubmit = document.statusFormSubmit;
+            statusFormSubmit.method = "post";
+            statusFormSubmit.target = "_self";
+            statusFormSubmit.action = "/orders/StatusUpdate/" + rowid + "?_method=post";
+            statusFormSubmit.submit();
+        }
+    }
+
+
+
+
+
+    function selectDelRow(chk) {
+
+        var chk = document.getElementsByName("del_unit[]"); // 체크박스객체를 담는다
+        var len = chk.length;    //체크박스의 전체 개수
+        var checkRow = '';      //체크된 체크박스의 value를 담기위한 변수
+        var checkCnt = 0;        //체크된 체크박스의 개수
+        var checkLast = '';      //체크된 체크박스 중 마지막 체크박스의 인덱스를 담기위한 변수
+        var rowid = '';             //체크된 체크박스의 모든 value 값을 담는다
+        var cnt = 0;
+
+        for (var i = 0; i < len; i++) {
+            if (chk[i].checked == true) {
+                checkCnt++;        //체크된 체크박스의 개수
+                checkLast = i;     //체크된 체크박스의 인덱스
+            }
+        }
+        for (var i = 0; i < len; i++) {
+            if (chk[i].checked == true) {  //체크가 되어있는 값 구분
+                checkRow = chk[i].value;
+                if (checkCnt == 1) {                            //체크된 체크박스의 개수가 한 개 일때,
+                    rowid += "" + checkRow + "";        //'value'의 형태 (뒤에 ,(콤마)가 붙지않게)
+                } else {                                            //체크된 체크박스의 개수가 여러 개 일때,
+                    if (i == checkLast) {                     //체크된 체크박스 중 마지막 체크박스일 때,
+                        rowid += "" + checkRow + "";  //'value'의 형태 (뒤에 ,(콤마)가 붙지않게)
+                    } else {
+                        rowid += "" + checkRow + ",";	 //'value',의 형태 (뒤에 ,(콤마)가 붙게)
+                    }
+                }
+                cnt++;
+                checkRow = '';    //checkRow초기화.
+            }
+            // alert(rowid);    //'value1', 'value2', 'value3' 의 형태로 (id값이)출력된다.
+        }
+
+
+
+        if (confirm('정말 삭제하시겠습니까?')) {
+            // alert(rowid);
+            var theForm = document.frmSubmit;
+            theForm.method = "post";
+            theForm.target = "_self";
+            theForm.action = "/orders/del/" + rowid + "?_method=delete";
+            theForm.submit();
+        }
+    }
+
+    function selectCheckRow(chk) {
+        var obj = document.getElementsByName("del_unit[]");
+        for (var i = 0; i < obj.length; i++) {
+            if (obj[i] != chk) {
+                obj[i].checked = false;
+            }
+        }
+    }
+
+
     $(document).ready(function () {
+
+        $("#myForm").submit(function () {
+            if ($('#status').val() == '') {
+                alert("주문상태를 정해주세요.");
+                return false;
+            }
+            alert("저장되었습니다.")
+        }); //  주문상태 submit()
+
+
+
+
         $(".active").removeClass("active");
         $("#orders").addClass("active");
         $("#forms-collapse1").addClass('show');

@@ -15,6 +15,28 @@ var http = require("http");
 var FCM = require("fcm-node");
 var serverKey = "AIzaSyCAcTA318i_SVCMl94e8SFuXHhI5VtXdhU";
 var fcm = new FCM(serverKey);
+var OrdersCounter = require("../models/OrdersCounter");
+
+var multerS3 = require('multer-s3');
+const AWS = require("aws-sdk");
+AWS.config.loadFromPath(__dirname + "/../config/awsconfig.json");
+let s3 = new AWS.S3();
+let s3upload = multer({
+  storage: multerS3({
+    s3: s3,
+    bucket: 'plinic',
+    metadata: function (req, file, cb) {
+      cb(null, {
+        fieldName: file.fieldname,
+        filename: file.fieldname + '-' + Date.now()
+      });
+    },
+    key: function (req, file, cb) {
+      cb(null, file.fieldname + '-' + Date.now())
+    },
+    acl: 'public-read'
+  })
+});
 
 //let UPLOAD_PATH = "./uploads/"
 
@@ -69,7 +91,7 @@ router.get("/Main", function (req, res) {
 // });
 //주문 관리 리스트 화면
 
-router.get('/OrderMgt', function (req, res) {
+router.get('/', function (req, res) {
   var vistorCounter = null;
   var page = Math.max(1, req.query.page) > 1 ? parseInt(req.query.page) : 1;
   var limit = Math.max(1, req.query.limit) > 1 ? parseInt(req.query.limit) : 7;
@@ -136,17 +158,129 @@ router.get('/OrderMgt', function (req, res) {
 }); // new index
 
 
-router.get("/OrderMgt/show", function (req, res) {
-  return res.render("PlinicAdmin/Orders/OrderMgt/show", {});
-});
-//주문 관리 show 화면
+router.post('/statusUpdate/:id', function(req, res) {
+  console.log(req.body);
+  var newstatus = req.body;
+  Orders.findOneAndUpdate({
+    _id: req.params.id,
+  }, 
+  req.body.post,
+  {
+    $push: {
+      body: newstatus
+    }
+  }, 
+  function(err, post) {
+    if (err) return res.json({
+      success: false,
+      message: err
+    });
+    res.redirect("/orders/");
+  });
+}); // 주문 상태 업데이트
 
-router.get("/", function (req, res) {
-  return res.render("PlinicAdmin/bootstraptest/index", {});
-});
-// index
 
 
+router.post('/:id/deliverNoUpdate', function(req, res) {
+    console.log(req.body);
+    var newdeliverNo = req.body;
+    Orders.findOneAndUpdate({
+      _id: req.params.id
+    }, 
+    req.body.post,
+    {
+      $push: {
+        body: newdeliverNo
+      }
+    }, 
+    function(err, post) {
+      if (err) return res.json({
+        success: false,
+        message: err
+      });
+      res.redirect("/orders/");
+    });
+  }); // 운송장 번호 Update
+
+
+  router.delete('/del/:id', isLoggedIn, function(req, res, next) {
+    Orders.findOneAndRemove({
+      _id: req.params.id,
+      // author: req.user._id
+    }, function(err, post) {
+      if (err) return res.json({
+        success: false,
+        message: err
+      });
+      if (!post) return res.json({
+        success: false,
+        message: "No data found to delete"
+      });
+      var params = {
+        Bucket: 'plinic',
+        Delete: { // required
+          Objects: [ // required
+            { Key: post.filename },
+          ]
+        }
+      };
+      s3.deleteObjects(params, function(err, data){
+        if(err) {
+          console.log("케어존 수정 아마존 파일 삭제 에러 : " + "err : " + err);
+          res.status(500);
+        }
+        else console.log("케어존 수정 이전 파일 삭제 완료 : " + JSON.stringify(data));
+      });
+      res.redirect('/orders/');
+    });
+  }); // row 데이터 삭제
+
+
+  router.post('/', isLoggedIn, function(req, res, next){
+
+    async.waterfall([function(callback){
+      OrdersCounter.findOne({name:"orders"}, function (err,counter) {
+        if(err) callback(err);
+        if(counter){
+           callback(null, counter);
+        } else {
+          
+        }
+      });
+    }],function(callback, counter){
+      var newPost = req.body.post;
+      newPost.author = req.user._id;
+      Orders.create(req.body.post,function (err,post) {
+        if(err) return res.json({success:false, message:err});
+        res.redirect('/orders');
+      });
+    });
+  });
+
+
+router.get("/:id", function (req, res) {
+  Orders.findById(req.params.id)
+    .populate(['author', 'comments.author'])
+    .exec(function (err, post) {
+      if (err) return res.json({
+        success: false,
+        message: err
+      });
+
+      console.log(post);
+
+      var url = 'https://plinic.s3.ap-northeast-2.amazonaws.com/' + post.filename;
+      var prod_url = 'https://plinic.s3.ap-northeast-2.amazonaws.com/' + post.prodfilename;
+      res.render("PlinicAdmin/Orders/OrderMgt/show", {
+        post: post,
+        url: url,
+        prod_url: prod_url,
+        urlQuery: req._parsedUrl.query,
+        user: req.user,
+        search: createSearch(req.query)
+      });
+    });
+}); // 제품 상세페이지 show
 
 
 

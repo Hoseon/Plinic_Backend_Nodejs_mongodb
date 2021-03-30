@@ -60,20 +60,10 @@ const sftpconfig = {
   password: "g100210!!"
 };
 
-router.get("/Alarm", function (req, res) {
+router.get("/", function (req, res) {
   return res.render("PlinicAdmin/Operation/Alarm/index", {});
 });
 //기본 알림 화면
-
-router.get("/Alarm/show", function (req, res) {
-  return res.render("PlinicAdmin/Operation/Alarm/show", {});
-});
-//고객 관리 show 화면
-
-router.get("/", function (req, res) {
-  return res.render("PlinicAdmin/bootstraptest/index", {});
-});
-// index
 
 function isLoggedIn(req, res, next) {
   if (req.isAuthenticated()) {

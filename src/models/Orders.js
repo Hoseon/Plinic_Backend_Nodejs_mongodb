@@ -40,13 +40,13 @@ var orderSchema = mongoose.Schema({
   updatedAt: Date,
   vbank_code: { type: String },
   vbank_date: { type: String },
-  vbank_holder: { type: String },
+  vbank_holder: { type: String }, //입금자명
   vbank_issued_at: { type: String },
-  vbank_name: { type: String },
-  vbank_num: { type: String },
-  product_name: { type: String },
-  product_num: { type: String },
-  productFileName: { type: String },
+  vbank_name: { type: String }, //입금 은행이름
+  vbank_num: { type: String }, //입금 계좌번호
+  product_name: { type: String }, //상품명
+  product_num: { type: String }, //상품 번호
+  productFileName: { type: String }, //상품 이미지
   invoiceNo: {type: String},
 });
 
