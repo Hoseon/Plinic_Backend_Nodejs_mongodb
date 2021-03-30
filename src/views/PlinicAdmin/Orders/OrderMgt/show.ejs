@@ -29,7 +29,6 @@
             <div class="col-md-12">
               <h1 class="page-header">
                 제품 상세페이지
-                <!-- <small> 챌린지 관리 Sub제목</small> -->
               </h1>
             </div>
           </div>
@@ -46,15 +45,15 @@
                 <table class="table-bordered table table-striped table-hover">
                   <tr>
                     <th class="text-center">주문 번호</th>
-                    <td class="text-left">1234567891</td>
+                    <td class="text-left"><%= post.imp_uid %></td>
                   </tr>
                   <tr>
                     <th class="text-center">주문 일자</th>
-                    <td class="text-left">2021-03-05 11:00:12</td>
+                    <td class="text-left"><%= post.getFormattedDate(post.paid_at) %> <%= post.getFormattedTime(post.paid_at) %></td>
                   </tr>
                   <tr>
                     <th class="text-center">주문 상태</th>
-                    <td class="text-left">결제확인</td>
+                    <td class="text-left"><%= post.status %></td>
                   </tr>
                 </table>
 
@@ -77,21 +76,22 @@
                   <tbody>
                     <tr class="text-center">
                       <td><img style="max-width:120px;"
-                          src="https://plinic.s3.ap-northeast-2.amazonaws.com/image-1593492322970"></td>
-                      <td>뷰셀리온 콜라겐드링크 5000 4주분(20mlx28병)</td>
-                      <td>25,000원</td>
+                          src="https://plinic.s3.ap-northeast-2.amazonaws.com/<%= post.productFileName %>" class="img-thumbnail" alt="..."></td>
+                      <td class="text-center"><%= post.name %></td>
+                      <td><%= post.amount.toLocaleString() %>원</td>
                       <td>0원</td>
-                      <td>2</td>
-                      <td>50,000원</td>
+                      <td><%= post.productCount %>개</td>
+                      <td><%= post.amount.toLocaleString() %>원</td>
                     </tr>
                   </tbody>
                   <tfoot>
                     <tr class="text-right">
                       <td colspan="6">
-                        <span>상품 합계(<span style="color: red;">50,000원</span>)-</span>
-                        <span>포인트 사용금액(<span style="color: red;">10,000원</span>)+</span>
+                        <span style="padding-right: 50px; font-weight: bold;">미개발&nbsp;</span>
+                        <span>상품 합계(<span style="color: red;"><%= post.amount.toLocaleString() %>원</span>)-</span>
+                        <span>포인트 사용금액(<span style="color: red;" class="point"><%= post.usePoint.toLocaleString() %>P</span>)+</span>
                         <span>배송비(<span style="color: red;">0원</span>)=</span>
-                        <span>최종 금액<span style="color: red;">40,000원</span></span>
+                        <span>최종 금액<span style="color: red;"><%= post.amount.toLocaleString() %>원</span></span>
                       </td>
                     </tr>
                   </tfoot>
@@ -106,13 +106,13 @@
                 <table class="table-bordered table table-striped table-hover">
                   <tr>
                     <th class="text-center" width=300>결제 수단</th>
-                    <td colspan="3" class="text-left">카드 결제</td>
+                    <td colspan="3" class="text-left"><%= post.pay_method %></td>
                   </tr>
                   <tr>
                     <th class="text-center" width=300>입금 계좌</th>
-                    <td class="text-left"></td>
+                    <td class="text-left"><%= post.vbank_num %></td>
                     <th class="text-center" width=300>입금자명</th>
-                    <td class="text-left"></td>
+                    <td class="text-left"><%= post.vbank_holder %></td>
                   </tr>
                 </table>
 
@@ -124,21 +124,21 @@
                 <table class="table-bordered table table-striped table-hover">
                   <tr>
                     <th class="text-center" width=300>주문자명</th>
-                    <td class="text-left">이요진</td>
+                    <td class="text-left"><%= post.buyer_name %></td>
                     <th class="text-center" width=300>휴대폰</th>
-                    <td class="text-left">010-1245-4585</td>
+                    <td class="text-left"><%= post.buyer_tel %></td>
                   </tr>
                   <tr>
                     <th class="text-center" width=300>우편 번호</th>
-                    <td colspan="3" class="text-left">134-707</td>
+                    <td colspan="3" class="text-left"><%= post.buyer_postcode %></td>
                   </tr>
                   <tr>
                     <th class="text-center" width=300>주소</th>
-                    <td colspan="3" class="text-left">서울시 송파구 소파대로 453 레이크빌 빌딩 402호</td>
+                    <td colspan="3" class="text-left"><%= post.buyer_addr %></td>
                   </tr>
                   <tr>
                     <th class="text-center" width=300>주문 취소 사유</th>
-                    <td colspan="3" class="text-left"></td>
+                    <td colspan="3" class="text-left"><%= post.cancel_reason %></td>
                   </tr>
                 </table>
                 <br><br>
@@ -162,7 +162,7 @@
                     <button type="submit"
                         class="w-15 m-1 btn btn-info btn-sm">저장하기</button>
                     <button type="reset" class="w-15 m-1 btn btn-secondary btn-sm"
-                        onclick="location.href='/orders/OrderMgt'">목록</button>
+                        onclick="location.href='/orders/'">목록</button>
                   </div>
                 </div>
               </div>
@@ -181,6 +181,7 @@
 <script src="/js/jquery-1.10.2.js"></script>
 <script src="/js/bootstrap.min.js"></script>
 <script>
+
   $(document).ready(function () {
     $(".active").removeClass("active");
     $("#orders").addClass("active");

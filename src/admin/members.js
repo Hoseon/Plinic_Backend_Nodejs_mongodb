@@ -65,20 +65,15 @@ router.get("/Main", function (req, res) {
 });
 //고객 관리 메인 화면
 
-router.get("/MemberMgt", function (req, res) {
+router.get("/", function (req, res) {
   return res.render("PlinicAdmin/Operation/MemberMgt/index", {});
 });
 //고객 관리 회원 리스트 화면
 
-router.get("/MemberMgt/show", function (req, res) {
+router.get("/show", function (req, res) {
   return res.render("PlinicAdmin/Operation/MemberMgt/show", {});
 });
 //고객 관리 show 화면
-
-router.get("/", function (req, res) {
-  return res.render("PlinicAdmin/bootstraptest/index", {});
-});
-// index
 
 function isLoggedIn(req, res, next) {
   if (req.isAuthenticated()) {

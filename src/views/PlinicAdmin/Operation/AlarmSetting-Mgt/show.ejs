@@ -11,6 +11,7 @@
     $(document).ready(function () {
         $(".active").removeClass("active");
         $("#members").addClass("active");
+        $("#forms-collapse3").addClass('show');
     });
 </script>
 <title>Hello, world!</title>
@@ -117,7 +118,7 @@
                                             </div>
                                             <div class="col-2">
                                                 <button type="button" class="btn btn-primary"
-                                                    onclick="location.href='/groups/GroupMgt/new'">새 그룹 추가</button>
+                                                    onclick="location.href='/groups/new'">새 그룹 추가</button>
                                             </div>
                                         </div>
                                     </div>
@@ -198,7 +199,7 @@
                             <div class="panel-body">
                                 <div class="text-center">
                                     <a type="button" class="w-15 m-1 btn btn-light btn-sm"
-                                        href="/alarmSetting/AlarmSetting-Mgt">목록</a>
+                                        href="/alarmSetting/">목록</a>
                                     <button type="submit" class="w-15 m-1 btn btn-info btn-sm">알림 보내기</button>
                                 </div>
                             </div>
