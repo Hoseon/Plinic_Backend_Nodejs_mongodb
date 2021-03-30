@@ -121,7 +121,8 @@ exports.challengeSave = (req, res) => {
     } else {
       //등록 한 미션이 없거나 완료가 되었을 때
       let newMission = Challenge(req.body);
-      newMission.createdAt = getCovertKoreaTime(new Date()); //데이터베이스에 오늘 날짜를 그냥 넣어 버림 GMT+09:00 기준
+      // newMission.createdAt = getCovertKoreaTime(new Date()); //데이터베이스에 오늘 날짜를 그냥 넣어 버림 GMT+09:00 기준
+      // newMission.createdAt = getCovertKoreaTime(new Date()); //데이터베이스에 오늘 날짜를 그냥 넣어 버림 GMT+09:00 기준
       newMission.save((err, user) => {
         if (err) {
           console.log(err);
@@ -1636,241 +1637,251 @@ exports.usePointUpdate = (req, res) => {
     var todayPoints = 0;
     var minusPoints = 0;
     var usePoints = 0;
-
-    // 오늘 사용했던 시간 + 현재 사용한 시간이 1분30초(90P초가 넘는지 확인 하는 로직)
-      console.log("플리닉 케어 사용자 적립 확인 : " + req.body.email);
-    for (var i = 0; i < result.userpoint.length; i++) {
-      if (getFormattedDate(result.userpoint[i].updatedAt) == getFormattedDate(new Date())) {
-        //날짜가 오늘이여야 하고
-        if (result.userpoint[i].status == 'true') {
-          //포인트는 케어하기로 누적한것만 찾아낸다( 출석체크 50P로 누적된건 제외 )
-          todayPoints = todayPoints + Number(result.userpoint[i].point); //날짜가 오늘인 점수는 모두다 누적해본다
-        }
-
-      }
+      
+    if (err) {
+      console.log("사용자 포인트 업데이트 11 : " + req.body.email);
+      return res.status(400).json();
     }
-
-
-    //누적 로직 시작
-    if (todayPoints < 90) { //하루 9분을 넘어가면
-
-      //만일 사용시간이 이번 누적으로 9분이 초과 하면 9분만 누적하는 로직
-      if ((todayPoints + Number(req.body.points)) > 90) {
-        // console.log("9분을 넘어감");
-        // console.log((todayPoints + Number(req.body.points)) - 90)
-
-        //만일 사용시간이 이번 누적으로 9분이 초과 하면 9분만 누적하는 로직 6분만 이용한걸로 뺀다
-        minusPoints = (todayPoints + Number(req.body.points)) - 90
-        usePoints = Number(req.body.points) - minusPoints
-        // console.log("적립되어야 할 포인트 : " + usePoints);
-        var newPoint = req.body
-        newPoint.points = usePoints;
-        newPoint.updatedAt = new Date();
-
-        var userPoint = req.body.userpoint;
-        userPoint.point = usePoints;
-        userPoint.updatedAt = new Date();
-
-
-        User.findOneAndUpdate({
-          email: req.body.email
-        }, {
-          $push: {
-            userpoint: userPoint
-            //req.body.userpoint
-          },
-          $inc: { //미션당 사용 시간 외에 일반적인 플리닉의 총 사용시간도 구해야 함 20191028
-            "totaluserpoint": usePoints
+      
+    if (result) {
+      // 오늘 사용했던 시간 + 현재 사용한 시간이 1분30초(90P초가 넘는지 확인 하는 로직)
+      console.log("플리닉 케어 사용자 적립 확인 : " + req.body.email);
+      for (var i = 0; i < result.userpoint.length; i++) {
+        if (getFormattedDate(result.userpoint[i].updatedAt) == getFormattedDate(new Date())) {
+          //날짜가 오늘이여야 하고
+          if (result.userpoint[i].status == 'true') {
+            //포인트는 케어하기로 누적한것만 찾아낸다( 출석체크 50P로 누적된건 제외 )
+            todayPoints = todayPoints + Number(result.userpoint[i].point); //날짜가 오늘인 점수는 모두다 누적해본다
           }
-        }, function (err, post2) {
-          if (err) {
-            // console.log("tags error : " + err);
-            return res.status(400).json(err);
-          } else {
-            PointLog.findOne({ email: req.body.email }, function (err, pointLogUser) {
-              if (err) {
-                return res.status(400).json(err);
-              }
 
-              if (pointLogUser) {
-                var pointPreLog = {
-                  // email: req.body.email,
-                    point: usePoints,
-                    reason: '플라즈마 케어 포인트 적립',
-                    status: true
+        }
+      }
+
+
+      //누적 로직 시작
+      if (todayPoints < 90) { //하루 9분을 넘어가면
+
+        //만일 사용시간이 이번 누적으로 9분이 초과 하면 9분만 누적하는 로직
+        if ((todayPoints + Number(req.body.points)) > 90) {
+          // console.log("9분을 넘어감");
+          // console.log((todayPoints + Number(req.body.points)) - 90)
+
+          //만일 사용시간이 이번 누적으로 9분이 초과 하면 9분만 누적하는 로직 6분만 이용한걸로 뺀다
+          minusPoints = (todayPoints + Number(req.body.points)) - 90
+          usePoints = Number(req.body.points) - minusPoints
+          // console.log("적립되어야 할 포인트 : " + usePoints);
+          var newPoint = req.body
+          newPoint.points = usePoints;
+          newPoint.updatedAt = new Date();
+
+          var userPoint = req.body.userpoint;
+          userPoint.point = usePoints;
+          userPoint.updatedAt = new Date();
+
+
+          User.findOneAndUpdate({
+            email: req.body.email
+          }, {
+            $push: {
+              userpoint: userPoint
+              //req.body.userpoint
+            },
+            $inc: { //미션당 사용 시간 외에 일반적인 플리닉의 총 사용시간도 구해야 함 20191028
+              "totaluserpoint": usePoints
+            }
+          }, function (err, post2) {
+            if (err) {
+              // console.log("tags error : " + err);
+              return res.status(400).json(err);
+            } else {
+              PointLog.findOne({ email: req.body.email }, function (err, pointLogUser) {
+                if (err) {
+                  return res.status(400).json(err);
                 }
 
-                PointLog.findOneAndUpdate({
-                  email: req.body.email
-                }, {
-                    $push: {
-                      point: pointPreLog
-                    }, $inc: {
-                      "totalPoint": usePoints
-                    }
-                  }, function (err, updateResult) {
-                    if (err) {
-                      console.log("포인트 로그 업데이트 실패1 : " + req.body.email + " : " + usePoints + "P");
-                      res.status(400).json(err);
-                    }
+                if (pointLogUser) {
+                  var pointPreLog = {
+                    // email: req.body.email,
+                      point: usePoints,
+                      reason: '플라즈마 케어 포인트 적립',
+                      status: true
+                  }
 
-                    if (updateResult) {
+                  PointLog.findOneAndUpdate({
+                    email: req.body.email
+                  }, {
+                      $push: {
+                        point: pointPreLog
+                      }, $inc: {
+                        "totalPoint": usePoints
+                      }
+                    }, function (err, updateResult) {
+                      if (err) {
+                        console.log("포인트 로그 업데이트 실패1 : " + req.body.email + " : " + usePoints + "P");
+                        res.status(400).json(err);
+                      }
+
+                      if (updateResult) {
+                        return res.status(201).json({
+                          'point': usePoints + 'P 획득 완료!',
+                          'msg': '오늘 적립된 포인트 : ' + (Number(todayPoints) + Number(usePoints)) + 'P <br>(최대적립 가능 포인트 : 90P)'
+                        });
+                      }
+                    });
+                } else {
+                  var pointPreLog = {
+                    // email: req.body.email,
+                    point: {
+                      point: usePoints,
+                      reason: '플라즈마 케어 포인트 적립',
+                      status: true
+                    },
+                  }
+
+                  let newPointLog = PointLog(pointPreLog);
+                  newPointLog.email = req.body.email;
+                  newPointLog.totalPoint = usePoints;
+                  newPointLog.save((err, result) => {
+                    if (err) {
+                      console.log("플라즈마 케어 포인트 적립 실패(PointLogSave) : " + req.body.email);
+                      return res.status(400).json(err);
+                    }
+                    
+                    if (result) {
                       return res.status(201).json({
                         'point': usePoints + 'P 획득 완료!',
                         'msg': '오늘 적립된 포인트 : ' + (Number(todayPoints) + Number(usePoints)) + 'P <br>(최대적립 가능 포인트 : 90P)'
                       });
                     }
-                  });
-              } else {
-                var pointPreLog = {
-                  // email: req.body.email,
-                  point: {
-                    point: usePoints,
-                    reason: '플라즈마 케어 포인트 적립',
-                    status: true
-                  },
+                  })
+                }
+                
+              })
+            }
+          });
+        } else { //총 사용시간과 현재 사용시간을 합쳐도 1분30초(90초)가 안넘어 갈때
+          // console.log("9분을 안넘어감");
+          var newPoint = req.body.userpoint;
+          newPoint.updatedAt = new Date();
+
+          User.findOneAndUpdate({
+            email: req.body.email
+          }, {
+            $push: {
+              userpoint: newPoint
+            },
+            $inc: { //미션당 사용사긴 외에 일반적인 플리닉의 총 사용시간도 구해야 함 20191028
+              "totaluserpoint": req.body.points
+            }
+          }, function (err, post2) {
+            if (err) {
+              // console.log("tags error : " + err);
+              console.log("플라즈마 케어 포인트 적립 실패 : " + req.body.email);
+              return res.status(400).json(err);
+            } else {
+              PointLog.findOne({ email: req.body.email }, function (err, pointLogUser) {
+                if (err) {
+                  return res.status(400).json(err);
                 }
 
-                let newPointLog = PointLog(pointPreLog);
-                newPointLog.email = req.body.email;
-                newPointLog.totalPoint = usePoints;
-                newPointLog.save((err, result) => {
-                  if (err) {
-                    console.log("플라즈마 케어 포인트 적립 실패(PointLogSave) : " + req.body.email);
-                    return res.status(400).json(err);
+                if (pointLogUser) {
+                  var pointPreLog = {
+                    // email: req.body.email,
+                      point: req.body.userpoint.point,
+                      reason: '플라즈마 케어 포인트 적립',
+                      status: true
                   }
-                  
-                  if (result) {
-                    return res.status(201).json({
-                      'point': usePoints + 'P 획득 완료!',
-                      'msg': '오늘 적립된 포인트 : ' + (Number(todayPoints) + Number(usePoints)) + 'P <br>(최대적립 가능 포인트 : 90P)'
+
+                  PointLog.findOneAndUpdate({
+                    email: req.body.email
+                  }, {
+                      $push: {
+                        point: pointPreLog
+                      }, $inc: {
+                        "totalPoint": req.body.userpoint.point
+                      }
+                    }, function (err, updateResult) {
+                      if (err) {
+                        console.log("포인트 로그 업데이트 실패1 : " + req.body.email + " : " + req.body.userpoint.point + "P");
+                        res.status(400).json(err);
+                      }
+
+                      if (updateResult) {
+                        return res.status(201).json({
+                          'point': req.body.points + 'P 획득 완료!',
+                          'msg': '오늘 적립된 포인트 : ' + (Number(todayPoints) + Number(req.body.points)) + 'P <br>(최대적립 가능 포인트 : 90P)'
+                        });
+                      }
                     });
+                } else {
+                  var pointPreLog = {
+                    // email: req.body.email,
+                    point: {
+                      point: req.body.userpoint.point,
+                      reason: '플라즈마 케어 포인트 적립',
+                      status: true
+                    },
                   }
-                })
-              }
-              
-            })
-          }
-        });
-      } else { //총 사용시간과 현재 사용시간을 합쳐도 1분30초(90초)가 안넘어 갈때
-        // console.log("9분을 안넘어감");
-        var newPoint = req.body.userpoint;
-        newPoint.updatedAt = new Date();
 
-        User.findOneAndUpdate({
-          email: req.body.email
-        }, {
-          $push: {
-            userpoint: newPoint
-          },
-          $inc: { //미션당 사용사긴 외에 일반적인 플리닉의 총 사용시간도 구해야 함 20191028
-            "totaluserpoint": req.body.points
-          }
-        }, function (err, post2) {
-          if (err) {
-            // console.log("tags error : " + err);
-            console.log("플라즈마 케어 포인트 적립 실패 : " + req.body.email);
-            return res.status(400).json(err);
-          } else {
-            PointLog.findOne({ email: req.body.email }, function (err, pointLogUser) {
-              if (err) {
-                return res.status(400).json(err);
-              }
-
-              if (pointLogUser) {
-                var pointPreLog = {
-                  // email: req.body.email,
-                    point: req.body.userpoint.point,
-                    reason: '플라즈마 케어 포인트 적립',
-                    status: true
-                }
-
-                PointLog.findOneAndUpdate({
-                  email: req.body.email
-                }, {
-                    $push: {
-                      point: pointPreLog
-                    }, $inc: {
-                      "totalPoint": req.body.userpoint.point
-                    }
-                  }, function (err, updateResult) {
+                  let newPointLog = PointLog(pointPreLog);
+                  newPointLog.email = req.body.email;
+                  newPointLog.totalPoint = req.body.userpoint.point;
+                  newPointLog.save((err, result) => {
                     if (err) {
-                      console.log("포인트 로그 업데이트 실패1 : " + req.body.email + " : " + req.body.userpoint.point + "P");
-                      res.status(400).json(err);
+                      console.log("플라즈마 케어 포인트 적립 실패(PointLogSave) : " + req.body.email);
+                      return res.status(400).json(err);
                     }
-
-                    if (updateResult) {
+                    
+                    if (result) {
                       return res.status(201).json({
                         'point': req.body.points + 'P 획득 완료!',
                         'msg': '오늘 적립된 포인트 : ' + (Number(todayPoints) + Number(req.body.points)) + 'P <br>(최대적립 가능 포인트 : 90P)'
                       });
                     }
-                  });
-              } else {
-                var pointPreLog = {
-                  // email: req.body.email,
-                  point: {
-                    point: req.body.userpoint.point,
-                    reason: '플라즈마 케어 포인트 적립',
-                    status: true
-                  },
+                  })
                 }
-
-                let newPointLog = PointLog(pointPreLog);
-                newPointLog.email = req.body.email;
-                newPointLog.totalPoint = req.body.userpoint.point;
-                newPointLog.save((err, result) => {
-                  if (err) {
-                    console.log("플라즈마 케어 포인트 적립 실패(PointLogSave) : " + req.body.email);
-                    return res.status(400).json(err);
-                  }
-                  
-                  if (result) {
-                    return res.status(201).json({
-                      'point': req.body.points + 'P 획득 완료!',
-                      'msg': '오늘 적립된 포인트 : ' + (Number(todayPoints) + Number(req.body.points)) + 'P <br>(최대적립 가능 포인트 : 90P)'
-                    });
-                  }
-                })
-              }
-              
-            })
-          }
-        });
-      }
-    } else {
-      var newPoint;
-      // newPoint.points = req.body.points;
-      // newPoint.updatedAt = new Date();
+                
+              })
+            }
+          });
+        }
+      } else {
+        var newPoint;
+        // newPoint.points = req.body.points;
+        // newPoint.updatedAt = new Date();
 
 
-      var userPoint = req.body.userpoint;
-      userPoint.updatedAt = new Date();
+        var userPoint = req.body.userpoint;
+        userPoint.updatedAt = new Date();
 
 
-      User.findOneAndUpdate({
-          email: req.body.email
-        }, {
-          $push: {
-            // userpoint: userPoint
+        User.findOneAndUpdate({
+            email: req.body.email
+          }, {
+            $push: {
+              // userpoint: userPoint
+            },
+            $inc: {
+              // totaluserpoint: req.body.points
+            }
           },
-          $inc: {
-            // totaluserpoint: req.body.points
-          }
-        },
-        function (err, response) {
-          if (err) {
-            res.json(0);
-          } else {
-            // res.json(response.credit);
-          }
+          function (err, response) {
+            if (err) {
+              res.json(0);
+            } else {
+              // res.json(response.credit);
+            }
+          });
+        return res.status(201).json({
+          'point': '적립 초과!',
+          'msg': '오늘 적립된 포인트 : 90P<br>(최대적립 가능 포인트 : 90P)'
         });
-      return res.status(201).json({
-        'point': '적립 초과!',
-        'msg': '오늘 적립된 포인트 : 90P<br>(최대적립 가능 포인트 : 90P)'
-      });
-      // console.log("오늘자로 9분을 모두 사용하여 누적이 되지 않습니다.");
-      // return res.status(200).json();
+        // console.log("오늘자로 9분을 모두 사용하여 누적이 되지 않습니다.");
+        // return res.status(200).json();
+      }  
+    } else {
+      console.log("사용자 포인트 업데이트 22 : " + req.body.email);
+      return res.status(400).json();
     }
   })
 }

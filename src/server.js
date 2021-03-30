@@ -2535,6 +2535,40 @@ module.exports = function (app) {
     //"rating": 1 별점 낮은 순
   });
 
+  //화장품 리뷰 가져 오기 2021-03-17 3건씩 가져 오기
+  app.get('/getProductReviewCount/:email', function (req, res, next) {
+    // console.log(req.params.email);
+    // console.log(req.params.product_num);
+    ProductsReview.countDocuments({
+      email: req.params.email,
+      // product_num: req.params.product_num
+    }, function (err, docs) {
+        if (err) {
+          console.log("사용자의 리뷰 횟수 가져오기 실패1 : " + req.params.email + " : " + req.params.product_num);
+          res.sendStatus(400).json();
+        }
+
+        if (docs) {
+          res.json(docs);
+        } else {
+          // console.log("사용자의 리뷰 횟수 가져오기 실패2 : " + req.params.email + " : " + req.params.product_num);
+          res.json(0);
+        }
+    })
+  });
+
+
+  app.post("/setServerLog", function (req, res, next) {
+    if (req.body) {
+      console.log("::::::::::::::::::::::::::: 플리닉 앱 로그 :::::::: LogType : " + req.body.logType + " \n: " + req.body.log + "\n: " + req.body.nickname + "\n: " + new Date() + "\n: Device : " + req.body.device);
+      return res.sendStatus(200);
+    } else {
+      res.sendStatus(400);
+    }
+  });
+
+  
+
 
   ///////////////////////////////////////////////////end api////////////////////////////////
 

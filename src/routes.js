@@ -120,6 +120,7 @@ routes.post('/changePassword', userController.changePassword);
 
 //화장품리뷰등록 2020-11-11
 routes.post('/registerReview', skinReportController.registerReview);
+routes.post('/registerReviewNoPoint', skinReportController.registerReviewNoPoint);
 routes.post('/productReviewDelete', skinReportController.deleteReview);
 routes.post('/productReviewUpdate', skinReportController.productReviewUpdate);
 
