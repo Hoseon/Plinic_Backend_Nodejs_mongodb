@@ -13,7 +13,7 @@ var challengeSchema = mongoose.Schema({
   //   author: {type:mongoose.Schema.Types.ObjectId, ref:'user_admin', required:true},
   //   createdAt: {type:Date, default:Date.now}
   // }],
-  createdAt: {type:Date},
+  createdAt: {type:Date, default: Date.now},
   updatedAt: Date,
   //이미지관리
   filename: String,

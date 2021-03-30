@@ -152,14 +152,14 @@ exports.registerReview = (req, res) => {
             if (data) {
               var prePointLog = {
                 reason: '화장품 리뷰 작성',
-                point: 500,
+                point: 100,
                 status: true
               }
               PointLog.findOneAndUpdate({
                 email: req.body.email
               }, {
                   $push: { point: prePointLog },
-                  $inc: {  "totalPoint": 500 }
+                  $inc: {  "totalPoint": 100 }
                 }, (err, data) => {
                   if (err) {
                     console.log("리뷰 작성 후 포인트 적립 실패(포인트 누적 실패) : " + req.body.email + " : " + req.body.review.product_name);
@@ -180,6 +180,84 @@ exports.registerReview = (req, res) => {
       }
       if (err) {
         console.log("리뷰 등록 에러 발생 : " + err);
+        return res.status(400).json({
+          'msg': '리뷰등록 에러발생'
+        });
+      }
+    });
+  }
+}
+
+exports.registerReviewNoPoint = (req, res) => {
+  if (!req.body.email) {
+    return res.status(400).json({
+      'msg': '사용자 정보가 정확하지 않습니다<br>다시 로그인 후 작성하세요'
+    });
+  } else {
+    let newReview = ProductsReview();
+    newReview.email = req.body.email;
+    newReview.content = req.body.review.content;
+    newReview.rating = req.body.review.rating;
+    newReview.product_num = req.body.review.product_num;
+    newReview.product_name = req.body.review.product_name;
+
+    newReview.save((err1, data) => {
+      if(!data) {
+        return res.status(400).json({
+          'msg': '리뷰등록 에러발생'
+        });
+      }
+      if (data) {
+        //리뷰가 등록 되었을시에 포인트 500P적립 기능 추가 2021-03-04
+        PointLog.findOne({
+          email : req.body.email
+        }, (err2, data) => {
+            if (err2) {
+              console.log("리뷰 작성 후 포인트 적립 실패(사용자 못찾음) : " + req.body.email + " : " + req.body.review.product_name);
+              res.status(400).json(err2);
+            }
+
+            if (data) {
+              return res.status(200).json({
+                'msg': '리뷰가 등록 되었습니다.'
+              });
+            } else {
+              console.log("리뷰 작성 후 포인트 적립 실패(포인트 누적 실패)22 : " + req.body.email + " : " + req.body.review.product_name);
+              res.status(400).json();
+            }
+
+
+            // if (data) {
+            //   var prePointLog = {
+            //     reason: '화장품 리뷰 작성',
+            //     point: 500,
+            //     status: true
+            //   }
+            //   PointLog.findOneAndUpdate({
+            //     email: req.body.email
+            //   }, {
+            //       $push: { point: prePointLog },
+            //       $inc: {  "totalPoint": 500 }
+            //     }, (err, data) => {
+            //       if (err) {
+            //         console.log("리뷰 작성 후 포인트 적립 실패(포인트 누적 실패) : " + req.body.email + " : " + req.body.review.product_name);
+            //         res.status(400).json(err);
+            //       }
+
+            //       if (data) {
+            //         return res.status(200).json({
+            //           'msg': '리뷰가 등록 되었습니다.'
+            //         });
+            //       } else {
+            //         console.log("리뷰 작성 후 포인트 적립 실패(포인트 누적 실패)22 : " + req.body.email + " : " + req.body.review.product_name);
+            //         res.status(400).json();
+            //       }
+            //     });
+            // }
+        })
+      }
+      if (err1) {
+        console.log("리뷰 등록 에러 발생 : " + err1);
         return res.status(400).json({
           'msg': '리뷰등록 에러발생'
         });
