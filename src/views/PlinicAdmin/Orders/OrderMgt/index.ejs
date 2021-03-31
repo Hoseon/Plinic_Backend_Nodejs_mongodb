@@ -156,11 +156,23 @@
                                 <div class="row justify-content-center">
                                     <form id="myForm" name="statusFormSubmit" style="text-align: center;">
                                         <div class="col-2" style="float: left;">
-                                            <select class="form-select form-select-sm"
+                                            <select class="form-select form-select-sm" 
                                                 aria-label=".form-select-sm example" id="status" name="post[status]">
                                                 <option selected>주문 상태</option>
-                                                <option value="ready">ready</option>
-                                                <option value="paid">paid</option>
+                                                <option value="status_ready">결제 확인중</option>
+                                                <option value="status_paid">결제 확인</option>
+                                                <option value="deliver_ready">배송 준비중</option>
+                                                <option value="deliver_during">배송중</option>
+                                                <option value="deliver_completed">배송 완료</option>
+                                                <option value="cencel_request">취소 요청</option>
+                                                <option value="cencel_progress">취소 처리중</option>
+                                                <option value="cencel_completed">취소 완료</option>
+                                                <option value="return_request">반품 요청</option>
+                                                <option value="return_progress">반품 처리중</option>
+                                                <option value="return_completed">반품 완료</option>
+                                                <option value="swap_request">교환 요청</option>
+                                                <option value="swap_during">교환중</option>
+                                                <option value="swap_completed">교환 완료</option>
                                             </select>
                                         </div>
                                         <br>
@@ -187,8 +199,8 @@
                                     <thead>
                                         <tr>
                                             <th rowspan="2">
-                                                <input class="form-check-input" type="checkbox" value=""
-                                                    id="flexCheckDisabled" disabled>
+                                                <input class="form-check-input" type="checkbox" name="del_unit[]" 
+                                                value="selectall" onclick="selectAll(this)"/>
                                             </th>
                                             <th colspan="1">주문일</th>
                                             <th rowspan="2" style="padding-bottom: 20px;">주문 상태</th>
@@ -227,7 +239,35 @@
                                                                     <%= post.getFormattedTime(post.paid_at) %>
                                                             </th>
                                                             <th rowspan="2" style="padding-top: 40px;">
-                                                                <%= post.status %>
+                                                                <% if(post.status == 'status_ready')  { %>
+                                                                    결제 확인중
+                                                                <% } else if(post.status == 'status_paid')  { %>
+                                                                    결제 확인
+                                                                <% } else if(post.status == 'deliver_ready') { %>
+                                                                    배송 준비중 
+                                                                <% } else if(post.status == 'deliver_during') { %>
+                                                                    배송중
+                                                                <% } else if(post.status == 'deliver_completed') { %>
+                                                                    배송 완료
+                                                                <% } else if(post.status == 'cencel_request') { %>
+                                                                    취소 요청
+                                                                <% } else if(post.status == 'cencel_progress') { %>
+                                                                    취소 처리중
+                                                                <% } else if(post.status == 'cencel_completed') { %>
+                                                                    취소 완료
+                                                                <% } else if(post.status == 'return_request') { %>
+                                                                    반품 요청
+                                                                <% } else if(post.status == 'return_progress') { %>
+                                                                    반품 처리중
+                                                                <% } else if(post.status == 'return_completed') { %>
+                                                                    반품 완료
+                                                                <% } else if(post.status == 'swap_request') { %>
+                                                                    교환 요청
+                                                                <% } else if(post.status == 'swap_during') { %>
+                                                                    교환중
+                                                                <% } else if(post.status == 'swap_completed') { %>
+                                                                    교환 완료
+                                                                <% } %>
                                                             </th>
                                                             <th rowspan="2" style="padding-top: 40px;"
                                                                 onclick="window.location = '/orders/<%= post._id %>?<%= urlQuery %>'">
@@ -346,6 +386,14 @@
 <script src="/js/bootstrap.min.js"></script>
 <script>
 
+    function selectAll(selectAll) {
+        const checkboxes = document.getElementsByName("del_unit[]");
+            
+        checkboxes.forEach((checkbox) => {
+            checkbox.checked = selectAll.checked;
+        })
+    }
+
     function press(f) {
         if (f.keyCode == 13) {
             formname.submit();
@@ -384,6 +432,7 @@
             }
             // alert(rowid);    //'value1', 'value2', 'value3' 의 형태로 출력된다.
         }
+
 
         if (confirm('적용 하시겠습니까?')) {
             // alert(rowid);
@@ -457,6 +506,7 @@
 
     $(document).ready(function () {
 
+
         $("#myForm").submit(function () {
             if ($('#status').val() == '') {
                 alert("주문상태를 정해주세요.");
@@ -464,9 +514,6 @@
             }
             alert("저장되었습니다.")
         }); //  주문상태 submit()
-
-
-
 
         $(".active").removeClass("active");
         $("#orders").addClass("active");

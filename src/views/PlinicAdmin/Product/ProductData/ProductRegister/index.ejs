@@ -594,11 +594,11 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="d-grid gap-2 d-md-block text-center">
+                            <div class="col-md-4 d-grid gap-2 d-md-block">
                                 <button type="submit"
-                                        class="w-15 m-1 btn btn-primary btn btn-danger btn-sm">저장
+                                        class="w-15 m-1 btn btn-primary btn btn-danger btn-sm float_left">저장
                                 </button>
-                                <button type="reset" class="w-15 m-1 btn btn-primary btn btn-primary btn-sm"
+                                <button type="button" class="w-15 m-1 btn btn-primary btn btn-primary btn-sm float_left"
                                         onclick="location.href='/product/ProductData/ProductList'">목록
                                 </button>
                             </div>
@@ -616,7 +616,7 @@
 <script>
     $(document).ready(function () {
         $(".active").removeClass("active");
-        $("#products").addClass("active");
+        $("#product").addClass("active");
         $("#forms-collapse3").addClass('show');
 
         $('.btn-number').click(function (e) {

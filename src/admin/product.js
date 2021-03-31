@@ -46,16 +46,15 @@ router.get("/Main", function(req, res) {
 //상품관리 메인 화면
 
 ////////////////////////////////////// 상품 데이터
-router.get("/ProductData/ProductList", function(req, res) {
-  return res.render("PlinicAdmin/Product/ProductData/ProductList/index", {});
-});
+
+
+// router.get("/ProductData/ProductList", function(req, res) {
+//   return res.render("PlinicAdmin/Product/ProductData/ProductList/index", {});
+// });
 //상품데이터 상품관리 리스트 화면
 
 router.get("/ProductData/ProductRegister", function(req, res) {
-  return res.render(
-    "PlinicAdmin/Product/ProductData/ProductRegister/index",
-    {}
-  );
+  return res.render("PlinicAdmin/Product/ProductData/ProductRegister/index", {});
 });
 //상품데이터 상품관리 생성 화면
 
@@ -64,10 +63,66 @@ router.get("/ProductData/ProductRegister/edit", function(req, res) {
 });
 //상품데이터 상품관리 수정 화면
 
-router.get("/", function(req, res) {
-  return res.render("PlinicAdmin/bootstraptest/index", {});
-});
-// index
+router.get('/Product/newIndex', function (req, res) {
+  var vistorCounter = null;
+  var page = Math.max(1, req.query.page) > 1 ? parseInt(req.query.page) : 1;
+  var limit = Math.max(1, req.query.limit) > 1 ? parseInt(req.query.limit) : 7;
+  var search = createSearch(req.query);
+  async.waterfall([
+    function (callback) {
+    if (!search.findUser) return callback(null);
+    User_admin.find(search.findUser, function (err, users) {
+      if (err) callback(err);
+      var or = [];
+      users.forEach(function (user) {
+        or.push({
+          author: mongoose.Types.ObjectId(user._id)
+        });
+      });
+      if (search.findPost.$or) {
+        search.findPost.$or = search.findPost.$or.concat(or);
+      } else if (or.length > 0) {
+        search.findPost = {
+          $or: or
+        };
+      }
+      callback(null);
+    });
+  }, function (callback) {
+    if (search.findUser && !search.findPost.$or) return callback(null, null, 0);
+    Product.count(search.findPost, function (err, count) {
+      if (err) callback(err);
+      skip = (page - 1) * limit;
+      maxPage = Math.ceil(count / limit);
+      callback(null, skip, maxPage);
+    });
+  }, function (skip, maxPage, callback) {
+    if (search.findUser && !search.findPost.$or) return callback(null, [], 0);
+    Product.find(search.findPost).sort({ "seq": 1 }).populate("author").sort({ "seq": 1, "updatedAt": -1 }).skip(skip).limit(limit).exec(function (err, orders) {
+      if (err) callback(err);
+      callback(null, product, maxPage);
+    });
+  }], function (err, product, maxPage) {
+    if (err) return res.json({
+      success: false,
+      message: err
+    });
+    return res.render("PlinicAdmin/Product/ProductData/ProductList/index", {
+      product: product,
+      user: req.user,
+      page: page,
+      maxPage: maxPage,
+      urlQuery: req._parsedUrl.query,
+      search: search,
+      counter: vistorCounter,
+      postsMessage: req.flash("postsMessage")[0]
+    });
+  });
+}); // index
+
+
+
+
 
 router.post("/", s3upload.fields([{ name: "productimage" }, {name: "jepumImage" }, { name: "detailimage" }, { name: "announcement" }]),isLoggedIn, function(req, res, next) {
     async.waterfall(
@@ -123,7 +178,7 @@ router.post("/", s3upload.fields([{ name: "productimage" }, {name: "jepumImage" 
             });
           counter.totalCount++;
           counter.save();
-          res.render("PlinicAdmin/Product/ProductData/ProductList/index", {});
+          res.render("PlinicAdmin/Product/ProductData/ProductRegister/index", {});
         });
       }
     );
