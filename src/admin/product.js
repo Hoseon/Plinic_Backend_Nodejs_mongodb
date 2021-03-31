@@ -221,6 +221,24 @@ router.get("/getPlinicProductCosmetic", function(req, res, next) {
   ]);
 });
 
+router.get("/getPlinicProductDevice", function(req, res, next) {
+  async.waterfall([
+    () => {
+      Product.find(
+        {
+          isPlinic: true,
+          tab: '기기'
+        },
+        (err, docs) => {
+          if (err) res.sendStatus(400);
+
+          if (docs) res.status(201).json(docs);
+        }
+      );
+    }
+  ]);
+});
+
 router.get("/like/:product_num/:email", function(req, res, next) {
   async.waterfall([
     function(callback) {

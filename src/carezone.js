@@ -283,7 +283,9 @@ router.get('/challengechkstart/:id', function(req, res) {
   }]);
 });
 
-router.get('/challangecount/:id/:date', function(req, res) {
+router.get('/challangecount/:id/:date', function (req, res) {
+  //2021-03-22 가져 오는 시간을 UDT로 가져오고 앱내에서 KST로 변경하여 사용자의 카운트를 매긴다.
+  
   var today = getCovertKoreaTime(new Date(req.params.date)).toISOString().substr(0,10)
   async.waterfall([function(callback) {
     Challenge.count({
