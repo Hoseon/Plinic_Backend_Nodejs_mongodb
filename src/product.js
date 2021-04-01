@@ -85,7 +85,7 @@ router.get('/productlist', function(req,res){
   async.waterfall([function(callback){
     Product.find(function(err, docs){
       res.json(docs);
-    }).sort({"_id" : -1});
+    }).sort({"_id" : -1}).limit(20);
   }])
 });
 
