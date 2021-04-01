@@ -887,7 +887,7 @@ module.exports = function (app) {
   app.use('/postDisplay', require('./admin/postDisplay'));
 
 
-  //상품 관리자
+  //앱용 상품관리 2020-04-01
   app.use('/product', require('./admin/product'));
 
   //// 콘텐츠관리

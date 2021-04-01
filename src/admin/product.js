@@ -157,32 +157,29 @@ router.post('/:id/productUpdate', s3upload.fields([{
   });
 }); //index 데이터row update
 
-router.get("/:id", function (req, res) {
-  Product.findById(req.params.id)
-    .populate(['author', 'comments.author'])
-    .exec(function (err, post) {
-      if (err) return res.json({
-        success: false,
-        message: err
-      });
+// router.get("/:id", function (req, res) {
+//   Product.findById(req.params.id)
+//     .populate(['author', 'comments.author'])
+//     .exec(function (err, post) {
+//       if (err) return res.json({
+//         success: false,
+//         message: err
+//       });
 
-      console.log(post);
+//       console.log(post);
 
-      var url = 'https://plinic.s3.ap-northeast-2.amazonaws.com/' + post.filename;
-      var prod_url = 'https://plinic.s3.ap-northeast-2.amazonaws.com/' + post.prodfilename;
-      res.render("PlinicAdmin/Product/ProductData/ProductList/show", {
-        post: post,
-        url: url,
-        prod_url: prod_url,
-        urlQuery: req._parsedUrl.query,
-        user: req.user,
-        search: createSearch(req.query)
-      });
-    });
-}); // 상품 상세페이지 show
-
-
-
+//       var url = 'https://plinic.s3.ap-northeast-2.amazonaws.com/' + post.filename;
+//       var prod_url = 'https://plinic.s3.ap-northeast-2.amazonaws.com/' + post.prodfilename;
+//       res.render("PlinicAdmin/Product/ProductData/ProductList/show", {
+//         post: post,
+//         url: url,
+//         prod_url: prod_url,
+//         urlQuery: req._parsedUrl.query,
+//         user: req.user,
+//         search: createSearch(req.query)
+//       });
+//     });
+// }); // 상품 상세페이지 show
 
 router.post("/", s3upload.fields([{ name: "productimage" }, {name: "jepumImage" }, { name: "detailimage" }, { name: "announcement" }]),isLoggedIn, function(req, res, next) {
     async.waterfall(
@@ -245,7 +242,7 @@ router.post("/", s3upload.fields([{ name: "productimage" }, {name: "jepumImage" 
   }
 ); // create
 
-router.get("/getPlinicProduct", function(req, res, next) {
+router.get("/getPlinicProduct", function (req, res, next) {
   async.waterfall([
     () => {
       Product.find(
