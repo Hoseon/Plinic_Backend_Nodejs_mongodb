@@ -15,7 +15,7 @@ var productSchema = mongoose.Schema({
   big_category: String, //대분류
   small_category: String, //소분류
   product_name: String, //상품명
-  seller: String, //
+  seller: String, //판매자
   color_type: String, //색상 타입
   function: String, //주요 효능
   ingredient: [{ //전성분
@@ -53,7 +53,7 @@ var productSchema = mongoose.Schema({
   announcementOriginalFileName: String, //상품 고시정보 이미지
   productDesc: String, //상품설명
   returnDesc: String, //교환 및 반품
-  showLocation: [{
+  showLocation: [{ //추천 노출 위치
     home: {type: Boolean, default: false},
     poreSize: {type: Boolean, default: false},
     poreCount: {type: Boolean, default: false},

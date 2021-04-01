@@ -1,95 +1,225 @@
 <!DOCTYPE html>
-<html>
-  <head>
-    <% include ../partials/head %>
-  </head>
-  <body>
-    <header>
-      <% include ../partials/header %>
-    </header>
-    <div class="posts">
-    <% include partials/top %>
-<!-- main start-->
+<html lang="en">
 
-<!-- views/qna/show.ejs -->
-<div class="show">
-  <div class="buttons floats">
-      <form class="float_right" action="/qna/<%=post._id%>?_method=delete" method="post">
-        <button type="button" onclick="confirm('Your post will be deleted')?this.parentElement.submit():null;">Delete</button>
-      </form>
-      <button class="float_right" onclick="location.href='/qna/<%=post._id%>/edit'">Edit</button>
-    <button class="float_left" onclick="location.href='/qna?<%= urlQuery %>'">Back</button>
-  </div>
-  <!-- <h3>
-    <%= post.numId %>
-    <span class="highlight" data-highlight="<%= search.highlight.title %>">
-      [<%= post.select %>]
-    </span>
-  </h3> -->
-  <div class="content floats">
-    <div class="info float_right">
-      <div class="highlight" data-highlight="<%= search.highlight.author %>">
-        Author: <%= post.email %>
+<head>
+  <% include ../../../../partials/head %>
+    <title></title>
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css' />
+</head>
+<script type="text/javascript" src="/js/jquery-1.10.2.js"></script>
+
+<body>
+
+  <header>
+    <% include ../../../../partials/header %>
+  </header>
+
+
+  <div class="container-fluid">
+    <div class="row">
+      <!-- 2단길이의 첫번째 열 -->
+      <div class="col-md-2">
+        <% include ../../../../partials/pside %>
       </div>
-      <div>
-        <%= post.views %> views
-      </div>
-      <div class="timestamp"><span>Created:</span>
-        <%= post.getFormattedTime(post.createdAt) %>, <%= post.getFormattedDate(post.createdAt) %>
-      </div>
-      <% if(post.updatedAt) { %>
-        <div class="timestamp"><span>Updated:</span>
-          <%= post.getFormattedTime(post.updatedAt) %>, <%= post.getFormattedDate(post.updatedAt) %>
-        </div>
-      <% } %>
-    </div>
-    <h3>공지사항 관리</h3>
 
-    <div class="body highlight" data-highlight="<%= search.highlight.body %>">문의하기 분류 : <%= post.select %></div>
-
-    <div class="body highlight" data-highlight="<%= search.highlight.body %>">문의하기 내용 : <%= post.qna %></div>
-
-    <div class="comments">
-      <h4>Comments (<%= post.comments?post.comments.length:"0" %>)</h4>
-      <% if(post.comments) { %>
-        <% post.comments.forEach(function(comment){ %>
-          <div class="comment">
-            <div class="top">
-              <b><%= comment.author.nickname %></b>
-              (<%= post.getFormattedTime(comment.createdAt) %>,
-              <%= post.getFormattedDate(comment.createdAt) %>)
-              <% if(user && user.equals(comment.author._id)) { %>
-                <form class="delete"  method="post"
-                  action="/qna/<%=post._id%>/comments/<%=comment._id%>?_method=delete&<%= urlQuery %>">
-                  <button type="button"
-                    onclick="confirm('Your comment will be deleted')?this.parentElement.submit():null;">
-                    x
-                  </button>
-                </form>
-              <% } %>
+      <!-- 10단길이의 첫번째 열 -->
+      <div class="col-md-10">
+        <div id="page-inner">
+          <div class="row">
+            <div class="col-md-12">
+              <h1 class="page-header">
+                상품 상세페이지
+              </h1>
             </div>
-            <div class="body"><%= comment.body %></div>
           </div>
-        <% }) %>
-      <% } %>
-      <form class="addComment checkValidation"
-        action="/qna/<%=post._id%>/comments?<%= urlQuery %>" method="post">
-        <input type="hidden" name="id" value="<%=post._id%>" /> <!-- 관리자가 댓글을 작성할시에 푸시 알림 클릭시 해당 창으로 이동 할 수 있도록 조치-->
-        <input type="hidden" name="pushtoken" value="<%=post.pushtoken%>" /> <!-- 관리자가 댓글을 작성할시에 푸시 알림이 가도록 설정 -->
-        <textarea class="cvRequired" type="text" name="comment[body]"
-          cvRqErrMsg="comments is empty." cvRqErrTo="#cvErrTitle" <%= user?"":"disabled" %>
-          placeholder="<%= user?"Add comment here":"로그인 한 후 문의하기 댓글을 작성해주세요.." %>"></textarea>
-        <button type="submit" <%= user?"":"disabled" %>>Comment</button>
-        <div id="cvErrTitle" class="message"></div>
-      </form>
+
+          <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne"
+            data-bs-parent="#accordionExample">
+              <div class="accordion-body">
+                <div class="form-group row">
+                  <label class="col-sm-1 text-center control-label" for="name">기본 정보</label>
+                  <div class="col-sm-11 controls">
+                  </div>
+                </div>
+                <table class="table-hover">
+                  <thead>
+                    <tr class="text-center">
+                      <th scioe="col">대표 이미지</th>
+                      <th scioe="col">상품 이미지</th>
+                      <th scope="col" width=700>상품명</th>
+                      <th scope="col">소비자가</th>
+                      <th scope="col">용량 및 중량</th>
+                      <th scope="col">주요 효능</th>
+                      <th scope="col">전성분</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr class="text-center">
+                      <td><img style="max-width:120px;"
+                          src="https://plinic.s3.ap-northeast-2.amazonaws.com/" class="img-thumbnail" alt="..."></td>
+                      <td class="text-center"></td>
+                      <td>원</td>
+                      <td>0원</td>
+                      <td>개</td>
+                      <td>원</td>
+                      <td></td>
+                    </tr>
+                  </tbody>
+                </table>
+
+
+                <table class="table-bordered table table-striped table-hover">
+                  <tr>
+                    <th class="text-center" style="padding-top: 12px;">제조사</th>
+                      <td>
+                          
+                      </td>
+                    <th class="text-center" style="padding-top: 12px;">원산지</th>
+                      <td>
+
+                      </td>
+                    <th class="text-center" style="padding-top: 12px;">상품 주문코드</th>
+                      <td>
+                        
+                      </td>
+                    <th class="text-center" style="padding-top: 12px;">단종 정보</th>
+                      <td>
+                        
+                      </td>
+                  </tr>
+                  <tr>
+                    <th class="text-center" style="padding-top: 12px;">상품 카테고리(대분류)</th>
+                      <td>
+
+                      </td>
+                    <th class="text-center" style="padding-top: 12px;">상품 카테고리(소분류)</th>
+                      <td>
+
+                      </td>
+                    <th class="text-center" style="padding-top: 12px;">추천 노출위치</th>
+                      <td>
+
+                      </td>
+                    <th class="text-center" style="padding-top: 12px;">상품 페이지 노출</th>
+                      <td>
+                        
+                      </td>
+                  </tr>
+              </table>
+
+                
+
+
+
+                <table class="table-bordered table table-striped table-hover">
+                  <tr>
+                    <th class="text-center" width=300>결제 수단</th>
+                    <td colspan="3" class="text-left"></td>
+                  </tr>
+                  <tr>
+                    <th class="text-center" width=300>입금 계좌</th>
+                    <td class="text-left"></td>
+                    <th class="text-center" width=300>입금자명</th>
+                    <td class="text-left"></td>
+                  </tr>
+                </table>
+
+                    <button type="reset" class="w-15 m-1 btn btn-secondary btn-sm"
+                        onclick="location.href='/product/'">목록</button>
+              </div>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
-</div>
 
-<!-- main end -->
-    </div><!--qna end -->
-    <footer>
-      <% include ../partials/footer %>
-    </footer>
-  </body>
+
+
+
+</body>
+<script src="/js/custom-scripts.js"></script>
+<script src="/js/jquery-1.10.2.js"></script>
+<script src="/js/bootstrap.min.js"></script>
+<script>
+
+  $(document).ready(function () {
+    $(".active").removeClass("active");
+    $("#product").addClass("active");
+    $("#forms-collapse3").addClass('show');
+
+    $('.btn-number').click(function (e) {
+      e.preventDefault();
+
+      fieldName = $(this).attr('data-field');
+      type = $(this).attr('data-type');
+      var input = $("input[name='" + fieldName + "']");
+      var currentVal = parseInt(input.val());
+      if (!isNaN(currentVal)) {
+        if (type == 'minus') {
+
+          if (currentVal > input.attr('min')) {
+            input.val(currentVal - 1).change();
+          }
+          if (parseInt(input.val()) == input.attr('min')) {
+            $(this).attr('disabled', true);
+          }
+
+        } else if (type == 'plus') {
+
+          if (currentVal < input.attr('max')) {
+            input.val(currentVal + 1).change();
+          }
+          if (parseInt(input.val()) == input.attr('max')) {
+            $(this).attr('disabled', true);
+          }
+
+        }
+      } else {
+        input.val(0);
+      }
+    });
+    $('.input-number').focusin(function () {
+      $(this).data('oldValue', $(this).val());
+    });
+    $('.input-number').change(function () {
+
+      minValue = parseInt($(this).attr('min'));
+      maxValue = parseInt($(this).attr('max'));
+      valueCurrent = parseInt($(this).val());
+
+      name = $(this).attr('name');
+      if (valueCurrent >= minValue) {
+        $(".btn-number[data-type='minus'][data-field='" + name + "']").removeAttr('disabled')
+      } else {
+        alert('Sorry, the minimum value was reached');
+        $(this).val($(this).data('oldValue'));
+      }
+      if (valueCurrent <= maxValue) {
+        $(".btn-number[data-type='plus'][data-field='" + name + "']").removeAttr('disabled')
+      } else {
+        alert('Sorry, the maximum value was reached');
+        $(this).val($(this).data('oldValue'));
+      }
+
+
+    });
+    $(".input-number").keydown(function (e) {
+      // Allow: backspace, delete, tab, escape, enter and .
+      if ($.inArray(e.keyCode, [46, 8, 9, 27, 13, 190]) !== -1 ||
+        // Allow: Ctrl+A
+        (e.keyCode == 65 && e.ctrlKey === true) ||
+        // Allow: home, end, left, right
+        (e.keyCode >= 35 && e.keyCode <= 39)) {
+        // let it happen, don't do anything
+        return;
+      }
+      // Ensure that it is a number and stop the keypress
+      if ((e.shiftKey || (e.keyCode < 48 || e.keyCode > 57)) && (e.keyCode < 96 || e.keyCode > 105)) {
+        e.preventDefault();
+      }
+    });
+
+  });
+</script>
+
 </html>
