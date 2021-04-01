@@ -158,7 +158,7 @@
                                         <div class="col-2" style="float: left;">
                                             <select class="form-select form-select-sm" 
                                                 aria-label=".form-select-sm example" id="status" name="post[status]">
-                                                <option selected>주문 상태</option>
+                                                <option disabled selected>주문 상태</option>
                                                 <option value="status_ready">결제 확인중</option>
                                                 <option value="status_paid">결제 확인</option>
                                                 <option value="deliver_ready">배송 준비중</option>
@@ -327,44 +327,35 @@
                                 <div class="col-auto">
                                     <nav aria-label="Page navigation example">
                                         <ul class="pagination pagination-sm justify-content-center">
-                                            <% var offset=4; var partialQuery; if(urlQuery) partialQuery="&"
-                                                +urlQuery.replace(/page=(.*?)(&|$)/ig,""); %>
-
-                                                <li class="page-item disabled">
-                                                    <a class="page-link" href="#" aria-label="Previous">
-                                                        <span aria-hidden="true">&laquo;</span>
-                                                    </a>
-                                                </li>
-
-                                                <% for(i=1;i<=maxPage;i++){ %>
-
-                                                    <% if(i<=offset || i>maxPage-offset || (i>=page-(offset-1) && i
-                                                        <=page+(offset-1))){ %>
-                                                            <% if(i !=page){ %>
-                                                                <!-- <li>[<a href="/carezone?page=<%= i %><%= partialQuery %>"> <%= i %> </a>]</li> -->
-                                                                <li class="page-item"><a class="page-link"
-                                                                        href="/orders/?page=<%= i %><%= partialQuery %>">
-                                                                        <%= i %>
-                                                                    </a></li>
-                                                                <% } else { %>
-                                                                    <li class="page-item" name="currentPage"
-                                                                        aria-current="page"><a class="page-link"
-                                                                            href="#">
-                                                                            <%= i %>
-                                                                        </a></li>
-                                                                    <% } %>
-                                                                        <% } else if(i==offset+1 || i==maxPage-offset){
-                                                                            %>
-                                                                            <li>...</li>
-                                                                            <% } %>
-                                                                                <%}%>
-                                                                                    <li class="page-item disabled">
-                                                                                        <a class="page-link" href="#"
-                                                                                            aria-label="Next">
-                                                                                            <span
-                                                                                                aria-hidden="true">&raquo;</span>
-                                                                                        </a>
-                                                                                    </li>
+                                            <%
+                                                var offset = 4;
+                                                var partialQuery;
+                                                if(urlQuery) partialQuery = "&"+urlQuery.replace(/page=(.*?)(&|$)/ig,"");
+                                            %>
+    
+                                            <li class="page-item disabled">
+                                                <a class="page-link" href="#" aria-label="Previous">
+                                                    <span aria-hidden="true">&laquo;</span>
+                                                </a>
+                                            </li>
+    
+                                            <% for(i=1;i<=maxPage;i++){ %>
+    
+                                                <% if(i<=offset || i>maxPage-offset || (i>=page-(offset-1) && i<=page+(offset-1))){ %>
+                                                    <% if(i != page){ %>
+                                                        <li class="page-item"><a class="page-link" href="/orders/?page=<%= i %><%= partialQuery %>"><%= i %></a></li>
+                                                    <% } else { %>
+                                                        <li class="page-item" name="currentPage" aria-current="page"><a class="page-link" href="#"><%= i %></a></li>
+                                                    <% } %>
+                                                <% } else if(i == offset+1 || i == maxPage-offset){ %>
+                                                        <li>...</li>
+                                                <% } %>
+                                            <%}%>
+                                            <li class="page-item disabled">
+                                            <a class="page-link" href="#" aria-label="Next">
+                                                <span aria-hidden="true">&raquo;</span>
+                                            </a>
+                                            </li>
                                         </ul>
                                     </nav>
                                 </div>

@@ -47,12 +47,6 @@ router.get("/Main", function(req, res) {
 
 ////////////////////////////////////// 상품 데이터
 
-
-// router.get("/ProductData/ProductList", function(req, res) {
-//   return res.render("PlinicAdmin/Product/ProductData/ProductList/index", {});
-// });
-//상품데이터 상품관리 리스트 화면
-
 router.get("/ProductData/ProductRegister", function(req, res) {
   return res.render("PlinicAdmin/Product/ProductData/ProductRegister/index", {});
 });
@@ -63,7 +57,7 @@ router.get("/ProductData/ProductRegister/edit", function(req, res) {
 });
 //상품데이터 상품관리 수정 화면
 
-router.get('/Product/newIndex', function (req, res) {
+router.get('/', function (req, res) { 
   var vistorCounter = null;
   var page = Math.max(1, req.query.page) > 1 ? parseInt(req.query.page) : 1;
   var limit = Math.max(1, req.query.limit) > 1 ? parseInt(req.query.limit) : 7;
@@ -98,7 +92,7 @@ router.get('/Product/newIndex', function (req, res) {
     });
   }, function (skip, maxPage, callback) {
     if (search.findUser && !search.findPost.$or) return callback(null, [], 0);
-    Product.find(search.findPost).sort({ "seq": 1 }).populate("author").sort({ "seq": 1, "updatedAt": -1 }).skip(skip).limit(limit).exec(function (err, orders) {
+    Product.find(search.findPost).sort({ "seq": 1 }).populate("author").sort({ "seq": 1, "updatedAt": -1 }).skip(skip).limit(limit).exec(function (err, product) {
       if (err) callback(err);
       callback(null, product, maxPage);
     });
@@ -118,8 +112,74 @@ router.get('/Product/newIndex', function (req, res) {
       postsMessage: req.flash("postsMessage")[0]
     });
   });
-}); // index
+}); // 상품데이터 상품관리 리스트 화면 index
 
+router.post('/:id/productUpdate', s3upload.fields([{
+  name: 'image'
+}, {
+  name: 'prodimage'
+}]), isLoggedIn, function (req, res, next) {
+
+  var params = {
+    Bucket: 'plinic',
+    Delete: { // required
+      Objects: [ // required
+        {
+          Key: req.body.prefilename // required
+        },
+        {
+          Key: req.body.preprodfilename // required
+        },
+
+      ]
+    }
+  };
+  s3.deleteObjects(params, function (err, data) {
+    if (err) {
+      console.log("케어존 수정 아마존 파일 삭제 에러 : " + req.body.prefilename + "err : " + err);
+      res.status(500);
+    }
+    else console.log("케어존 수정 이전 파일 삭제 완료 : " + JSON.stringify(data));
+    Product.findOneAndUpdate({
+      _id: req.params.id,
+      // author: req.user._id
+    }, req.body.post, function (err, post) {
+      if (err) return res.json({
+        success: false,
+        message: err
+      });
+      if (!post) return res.json({
+        success: false,
+        message: "No data found to update"
+      });
+      res.redirect('/product/');
+    });
+  });
+}); //index 데이터row update
+
+router.get("/:id", function (req, res) {
+  Product.findById(req.params.id)
+    .populate(['author', 'comments.author'])
+    .exec(function (err, post) {
+      if (err) return res.json({
+        success: false,
+        message: err
+      });
+
+      console.log(post);
+
+      var url = 'https://plinic.s3.ap-northeast-2.amazonaws.com/' + post.filename;
+      var prod_url = 'https://plinic.s3.ap-northeast-2.amazonaws.com/' + post.prodfilename;
+      res.render("PlinicAdmin/Product/ProductData/ProductList/show", {
+        post: post,
+        url: url,
+        prod_url: prod_url,
+        urlQuery: req._parsedUrl.query,
+        user: req.user,
+        search: createSearch(req.query)
+      });
+    });
+}); // 상품 상세페이지 show
 
 
 
