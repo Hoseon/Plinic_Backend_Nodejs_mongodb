@@ -168,12 +168,12 @@ router.get("/:id", function (req, res) {
 
       console.log(post);
 
-      var url = 'https://plinic.s3.ap-northeast-2.amazonaws.com/' + post.filename;
-      var prod_url = 'https://plinic.s3.ap-northeast-2.amazonaws.com/' + post.prodfilename;
+      var url = 'https://plinic.s3.ap-northeast-2.amazonaws.com/' + post.originaFileName;
+      var product_url = 'https://plinic.s3.ap-northeast-2.amazonaws.com/' + post.productFileName;
       res.render("PlinicAdmin/Product/ProductData/ProductList/show", {
         post: post,
         url: url,
-        prod_url: prod_url,
+        product_url: product_url,
         urlQuery: req._parsedUrl.query,
         user: req.user,
         search: createSearch(req.query)
