@@ -2521,6 +2521,29 @@ exports.setUserPointLog = (req, res) => { //사용자 포인트 차감 저장 �
   
 }
 
+exports.isPlinicUser = (req, res) => {
+  //사용자 포인트 차감 저장 로직
+  if (!req.params.email) {
+    res.status(400).json();
+  }
+
+  User.findOne({
+    email : req.params.email
+  }, (err, result) => {
+      if (err) {
+        console.log("사용자 실제 존재 하는지 체크 : " + req.params.email);
+        res.status(400).json(err);
+      }
+
+      if (result) {
+        res.status(200).json(result);
+      } else {
+        console.log("사용자 실제 존재 하는지 체크 : " + req.params.email);
+        res.status(400).json(err);
+      }
+  }) 
+};
+
 
 function makeRandomStr() {
   var randomStr = "";

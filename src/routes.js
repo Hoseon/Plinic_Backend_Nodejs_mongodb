@@ -133,6 +133,7 @@ routes.post('/setUserOrders', orderController.setUserOrders); //결제 성공시
 
 routes.get('/getUserOrders/:email', orderController.getUserOrders); //결제 성공시 오더 정보 가져오기 2021-03-10
 routes.get('/getUserOrdersTrackingInfo/:email/:t_invoice', orderController.getUserOrdersTrackingInfo); //결제 성공시 오더 정보 가져오기 2021-03-10
+routes.get('/isPlinicUser/:email/', userController.isPlinicUser); //결제 성공시 오더 정보 가져오기 2021-03-10
 
 
 routes.get('/auth/kakao', passport.authenticate('kakao',{
