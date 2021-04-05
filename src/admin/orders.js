@@ -159,7 +159,7 @@ router.get('/', function (req, res) {
 
 
 router.post('/statusUpdate/:id', function(req, res) {
-  console.log(req.body);
+  // console.log(req.body);
   var newstatus = req.body;
   Orders.findOneAndUpdate({
     _id: req.params.id,
@@ -182,7 +182,7 @@ router.post('/statusUpdate/:id', function(req, res) {
 
 
 router.post('/:id/deliverNoUpdate', function(req, res) {
-    console.log(req.body);
+    // console.log(req.body);
     var newdeliverNo = req.body;
     Orders.findOneAndUpdate({
       _id: req.params.id
@@ -267,7 +267,7 @@ router.get("/:id", function (req, res) {
         message: err
       });
 
-      console.log(post);
+      // console.log(post);
 
       var url = 'https://plinic.s3.ap-northeast-2.amazonaws.com/' + post.filename;
       var prod_url = 'https://plinic.s3.ap-northeast-2.amazonaws.com/' + post.prodfilename;
