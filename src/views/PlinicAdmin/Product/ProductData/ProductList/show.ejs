@@ -35,119 +35,477 @@
 
           <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne"
             data-bs-parent="#accordionExample">
-              <div class="accordion-body">
+            <div class="accordion-body">
+              <div class="form-group row">
+                <label class="col-sm-1 text-center control-label" for="name">기본 정보</label>
+                <div class="col-sm-11 controls">
+                </div>
+              </div>
+              <div class="panel panel-default">
+                <div class="panel-heading">
+                  기본정보
+                </div>
+                <br>
                 <div class="form-group row">
-                  <label class="col-sm-1 text-center control-label" for="name">기본 정보</label>
-                  <div class="col-sm-11 controls">
+                  <label class="col-sm-2 text-center control-label" for="name">
+                    <span class="input_title_cion" style="color: red;">* </span>제조사
+                  </label>
+                  <div class="col-sm-10 controls">
+                    <%= post.brand_name %>
                   </div>
                 </div>
-                <table class="table-hover">
-                  <thead>
-                    <tr class="text-center">
-                      <th scioe="col">대표 이미지</th>
-                      <th scioe="col">상품 이미지</th>
-                      <th scope="col">상품명</th>
-                      <th scope="col">소비자가</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr class="text-center">
-                      <td>
-                        <img src="https://plinic.s3.ap-northeast-2.amazonaws.com/<%= post.originaFileName %>" style="max-width:120px;" 
-                          class="img-thumbnail" alt="...">
-                      </td>
-                      <td class="text-center">
-                        <!-- <img src="https://plinic.s3.ap-northeast-2.amazonaws.com/<%=// post.productFileName %>" style="max-width:120px;" 
+                <div class="form-group row">
+                  <label class="col-sm-2 text-center control-label" for="name">
+                    <span class="input_title_cion" style="color: red;">* </span>원산지
+                  </label>
+                  <div class="col-sm-10 controls">
+                    <%= post.madein %>
+                  </div>
+                </div>
+                <div class="form-group row">
+                  <label class="col-sm-2 text-center control-label" for="name">상품 주문코드</label>
+                  <div class="col-sm-10 controls">
+                    <%= post.product_num %>
+                  </div>
+                </div>
+                <div class="form-group row">
+                  <label class="col-sm-2 text-center control-label" for="name">상품 카테고리(대분류)</label>
+                  <div class="col-sm-10 controls">
+                    <%= post.big_category %>
+                  </div>
+                </div>
+                <div class="form-group row">
+                  <label class="col-sm-2 text-center control-label" for="name">상품 카테고리(소분류)</label>
+                  <div class="col-sm-10 controls">
+                    <%= post.small_category %>
+                  </div>
+                </div>
+                <div class="form-group row">
+                  <label class="col-sm-2 text-center control-label" for="name">
+                    <span class="input_title_cion" style="color: red;">* </span>상품명
+                  </label>
+                  <div class="col-sm-10 controls">
+                    <%= post.product_name %>
+                  </div>
+                </div>
+                <div class="form-group row">
+                  <label class="col-sm-2 text-center control-label" for="name">
+                    <span class="input_title_cion" style="color: red;">* </span>소비자가
+                  </label>
+                  <div class="col-sm-10 controls">
+                    <%= post.price %>
+                  </div>
+                </div>
+                <div class="form-group row">
+                  <label class="col-sm-2 text-center control-label" for="name">
+                    <span class="input_title_cion" style="color: red;">* </span>용량 및 중량
+                  </label>
+                  <div class="col-sm-10 controls">
+                    <%= post.weight %>
+                  </div>
+                </div>
+                <div class="form-group row">
+                  <label class="col-sm-2 text-center control-label" for="name">
+                    <span class="input_title_cion" style="color: red;">* </span>주요 효능
+                  </label>
+                  <div class="col-sm-10 controls">
+                    <%= post.function %>
+                  </div>
+                </div>
+                <div class="form-group row">
+                  <label class="col-sm-2 text-center control-label" for="name">
+                    <span class="input_title_cion" style="color: red;">* </span>전성분
+                  </label>
+                  <div class="col-sm-10 controls">
+                    <% // if(post.ingredient) { %>
+                      <!-- <td> -->
+                      <%= // post.ingredient[0].purpose %>
+                        <!-- </td> -->
+                        <% // } %>
+                          <% if(post.ingredient) { %>
+                            <% post.ingredient.forEach(function(ingredient, index) { %>
+                              <td>
+                                <%= ingredient.purpose %>
+                              </td>
+                              <% }) %>
+                                <% } %>
+                  </div>
+                </div>
+                <div class="form-group row">
+                  <label class="col-sm-2 text-center control-label" for="name">
+                    <span class="input_title_cion" style="color: red;">* </span>대표 이미지
+                  </label>
+                  <div class="col-sm-3 controls">
+                    <div class="w-25 imgUp">
+                      <div class="imagePreview img-fluid"></div>
+                      <img src="https://plinic.s3.ap-northeast-2.amazonaws.com/<%= post.filename %>"
+                        style="max-width:120px;" class="img-thumbnail" alt="...">
+                    </div>
+                    <label class="col-sm-7 text-left control-label" style="margin-left:-15px;" for="name">이미지 사이즈
+                      300*300</label>
+                  </div>
+                </div>
+                <div class="form-group row">
+                  <label class="col-sm-2 text-center control-label" for="name">
+                    <span class="input_title_cion" style="color: red;">* </span>상품 이미지
+                  </label>
+                  <div class="col-sm-3 controls">
+                    <div class="w-25 imgUp">
+                      <div class="imagePreview img-fluid"></div>
+                      <!-- <img src="https://plinic.s3.ap-northeast-2.amazonaws.com/<%=// post.productFileName %>" style="max-width:120px;" 
                           class="img-thumbnail" alt="..."> -->
-                        <img src="<%= post.image_url %>" style="max-width:120px;"
-                          class="img-thumbnail" alt="...">
-                      </td>
-                      <td><%= post.product_name %></td>
-                      <td><%= post.price %></td>
-                    </tr>
-                  </tbody>
-                </table>
-                <table class="table-hover">
-                  <thead>
-                    <tr class="text-center">
-                      <th scope="col">용량 및 중량</th>
-                      <th scope="col">주요 효능</th>
-                      <th scope="col">전성분</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr class="text-center">
-                      <td><%= post.weight %></td>
-                      <td class="text-center"><%= post.function %></td>
-                      <% if(post.ingredient) { %>
-                        <% post.ingredient.forEach(function(ing, index) { %>
-                          <td><%= ing.purpose %></td>
-                      <% }) %>
-                      <% } %>
-                    </tr>
-                  </tbody>
-                </table>
+                      <img src="<%= post.image_url %>" style="max-width:120px;" class="img-thumbnail" alt="...">
+                    </div>
+                    <label class="col-sm-7 text-left control-label" style="margin-left:-15px;" for="name">이미지 사이즈
+                      300*300</label>
+                  </div>
+                </div>
 
-
-                <table class="table-bordered table table-striped table-hover">
-                  <tr>
-                    <th class="text-center" style="padding-top: 12px;">제조사</th>
-                      <td>
-                          
-                      </td>
-                    <th class="text-center" style="padding-top: 12px;">원산지</th>
-                      <td>
-
-                      </td>
-                    <th class="text-center" style="padding-top: 12px;">상품 주문코드</th>
-                      <td>
-                        
-                      </td>
-                    <th class="text-center" style="padding-top: 12px;">단종 정보</th>
-                      <td>
-                        
-                      </td>
-                  </tr>
-                  <tr>
-                    <th class="text-center" style="padding-top: 12px;">상품 카테고리(대분류)</th>
-                      <td>
-
-                      </td>
-                    <th class="text-center" style="padding-top: 12px;">상품 카테고리(소분류)</th>
-                      <td>
-
-                      </td>
-                    <th class="text-center" style="padding-top: 12px;">추천 노출위치</th>
-                      <td>
-
-                      </td>
-                    <th class="text-center" style="padding-top: 12px;">상품 페이지 노출</th>
-                      <td>
-                        
-                      </td>
-                  </tr>
-              </table>
-
-                
-
-
-
-                <table class="table-bordered table table-striped table-hover">
-                  <tr>
-                    <th class="text-center" width=300>결제 수단</th>
-                    <td colspan="3" class="text-left"></td>
-                  </tr>
-                  <tr>
-                    <th class="text-center" width=300>입금 계좌</th>
-                    <td class="text-left"></td>
-                    <th class="text-center" width=300>입금자명</th>
-                    <td class="text-left"></td>
-                  </tr>
-                </table>
-
-                    <button type="reset" class="w-15 m-1 btn btn-secondary btn-sm"
-                        onclick="location.href='/product/'">목록</button>
+                <div class="form-group row">
+                  <label class="col-sm-2 text-center control-label" for="name">단종 정보</label>
+                  <div class="col-sm-3 controls">
+                    <input class="form-check-input" type="checkbox" id="inlineCheckbox0" value="option1" disabled 
+                      <%=// post.showLocation[0].home ? "checked" : "value=false" %> />
+                    <label class="form-check-label" for="inlineCheckbox0">단종 제품 시 체크</label>
+                  </div>
+                </div>
+                <% // if(!post.isEmpty(post.showLocation)) { %>
+                  <div class="form-group row">
+                    <div class="col-lg-12">
+                      <label class="col-sm-2 text-center control-label"><span class="input_title_cion"
+                          style="color: red;">* </span>추천 노출위치</label>
+                      <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="checkbox" id="inlineCheckbox1" value="option1" disabled
+                          <%=// post.showLocation[0].home ? "checked" : "value=false" %> />
+                        <label class="form-check-label" for="inlineCheckbox1">메인홈</label>
+                      </div>
+                      <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="checkbox" id="inlineCheckbox2" value="option2" disabled
+                          <%=// post.showLocation[0].poreSize ? "checked" : "value=false" %> >
+                        <label class="form-check-label" for="inlineCheckbox2">모공크기</label>
+                      </div>
+                      <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="checkbox" id="inlineCheckbox3" value="option3" disabled
+                          <%=// post.showLocation[0].poreCount ? "checked" : "value=false" %> >
+                        <label class="form-check-label" for="inlineCheckbox3">모공수</label>
+                      </div>
+                      <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="checkbox" id="inlineCheckbox4" value="option4" disabled
+                          <%=// post.showLocation[0].skinTone ? "checked" : "value=false" %> >
+                        <label class="form-check-label" for="inlineCheckbox4">피부톤</label>
+                      </div>
+                      <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="checkbox" id="inlineCheckbox5" value="option5" disabled
+                          <%=// post.showLocation[0].clean ? "checked" : "value=false" %> >
+                        <label class="form-check-label" for="inlineCheckbox5">클린지수</label>
+                      </div>
+                      <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="checkbox" id="inlineCheckbox6" value="option6" disabled
+                          <%=// post.showLocation[0].munjin ? "checked" : "value=false" %> >
+                        <label class="form-check-label" for="inlineCheckbox6">생활문진</label>
+                      </div>
+                    </div>
+                  </div>
+                  <% // } else { %>
+                    <!-- <div class="row">
+                      <div class="col-lg-12">
+                        <label class="col-1">노출위치</label>
+                        <div class="form-check form-check-inline">
+                          <input class="form-check-input" type="checkbox" id="inlineCheckbox1" value="option1" disabled />
+                          <label class="form-check-label" for="inlineCheckbox1">메인홈</label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                          <input class="form-check-input" type="checkbox" id="inlineCheckbox2" value="option2" disabled />
+                          <label class="form-check-label" for="inlineCheckbox2">모공크기</label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                          <input class="form-check-input" type="checkbox" id="inlineCheckbox3" value="option3" disabled />
+                          <label class="form-check-label" for="inlineCheckbox3">모공수</label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                          <input class="form-check-input" type="checkbox" id="inlineCheckbox4" value="option4" disabled />
+                          <label class="form-check-label" for="inlineCheckbox4">피부톤</label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                          <input class="form-check-input" type="checkbox" id="inlineCheckbox5" value="option5" disabled />
+                          <label class="form-check-label" for="inlineCheckbox5">클린지수</label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                          <input class="form-check-input" type="checkbox" id="inlineCheckbox6" value="option6" disabled />
+                          <label class="form-check-label" for="inlineCheckbox6">생활문진</label>
+                        </div>
+                      </div>
+                    </div> -->
+                    <% // } %>
+                      <div class="form-group row">
+                        <label class="col-sm-2 text-center control-label" for="name">상품 페이지 노출</label>
+                        <div class="col-2">
+                          <input class="form-check-input" type="checkbox" id="inlineCheckbox10" value="option10">
+                          <label class="form-check-label" for="inlineCheckbox10">노출1</label>
+                        </div>
+                        <div class="col-2">
+                          <input class="form-check-input" type="checkbox" id="inlineCheckbox11" value="option11">
+                          <label class="form-check-label" for="inlineCheckbox11">노출2</label>
+                        </div>
+                        <div class="col-2">
+                          <input class="form-check-input" type="checkbox" id="inlineCheckbox12" value="option12">
+                          <label class="form-check-label" for="inlineCheckbox12">뷰티템</label>
+                        </div>
+                        <div class="col-2">
+                          <input class="form-check-input" type="checkbox" id="inlineCheckbox13" value="option13">
+                          <label class="form-check-label" for="inlineCheckbox13">뷰티템</label>
+                        </div>
+                      </div>
               </div>
+              <div class="accordion-item">
+                <h2 class="accordion-header" id="headingOne">
+                  <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne"
+                    aria-expanded="true" aria-controls="collapseOne">
+                    판매할 상품 정보
+                  </button>
+                </h2>
+                <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne"
+                  data-bs-parent="#accordionExample">
+                  <div class="accordion-body">
+                    <div class="form-group row">
+                      <label class="col-sm-2 text-center control-label" for="name">
+                        <span class="input_title_cion" style="color: red;">* </span>탭명
+                      </label>
+                      <div class="col-sm-10 controls">
+                        <%= post.tab %>
+                      </div>
+                    </div>
+                    <div class="form-group row">
+                      <label class="col-sm-2 text-center control-label" for="name">
+                        <span class="input_title_cion" style="color: red;">* </span>결제 수단
+                      </label>
+                      <div class="col-sm-10 controls">
+                        <%= post.payment %>
+                      </div>
+                    </div>
+                    <div class="form-group row">
+                      <label class="col-sm-2 text-center control-label" for="name">
+                        <span class="input_title_cion" style="color: red;">* </span>판매 가격
+                      </label>
+                      <div class="col-sm-10 controls">
+                        <%= post.Amount %>원
+                      </div>
+                    </div>
+                    <div class="form-group row">
+                      <label class="col-sm-2 text-center control-label" for="name">
+                        <span class="input_title_cion" style="color: red;">* </span>할인율
+                      </label>
+                      <div class="col-sm-10 controls">
+                        <%= post.saleAmount %>%
+                      </div>
+                    </div>
+                    <div class="form-group row">
+                      <label class="col-sm-2 text-center control-label" for="name">
+                        <span class="input_title_cion" style="color: red;">* </span>사용 가능 포인트
+                      </label>
+                      <div class="col-sm-10 controls">
+                        <%= post.maxPercent %>P
+                      </div>
+                    </div>
+                    <!-- <div class="accordion2" id="accordionExample2">
+                      <div class="accordion-item2">
+                        <h2 class="accordion-header2" id="headingOne2">
+                          <button class="accordion-button" type="button" data-bs-toggle="collapse"
+                            data-bs-target="#collapseOne2" aria-expanded="true" aria-controls="collapseOne2">
+                            단일옵션
+                          </button>
+                        </h2>
+                        <div id="collapseOne2" class="accordion-collapse collapse show" aria-labelledby="headingOne"
+                          data-bs-parent="#accordionExample">
+                          <div class="accordion-body">
+                            <div class="row">
+                              <div class="col-sm-2 controls">
+                                <button class="btn btn-default btn-icon btn-sm " type="button">✓사용
+                                </button>
+                                <button type="button" class="btn btn-info btn-sm">✗사용안함
+                                </button>
+                              </div>
+                            </div>
+                            <br>
+                            <div class="row">
+                              <div class="panel-body" style="padding-top:0px;padding-bottom:15px;">
+                                <div class="table-responsive dataTables_wrapper form-inline">
+                                  <table class="table table-bordered  table-condensed table-hover  text-center">
+                                    <thead>
+                                      <tr>
+                                        <th class="text-center">옵션명</th>
+                                        <th class="text-center">옵션값</th>
+                                        <th class="text-center">추가금액</th>
+                                        <th class="text-center">공급가</th>
+                                        <th class="text-center">재고수량</th>
+                                        <th class="text-center">통보수량</th>
+                                        <th class="text-center">사용여부</th>
+                                        <th class="text-center">관리</th>
+                                      </tr>
+                                    </thead>
+                                    <tbody>
+                                      <tr>
+                                        <td rowspan="2" class="align-middle text-center" width=100>
+                                          <input type="text" id="number" class="form-control" style="width: 150px;">
+                                          <br><br><br>
+                                          <button class="btn btn-info" type="button">✓옵션추가
+                                          </button>
+                                        </td>
+                                        <td>
+                                          <div>
+                                            <input name="text" id="text" class="form-control" value=""
+                                              data-validate="data">
+                                          </div>
+                                        </td>
+                                        <td>
+                                          <input name="text" id="text" class="form-control" value=""
+                                            data-validate="data">
+                                        </td>
+                                        <td>
+                                          <input name="text" id="text" class="form-control" value=""
+                                            data-validate="data">
+                                        </td>
+                                        <td>
+                                          <input name="text" id="text" class="form-control" placeholder="999" value=""
+                                            data-validate="data">
+                                        </td>
+                                        <td>
+                                          <input name="text" id="text" class="form-control" placeholder="999" value=""
+                                            data-validate="data">
+                                        </td>
+                                        <td>
+                                          <div>
+                                            <select class="form-select" aria-label="Default select example">
+                                              <option selected>선택
+                                              </option>
+                                              <option value="1">사용함
+                                              </option>
+                                              <option value="2">사용안함
+                                              </option>
+                                            </select>
+                                          </div>
+                                        </td>
+                                        <td class="center">
+                                          <button class="btn btn-info" type="button">✓추가
+                                          </button>
+                                        </td>
+                                      </tr>
+                                      <tr>
+                                        <td colspan="7" height=50>
+
+                                        </td>
+                                      </tr>
+                                    </tbody>
+                                  </table>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div> -->
+                    <!-- <br><br> -->
+                    <div class="form-group row">
+                      <label class="col-sm-2 text-center control-label" for="name">상품 품절</label>
+                      <div class="col-sm-10">
+                        <input class="form-check-input" type="checkbox" id="inlineCheckbox16" value="option16" disabled
+                          <%=// post.outofStock[0].munjin ? "checked" : "value=false" %> >
+                        <label class="form-check-label" for="inlineCheckbox16">품절</label>
+                      </div>
+                    </div>
+                    <div class="form-group row">
+                      <label class="col-sm-2 text-center control-label" for="name">상품 비공개</label>
+                      <div class="col-sm-10">
+                        <input class="form-check-input" type="checkbox" id="inlineCheckbox17" value="option17" disabled
+                          <%=// post.noPublic[0].munjin ? "checked" : "value=false" %> >
+                        <label class="form-check-label" for="inlineCheckbox17">비공개</label>
+                      </div>
+                    </div>
+                    <div class="form-group row">
+                      <label class="col-sm-2 text-center control-label" for="name">배송지 입력</label>
+                      <div class="col-sm-10">
+                        <input class="form-check-input" type="checkbox" id="inlineCheckbox18" value="option18" disabled
+                          <%=// post.destination[0].munjin ? "checked" : "value=false" %> >
+                        <label class="form-check-label" for="inlineCheckbox18">배송지 미입력</label>
+                      </div>
+                    </div>
+                    <div class="form-group row">
+                      <label class="col-sm-2 text-center control-label" for="name">배송비 유형</label>
+                      <!-- <div class="col-sm-3 controls">
+                        <select class="form-select" aria-label="Default select example">
+                          <option selected>쇼핑몰 기본설정 사용</option>
+                          <option value="1">사용함</option>
+                          <option value="2">사용안함</option>
+                        </select>
+                      </div> -->
+                      <div class="col-sm-10">
+                        <input class="form-check-input" type="checkbox" id="inlineCheckbox19" value="option19" disabled
+                          <%=// post.destinationType[0].munjin ? "checked" : "value=false" %> >
+                        <label class="form-check-label" for="inlineCheckbox19">배송비 유형</label>
+                      </div>
+                    </div>
+                    <div class="accordion" id="accordionExample4">
+                      <div class="accordion-item">
+                        <h2 class="accordion-header" id="headingOne4">
+                          <button class="accordion-button" type="button" data-bs-toggle="collapse"
+                            data-bs-target="#collapseOne4" aria-expanded="true" aria-controls="collapseOne4">
+                            상세 페이지 이미지
+                          </button>
+                        </h2>
+                        <div id="collapseOne4" class="accordion-collapse collapse show" aria-labelledby="headingOne"
+                          data-bs-parent="#accordionExample">
+                          <div class="accordion-body">
+                            <div class="w-25 imgUp">
+                              <div class="imagePreview img-fluid"></div>
+                              <img src="https://plinic.s3.ap-northeast-2.amazonaws.com/<%= post.detailImageName %>"
+                                style="max-width:120px;" class="img-thumbnail" alt="...">
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <br>
+                    <div class="accordion" id="accordionExample4">
+                      <div class="accordion-item">
+                        <h2 class="accordion-header" id="headingOne4">
+                          <button class="accordion-button" type="button" data-bs-toggle="collapse"
+                            data-bs-target="#collapseOne4" aria-expanded="true" aria-controls="collapseOne4">
+                            상품 고시정보 이미지
+                          </button>
+                        </h2>
+                        <div id="collapseOne4" class="accordion-collapse collapse show" aria-labelledby="headingOne"
+                          data-bs-parent="#accordionExample">
+                          <div class="accordion-body">
+                            <div class="w-25 imgUp">
+                              <div class="imagePreview img-fluid"></div>
+                              <img src="https://plinic.s3.ap-northeast-2.amazonaws.com/<%= post.announcementFileName %>"
+                                style="max-width:120px;" class="img-thumbnail" alt="...">
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <br>
+                    <div class="form-group row">
+                      <label class="col-sm-2 text-center control-label" for="name">상품 설명</label>
+                      <div class="form-floating col-md-10">
+                        <%= post.productDesc %>
+                      </div>
+                    </div>
+                    <div class="form-group row">
+                      <label class="col-sm-2 text-center control-label" for="name">교환 및 반품</label>
+                      <div class="form-floating col-md-10">
+                        <%= post.returnDesc %>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+
+              <button type="reset" class="w-15 m-1 btn btn-secondary btn-sm"
+                onclick="location.href='/product/'">목록</button>
+            </div>
           </div>
         </div>
       </div>

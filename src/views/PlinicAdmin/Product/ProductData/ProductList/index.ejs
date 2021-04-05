@@ -342,7 +342,7 @@
                                                                     </div>
                                                                     <div class="rows">
                                                                         <button type="button" style="margin-top: 10px;" class="btn btn-warning"
-                                                                        onclick="window.location='/product/<%= post._id %>?<%= urlQuery %>'">상품 미리보기</button>
+                                                                        onclick="window.location='/product/producPreview/<%= post._id %>?<%= urlQuery %>'">상품 미리보기</button>
                                                                     </div>
                                                                     <div class="rows">
                                                                         <button type="button" style="margin-top: 10px;"
@@ -484,10 +484,6 @@
             formname.submit();
         }
     }
-
-
-
-
 
     $(document).ready(function () {
         $(".active").removeClass("active");
