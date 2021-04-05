@@ -166,8 +166,6 @@ router.get("/producPreview/:id", function (req, res) {
         message: err
       });
 
-      console.log(post);
-
       var url = 'https://plinic.s3.ap-northeast-2.amazonaws.com/' + post.filename;
       var prod_url = 'https://plinic.s3.ap-northeast-2.amazonaws.com/' + post.prodfilename;
       res.render("PlinicAdmin/Product/ProductData/ProductList/show", {
@@ -241,6 +239,44 @@ router.post("/", s3upload.fields([{ name: "productimage" }, {name: "jepumImage" 
     );
   }
 ); // create
+
+router.get('/ProductRegister/:id/edit', isLoggedIn, function (req, res) {
+  Product.findById(req.params.id, function (err, post) {
+    var url = 'https://plinic.s3.ap-northeast-2.amazonaws.com/' + post.filename;
+    var prod_url = 'https://plinic.s3.ap-northeast-2.amazonaws.com/' + post.prodfilename;
+
+    var prefilename = post.filename; //이전 파일들은 삭제
+    var preoriginaFileName = post.originaFileName; //이전 파일들은 삭제
+
+    var preproductFileName = post.productFileName;
+    var preproductOriginalName = post.productOriginalName;
+
+    var predetailImageName = post.detailImageName;
+    var predetailImageOriginalName = post.detailImageOriginalName;
+
+    var preannouncementFileName = post.announcementFileName;
+    var preannouncementOriginalFileName = post.announcementOriginalFileName;
+
+    if (err) return res.json({
+      success: false,
+      message: err
+    });
+    res.render("PlinicAdmin/Product/ProductData/ProductRegister/edit", {
+      post: post,
+      prefilename: prefilename,
+      preoriginaFileName : preoriginaFileName,
+      preproductFileName : preproductFileName,
+      preproductOriginalName : preproductOriginalName,
+      predetailImageName : predetailImageName,
+      predetailImageOriginalName : predetailImageOriginalName,
+      preannouncementFileName : preannouncementFileName,
+      preannouncementOriginalFileName : preannouncementOriginalFileName,
+      url: url,
+      prod_url: prod_url,
+      user: req.user
+    });
+  });
+}); // 상품 수정 edit
 
 router.get("/getPlinicProduct", function (req, res, next) {
   async.waterfall([
