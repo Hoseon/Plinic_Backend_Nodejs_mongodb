@@ -200,7 +200,7 @@
                                         <tr>
                                             <th rowspan="2">
                                                 <input class="form-check-input" type="checkbox" name="del_unit[]" 
-                                                value="selectall" onclick="selectAll(this)"/>
+                                                onclick="CheckAll(this)"/>
                                             </th>
                                             <th colspan="1">주문일</th>
                                             <th rowspan="2" style="padding-bottom: 20px;">주문 상태</th>
@@ -292,7 +292,7 @@
                                                             <th rowspan="2" style="padding-top: 40px;">
                                                                 <%= post.pay_method %>
                                                             </th>
-                                                            <th colspan="1" style="padding-top: 15px;">
+                                                            <th colspan="1" style="padding-top: 15px;" >
                                                                 <%= post.amount %>원
                                                             </th>
                                                             <th rowspan="2" style="padding-top: 40px;"></th>
@@ -305,7 +305,7 @@
                                                                 <input name="post[deliverNo]" class="form-control"
                                                                     type="number" value="<%= post.deliverNo %>">
                                                             </th>
-                                                            <th style="padding-top: 15px;">
+                                                            <th style="padding-top: 15px;" name="nums">
                                                                 <%= post.usePoint %>P
                                                             </th>
                                                         </tr>
@@ -377,13 +377,55 @@
 <script src="/js/bootstrap.min.js"></script>
 <script>
 
-    function selectAll(selectAll) {
-        const checkboxes = document.getElementsByName("del_unit[]");
-            
-        checkboxes.forEach((checkbox) => {
-            checkbox.checked = selectAll.checked;
-        })
+var check = false;
+
+    function CheckAll(chk) {
+
+        var chk = document.getElementsByName("del_unit[]");
+        if(check == false) {
+            check = true;
+            for(var i=0; i<chk.length;i++) {                                                                    
+                chk[i].checked = chk;    //모두 체크
+            }
+
+        } else {
+
+            check = false;
+            for(var i=0; i<chk.length;i++) {                                                                    
+            chk[i].checked = chk;     //모두 해제
+
+            }
+        }
+
+        if (confirm('전체 적용 하시겠습니까?')) {
+            // alert(rowid);
+            var statusFormSubmit = document.statusFormSubmit;
+            statusFormSubmit.method = "post";
+            statusFormSubmit.target = "_self";
+            statusFormSubmit.action = "/orders/StatusUpdate/" + rowid + "?_method=post";
+            statusFormSubmit.submit();
+        }
+
     }
+
+
+
+
+    //세 자리 콤마
+
+    
+    // function addComma(usePoint) {
+    //     var usePoint = document.getElementsByName("nums");
+    //     var regexp = /\B(?=(\d{3})+(?!\d))/g;
+    //     return usePoint.toString().replace(regexp, ',');
+    // }
+
+
+    function priceToString(price) {
+        return price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+    }
+
+    
 
     function press(f) {
         if (f.keyCode == 13) {
