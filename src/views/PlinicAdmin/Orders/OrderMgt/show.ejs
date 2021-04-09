@@ -53,7 +53,37 @@
                   </tr>
                   <tr>
                     <th class="text-center">주문 상태</th>
-                    <td class="text-left"><%= post.status %></td>
+                    <td class="text-left">
+                      <% if(post.status == 'status_ready')  { %>
+                        결제 확인중
+                    <% } else if(post.status == 'status_paid')  { %>
+                        결제 확인
+                    <% } else if(post.status == 'deliver_ready') { %>
+                        배송 준비중 
+                    <% } else if(post.status == 'deliver_during') { %>
+                        배송중
+                    <% } else if(post.status == 'deliver_completed') { %>
+                        배송 완료
+                    <% } else if(post.status == 'cencel_request') { %>
+                        취소 요청
+                    <% } else if(post.status == 'cencel_progress') { %>
+                        취소 처리중
+                    <% } else if(post.status == 'cencel_completed') { %>
+                        취소 완료
+                    <% } else if(post.status == 'return_request') { %>
+                        반품 요청
+                    <% } else if(post.status == 'return_progress') { %>
+                        반품 처리중
+                    <% } else if(post.status == 'return_completed') { %>
+                        반품 완료
+                    <% } else if(post.status == 'swap_request') { %>
+                        교환 요청
+                    <% } else if(post.status == 'swap_during') { %>
+                        교환중
+                    <% } else if(post.status == 'swap_completed') { %>
+                        교환 완료
+                    <% } %>
+                    </td>
                   </tr>
                 </table>
 
@@ -78,10 +108,10 @@
                       <td><img style="max-width:120px;"
                           src="https://plinic.s3.ap-northeast-2.amazonaws.com/<%= post.productFileName %>" class="img-thumbnail" alt="..."></td>
                       <td class="text-center"><%= post.name %></td>
-                      <td><%= post.amount.toLocaleString() %>원</td>
+                      <td><%= post.amount %>원</td>
                       <td>0원</td>
                       <td><%= post.productCount %>개</td>
-                      <td><%= post.amount.toLocaleString() %>원</td>
+                      <td><%= post.amount %>원</td>
                     </tr>
                   </tbody>
                   <tfoot>

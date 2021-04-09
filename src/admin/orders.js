@@ -86,26 +86,12 @@ router.get("/Main", function (req, res) {
 });
 //주문 관리 메인 화면
 
-// router.get("/OrderMgt", function (req, res) {
-//   return res.render("PlinicAdmin/Orders/OrderMgt/index", {});
-// });
-//주문 관리 리스트 화면
-
 router.get('/', function (req, res) {
   var vistorCounter = null;
   var page = Math.max(1, req.query.page) > 1 ? parseInt(req.query.page) : 1;
   var limit = Math.max(1, req.query.limit) > 1 ? parseInt(req.query.limit) : 7;
   var search = createSearch(req.query);
   async.waterfall([
-    // function (callback) {
-    // OrdersCounter.findOne({
-    //   name: "carezone"
-    // }, function (err, counter) {
-    //   if (err) callback(err);
-    //   vistorCounter = counter;
-    //   callback(null);
-    // });
-    // },
     function (callback) {
     if (!search.findUser) return callback(null);
     User_admin.find(search.findUser, function (err, users) {
@@ -233,7 +219,7 @@ router.post('/:id/deliverNoUpdate', function(req, res) {
       });
       res.redirect('/orders/');
     });
-  }); // row 데이터 삭제
+  }); // 데이터 삭제
 
 
   router.post('/', isLoggedIn, function(req, res, next){

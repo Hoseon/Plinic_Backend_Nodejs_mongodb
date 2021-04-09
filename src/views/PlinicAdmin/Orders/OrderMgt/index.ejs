@@ -293,7 +293,8 @@
                                                                 <%= post.pay_method %>
                                                             </th>
                                                             <th colspan="1" style="padding-top: 15px;" >
-                                                                <%= post.amount %>원
+                                                                <!-- <%=// post.amount %>원 -->
+                                                                <%= post.amount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ','); %>원
                                                             </th>
                                                             <th rowspan="2" style="padding-top: 40px;"></th>
                                                         </tr>
@@ -306,7 +307,7 @@
                                                                     type="number" value="<%= post.deliverNo %>">
                                                             </th>
                                                             <th style="padding-top: 15px;" name="nums">
-                                                                <%= post.usePoint %>P
+                                                                <%= post.usePoint.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ','); %>P
                                                             </th>
                                                         </tr>
                                                     </tbody>
@@ -377,7 +378,7 @@
 <script src="/js/bootstrap.min.js"></script>
 <script>
 
-var check = false;
+    var check = false;
 
     function CheckAll(chk) {
 
@@ -397,35 +398,21 @@ var check = false;
             }
         }
 
-        if (confirm('전체 적용 하시겠습니까?')) {
-            // alert(rowid);
-            var statusFormSubmit = document.statusFormSubmit;
-            statusFormSubmit.method = "post";
-            statusFormSubmit.target = "_self";
-            statusFormSubmit.action = "/orders/StatusUpdate/" + rowid + "?_method=post";
-            statusFormSubmit.submit();
-        }
+        // if (confirm('전체 적용 하시겠습니까?')) {
+        //     // alert(rowid);
+        //     var statusFormSubmit = document.statusFormSubmit;
+        //     statusFormSubmit.method = "post";
+        //     statusFormSubmit.target = "_self";
+        //     statusFormSubmit.action = "/orders/StatusUpdate/" + chk + "?_method=post";
+        //     statusFormSubmit.submit();
+        // }
 
     }
-
-
-
-
-    //세 자리 콤마
-
-    
-    // function addComma(usePoint) {
-    //     var usePoint = document.getElementsByName("nums");
-    //     var regexp = /\B(?=(\d{3})+(?!\d))/g;
-    //     return usePoint.toString().replace(regexp, ',');
-    // }
-
 
     function priceToString(price) {
         return price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
     }
 
-    
 
     function press(f) {
         if (f.keyCode == 13) {
@@ -472,7 +459,7 @@ var check = false;
             var statusFormSubmit = document.statusFormSubmit;
             statusFormSubmit.method = "post";
             statusFormSubmit.target = "_self";
-            statusFormSubmit.action = "/orders/StatusUpdate/" + rowid + "?_method=post";
+            statusFormSubmit.action = "/orders/statusUpdate/" + rowid + "?_method=post";
             statusFormSubmit.submit();
         }
     }
