@@ -91,10 +91,18 @@ router.get('/', function (req, res) {
       callback(null, skip, maxPage);
     });
   }, function (skip, maxPage, callback) {
-    if (search.findUser && !search.findPost.$or) return callback(null, [], 0);
-    Product.find(search.findPost).sort({ "seq": 1 }).populate("author").sort({ "seq": 1, "updatedAt": -1 }).skip(skip).limit(limit).exec(function (err, product) {
-      if (err) callback(err);
-      callback(null, product, maxPage);
+    if (search.findUser && !search.findPost.$or)
+     return callback(null, [], 0);
+    Product.find(search.findPost)
+      .sort({ tab: -1 })
+      // .sort({ "seq": 1 })
+      .populate("author")
+      // .sort({ "seq": 1, "updatedAt": -1 })
+      .skip(skip)
+      .limit(limit)
+      .exec(function (err, product) {
+        if (err) callback(err);
+        callback(null, product, maxPage);
     });
   }], function (err, product, maxPage) {
     if (err) return res.json({
@@ -157,6 +165,8 @@ router.post('/:id/productUpdate', s3upload.fields([{
   });
 }); //index 데이터row update
 
+
+
 router.get("/producPreview/:id", function (req, res) {
   Product.findById(req.params.id)
     .populate(['author', 'comments.author'])
@@ -168,10 +178,21 @@ router.get("/producPreview/:id", function (req, res) {
 
       var url = 'https://plinic.s3.ap-northeast-2.amazonaws.com/' + post.filename;
       var prod_url = 'https://plinic.s3.ap-northeast-2.amazonaws.com/' + post.prodfilename;
+
+      var productimage = 'https://plinic.s3.ap-northeast-2.amazonaws.com/' + post.filename;
+      var jepumImage = 'https://plinic.s3.ap-northeast-2.amazonaws.com/' + post.productFileName;
+      var detailimage = 'https://plinic.s3.ap-northeast-2.amazonaws.com/' + post.detailImageName;
+      var announcement = 'https://plinic.s3.ap-northeast-2.amazonaws.com/' + post.announcementFileName;
+
+
       res.render("PlinicAdmin/Product/ProductData/ProductList/show", {
         post: post,
         url: url,
         prod_url: prod_url,
+        productimage: productimage,
+        jepumImage: jepumImage,
+        detailimage: detailimage,
+        announcement: announcement,
         urlQuery: req._parsedUrl.query,
         user: req.user,
         search: createSearch(req.query)
@@ -276,13 +297,132 @@ router.get('/ProductRegister/:id/edit', isLoggedIn, function (req, res) {
       user: req.user
     });
   });
-}); // 상품 수정 edit
+}); // 상품 edit 페이지
+
+
+router.put('/RegisterEdit/:id', s3upload.fields([{
+  name: 'productimage'
+}, {
+  name: 'jepumImage'
+}, {
+  name: 'detailimage'
+}, {
+  name: 'announcement'
+}]), isLoggedIn, function (req, res, next) {
+  req.body.post.updatedAt = Date.now();
+  req.body.post.isPlinic = true;
+  req.body.post.filename = req.files['productimage'][0].key;
+  req.body.post.originaFileName = req.files['productimage'][0].originalname;
+  req.body.post.productFileName = req.files['jepumImage'][0].key;
+  req.body.post.productOriginalName = req.files['jepumImage'][0].originalname;
+  req.body.post.detailImageName = req.files['detailimage'][0].key;
+  req.body.post.detailImageOriginalName = req.files['detailimage'][0].originalname;
+  req.body.post.announcementFileName = req.files['announcement'][0].key;
+  req.body.post.announcementOriginalFileName = req.files['announcement'][0].originalname;
+
+  var params = {
+    Bucket: 'plinic',
+    Delete: { // required
+      Objects: [ // required
+        {
+          Key: req.body.prefilename // required
+        },
+        {
+          Key: req.body.preproductFileName // required
+        },
+        {
+          Key: req.body.predetailImageName // required
+        },
+        {
+          Key: req.body.preannouncementFileName // required
+        },
+
+      ]
+    }
+  };
+  s3.deleteObjects(params, function (err, data) {
+    if (err) {
+      console.log("케어존 수정 아마존 파일 삭제 에러 : " + req.body.prefilename + "err : " + err);
+      res.status(500);
+    }
+    else console.log("케어존 수정 이전 파일 삭제 완료 : " + JSON.stringify(data));
+    Product.findOneAndUpdate({
+      _id: req.params.id,
+      // author: req.user._id
+    }, req.body.post, function (err, post) {
+      if (err) return res.json({
+        success: false,
+        message: err
+      });
+      if (!post) return res.json({
+        success: false,
+        message: "No data found to update"
+      });
+      res.redirect('/product/');
+    });
+  });
+}); // 상품 edit Update
+
+
+
+
+
+router.delete('/del/:id', isLoggedIn, function(req, res, next) {
+  Product.findOneAndRemove({
+    _id: req.params.id,
+    // author: req.user._id
+  }, function(err, post) {
+    if (err) return res.json({
+      success: false,
+      message: err
+    });
+    var params = {
+      Bucket: 'plinic',
+      Delete: { // required
+      }
+    };
+    s3.deleteObjects(params, function(err, data){
+      if(err) {
+        console.log("케어존 수정 아마존 파일 삭제 에러 : " + "err : " + err);
+        res.status(500);
+      }
+      else console.log("케어존 수정 이전 파일 삭제 완료 : " + JSON.stringify(data));
+    });
+    res.redirect('/product/');
+  });
+}); //상단 선택 삭제
+
+router.delete('/rowdel/:id', isLoggedIn, function(req, res, next) {
+  Product.findOneAndRemove({
+    _id: req.params.id,
+    // author: req.user._id
+  }, function(err, post) {
+    if (err) return res.json({
+      success: false,
+      message: err
+    });
+    var params = {
+      Bucket: 'plinic',
+      Delete: { // required
+      }
+    };
+    s3.deleteObjects(params, function(err, data){
+      if(err) {
+        console.log("케어존 수정 아마존 파일 삭제 에러 : " + "err : " + err);
+        res.status(500);
+      }
+      else console.log("케어존 수정 이전 파일 삭제 완료 : " + JSON.stringify(data));
+    });
+    res.redirect('/product/');
+  });
+}); //row 삭제
 
 router.get("/getPlinicProduct", function (req, res, next) {
   async.waterfall([
     () => {
       Product.find(
         {
+          noPublic: false,
           isPlinic: true,
           tab: '투데이'
         },
@@ -301,6 +441,7 @@ router.get("/getPlinicProductCosmetic", function(req, res, next) {
     () => {
       Product.find(
         {
+          noPublic: false,
           isPlinic: true,
           tab: '화장품'
         },
@@ -319,6 +460,7 @@ router.get("/getPlinicProductDevice", function(req, res, next) {
     () => {
       Product.find(
         {
+          noPublic: false,
           isPlinic: true,
           tab: '기기'
         },

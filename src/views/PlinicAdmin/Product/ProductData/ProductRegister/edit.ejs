@@ -27,7 +27,7 @@
                 <div id="page-inner">
                     <!-- /. ROW  -->
                     <div class="row">
-                        <form action="/product/<%= post._id %>?_method=put" method="post" enctype="multipart/form-data">
+                        <form action="/product/RegisterEdit/<%= post._id %>?_method=put" method="post" enctype="multipart/form-data">
                             <div class="col-lg-12">
                                 <h1 class="page-header">
                                     등록/수정
@@ -80,9 +80,10 @@
                                     <div class="form-group row">
                                         <label class="col-sm-2 text-center control-label" for="name">소비자가</label>
                                         <div class="col-sm-5 controls">
-                                            <input name="post[price]" id="name" class="form-control" value="<%= post.price %>"
+                                            <input name="post[price]" id="name" class="form-control" value="<%= post.price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ','); %>"
                                                 data-validate="data">
                                         </div>
+                                        <div class="col-sm-1">원</div>
                                     </div>
                                     <div class="form-group row">
                                         <label class="col-sm-2 text-center control-label" for="name">용량 및 중량</label>
@@ -109,10 +110,27 @@
                                         <label class="col-sm-2 text-center control-label" for="name">대표 이미지</label>
                                         <div class="col-sm-3 controls">
                                             <div class="imgUp">
-                                                <div class="productimage"></div>
+                                                <img class="imagePreview img-fluid" src="https://plinic.s3.ap-northeast-2.amazonaws.com/<%= prefilename %>" />
                                                 <label class="btn btn-primary">
                                                     Upload
                                                     <input name="productimage" type="file"
+                                                        class="uploadFile img form-control" value="Upload Photo"
+                                                        style="width: 0px;height: 0px;overflow: hidden;" required
+                                                        accept=".jpg, .jpeg, .png">
+                                                </label>
+                                            </div>
+                                            <label class="col-sm-7 text-left control-label" style="margin-left:-15px;"
+                                                for="name">이미지 사이즈 300*300</label>
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-sm-2 text-center control-label" for="name">상품 이미지</label>
+                                        <div class="col-sm-3 controls">
+                                            <div class="imgUp">
+                                                <img class="imagePreview img-fluid" src="https://plinic.s3.ap-northeast-2.amazonaws.com/<%= preproductFileName %>" />
+                                                <label class="btn btn-primary">
+                                                    Upload
+                                                    <input name="jepumImage" type="file"
                                                         class="uploadFile img form-control" value="Upload Photo"
                                                         style="width: 0px;height: 0px;overflow: hidden;" required
                                                         accept=".jpg, .jpeg, .png">
@@ -212,16 +230,30 @@
                                         aria-labelledby="headingOne" data-bs-parent="#accordionExample">
                                         <div class="accordion-body">
                                             <div class="form-group row">
+                                                <label class="col-sm-2 text-center control-label" for="name"><span
+                                                            class="input_title_cion" style="color: red;">* </span>탭
+                                                    명</label>
+                                                <div class="col-sm-3 controls">
+                                                    <select name="post[tab]" class="form-select"
+                                                            aria-label="Default select example">
+                                                        <option selected>투데이</option>
+                                                        <option value="넥스트">넥스트</option>
+                                                        <option value="화장품">화장품</option>
+                                                        <option value="기기">기기</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div class="form-group row">
                                                 <label class="col-sm-2 text-center control-label" for="name">결제
                                                     수단</label>
                                                 <div class="col-1">
                                                     <input class="form-check-input" type="checkbox"
-                                                        id="inlineCheckbox14" value="option14">
+                                                        id="inlineCheckbox14" name="post[payment]" value="신용카드">
                                                     <label class="form-check-label" for="inlineCheckbox14">신용카드</label>
                                                 </div>
                                                 <div class="col-1">
                                                     <input class="form-check-input" type="checkbox"
-                                                        id="inlineCheckbox15" value="option15">
+                                                        id="inlineCheckbox15" name="post[payment]" value="무통장">
                                                     <label class="form-check-label" for="inlineCheckbox15">무통장
                                                         입금</label>
                                                 </div>
@@ -237,12 +269,22 @@
                                                         class="input_title_cion" style="color: red;">* </span>판매
                                                     가격</label>
                                                 <div class="col-sm-3 controls">
-                                                    <input name="price" id="price" class="form-control" value=""
+                                                    <input name="post[Amount]" id="price" class="form-control" value="<%= post.Amount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ','); %>"
                                                         data-validate="data">
                                                 </div>
                                                 <div class="col-sm-1">원</div>
                                             </div>
-
+                                            <div class="form-group row">
+                                                <label class="col-sm-2 text-center control-label" for="name"><span
+                                                            class="input_title_cion"
+                                                            style="color: red;">* </span>할인율</label>
+                                                <div class="col-sm-3 controls">
+                                                    <input type="number" name="post[saleAmount]" id="sale"
+                                                           class="form-control" value="<%= post.saleAmount %>"
+                                                           data-validate="data">
+                                                </div>
+                                                <div class="col-sm-1">%</div>
+                                            </div>
                                             <div class="accordion2" id="accordionExample2">
                                                 <div class="accordion-item2">
                                                     <h2 class="accordion-header2" id="headingOne2">
@@ -386,11 +428,11 @@
                                                                         사용가능 포인트는</label>
                                                                 </div>
                                                                 <div class="col-sm-2 controls">
-                                                                    <input name="number" id="number"
-                                                                        class="form-control" value=""
+                                                                    <input name="post[maxPercent]" id="number"
+                                                                        class="form-control" value="<%= post.maxPercent %>"
                                                                         data-validate="data">
                                                                 </div>
-                                                                <div class="col-sm-1">%</div>
+                                                                <div class="col-sm-1">p</div>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -412,21 +454,61 @@
                                                         경우</label>
                                                 </div>
                                             </div>
-                                            <div class="form-group row">
-                                                <label class="col-sm-2 text-center control-label" for="name">상품
-                                                    비공개</label>
-                                                <div class="col-1">
-                                                    <input class="form-check-input" type="checkbox"
-                                                        id="inlineCheckbox17" value="option17">
-                                                    <label class="form-check-label" for="inlineCheckbox17">비공개</label>
+                                            <% if(post.noPublic == false) { %>
+                                                <div class="form-group row">
+                                                    <label class="col-sm-2 text-center control-label" for="name"><span
+                                                        class="input_title_cion" style="color: red;">* </span>상품 공개</label>
+                                                    <div class="col-2">
+                                                        <input class="form-check-input" type="checkbox"
+                                                            id="inlineCheckbox33"  name="post[noPublic]" value=false>
+                                                        <label class="form-check-label" for="inlineCheckbox33">공개</label>
+                                                    </div>
+                                                    <div class="col-sm-12">
+                                                        <label class="col-sm-2 text-left control-label" for="name"></label>
+                                                        <label class="col-sm-7 text-left control-label" for="name">상품이 목록에 표시</label>
+                                                    </div>
                                                 </div>
-                                                <div class="col-sm-12">
-                                                    <label class="col-sm-2 text-left control-label" for="name"></label>
-                                                    <label class="col-sm-7 text-left control-label" for="name">상품이 목록에
-                                                        표시
-                                                        안함</label>
+                                                <div class="form-group row">
+                                                    <label class="col-sm-2 text-center control-label" for="name"><span
+                                                        class="input_title_cion" style="color: red;">* </span>상품 비공개</label>
+                                                    <div class="col-2">
+                                                        <input class="form-check-input" type="checkbox" disabled
+                                                            id="inlineCheckbox17"  name="post[noPublic]" value=true>
+                                                        <label class="form-check-label" for="inlineCheckbox17">비공개</label>
+                                                    </div>
+                                                    <div class="col-sm-12">
+                                                        <label class="col-sm-2 text-left control-label" for="name"></label>
+                                                        <label class="col-sm-7 text-left control-label" for="name">상품이 목록에 표시 안함</label>
+                                                    </div>
                                                 </div>
-                                            </div>
+                                            <% } else if(post.noPublic == true) { %>
+                                                <div class="form-group row">
+                                                    <label class="col-sm-2 text-center control-label" for="name"><span
+                                                        class="input_title_cion" style="color: red;">* </span>상품 비공개</label>
+                                                    <div class="col-2">
+                                                        <input class="form-check-input" type="checkbox"
+                                                            id="inlineCheckbox17"  name="post[noPublic]" value=true>
+                                                        <label class="form-check-label" for="inlineCheckbox17">비공개</label>
+                                                    </div>
+                                                    <div class="col-sm-12">
+                                                        <label class="col-sm-2 text-left control-label" for="name"></label>
+                                                        <label class="col-sm-7 text-left control-label" for="name">상품이 목록에 표시 안함</label>
+                                                    </div>
+                                                </div>
+                                                <div class="form-group row">
+                                                    <label class="col-sm-2 text-center control-label" for="name"><span
+                                                        class="input_title_cion" style="color: red;">* </span>상품 공개</label>
+                                                    <div class="col-2">
+                                                        <input class="form-check-input" type="checkbox" disabled
+                                                            id="inlineCheckbox33"  name="post[noPublic]" value=false>
+                                                        <label class="form-check-label" for="inlineCheckbox33">공개</label>
+                                                    </div>
+                                                    <div class="col-sm-12">
+                                                        <label class="col-sm-2 text-left control-label" for="name"></label>
+                                                        <label class="col-sm-7 text-left control-label" for="name">상품이 목록에 표시</label>
+                                                    </div>
+                                                </div>
+                                            <% } %>
                                             <div class="form-group row">
                                                 <label class="col-sm-2 text-center control-label" for="name">배송지
                                                     입력</label>
@@ -467,10 +549,10 @@
                                                         aria-labelledby="headingOne" data-bs-parent="#accordionExample">
                                                         <div class="accordion-body">
                                                             <div class="imgUp">
-                                                                <div class="imagePreview"></div>
+                                                                <img class="imagePreview img-fluid" src="https://plinic.s3.ap-northeast-2.amazonaws.com/<%= predetailImageName %>" />
                                                                 <label class="btn btn-primary">
                                                                     Upload
-                                                                    <input name="homeimage" type="file"
+                                                                    <input name="detailimage" type="file"
                                                                         class="uploadFile img form-control"
                                                                         value="Upload Photo"
                                                                         style="width: 0px;height: 0px;overflow: hidden;"
@@ -482,12 +564,39 @@
                                                 </div>
                                             </div>
                                             <br>
+                                            <div class="accordion" id="accordionExample4">
+                                                <div class="accordion-item">
+                                                    <h2 class="accordion-header" id="headingOne4">
+                                                        <button class="accordion-button" type="button"
+                                                                data-bs-toggle="collapse" data-bs-target="#collapseOne4"
+                                                                aria-expanded="true" aria-controls="collapseOne4">
+                                                            상품 고시정보 이미지
+                                                        </button>
+                                                    </h2>
+                                                    <div id="collapseOne4" class="accordion-collapse collapse show"
+                                                         aria-labelledby="headingOne" data-bs-parent="#accordionExample">
+                                                        <div class="accordion-body">
+                                                            <div class="w-25 imgUp">
+                                                                <img class="imagePreview img-fluid" src="https://plinic.s3.ap-northeast-2.amazonaws.com/<%= preannouncementFileName %>" />
+                                                                <label class="btn btn-primary">
+                                                                    Upload
+                                                                    <input name="announcement" type="file"
+                                                                           class="uploadFile img form-control"
+                                                                           value="Upload Photo"
+                                                                           style="width: 0px;height: 0px;overflow: hidden;"
+                                                                           required accept=".jpg, .jpeg, .png">
+                                                                </label>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
                                             <div class="form-group row">
                                                 <label class="col-sm-2 text-center control-label" for="name">상품
                                                     설명</label>
                                                 <div class="form-floating col-md-10">
                                                     <textarea class="form-control" placeholder="Leave a comment here"
-                                                        id="floatingTextarea" style="height: 100px"></textarea>
+                                                        id="floatingTextarea" name="post[productDesc]" style="height: 100px"></textarea>
                                                 </div>
                                             </div>
                                             <div class="form-group row">
@@ -495,7 +604,7 @@
                                                     반품</label>
                                                 <div class="form-floating col-md-10">
                                                     <textarea class="form-control" placeholder="Leave a comment here"
-                                                        id="floatingTextarea2" style="height: 100px"></textarea>
+                                                        id="floatingTextarea2" name="post[returnDesc]" style="height: 100px"></textarea>
                                                 </div>
                                             </div>
                                         </div>
@@ -504,8 +613,8 @@
                                 <div class="d-grid gap-2 d-md-block text-center">
                                     <button type="submit"
                                         class="w-15 m-1 btn btn-primary btn btn-danger btn-sm">저장</button>
-                                    <button type="reset" class="w-15 m-1 btn btn-primary btn btn-primary btn-sm"
-                                        onclick="location.href='/product/ProductData/ProductRegister'">목록</button>
+                                    <button type="reset" class="w-15 m-1 btn btn-secondary btn-sm"
+                                        onclick="location.href='/product/'">목록</button>
                                 </div>
                             </div>
                         </form>
@@ -522,7 +631,7 @@
     $(document).ready(function () {
         $(".active").removeClass("active");
         $("#products").addClass("active");
-        $("#forms-collapse1").addClass('show');
+        $("#forms-collapse3").addClass('show');
 
         $('.btn-number').click(function (e) {
             e.preventDefault();
