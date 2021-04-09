@@ -2048,6 +2048,34 @@ exports.findId = (req, res) => {
   });
 };
 
+exports.idFindWithPhone = (req, res) => {
+  if (!req.body.name && !req.body.birthday) {
+    return res.status(400).json({
+      'msg': '이름, 생년월을를 입력해 주세요.'
+    });
+  }
+
+  User.find({
+    name: req.body.name,
+    phonenumber: req.body.phonenumber
+  }, (err, user) => {
+    if (err) {
+      return res.status(400).json({
+        'msg': '사용자 정보를 찾을 수 없습니다.'
+      });
+    }
+    if (user) {
+      // return res.status(400).json({ 'msg': 'The user already exists' });
+      return res.status(201).json({user});
+    }
+    if (!user) {
+      return res.status(400).json({
+        'msg': '사용자 정보를 찾을 수 없습니다.'
+      })
+    }
+  });
+};
+
 
 exports.validSendEmail = (req, res) => {
   if (!req.body.email && !req.body.name && !req.body.birthday) {

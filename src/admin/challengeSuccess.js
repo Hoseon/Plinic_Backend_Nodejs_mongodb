@@ -127,7 +127,7 @@ router.get('/Challenge/newIndex', function (req, res) {
     });
   }, function (skip, maxPage, callback) {
     if (search.findUser && !search.findPost.$or) return callback(null, [], 0);
-    Reward.find(search.findPost).sort({ "seq": 1 }).populate("author").sort({ "seq": 1, "updatedAt": -1 }).skip(skip).limit(limit).exec(function (err, reward) {
+    Reward.find(search.findPost).sort({ "seq": 1 }).populate("author").sort({ "seq": 1, "createdAt": -1 }).skip(skip).limit(limit).exec(function (err, reward) {
       if (err) callback(err);
       callback(null, reward, maxPage);
     });

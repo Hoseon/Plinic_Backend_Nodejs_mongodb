@@ -1758,8 +1758,10 @@ module.exports = function (app) {
           'msg': '플리닉샵 사용자 전체 포인트 조회 에러'
         });
       }
-      if(body) {
-        res.send(JSON.parse(body));
+        if (body) {
+          res.status(200).json(0);
+        // 구형 버전의 앱을 쓰는 사람이 있어서 폐쇄조치 2021-04-06
+        // res.send(JSON.parse(body));
       }
     })
   })
@@ -2219,8 +2221,8 @@ module.exports = function (app) {
               if (err) {
                 console.log('skinAnalySecondCheekSave Error! : ' + err);
               } else {
-                // console.log("1st : " + body);
-                // console.log("2nd :" + JSON.stringify(body));
+                console.log("1st : " + body);
+                console.log("2nd :" + JSON.stringify(body));
                 if(IsJsonString(body)) {
                   body = JSON.parse(body);
                   body.output.skin_analy.pore = JSON.parse(JSON.stringify(body.output.skin_analy.pore).replace(/um/g, ""));
