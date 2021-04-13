@@ -422,10 +422,11 @@ router.get("/getPlinicProduct", function (req, res, next) {
     () => {
       Product.find(
         {
+          outofStock: false, //비공개와 같은 기능으로 사용
           noPublic: false,
           isPlinic: true,
           tab: '투데이'
-        },
+        }, 
         (err, docs) => {
           if (err) res.sendStatus(400);
 
@@ -441,6 +442,7 @@ router.get("/getPlinicProductCosmetic", function(req, res, next) {
     () => {
       Product.find(
         {
+          outofStock: false,
           noPublic: false,
           isPlinic: true,
           tab: '화장품'
@@ -460,6 +462,7 @@ router.get("/getPlinicProductDevice", function(req, res, next) {
     () => {
       Product.find(
         {
+          outofStock: false,
           noPublic: false,
           isPlinic: true,
           tab: '기기'
