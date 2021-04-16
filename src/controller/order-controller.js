@@ -34,6 +34,99 @@ exports.setUserOrders = (req, res) => {
   });
 };
 
+exports.UpdateChangeOrders = (req, res) => { //사용자 교환요청 처리
+  //사용자 포인트 차감 저장 로직
+  if (!req.body.reasonType && !req.body.reasonDesc && !req.body.email) {
+    res.status(400).json();
+  }
+ 
+  Orders.findOneAndUpdate({
+    _id: req.body.id
+  }, {
+      $push: {
+        change_history : req.body
+      },
+      $set: {
+        status: 'swap_request',
+        updatedAt: Date.now()
+      },
+  }, function (err, post) {
+    if (err) {
+      console.log("사용자 교환 요청 처리 에러 1 : " + req.body.email);
+      res.status(400).json(err);
+    }
+      
+    if (post) {
+      res.status(200).json(post);
+    } else {
+      console.log("사용자 교환 요청 처리 에러 2 : " + req.body.email);
+      res.status(400).json();
+    }
+  });
+};
+
+exports.UpdateReturnOrders = (req, res) => { //사용자 반품요청 처리
+  //사용자 포인트 차감 저장 로직
+  if (!req.body.reasonType && !req.body.reasonDesc && !req.body.email) {
+    res.status(400).json();
+  }
+ 
+  Orders.findOneAndUpdate({
+    _id: req.body.id
+  }, {
+      $push: {
+        return_history : req.body
+      },
+      $set: {
+        status: 'return_request',
+        updatedAt: Date.now()
+      },
+  }, function (err, post) {
+    if (err) {
+      console.log("사용자 반품 요청 처리 에러 1 : " + req.body.email);
+      res.status(400).json(err);
+    }
+      
+    if (post) {
+      res.status(200).json(post);
+    } else {
+      console.log("사용자 반품 요청 처리 에러 2 : " + req.body.email);
+      res.status(400).json();
+    }
+  });
+};
+
+exports.UpdateCancelOrders = (req, res) => { //사용자 취소요청 처리
+  //사용자 포인트 차감 저장 로직
+  if (!req.body.reasonType && !req.body.reasonDesc && !req.body.email) {
+    res.status(400).json();
+  }
+ 
+  Orders.findOneAndUpdate({
+    _id: req.body.id
+  }, {
+      $push: {
+        cancel_history : req.body
+      },
+      $set: {
+        status: 'cencel_request',
+        updatedAt: Date.now()
+      },
+  }, function (err, post) {
+    if (err) {
+      console.log("사용자 취소 요청 처리 에러 1 : " + req.body.email);
+      res.status(400).json(err);
+    }
+      
+    if (post) {
+      res.status(200).json(post);
+    } else {
+      console.log("사용자 취소 요청 처리 에러 2 : " + req.body.email);
+      res.status(400).json();
+    }
+  });
+};
+
 exports.getUserOrders = (req, res) => {
   //사용자 포인트 차감 저장 로직
   if (!req.params.email) {

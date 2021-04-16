@@ -160,7 +160,7 @@
                                                 aria-label=".form-select-sm example" id="status" name="post[status]">
                                                 <option disabled selected>주문 상태</option>
                                                 <option value="status_ready">결제 확인중</option>
-                                                <option value="status_paid">결제 확인</option>
+                                                <option value="paid">결제 확인</option>
                                                 <option value="deliver_ready">배송 준비중</option>
                                                 <option value="deliver_during">배송중</option>
                                                 <option value="deliver_completed">배송 완료</option>
@@ -241,7 +241,7 @@
                                                             <th rowspan="2" style="padding-top: 40px;">
                                                                 <% if(post.status == 'status_ready')  { %>
                                                                     결제 확인중
-                                                                <% } else if(post.status == 'status_paid')  { %>
+                                                                <% } else if(post.status == 'paid')  { %>
                                                                     결제 확인
                                                                 <% } else if(post.status == 'deliver_ready') { %>
                                                                     배송 준비중 

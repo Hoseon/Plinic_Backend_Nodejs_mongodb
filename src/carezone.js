@@ -334,7 +334,9 @@ router.get('/challengeusetime2/:id/:email', function(req, res) {
   async.waterfall([function(callback) {
     Challenge.findOne({
       missionID: req.params.id,
-      email: req.params.email
+      email: req.params.email,
+      missioncomplete: false,
+      reward: false,
     }, function (err, docs) {
         if (err) {
           console.log("챌린지 성공횟수 가져오기 에러 : " + req.params.email + " : " + req.params.id);
