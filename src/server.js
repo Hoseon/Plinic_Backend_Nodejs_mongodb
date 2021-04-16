@@ -2537,7 +2537,7 @@ module.exports = function (app) {
     //"rating": 1 별점 낮은 순
   });
 
-  //화장품 리뷰 가져 오기 2021-03-17 3건씩 가져 오기
+  //한 사용자가 하루에 한번씩만 작성 할수 있도록 사용자의 리뷰 카운트를 조회 한다.
   app.get('/getProductReviewCount/:email/:product_num', function (req, res, next) {
     // console.log(req.params.email);
     // console.log(req.params.product_num);

@@ -128,6 +128,9 @@ routes.post('/productReviewUpdate', skinReportController.productReviewUpdate);
 
 routes.post('/setUserPointLog', userController.setUserPointLog); //결제시 포인트 차감 2021-03-09
 routes.post('/setUserOrders', orderController.setUserOrders); //결제 성공시 오더 정보 저장 2021-03-10
+routes.post('/updateChangeOrders', orderController.UpdateChangeOrders); //
+routes.post('/updateReturnOrders', orderController.UpdateReturnOrders); //
+routes.post('/updateCancelOrders', orderController.UpdateCancelOrders); //
 
 
 ////GET////////////////////////////////////////////////////////////////////////////////////////////

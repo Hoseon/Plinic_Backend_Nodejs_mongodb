@@ -33,11 +33,38 @@ var orderSchema = mongoose.Schema({
     reason: String,
     receipt_url: String
   }],
+  change_history: [{
+    // pg_tid: String,
+    // amount: Number,
+    email: String,
+    request_at: Date,
+    reasonDesc: String,
+    reasonType: String,
+    // receipt_url: String
+  }],
+  return_history: [{
+    // pg_tid: String,
+    // amount: Number,
+    email: String,
+    request_at: Date,
+    reasonDesc: String,
+    reasonType: String,
+    // receipt_url: String
+  }],
+  cancel_history: [{
+    // pg_tid: String,
+    // amount: Number,
+    email: String,
+    request_at: Date,
+    reasonDesc: String,
+    reasonType: String,
+    // receipt_url: String
+  }],
   cancel_reason: String, //취소사유
   cancel_receipt_urls: String, //취소영수증
   cancelled_at: String, //취소시간/일
   createdAt: {type:Date, default:Date.now},
-  updatedAt: Date,
+  updatedAt: {type:Date, default:Date.now},
   vbank_code: { type: String },
   vbank_date: { type: String },
   vbank_holder: { type: String }, //입금자명
