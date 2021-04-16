@@ -307,7 +307,11 @@
                                                                     type="number" value="<%= post.deliverNo %>">
                                                             </th>
                                                             <th style="padding-top: 15px;" name="nums">
-                                                                <%= post.usePoint.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ','); %>P
+                                                                <% if(post.usePoint == null || post.usePoint.length == 0) { %>
+                                                                    0P
+                                                                <% } else { %>
+                                                                    <%= post.usePoint.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ','); %>P
+                                                                <% } %>
                                                             </th>
                                                         </tr>
                                                     </tbody>
