@@ -408,8 +408,8 @@
                     <div class="form-group row">
                       <label class="col-sm-2 text-center control-label" for="name">상품 품절</label>
                       <div class="col-sm-10">
-                        <input class="form-check-input" type="checkbox" id="inlineCheckbox16" value="option16" disabled
-                          <%=// post.outofStock[0].munjin ? "checked" : "value=false" %> >
+                        <input class="form-check-input" type="checkbox" value="true" 
+                        name="post[outofStock]" <%= post.outofStock ? "checked" : "value=true" %> disabled>
                         <label class="form-check-label" for="inlineCheckbox16">품절</label>
                       </div>
                     </div>
@@ -417,33 +417,40 @@
                       <label class="col-sm-2 text-center control-label" for="name">상품 비공개</label>
                       <div class="col-sm-10">
                         <input class="form-check-input" type="checkbox" value=true
-                        name="post[noPublic]" required <%= post.noPublic ? "checked" : "value=true" %> disabled>
+                        name="post[noPublic]" <%= post.noPublic ? "checked" : "value=true" %> disabled>
                         <label class="form-check-label" for="inlineCheckbox17">비공개</label>
                       </div>
                     </div>
                     <div class="form-group row">
                       <label class="col-sm-2 text-center control-label" for="name">배송지 입력</label>
                       <div class="col-sm-10">
-                        <input class="form-check-input" type="checkbox" id="inlineCheckbox18" value="option18" disabled
-                          <%=// post.destination[0].munjin ? "checked" : "value=false" %> >
+                        <input class="form-check-input" type="checkbox" value="true"
+                        name="post[destination]" <%= post.destination ? "checked" : "value=true" %> disabled>
                         <label class="form-check-label" for="inlineCheckbox18">배송지 미입력</label>
                       </div>
                     </div>
                     <div class="form-group row">
-                      <label class="col-sm-2 text-center control-label" for="name">배송비 유형</label>
-                      <!-- <div class="col-sm-3 controls">
-                        <select class="form-select" aria-label="Default select example">
-                          <option selected>쇼핑몰 기본설정 사용</option>
-                          <option value="1">사용함</option>
-                          <option value="2">사용안함</option>
-                        </select>
-                      </div> -->
+                      <label class="col-sm-2 text-center control-label" for="name">배송지 유형</label>
                       <div class="col-sm-10">
-                        <input class="form-check-input" type="checkbox" id="inlineCheckbox19" value="option19" disabled
-                          <%=// post.destinationType[0].munjin ? "checked" : "value=false" %> >
-                        <label class="form-check-label" for="inlineCheckbox19">배송비 유형</label>
+                        <input class="form-check-input" type="checkbox" value="true"
+                        name="post[destinationType]" <%= post.destination ? "checked" : "value=true" %> disabled>
+                        <label class="form-check-label" for="inlineCheckbox18">쇼핑몰 기본설정 사용 </label>
                       </div>
                     </div>
+                    <!-- <div class="form-group row">
+                      <label class="col-sm-2 text-center control-label" for="name">배송비 유형</label>
+                      <div class="col-sm-3 controls">
+                        <select name="post[destinationType]" class="form-select" aria-label="Default select example" <%=// post.destinationType %> disabled>
+                          <option selected>쇼핑몰 기본설정 사용</option>
+                          <option value="Yes">사용함</option>
+                          <option value="No">사용안함</option>
+                        </select>
+                      </div>
+                      <div class="col-sm-10">
+                        <input class="form-check-input" type="checkbox" id="inlineCheckbox19" value="option19" disabled>
+                        <label class="form-check-label" for="inlineCheckbox19">배송비 유형</label>
+                      </div>
+                    </div> -->
                     <div class="accordion" id="accordionExample4">
                       <div class="accordion-item">
                         <h2 class="accordion-header" id="headingOne4">

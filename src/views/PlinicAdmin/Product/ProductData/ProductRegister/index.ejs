@@ -469,7 +469,7 @@
                                                 품절</label>
                                             <div class="col-1">
                                                 <input class="form-check-input" type="checkbox"
-                                                       id="inlineCheckbox16" value="option16">
+                                                       id="inlineCheckbox16" name="post[outofStock]" value="true">
                                                 <label class="form-check-label" for="inlineCheckbox16">품절</label>
                                             </div>
                                             <div class="col-sm-12">
@@ -483,14 +483,13 @@
                                                 비공개</label>
                                             <div class="col-1">
                                                 <input class="form-check-input" type="checkbox"
-                                                       id="inlineCheckbox17" value="option17">
+                                                    id="inlineCheckbox17"  name="post[noPublic]" value=true>
                                                 <label class="form-check-label" for="inlineCheckbox17">비공개</label>
                                             </div>
                                             <div class="col-sm-12">
                                                 <label class="col-sm-2 text-left control-label" for="name"></label>
                                                 <label class="col-sm-7 text-left control-label" for="name">상품이 목록에
-                                                    표시
-                                                    안함</label>
+                                                    표시 안함</label>
                                             </div>
                                         </div>
                                         <div class="form-group row">
@@ -498,7 +497,7 @@
                                                 입력</label>
                                             <div class="col-2">
                                                 <input class="form-check-input" type="checkbox"
-                                                       id="inlineCheckbox18" value="option18">
+                                                       id="inlineCheckbox18" name="post[destination]" value=true>
                                                 <label class="form-check-label" for="inlineCheckbox18">배송지
                                                     미입력</label>
                                             </div>
@@ -512,14 +511,33 @@
                                         <div class="form-group row">
                                             <label class="col-sm-2 text-center control-label" for="name">배송비
                                                 유형</label>
-                                            <div class="col-sm-3 controls">
-                                                <select class="form-select" aria-label="Default select example">
-                                                    <option selected>쇼핑몰 기본설정 사용</option>
-                                                    <option value="1">사용함</option>
-                                                    <option value="2">사용안함</option>
-                                                </select>
+                                            <div class="col-2">
+                                                <input class="form-check-input" type="radio"
+                                                       id="inlineCheckbox18" name="post[destinationType]" value=true>
+                                                <label class="form-check-label" for="inlineCheckbox18">쇼핑몰 
+                                                    기본설정 사용</label>
                                             </div>
                                         </div>
+                                        <div class="form-group row">
+                                            <label class="col-sm-2 text-center control-label" for="name"></label>
+                                            <div class="col-2">
+                                                <input class="form-check-input" type="radio"
+                                                       id="inlineCheckbox18" name="post[destinationType]" value=false>
+                                                <label class="form-check-label" for="inlineCheckbox18">사용안함</label>
+                                            </div>
+                                        </div>
+
+                                        <!-- <div class="form-group row">
+                                            <label class="col-sm-2 text-center control-label" for="name">배송비
+                                                유형</label>
+                                            <div class="col-sm-3 controls">
+                                                <select name="post[destinationType]" class="form-select" aria-label="Default select example">
+                                                    <option disabled selected>쇼핑몰 기본설정 사용</option>
+                                                    <option value="true">사용함</option>
+                                                    <option value="false">사용안함</option>
+                                                </select>
+                                            </div>
+                                        </div> -->
                                         <div class="accordion" id="accordionExample4">
                                             <div class="accordion-item">
                                                 <h2 class="accordion-header" id="headingOne4">
