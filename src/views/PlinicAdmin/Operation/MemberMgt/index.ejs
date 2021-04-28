@@ -76,11 +76,11 @@
                                         <td rowspan="2">
                                             <div class="row justify-content-center">
                                                 <div class="col-6 p-0 m-0">
-                                                    <button type="submit" class="btn btn-info" style="margin-top: 31px;" <%= search.searchType=="author!"?"disabled":"" %>>검색</button>
+                                                    <button type="submit" id="btnSearch"  class="btn btn-info" style="margin-top: 41px;" <%= search.searchType=="author!"?"disabled":"" %>>검색</button>
                                                 </div>
                                                 <%if(search.searchType){%>
                                                 <div class="col-6 p-0 m-0">
-                                                    <button type="button" class="btn btn-secondary" style="margin-top: 31px;" onclick="window.location = '/members?page=1'">취소</button>
+                                                    <button type="button" class="btn btn-secondary" style="margin-top: 41px;" onclick="window.location = '/members?page=1'">취소</button>
                                                 </div>
                                                 <%}%>
                                                 <div class="message" id="searchError"></div>
@@ -110,15 +110,6 @@
                                                         <input type="checkbox" class="form-check-input" name="termCheck[monthy]" value="true" id="inlineCheckbox3"/>
                                                         <label class="form-check-label" for="inlineCheckbox3">1개월</label>
                                                     </div>
-                                                    <!-- <div class="col-6">
-                                                        <input type="date" id="date" style="height:25px;">
-                                                    </div>
-                                                    <div class="col-1">
-                                                        ~
-                                                    </div>
-                                                    <div class="col-2">
-                                                        <input type="date" id="date" style="height:25px;">
-                                                    </div> -->
                                                 </div>
                                             <% } else { %>
                                                 <div class="row g-4 align-self-center">
@@ -139,6 +130,18 @@
                                                     </div>
                                                 </div>
                                             <% } %>
+                                            <%// if(typeof dateSearch.finsAfter == "undefined" || dateSearch.finsAfter == null || dateSearch.finsAfter == "") {%>
+                                            <!-- 날짜.. -->
+                                            <!-- <div class="col-12" id="dateType">
+                                                <input type="date" id="dateFrom" name="from" style="float: left; height: 30px;">
+                                                <span style="float: left; width: 100px; padding-top: 10px;">
+                                                    ~
+                                                </span>
+                                                <input type="date" id="dateTo" name="to" style="float: left; height: 30px;">
+                                            </div> -->
+                                            <%// } else { %>
+
+                                            <%// } %>
                                         </td>
                                     </tr>
                                 </form>
@@ -147,14 +150,19 @@
                             <div class="accordion-body">
                                 <div class="row g-4 align-items-left">
                                     <div class="col-2" no-margin>
-                                    <%// if(users) {%>
+                                    <% if(users) {%>
                                         전체목록 | 전체 회원수
-                                        <%// for(i = 1;i <= users.length ;i++){ %>
+                                        <% var sum = 0; %>
+                                        <% for(i = users.length; i <= users.length ;i++){ %>
                                             <span>
-                                                <%=// users.length %><%=// i %>명
+                                                <%= sum = sum + i %>명
                                             </span>
-                                        <%// } %>
-                                    <%// } %>
+                                        <% } %>
+                                    <% } %>
+                                        <!-- 전체목록 | 전체 회원수 -->
+                                            <!-- <span> -->
+                                                <!-- <%=// users.length %>명 -->
+                                            <!-- </span> -->
                                     </div>
                                     <div class="col-10">
                                         <button type="button" class="btn btn-success btn-sm">Excel Download</button>
@@ -212,7 +220,7 @@
                                                         <div class="row justify-content-center">
                                                             <div class="col-6 p-0 m-0">
                                                                 <button class="btn btn-primary" type="button"
-                                                                    onclick="location.href='/members/show'">보기</button>
+                                                                onclick="window.location = '/members/<%= post._id %>?<%= urlQuery %>'">보기</button>
                                                             </div>
                                                             <div class="col-6 p-0 m-0">
                                                                 <form>
@@ -284,49 +292,6 @@
 <script src="/js/jquery-1.10.2.js"></script>
 <script src="/js/bootstrap.min.js"></script>
 <script>
-
-// function All() {
-//   this.all = true;
-//   this.weekly=false;
-//   this.threemonthly=false;
-//   this.auth.getOrderList(this.userData.email, 'All').subscribe(data => {
-//     this.detailOrderData = data;
-//     this.yearAgo = new Date();
-//     this.yearAgo.setMonth(this.yearAgo.getMonth()-12);
-//   }, error => {
-//     console.log("데이터 전체 불러오기 에러" + error);
-//   });
-
-// }
-
-// function weeklyy() {
-//   this.all = false;
-//   this.weekly=true;
-//   this.monthly=false;
-//   this.threemonthly=false;
-//   this.auth.getOrderList(this.userData.email, 'Weekly').subscribe(data => {
-//     this.detailOrderData = data;
-//     this.yearAgo = new Date();
-//     this.yearAgo.setDate(this.yearAgo.getDate()-7); //일주일전
-
-//   }, error => {
-//     console.log("데이터 1주일 불러오기 에러" + error);
-//   });
-// }
-
-// function monthy(){
-//   this.all = false;
-//   this.weekly=false;
-//   this.monthly=true;
-//   this.threemonthly=false;
-//   this.auth.getOrderList(this.userData.email, 'Monthy').subscribe(data => {
-//     this.detailOrderData = data;
-//     this.yearAgo = new Date();
-//     this.yearAgo.setMonth(this.yearAgo.getMonth()-1); //한달전
-//   }, error => {
-//     console.log("데이터 1달 불러오기 에러" + error);      
-//   });
-// }
 
     $(document).ready(function () {
 

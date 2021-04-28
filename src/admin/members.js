@@ -2,6 +2,7 @@ var express = require("express");
 var router = express.Router();
 var mongoose = require("mongoose");
 var User = require("../models/user");
+var Orders = require("../models/Orders");
 var UserCounter = require("../models/UserCounter");
 var async = require("async");
 var User_admin = require("../models/User_admin");
@@ -18,6 +19,7 @@ var serverKey = "AIzaSyCAcTA318i_SVCMl94e8SFuXHhI5VtXdhU";
 var fcm = new FCM(serverKey);
 var multerS3 = require("multer-s3");
 const AWS = require("aws-sdk");
+const { search } = require("./product");
 AWS.config.loadFromPath(__dirname + "/../config/awsconfig.json");
 let s3 = new AWS.S3();
 
@@ -69,107 +71,12 @@ router.get("/Main", function (req, res) {
 });
 //고객 관리 메인 화면
 
-// router.get('/', function(req, res) {
-//   var vistorCounter = null;
-//   var page = Math.max(1, req.query.page) > 1 ? parseInt(req.query.page) : 1;
-//   var limit = Math.max(1, req.query.limit) > 1 ? parseInt(req.query.limit) : 7;
-//   var search = createSearch(req.query);
-//   var testSearch = createSearchTest(req.query);
-
-//   async.waterfall([function(callback) {
-//     if (!search.findUser) return callback(null);
-//     User.find(search.findUser, function(err, users) {
-//       if (err) callback(err);
-//       var or = [];
-//       users.forEach(function(users) {
-//         or.push({
-//           author: mongoose.Types.ObjectId(users._id)
-//         });
-//       });
-//       if (search.findPost.$or) {
-//         search.findPost.$or = search.findPost.$or.concat(or);
-//       } else if (or.length > 0) {
-//         search.findPost = {
-//           $or: or
-//         };
-//       }
-//       callback(null);
-//     });
-//   }, function(callback) {
-//     if (search.findUser && !search.findPost.$or) return callback(null, null, 0);
-//     User.count(search.findPost, function(err, count) {
-//       if (err) callback(err);
-//       skip = (page - 1) * limit;
-//       maxPage = Math.ceil(count / limit);
-//       callback(null, skip, maxPage);
-//     });
-//   }, function(skip, maxPage, callback) {
-//     if (search.findUser && !search.findPost.$or) return callback(null, [], 0);
-//     User.find(search.findPost).populate("author").sort('-created').skip(skip).limit(limit).exec(function(err, user) {
-//       if (err) callback(err);
-//       callback(null, user, maxPage);
-//     });
-//   },
-//   function(skip, maxPage, callback) {
-//     if (testSearch.findUser && !testSearch.findPost.$or)
-//       return callback(null, [], 0);
-
-//     if(testSearch.sortViews[0]) {
-//       User.find(testSearch.findPost)
-//       .sort({"seq": 1})
-//       .sort({ "created": 1 })
-//       .sort(testSearch.sortViews[0])
-//       .populate("author")
-//       .sort(testSearch.sortViews[0])
-//       .skip(skip)
-//       .limit(limit)
-//       .exec(function(err, user) {
-//         if (err) callback(err);
-//         callback(null, user, maxPage);
-//       });
-//     } else {
-//       User.find(testSearch.findPost)
-//       .sort({"seq": 1})
-//       .sort({ "created": 1})
-//       .populate("author")
-//       .sort({ seq: 1, created: -1 })
-//       .skip(skip)
-//       .limit(limit)
-//       .exec(function(err, user) {
-//         if (err) callback(err);
-//         callback(null, user, maxPage);
-//       });
-//     }
-//   }
-//   ], 
-//   function(err, user, maxPage) {
-//     if (err) return res.json({
-//       success: false,
-//       message: err
-//     });
-//     return res.render("PlinicAdmin/Operation/MemberMgt/index", {
-//       users: user,
-//       user: req.user,
-//       page: page,
-//       maxPage: maxPage,
-//       urlQuery: req._parsedUrl.query,
-//       search: search,
-//       counter: vistorCounter,
-//       postsMessage: req.flash("postsMessage")[0]
-//     });
-//   });
-// });
-
-
-
-
 router.get('/', function(req, res) {
   var vistorCounter = null;
   var page = Math.max(1, req.query.page) > 1 ? parseInt(req.query.page) : 1;
-  var limit = Math.max(1, req.query.limit) > 1 ? parseInt(req.query.limit) : 7;
+  var limit = Math.max(1, req.query.limit) > 1 ? parseInt(req.query.limit) : 80;
   var search = createSearch(req.query);
   var testSearch = createSearchTest(req.query);
-
   async.waterfall([
     function(callback) {
       // var created = new Date();
@@ -193,109 +100,41 @@ router.get('/', function(req, res) {
       callback(null);
     });
   }, function(callback) {
-    if (search.findUser && !search.findPost.$or) return callback(null, null, 0);
-    User.count(search.findPost, function(err, count) {
-      if (err) callback(err);
-      skip = (page - 1) * limit;
-      maxPage = Math.ceil(count / limit);
-      callback(null, skip, maxPage);
-    });
-  }, 
-  function(skip, maxPage, callback) {
-    if (search.findUser && !search.findPost.$or) return callback(null, [], 0);
-    User.find(search.findPost).populate("author").sort('-created').skip(skip).limit(limit).exec(function(err, user) {
-      if (err) callback(err);
-      callback(null, user, maxPage);
-    });
-  },
-  // function(callback) {
-  //   if (testSearch.findUser && !testSearch.findPost.$or)
-  //     return callback(null, null, 0);
-  //   User.count(testSearch.findPost, function(err, count) {
-  //     if (err) callback(err);
-  //     skip = (page - 1) * limit;
-  //     maxPage = Math.ceil(count / limit);
-  //     callback(null, skip, maxPage);
-  //   });
-  // },
-  // function(skip, maxPage, callback) {
-  //   if (testSearch.findUser && !testSearch.findPost.$or)
-  //     return callback(null, [], 0);
-
-  //   if(testSearch.termViews[0]) {
-  //     User.find(testSearch.findPost)
-  //     .sort({"seq": 1})
-  //     .sort({ "created": 1 })
-  //     .sort(testSearch.termViews[0])
-  //     .populate("author")
-  //     .sort(testSearch.termViews[0])
-  //     .sort(testSearch.termViews[0])
-  //     .skip(skip)
-  //     .limit(limit)
-  //     .exec(function(err, user) {
-  //       if (err) callback(err);
-  //       callback(null, user, maxPage);
-  //     });
-  //   } else {
-  //     User.find(testSearch.findPost)
-  //     .sort({"seq": 1})
-  //     .sort({ "created": 1})
-  //     .populate("author")
-  //     .sort({ seq: 1, created: -1 })
-  //     .skip(skip)
-  //     .limit(limit)
-  //     .exec(function(err, user) {
-  //       if (err) callback(err);
-  //       callback(null, user, maxPage);
-  //     });
-  //   }
-  // },
-  ], 
-  async.waterfall([
-    
-    function(callback) {
-      if (testSearch.findUser && !testSearch.findPost.$or)
-        return callback(null, null, 0);
-      User.count(testSearch.findPost, function(err, count) {
+      if (search.findUser && !search.findPost.$or || testSearch.findUser && testSearch.dayCreated[0].created.$gte) 
+      return callback(null, null, 0);
+      User.count(search.findPost || testSearch.dayCreated[0].created.$gte, function(err, count) {
         if (err) callback(err);
         skip = (page - 1) * limit;
         maxPage = Math.ceil(count / limit);
         callback(null, skip, maxPage);
       });
-    },
-    function(skip, maxPage, callback) {
-      if (testSearch.findUser && !testSearch.findPost.$or)
-        return callback(null, [], 0);
 
-      if(testSearch.termViews[0]) {
-        User.find(testSearch.findPost)
-        .sort({"seq": 1})
-        // .sort({ "created": 1 })
-        .sort(testSearch.termViews[0])
-        .populate("author")
-        .sort(testSearch.termViews[0])
-        .sort(testSearch.termViews[0])
-        .skip(skip)
-        .limit(limit)
-        .exec(function(err, user) {
-          if (err) callback(err);
-          callback(null, user, maxPage);
-        });
-      } else {
-        User.find(testSearch.findPost)
-        .sort({"seq": 1})
-        // .sort({ "created": 1})
-        .populate("author")
-        // .sort({ seq: 1, created: -1 })
-        .skip(skip)
-        .limit(limit)
-        .exec(function(err, user) {
-          if (err) callback(err);
-          callback(null, user, maxPage);
-        });
-      }
-    },
-  ],
+  }, 
+  function(skip, maxPage, callback) {
+    if (search.findUser && !search.findPost.$or || testSearch.findUser && testSearch.dayCreated[0].created.$gte) 
+    return callback(null, [], 0);
+
+    if(testSearch.dayCreated[0]) {
+      User.find(testSearch.dayCreated[0])
+      .sort({created : -1})
+      .skip(skip)
+      .limit(limit)
+      .exec(function(err, user) {
+        if (err) callback(err);
+        callback(null, user, maxPage);
+      });
+    } else {
+      User.find(search.findPost)
+      .sort({created : -1})
+      .skip(skip)
+      .limit(limit)
+      .exec(function(err, user) {
+        if (err) callback(err);
+        callback(null, user, maxPage);
+      });
+    }
+  },
+  ], 
   function(err, user, maxPage) {
     if (err) return res.json({
       success: false,
@@ -312,14 +151,93 @@ router.get('/', function(req, res) {
       counter: vistorCounter,
       postsMessage: req.flash("postsMessage")[0]
     });
-  }));
+  });
 });
 
 
-router.get("/show", function (req, res) {
-  return res.render("PlinicAdmin/Operation/MemberMgt/show", {});
-});
-//고객 관리 show 화면
+router.get("/:id", function (req, res) {
+  Orders.aggregate([
+    { $match: { _id : mongoose.Types.ObjectId(req.params.id)}},
+    { $unwind: "$author" },
+    { $project: {
+        paid_at: "$paid_at",
+        imp_uid: "$imp_uid",
+        status: "$status",
+        product_name: "$product_name",
+        productCount: 1,
+        deliverCompany: "$deliverCompany",
+        deliverNo: 1,
+        buyer_name: "$buyer_name",
+        pay_method: "$pay_method",
+        amount: 1,
+        usePoint: 1,
+      }
+    }
+  ])
+  User.findById(req.params.id)
+    .populate(['author', 'orders'])
+    .exec(function (err, post) {
+      // console.log(orders)
+      if (err) return res.json({
+        success: false,
+        message: err
+      });
+      // console.log(post);
+      var url = 'https://plinic.s3.ap-northeast-2.amazonaws.com/' + post.filename;
+      var prod_url = 'https://plinic.s3.ap-northeast-2.amazonaws.com/' + post.prodfilename;
+      res.render("PlinicAdmin/Operation/MemberMgt/show", {
+        post: post,
+        // orders: orders,
+        url: url,
+        prod_url: prod_url,
+        urlQuery: req._parsedUrl.query,
+        user: req.user,
+        // postDate: getFormattedDate(post[0].updatedAt),
+        search: createSearch(req.query)
+      });
+    });
+}); // 회원 정보 show
+
+
+// router.get("/:id", function (req, res) {
+//   Orders.aggregate([
+//     console.log(Orders),
+//     { $match: { _id : mongoose.Types.ObjectId(req.params.id)}},
+//     { $project: {
+//         paid_at: 1,
+//         imp_uid: 1,
+//         status: 1,
+//         product_name: 1,
+//         productCount: 1,
+//         deliverCompany: 1,
+//         deliverNo: 1,
+//         buyer_name: 1,
+//         pay_method: 1,
+//         amount: 1,
+//         usePoint: 1,
+//       }
+//     }
+//   ])
+//     .exec(function (err, post) {
+//       if (err) return res.json({
+//         success: false,
+//         message: err
+//       });
+//       // console.log(post);
+//       res.render("PlinicAdmin/Operation/MemberMgt/show", {
+//         post: post,
+//         postDate: getFormattedDate(post[0].updatedAt),
+//         url: url,
+//         prod_url: prod_url,
+//         urlQuery: req._parsedUrl.query,
+//         user: req.user,
+//         search: createSearch(req.query)
+//       });
+//     });
+// }); // 회원 통합 주문내역 show
+
+
+
 
 function isLoggedIn(req, res, next) {
   if (req.isAuthenticated()) {
@@ -331,154 +249,132 @@ function isLoggedIn(req, res, next) {
 
 module.exports = router;
 
-function createSearchTest(queries) {
-  var findPost = {},
-    findUser = null,
-    highlight = {};
-  if (!isEmpty2(queries.searchCheck)) {
-    var postQueries = [];
-    var termViews = []; //기간별 조희
-    // var created = new Date();
+
+function createSearchTest(querie) {
+  findUser = null
+  if (!isEmpty2(querie.termCheck)) {
+    var dayCreated = [];//기간별 조희
     var findAfter = {
-      // home : false,
-      // poreSize : false,
-      // poreCount : false,
-      // skinTone : false,
-      // clean : false,
-      // munjin : false,
-      // editor : false,
-      // tip: false,
-      // hit: false,
-      // new: false
     };
 
-    findPost = {
-      $or: postQueries
-    };
-
-    if (!isEmpty2(queries.termCheck)) {
-      
-      if(isEmpty2(!queries.termCheck.all)) {
-        var created = new Date();
-        termViews.push({
-          created : created.setMonth(created.getMonth()-12)
-          // created: created
+    if (!isEmpty2(querie.termCheck)) {
+      var created = new Date();
+      if(isEmpty2(!querie.termCheck.all)) {
+        var today = new Date();
+        var preToday = created.setMonth(created.getMonth()-12);
+        
+        dayCreated.push({
+          created: {
+            $gte: preToday,
+            $lte: today,
+          }
         });
-        postQueries.push();
       } else {
-        termViews.push();
-        postQueries.push();
+        dayCreated.push();
       }
   
-      if(isEmpty2(!queries.termCheck.weeklyy)) {
-        var created = new Date();
-        termViews.push({
-          created : created.setDate(created.getDate()-7)
-          // created: created
+      if(isEmpty2(!querie.termCheck.weeklyy)) {
+        var today = new Date();
+        var preToday = created.setDate(created.getDate()-7);
+        
+        dayCreated.push({
+          created: {
+            $gte: preToday,
+            $lte: today,
+          }
         });
-        postQueries.push();
       } else {
-        termViews.push();
-        postQueries.push();
+        dayCreated.push();
       }
 
-      if(isEmpty2(!queries.termCheck.monthy)) {
-        var created = new Date();
-        termViews.push({
-          created : created.setMonth(created.getMonth()-1)
-          // created: created
+      if(isEmpty2(!querie.termCheck.monthy)) {
+        var today = new Date();
+        var preToday = created.setMonth(created.getMonth()-1);
+
+        dayCreated.push({
+          created: {
+            $gte: preToday,
+            $lte: today,
+          }
         });
-        postQueries.push();
       } else {
-        termViews.push();
-        postQueries.push();
+        dayCreated.push();
       }
 
-      isEmpty2(!queries.termCheck.all) ? findAfter.all = true : findAfter.all = false;
-      isEmpty2(!queries.termCheck.weeklyy) ? findAfter.weeklyy = true : findAfter.weeklyy = false;
-      isEmpty2(!queries.termCheck.monthy) ? findAfter.monthy = true : findAfter.monthy = false;
+      isEmpty2(!querie.termCheck.all) ? findAfter.all = true : findAfter.all = false;
+      isEmpty2(!querie.termCheck.weeklyy) ? findAfter.weeklyy = true : findAfter.weeklyy = false;
+      isEmpty2(!querie.termCheck.monthy) ? findAfter.monthy = true : findAfter.monthy = false;
     }
 
     return {
-      searchText: queries.searchCheck,
-      findPost: findPost,
       findUser: findUser,
-      highlight: highlight,
       findAfter: findAfter,
-      termViews : termViews
+      dayCreated : dayCreated
     };
 
   } else {
-    var searchCheck = {
-      // home : false,
-      // poreSize : false,
-      // poreCount : false,
-      // skinTone : false,
-      // clean : false,
-      // munjin : false,
-      // home : false,
-    }
 
-    var postQueries = [];
-    var termViews = [];
+    var dayCreated = [];
     var findAfter = {
-      // home : false,
-      // poreSize : false,
-      // poreCount : false,
-      // skinTone : false,
-      // clean : false,
-      // munjin : false,
-      // editor : false,
+      all : false,
+      weeklyy: false,
+      monthy: false,
     };
-
-    if (!isEmpty2(queries.termCheck)) {
-
-      if(isEmpty2(!queries.termCheck.all)) {
-        var created = new Date();
-        termViews.push({
-          created : created.setMonth(created.getMonth()-12)
-          // created : created
+    if (!isEmpty2(querie.termCheck)) {
+      var created = new Date();
+      if(isEmpty2(!querie.termCheck.all)) {
+        var today = new Date();
+        var preToday = created.setMonth(created.getMonth()-12);
+        
+        dayCreated.push({
+          created: {
+            $gte: preToday,
+            $lte: today,
+          }
         });
       } else {
       }
   
-      if(isEmpty2(!queries.termCheck.weeklyy)) {
-        var created = new Date();
-        termViews.push({
-          created : created.setDate(created.getDate()-7)
-          // created : created
+      if(isEmpty2(!querie.termCheck.weeklyy)) {
+        var today = new Date();
+        var preToday = created.setDate(created.getDate()-7);
+        
+        dayCreated.push({
+          created: {
+            $gte: preToday,
+            $lte: today,
+          }
         });
       } else {
       }
 
-      if(isEmpty2(!queries.termCheck.monthy)) {
-        var created = new Date();
-        termViews.push({
-          created : created.setMonth(created.getMonth()-1)
-          // created : created
+      if(isEmpty2(!querie.termCheck.monthy)) {
+        var today = new Date();
+        var preToday = created.setMonth(created.getMonth()-1);
+
+        dayCreated.push({
+          created: {
+            $gte: preToday,
+            $lte: today,
+          }
         });
       } else {
       }
 
-      isEmpty2(!queries.termCheck.all) ? findAfter.all = true : findAfter.all = false;
-      isEmpty2(!queries.termCheck.weeklyy) ? findAfter.weeklyy = true : findAfter.weeklyy = false;
-      isEmpty2(!queries.termCheck.monthy) ? findAfter.monthy = true : findAfter.monthy = false;
+      isEmpty2(!querie.termCheck.all) ? findAfter.all = true : findAfter.all = false;
+      isEmpty2(!querie.termCheck.weeklyy) ? findAfter.weeklyy = true : findAfter.weeklyy = false;
+      isEmpty2(!querie.termCheck.monthy) ? findAfter.monthy = true : findAfter.monthy = false;
     }
 
 
     return {
-      searchType: queries.searchType,
-      searchText: queries.searchText,
-      findPost: findPost,
       findUser: findUser,
       findAfter: findAfter,
-      highlight: highlight,
-      termViews: termViews
+      dayCreated: dayCreated
     };
   }
   
 }
-
 
 function createSearch(queries) {
   var findPost = {},
@@ -520,6 +416,7 @@ function createSearch(queries) {
       $or: postQueries
     };
   }
+  
   return {
     searchType: queries.searchType,
     searchText: queries.searchText,

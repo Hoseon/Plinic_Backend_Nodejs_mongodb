@@ -89,12 +89,13 @@ router.get("/Main", function (req, res) {
 router.get('/', function (req, res) {
   var vistorCounter = null;
   var page = Math.max(1, req.query.page) > 1 ? parseInt(req.query.page) : 1;
-  var limit = Math.max(1, req.query.limit) > 1 ? parseInt(req.query.limit) : 7;
+  var limit = Math.max(1, req.query.limit) > 1 ? parseInt(req.query.limit) : 20;
   var search = createSearch(req.query);
+  var testSearch = createSearchTest(req.query);
   async.waterfall([
     function (callback) {
     if (!search.findUser) return callback(null);
-    User_admin.find(search.findUser, function (err, users) {
+    Orders.find(search.findUser, function (err, users) {
       if (err) callback(err);
       var or = [];
       users.forEach(function (user) {
@@ -112,27 +113,42 @@ router.get('/', function (req, res) {
       callback(null);
     });
   }, function (callback) {
-    if (search.findUser && !search.findPost.$or) return callback(null, null, 0);
-    Orders.count(search.findPost, function (err, count) {
+    if (search.findUser && !search.findPost.$or || testSearch.findUser && 
+      testSearch.dayCreated[0]    ) 
+    return callback(null, null, 0);
+    Orders.count(search.findPost || testSearch.dayCreated[0]    , function (err, count) {
       if (err) callback(err);
       skip = (page - 1) * limit;
       maxPage = Math.ceil(count / limit);
       callback(null, skip, maxPage);
     });
-  }, function (skip, maxPage, callback) {
-    if (search.findUser && !search.findPost.$or) return callback(null, [], 0);
-    Orders.find(search.findPost)
+  }, 
+  function (skip, maxPage, callback) {
+    if (search.findUser && !search.findPost.$or ||    
+      testSearch.findUser && testSearch.dayCreated[0]) 
+    return callback(null, [], 0);
+
+    if(testSearch.dayCreated[0]) {
+      Orders.find(testSearch.dayCreated[0])
+      .sort({paid_at : -1})
+      .skip(skip)
+      .limit(limit)
+      .exec(function(err, orders) {
+        if (err) callback(err);
+        callback(null, orders, maxPage);
+      });
+    } else {
+    Orders.find(search.findPost    )
     .sort({ paid_at: -1 })
-    // .sort({ "seq": 1 })
-    .populate("author")
-    // .sort({ "seq": 1, "updatedAt": -1 })
     .skip(skip)
     .limit(limit)
     .exec(function (err, orders) {
       if (err) callback(err);
       callback(null, orders, maxPage);
     });
-  }], function (err, orders, maxPage) {
+  }
+  }], 
+  function (err, orders, maxPage) {
     if (err) return res.json({
       success: false,
       message: err
@@ -144,6 +160,7 @@ router.get('/', function (req, res) {
       maxPage: maxPage,
       urlQuery: req._parsedUrl.query,
       search: search,
+      testSearch: testSearch,
       counter: vistorCounter,
       postsMessage: req.flash("postsMessage")[0]
     });
@@ -176,7 +193,9 @@ router.post('/statusUpdate/:id', function(req, res) {
 
 router.post('/:id/deliverNoUpdate', function(req, res) {
     // console.log(req.body);
+    var status = req.body;
     var newdeliverNo = req.body;
+    // status = 'deliver_during';
     Orders.findOneAndUpdate({
       _id: req.params.id
     }, 
@@ -288,6 +307,258 @@ function isLoggedIn(req, res, next) {
 
 module.exports = router;
 
+
+function createSearchTest(querie) {
+
+  findUser = null
+
+  if (!isEmpty2(querie.termCheck)) {
+    var dayCreated = [];//기간별 조희
+    var findAfter = {
+    };
+
+    if (!isEmpty2(querie.termCheck)) {
+      var paid_at = new Date();
+      if(isEmpty2(!querie.termCheck.all)) {
+        var today = new Date();
+        var preToday = paid_at.setMonth(paid_at.getMonth()-12);
+        
+        dayCreated.push({
+          paid_at: {
+            $gte: preToday,
+            $lte: today,
+          }
+        });
+      } else {
+        dayCreated.push();
+      }
+
+      if(isEmpty2(!querie.termCheck.dday)) {
+        var today = new Date();
+        var preToday = paid_at;
+        
+        dayCreated.push({
+          paid_at: {
+            $gte: preToday,
+            $lte: today,
+          }
+        });
+      } else {
+        dayCreated.push();
+      }
+
+      if(isEmpty2(!querie.termCheck.threeDay)) {
+        var today = new Date();
+        var preToday = paid_at.setDate(paid_at.getDate()-3);
+        
+        dayCreated.push({
+          paid_at: {
+            $gte: preToday,
+            $lte: today,
+          }
+        });
+      } else {
+        dayCreated.push();
+      }
+  
+      if(isEmpty2(!querie.termCheck.weeklyy)) {
+        var today = new Date();
+        var preToday = paid_at.setDate(paid_at.getDate()-7);
+        
+        dayCreated.push({
+          paid_at: {
+            $gte: preToday,
+            $lte: today,
+          }
+        });
+      } else {
+        dayCreated.push();
+      }
+
+      if(isEmpty2(!querie.termCheck.monthy)) {
+        var today = new Date();
+        var preToday = paid_at.setMonth(paid_at.getMonth()-1);
+
+        dayCreated.push({
+          paid_at: {
+            $gte: preToday,
+            $lte: today,
+          }
+        });
+      } else {
+        dayCreated.push();
+      }
+
+      if(isEmpty2(!querie.termCheck.threeMonthy)) {
+        var today = new Date();
+        var preToday = paid_at.setMonth(paid_at.getMonth()-3);
+        
+        dayCreated.push({
+          paid_at: {
+            $gte: preToday,
+            $lte: today,
+          }
+        });
+      } else {
+        dayCreated.push();
+      }
+
+      if(isEmpty2(!querie.termCheck.year)) {
+        var today = new Date();
+        var preToday = paid_at.setFullYear(paid_at.getFullYear()-1);
+        
+        dayCreated.push({
+          paid_at: {
+            $gte: preToday,
+            $lte: today,
+          }
+        });
+      } else {
+        dayCreated.push();
+      }
+
+      isEmpty2(!querie.termCheck.all) ? findAfter.all = true : findAfter.all = false;
+      isEmpty2(!querie.termCheck.dday) ? findAfter.dday = true : findAfter.dday = false;
+      isEmpty2(!querie.termCheck.threeDay) ? findAfter.threeDay = true : findAfter.threeDay = false;
+      isEmpty2(!querie.termCheck.weeklyy) ? findAfter.weeklyy = true : findAfter.weeklyy = false;
+      isEmpty2(!querie.termCheck.monthy) ? findAfter.monthy = true : findAfter.monthy = false;
+      isEmpty2(!querie.termCheck.threeMonthy) ? findAfter.threeMonthy = true : findAfter.threeMonthy = false;
+      isEmpty2(!querie.termCheck.year) ? findAfter.year = true : findAfter.year = false;
+    }
+
+    return {
+      findUser: findUser,
+      findAfter: findAfter,
+      dayCreated : dayCreated
+    };
+
+  } else {
+
+    findUser = null
+
+    var dayCreated = [];
+    var findAfter = {
+      all: false,
+      ddaty: false,
+      threeDay: false,
+      weeklyy: false,
+      monthy: false,
+      threeMonthy: false,
+      year: false,
+    };
+
+    if (!isEmpty2(querie.termCheck)) {
+      var paid_at = new Date();
+      if(isEmpty2(!querie.termCheck.all)) {
+        var today = new Date();
+        var preToday = paid_at.setMonth(paid_at.getMonth()-12);
+        
+        dayCreated.push({
+          paid_at: {
+            $gte: preToday,
+            $lte: today,
+          }
+        });
+      } else {
+      }
+
+      if(isEmpty2(!querie.termCheck.dday)) {
+        var today = new Date();
+        var preToday = paid_at;
+        
+        dayCreated.push({
+          paid_at: {
+            $gte: preToday,
+            $lte: today,
+          }
+        });
+      } else {
+      }
+
+      if(isEmpty2(!querie.termCheck.threeDay)) {
+        var today = new Date();
+        var preToday = paid_at.setDate(paid_at.getDate()-3);
+        
+        dayCreated.push({
+          paid_at: {
+            $gte: preToday,
+            $lte: today,
+          }
+        });
+      } else {
+      }
+  
+      if(isEmpty2(!querie.termCheck.weeklyy)) {
+        var today = new Date();
+        var preToday = paid_at.setDate(paid_at.getDate()-7);
+        
+        dayCreated.push({
+          paid_at: {
+            $gte: preToday,
+            $lte: today,
+          }
+        });
+      } else {
+      }
+
+      if(isEmpty2(!querie.termCheck.monthy)) {
+        var today = new Date();
+        var preToday = paid_at.setMonth(paid_at.getMonth()-1);
+
+        dayCreated.push({
+          paid_at: {
+            $gte: preToday,
+            $lte: today,
+          }
+        });
+      } else {
+      }
+
+      if(isEmpty2(!querie.termCheck.threeMonthy)) {
+        var today = new Date();
+        var preToday = paid_at.setMonth(paid_at.getMonth()-3);
+
+        dayCreated.push({
+          paid_at: {
+            $gte: preToday,
+            $lte: today,
+          }
+        });
+      } else {
+      }
+
+      if(isEmpty2(!querie.termCheck.year)) {
+        var today = new Date();
+        var preToday = paid_at.setFullYear(paid_at.getFullYear()-1);
+
+        dayCreated.push({
+          paid_at: {
+            $gte: preToday,
+            $lte: today,
+          }
+        });
+      } else {
+      }
+
+      isEmpty2(!querie.termCheck.all) ? findAfter.all = true : findAfter.all = false;
+      isEmpty2(!querie.termCheck.dday) ? findAfter.dday = true : findAfter.dday = false;
+      isEmpty2(!querie.termCheck.threeDay) ? findAfter.threeDay = true : findAfter.threeDay = false;
+      isEmpty2(!querie.termCheck.weeklyy) ? findAfter.weeklyy = true : findAfter.weeklyy = false;
+      isEmpty2(!querie.termCheck.monthy) ? findAfter.monthy = true : findAfter.monthy = false;
+      isEmpty2(!querie.termCheck.threeMonthy) ? findAfter.threeMonthy = true : findAfter.threeMonthy = false;
+      isEmpty2(!querie.termCheck.year) ? findAfter.year = true : findAfter.year = false;
+    }
+
+
+    return {
+      findUser: findUser,
+      findAfter: findAfter,
+      dayCreated: dayCreated
+    };
+  }
+  
+}
+
 function createSearch(queries) {
   var findPost = {},
     findUser = null,
@@ -300,21 +571,53 @@ function createSearch(queries) {
     //검색어 글자수 제한 하는 것
     var searchTypes = queries.searchType.toLowerCase().split(",");
     var postQueries = [];
-    if (searchTypes.indexOf("title") >= 0) {
+    if (searchTypes.indexOf("imp_uid") >= 0) {
       postQueries.push({
-        title: {
+        imp_uid: {
           $regex: new RegExp(queries.searchText, "i")
         }
       });
-      highlight.title = queries.searchText;
+      highlight.imp_uid = queries.searchText;
     }
-    if (searchTypes.indexOf("body") >= 0) {
+    if (searchTypes.indexOf("buyer_email") >= 0) {
       postQueries.push({
-        body: {
+        buyer_email: {
           $regex: new RegExp(queries.searchText, "i")
         }
       });
-      highlight.body = queries.searchText;
+      highlight.buyer_email = queries.searchText;
+    }
+    if (searchTypes.indexOf("buyer_tel") >= 0) {
+      postQueries.push({
+        buyer_tel: {
+          $regex: new RegExp(queries.searchText, "i")
+        }
+      });
+      highlight.buyer_tel = queries.searchText;
+    }
+    if (searchTypes.indexOf("buyer_name") >= 0) {
+      postQueries.push({
+        buyer_name: {
+          $regex: new RegExp(queries.searchText, "i")
+        }
+      });
+      highlight.buyer_name = queries.searchText;
+    }
+    if (searchTypes.indexOf("name") >= 0) {
+      postQueries.push({
+        name: {
+          $regex: new RegExp(queries.searchText, "i")
+        }
+      });
+      highlight.name = queries.searchText;
+    }
+    if (searchTypes.indexOf("deliverNo") >= 0) {
+      postQueries.push({
+        deliverNo: {
+          $regex: new RegExp(queries.searchText, "i")
+        }
+      });
+      highlight.deliverNo = queries.searchText;
     }
     if (searchTypes.indexOf("author!") >= 0) {
       findUser = {
@@ -333,6 +636,75 @@ function createSearch(queries) {
       findPost = {
         $or: postQueries
       };
+  } else if(queries.searchType && queries.searchText === '') {
+    var postQueries = [];
+    var searchTypes = queries.searchType;
+
+    if (searchTypes.indexOf("deliver_completed")>= 0) {
+      postQueries.push({
+        status: {
+          $regex: "deliver_completed"
+        }
+      });
+      highlight.status = "deliver_completed";
+    }
+    if (searchTypes.indexOf("cencel_completed")>= 0) {
+      postQueries.push({
+        status: {
+          $regex: "cencel_completed"
+        }
+      });
+      highlight.status = "cencel_completed";
+    }
+    if (searchTypes.indexOf("return_request")>= 0) {
+      postQueries.push({
+        status: {
+          $regex: "return_request"
+        }
+      });
+      highlight.status = "return_request";
+    }
+    if (searchTypes.indexOf("return_completed")>= 0) {
+      postQueries.push({
+        status: {
+          $regex: "return_completed"
+        }
+      });
+      highlight.status = "return_completed";
+    }
+    if (searchTypes.indexOf("swap_request")>= 0) {
+      postQueries.push({
+        status: {
+          $regex: "swap_request"
+        }
+      });
+      highlight.status = "swap_request";
+    }
+    if (searchTypes.indexOf("swap_completed")>= 0) {
+      postQueries.push({
+        status: {
+          $regex: "swap_completed"
+        }
+      });
+      highlight.status = "swap_completed";
+    }
+    if (searchTypes.indexOf("author!")>= 0) {
+      findUser = {
+        nickname: author
+      };
+      highlight.author = author
+    } else if (searchTypes.indexOf("author")>= 0) {
+      findUser = {
+        nickname: {
+          nickname: author
+        }
+      };
+      highlight.author = author
+    }
+    if (postQueries.length > 0)
+    findPost = {
+      $or: postQueries
+    };
   }
   return {
     searchType: queries.searchType,
@@ -341,4 +713,11 @@ function createSearch(queries) {
     findUser: findUser,
     highlight: highlight
   };
+}
+
+function isEmpty2(str) {
+  if(typeof str == "undefined" || str == null || str == "")
+    return true;
+  else
+    return false ;
 }
