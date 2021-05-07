@@ -33,6 +33,7 @@ var SkinAnaly = require('./models/SkinAnaly');
 var SkinReport = require('./models/SkinReport');
 var ProductsReview = require('./models/ProductsReview');
 var PointLog = require('./models/PointLog');
+var Orders = require('./models/Orders');
 
 const GoogleStrategy = require('passport-google-oauth20');
 var jwt = require('jsonwebtoken');
@@ -1766,30 +1767,108 @@ module.exports = function (app) {
     })
   })
 
-  app.get('/Point/getUserOrder/:email/:dateTime', async function(req, res, next) {
-    if(!req.params.email) {
+  app.get('/Point/getUserOrder/:email/:dateTime', async function (req, res, next) {
+    if (!req.params.email) {
       return res.status(400).send({
         'msg': '사용자 정보가 존재하지 않음 플리닉샵 포인트 가져오기'
       });
     }
-    var email = req.params.email
+    // var email = req.params.email
     var dateTime = req.params.dateTime
-    var request10 = require('request');
-    var url = 'http://plinicshop.com:50082/Point/getUserOrder?id=' + email + '&dateTime=' + dateTime
-    await request10({
-      url: url,
-      method: 'GET'
-    }, function (error, response, body) {
-      if(error) {
-        return res.status(400).send({
-          'msg': '플리닉샵 사용자 전체 포인트 조회 에러'
-        });
-      }
-      if(body) {
-        res.send(JSON.parse(body));
-      }
-    })
-  })
+
+    if (dateTime == 'All') {
+      Orders.find({
+        email : req.params.email
+      }, (err, result) => {
+          if (err) {
+            console.log("사용자 오더 정보 조회 실패 : " + req.params.email);
+            res.status(400).json(err);
+          }
+    
+          if (result) {
+            res.status(200).json(result);
+          } else {
+            console.log("사용자 오더 정보 조회 실패2 : " + req.params.email);
+            res.status(400).json(err);
+          }
+      })
+      
+    } else if (dateTime == 'Weekly') {
+      var today = new Date();
+      var preToday = new Date();
+      var preToday = preToday.setDate(preToday.getDate() - 8);
+
+      Orders.find({
+        email: req.params.email,
+        started_at: {
+          $gte: preToday,
+          $lte: today,
+        }
+      }, (err, result) => {
+          if (err) {
+            console.log("사용자 오더 정보 조회 실패 : " + req.params.email);
+            res.status(400).json(err);
+          }
+    
+          if (result) {
+            res.status(200).json(result);
+          } else {
+            console.log("사용자 오더 정보 조회 실패2 : " + req.params.email);
+            res.status(400).json(err);
+          }
+      })
+
+    } else if (dateTime == 'Monthy') {
+      var today = new Date();
+      var preToday = new Date();
+      var preToday = preToday.setDate(preToday.getDate() - 32);
+      Orders.find({
+        email: req.params.email,
+        started_at: {
+          $gte: preToday,
+          $lte: today,
+        }
+      }, (err, result) => {
+          if (err) {
+            console.log("사용자 오더 정보 조회 실패 : " + req.params.email);
+            res.status(400).json(err);
+          }
+    
+          if (result) {
+            res.status(200).json(result);
+          } else {
+            console.log("사용자 오더 정보 조회 실패2 : " + req.params.email);
+            res.status(400).json(err);
+          }
+      })
+
+    } else if (dateTime == 'ThreeMonthy') {
+      var today = new Date();
+      var preToday = new Date();
+      var preToday = preToday.setDate(preToday.getDate() - 91);
+      Orders.find({
+        email: req.params.email,
+        started_at: {
+          $gte: preToday,
+          $lte: today,
+        }
+      }, (err, result) => {
+          if (err) {
+            console.log("사용자 오더 정보 조회 실패 : " + req.params.email);
+            res.status(400).json(err);
+          }
+    
+          if (result) {
+            res.status(200).json(result);
+          } else {
+            console.log("사용자 오더 정보 조회 실패2 : " + req.params.email);
+            res.status(400).json(err);
+          }
+      })
+
+    }
+
+  });
 
 
   app.get('/getweather/:date/:time', async function(req, res, next) {
@@ -1959,6 +2038,12 @@ module.exports = function (app) {
     })
   })
 
+  app.post("/registerTest", function(req, res, next){
+    console.log(req.body);
+    res.status(200).json("ok");
+    
+  });
+
   //사용자 포인트 다시 가져 오기 2020-02-18
   app.get('/testskinqna/:email', function (req, res, next) {
     User.findOne({
@@ -2105,6 +2190,26 @@ module.exports = function (app) {
   function average(array) { //배열 평균 함수
     return array.reduce((sum, current) => sum + current, 0) / array.length;
   }
+
+  app.get('/userFindDate', function (req, res) {
+    var today = new Date();
+    var preToday = new Date();
+    var preToday = preToday.setDate(preToday.getDate() - 8);
+    User.find({
+      created: {
+        $gte: preToday,
+        $lte: today,
+      }
+    }, function (err, result) {
+        if (err) {
+          res.status(400).json();
+        }
+
+        if (result) {
+          res.status(200).json(result);
+        }
+    })
+  })
 
 
   app.get('/getSkinAnalyAge/:age/:gender' ,function(req, res) {
@@ -2457,22 +2562,41 @@ module.exports = function (app) {
   })
 
   app.get('/getUserPointLog/:email', function (req, res, next) {
-    PointLog.findOne({
-      email: req.params.email,
-    }, function (err, docs) {
-        if (err) {
-          console.log("사용자 포인트 기록 가져 오기 에러 : " + req.params.email);
-          return res.status(400).json(err);
-        }
+    // PointLog.findOne({
+    //   email: req.params.email,
+    // }, function (err, docs) {
+    //   if (err) {
+    //     console.log("사용자 포인트 기록 가져 오기 에러 : " + req.params.email);
+    //     return res.status(400).json(err);
+    //   }
 
-        if (docs) {
-          return res.status(201).json(docs);
-        } else {
-          console.log("사용자 포인트 기록 가져 오기 에러2 : " + req.params.email);
-          return res.status(400).json();
-        }
-    })
-  })
+    //   if (docs) {
+    //     return res.status(201).json(docs);
+    //   } else {
+    //     console.log("사용자 포인트 기록 가져 오기 에러2 : " + req.params.email);
+    //     return res.status(400).json();
+    //   }
+    // });
+    
+    PointLog.aggregate([
+      { $unwind: "$point" },
+      { $match: { email: req.params.email } },
+      { $sort: { 'point.createdAt': -1 } }
+    ], function (err, docs) {
+      if (err) {
+        console.log("사용자 포인트 기록 가져 오기 에러 : " + req.params.email);
+        return res.status(400).json(err);
+      }
+
+      if (docs) {
+        return res.status(201).json(docs);
+      } else {
+        console.log("사용자 포인트 기록 가져 오기 에러2 : " + req.params.email);
+        return res.status(400).json();
+      }
+    });
+        
+  });
 
   //화장품 리뷰 가져 오기 2021-03-17 3건씩 가져 오기
   app.get('/getProductReview2/:product_num/:page', function (req, res, next) {

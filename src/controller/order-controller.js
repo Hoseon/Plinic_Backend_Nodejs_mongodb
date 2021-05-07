@@ -127,6 +127,34 @@ exports.UpdateCancelOrders = (req, res) => { //사용자 취소요청 처리
   });
 };
 
+exports.UpdateCompletedOrders = (req, res) => { //사용자 취소요청 처리
+  //사용자 포인트 차감 저장 로직
+  if (!req.body.id && !req.body.email) {
+    res.status(400).json();
+  }
+ 
+  Orders.findOneAndUpdate({
+    _id: req.body.id
+  }, {
+      $set: {
+        status: 'deliver_completed',
+        updatedAt: Date.now()
+      },
+  }, function (err, post) {
+    if (err) {
+      console.log("사용자 구매 확정 처리 에러 1 : " + req.body.email);
+      res.status(400).json(err);
+    }
+      
+    if (post) {
+      res.status(200).json(post);
+    } else {
+      console.log("사용자 구매 확정 처리 에러 2 : " + req.body.email);
+      res.status(400).json();
+    }
+  });
+};
+
 exports.getUserOrders = (req, res) => {
   //사용자 포인트 차감 저장 로직
   if (!req.params.email) {
@@ -156,9 +184,9 @@ exports.getUserOrdersTrackingInfo = (req, res) => {
   var request = require('request');
 
   var url = 'http://info.sweettracker.co.kr/api/v1/trackingInfo';
-  var queryParams = '?' + encodeURIComponent('t_key') + '=9Y2nG9CuZ4yYA2PvxmN11Q'; /* Service Key*/
+  var queryParams = '?' + encodeURIComponent('t_key') + '=mConPK30usstNWcXlN9JSg'; /* Service Key*/
   queryParams += '&' + encodeURIComponent('t_code') + '=' + encodeURIComponent('04'); /* 한 페이지 결과 수 */
-  queryParams += '&' + encodeURIComponent('t_invoice') + '=' + encodeURIComponent('638456129441'); /* 한 페이지 결과 수 */
+  queryParams += '&' + encodeURIComponent('t_invoice') + '=' + encodeURIComponent(req.params.t_invoice); /* 한 페이지 결과 수 */
 
   request({
     url: url + queryParams,

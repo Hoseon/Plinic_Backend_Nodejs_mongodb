@@ -161,10 +161,6 @@ exports.noteUpdate = (req, res) => {
 
 
 exports.replySave = (req, res) => {
-  // console.log(req.body.email);
-  // console.log(req.body.id);
-  // console.log(req.body.comment);
-
   var newReply = req.body
   BeautyNote.update({
     _id: req.body.id
@@ -177,7 +173,6 @@ exports.replySave = (req, res) => {
       console.log("tags error : " + err);
       return res.status(400).json(err);
     } else {
-      // console.log("result tags : " + JSON.stringify(post2));
       return res.status(201).json(post2);
     }
   })

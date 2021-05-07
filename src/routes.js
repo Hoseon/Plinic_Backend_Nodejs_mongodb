@@ -131,6 +131,7 @@ routes.post('/setUserOrders', orderController.setUserOrders); //결제 성공시
 routes.post('/updateChangeOrders', orderController.UpdateChangeOrders); //
 routes.post('/updateReturnOrders', orderController.UpdateReturnOrders); //
 routes.post('/updateCancelOrders', orderController.UpdateCancelOrders); //
+routes.post('/updateCompletedOrders', orderController.UpdateCompletedOrders); // 고객이 직접 구매확정을 누를때 처리 2021-04-27
 
 
 ////GET////////////////////////////////////////////////////////////////////////////////////////////
