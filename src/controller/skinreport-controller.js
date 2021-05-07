@@ -140,26 +140,42 @@ exports.registerReview = (req, res) => {
         });
       }
       if (data) {
-        //리뷰가 등록 되었을시에 포인트 500P적립 기능 추가 2021-03-04
+        var isReview = false;
+        //리뷰가 등록 되었을시에 포인트 50P적립 기능 추가 2021-03-04
         PointLog.findOne({
           email : req.body.email
         }, (err, data) => {
-            if (err) {
-              console.log("리뷰 작성 후 포인트 적립 실패(사용자 못찾음) : " + req.body.email + " : " + req.body.review.product_name);
-              res.status(400).json(err);
+          if (err) {
+            console.log("리뷰 작성 후 포인트 적립 실패(사용자 못찾음) : " + req.body.email + " : " + req.body.review.product_name);
+            res.status(400).json(err);
+          }
+            
+          for (var i = 0; i < data.point.length; i++) {
+            if (getFormattedDate(data.point[i].createdAt) == getFormattedDate(new Date())) {
+              if (data.point[i].reason == '화장품 리뷰 작성') {
+                // console.log(getFormattedDate(data.point[i].createdAt) + " : " + getFormattedDate(new Date()));
+                isReview = true;
+              }
+            } 
+          }
+          if (isReview) { //포인트 적립을 했던 적이 있음
+            if (data) {
+              return res.status(200).json({
+                'msg': '리뷰가 등록 되었습니다.'
+              });
             }
-
+          } else { //포인트 적립이 오늘 최초임
             if (data) {
               var prePointLog = {
                 reason: '화장품 리뷰 작성',
-                point: 100,
+                point: 50,
                 status: true
               }
               PointLog.findOneAndUpdate({
                 email: req.body.email
               }, {
                   $push: { point: prePointLog },
-                  $inc: {  "totalPoint": 100 }
+                  $inc: {  "totalPoint": 50 }
                 }, (err, data) => {
                   if (err) {
                     console.log("리뷰 작성 후 포인트 적립 실패(포인트 누적 실패) : " + req.body.email + " : " + req.body.review.product_name);
@@ -176,6 +192,11 @@ exports.registerReview = (req, res) => {
                   }
                 });
             }
+          }
+
+            
+
+            
         })
       }
       if (err) {

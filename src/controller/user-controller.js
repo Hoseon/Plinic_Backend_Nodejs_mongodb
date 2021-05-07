@@ -1223,13 +1223,13 @@ exports.pointUpdate = (req, res) => {
         }
       }
       // console.log("total points : " + todayPoints);
-      if (todayPoints < 90) {
-        if ((todayPoints + Number(req.body.points)) > 90) {
+      if (todayPoints < 300) {
+        if ((todayPoints + Number(req.body.points)) > 300) {
           // console.log("9분을 넘어감");
           // console.log((todayPoints + Number(req.body.points)) - 90)
 
           //만일 사용시간이 이번 누적으로 9분이 초과 하면 9분만 누적하는 로직
-          minusPoints = (todayPoints + Number(req.body.points)) - 90
+          minusPoints = (todayPoints + Number(req.body.points)) - 300
           usePoints = Number(req.body.points) - minusPoints
           // console.log("적립되어야 할 포인트 : " + usePoints);
           var newPoint = req.body
@@ -1266,7 +1266,7 @@ exports.pointUpdate = (req, res) => {
                 });
               // return res.status(201).json(post2);
               return res.status(201).json({
-                'msg': '오늘 누적 사용시간이 90초를 초과하여 <br>' + getSecondsAsDigitalClock(usePoints) + ' 초만 누적되었습니다. <br> 내일 다시 사용해 주세요 <br> 감사합니다'
+                'msg': '오늘 누적 사용시간이 300초를 초과하여 <br>' + getSecondsAsDigitalClock(usePoints) + ' 초만 누적되었습니다. <br> 내일 다시 사용해 주세요 <br> 감사합니다'
               });
             }
           });
@@ -1304,7 +1304,7 @@ exports.pointUpdate = (req, res) => {
                   }
                 });
               return res.status(201).json({
-                'msg': '오늘 적립된 포인트 : ' + todayPoints + Number(req.body.points) + 'P<br>(최대 적립 가능 포인트 : 90P)'
+                'msg': '오늘 적립된 포인트 : ' + todayPoints + Number(req.body.points) + 'P<br>(최대 적립 가능 포인트 : 300P)'
                 // 'msg': '사용시간 ' + getSecondsAsDigitalClock(req.body.points) + '초가 누적되었습니다. <br> 오늘 누적 사용시간 : ' + getSecondsAsDigitalClock(todayPoints + Number(req.body.points))
               });
             }
@@ -1659,15 +1659,15 @@ exports.usePointUpdate = (req, res) => {
 
 
       //누적 로직 시작
-      if (todayPoints < 90) { //하루 9분을 넘어가면
+      if (todayPoints < 300) { //하루 9분을 넘어가면
 
         //만일 사용시간이 이번 누적으로 9분이 초과 하면 9분만 누적하는 로직
-        if ((todayPoints + Number(req.body.points)) > 90) {
+        if ((todayPoints + Number(req.body.points)) > 300) {
           // console.log("9분을 넘어감");
           // console.log((todayPoints + Number(req.body.points)) - 90)
 
           //만일 사용시간이 이번 누적으로 9분이 초과 하면 9분만 누적하는 로직 6분만 이용한걸로 뺀다
-          minusPoints = (todayPoints + Number(req.body.points)) - 90
+          minusPoints = (todayPoints + Number(req.body.points)) - 300
           usePoints = Number(req.body.points) - minusPoints
           // console.log("적립되어야 할 포인트 : " + usePoints);
           var newPoint = req.body
@@ -1724,7 +1724,7 @@ exports.usePointUpdate = (req, res) => {
                       if (updateResult) {
                         return res.status(201).json({
                           'point': usePoints + 'P 획득 완료!',
-                          'msg': '오늘 적립된 포인트 : ' + (Number(todayPoints) + Number(usePoints)) + 'P <br>(최대적립 가능 포인트 : 90P)'
+                          'msg': '오늘 적립된 포인트 : ' + (Number(todayPoints) + Number(usePoints)) + 'P <br>(최대적립 가능 포인트 : 300P)'
                         });
                       }
                     });
@@ -1750,7 +1750,7 @@ exports.usePointUpdate = (req, res) => {
                     if (result) {
                       return res.status(201).json({
                         'point': usePoints + 'P 획득 완료!',
-                        'msg': '오늘 적립된 포인트 : ' + (Number(todayPoints) + Number(usePoints)) + 'P <br>(최대적립 가능 포인트 : 90P)'
+                        'msg': '오늘 적립된 포인트 : ' + (Number(todayPoints) + Number(usePoints)) + 'P <br>(최대적립 가능 포인트 : 300P)'
                       });
                     }
                   })
@@ -1809,7 +1809,7 @@ exports.usePointUpdate = (req, res) => {
                       if (updateResult) {
                         return res.status(201).json({
                           'point': req.body.points + 'P 획득 완료!',
-                          'msg': '오늘 적립된 포인트 : ' + (Number(todayPoints) + Number(req.body.points)) + 'P <br>(최대적립 가능 포인트 : 90P)'
+                          'msg': '오늘 적립된 포인트 : ' + (Number(todayPoints) + Number(req.body.points)) + 'P <br>(최대적립 가능 포인트 : 300P)'
                         });
                       }
                     });
@@ -1835,7 +1835,7 @@ exports.usePointUpdate = (req, res) => {
                     if (result) {
                       return res.status(201).json({
                         'point': req.body.points + 'P 획득 완료!',
-                        'msg': '오늘 적립된 포인트 : ' + (Number(todayPoints) + Number(req.body.points)) + 'P <br>(최대적립 가능 포인트 : 90P)'
+                        'msg': '오늘 적립된 포인트 : ' + (Number(todayPoints) + Number(req.body.points)) + 'P <br>(최대적립 가능 포인트 : 300P)'
                       });
                     }
                   })
@@ -1874,7 +1874,7 @@ exports.usePointUpdate = (req, res) => {
           });
         return res.status(201).json({
           'point': '적립 초과!',
-          'msg': '오늘 적립된 포인트 : 90P<br>(최대적립 가능 포인트 : 90P)'
+          'msg': '오늘 적립된 포인트 : 300P<br>(최대적립 가능 포인트 : 300P)'
         });
         // console.log("오늘자로 9분을 모두 사용하여 누적이 되지 않습니다.");
         // return res.status(200).json();
