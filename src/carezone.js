@@ -85,6 +85,29 @@ let s3upload = multer({
 // };
 
 
+//20210507 대댓글 저장
+router.post('/:id/recomments', function(req, res) {
+  // console.log(req.body);
+  var newComment = req.body;
+  Carezone.update({
+    "comments._id" : req.params.id
+  }, {
+    $push: {
+      "comments.$.recomments" : newComment
+    }
+  }, function(err, post) {
+    if (err) return res.json({
+      success: false,
+      message: err
+    });
+    return res.status(201).json({
+      'msg': '댓글이 작성되었습니다!!'
+    });
+  });
+}); 
+
+
+
 //20190829 사용자 플리닉 블루투스 월 사용시간 Get!
 router.get('/totalusetime/:id/:date', function(req, res) {
   // console.log(req.params.id);

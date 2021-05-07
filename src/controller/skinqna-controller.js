@@ -69,60 +69,107 @@ exports.skinQnaSave = (req, res) => {
 
         console.log("포인트 등록 시작 : " + req.body.email);
         //포인트를 등록한다. 2020-05-25
-        User.findOne({
+        PointLog.findOne({
           email: req.body.email
         },
         function(err, result) {
           if (result) {
-            for(var i =0; i< result.userpoint.length; i++) {
-              if (getFormattedDate(new Date(result.userpoint[i].updatedAt)) == getFormattedDate(new Date())) {
-                if(result.userpoint[i].status=="skinqna" || result.userpoint[i].status=="뷰티플 글쓰기 작성") {
-                  return res.status(400);
-                  //         // 'msg': '하루 한번만 포인트가 누적됩니다!!'
-                }
-              }
-            }
-            //커뮤니티 글 작성시 1회/일 50점을 쌓아 준다 2020-05-25
-            User.update({
-              email : req.body.email
-            }, {
-              $push: {
-                userpoint : {point: 50, updatedAt: new Date(), status: 'skinqna'}
-              }, $inc: { //미션당 사용사긴 외에 일반적인 플리닉의 총 사용시간도 구해야 함 20191028
-                "totaluserpoint": 50
-              }
-            }, function(err, result2){
-              if(err) {
-                // return res.status(400).json(err);
-              } else {
-                // return res.status(201).json({
-                  // 'msg': '커뮤니티 작성 포인트가 누적되었습니다111!!'
-                // });
-              }
-              });
+
             var prePointLog = {
               reason: "뷰티플 글쓰기 작성",
               point: 50,
               status : 'skinqna'
             }
-            //포인트 로그 플리닉샵 --> 플리닉으로 변경 2021-03-04
-            PointLog.update({
+
+            PointLog.findOne({
               email: req.body.email
-            }, {
-                $push: { point: prePointLog },
-                $inc: { "totalPoint": 50 }
-              }, (err, result) => {
-                if (err) {
-                  console.log("글쓰기 포인트 적립 에러 발생 : " + req.body.email);
-                  res.status(400).json();
+            }, (err, data) => {
+              if (err) {
+                console.log("톡 작성 후 포인트 적립 실패(사용자 못찾음) : " + req.body.email + " : " + req.body.review.product_name);
+                res.status(400).json(err);
+              }
+              
+              if (data) {
+                var isReview = false;
+                for (var i = 0; i < data.point.length; i++) {
+                  if (getFormattedDate(data.point[i].createdAt) == getFormattedDate(new Date())) {
+                    if (data.point[i].reason == '뷰티플 글쓰기 작성') {
+                      // console.log(getFormattedDate(data.point[i].createdAt) + " : " + getFormattedDate(new Date()));
+                      isReview = true;
+                    }
+                  } 
                 }
-                if (result) {
-                  // res.status(200).json(result);
-                } else {
-                  console.log("글쓰기 포인트 적립 에러 발생 2 : " + req.body.email);
-                  res.status(400).json();
+
+                if (isReview) { //오늘 톡을 작성한게 있다면 포인트 적립 없이 진행
+                  console.log("뷰티플 글쓰기 작성은 되었으나 포인트는 적립되지 않음");
+                } else { //오늘 톡을 작성한게 있다면 포인트 적립 진행
+                  PointLog.update({
+                    email: req.body.email
+                  }, {
+                      $push: { point: prePointLog },
+                      $inc: { "totalPoint": 50 }
+                    }, (err, result) => {
+                      if (err) {
+                        console.log("글쓰기 포인트 적립 에러 발생 : " + req.body.email);
+                        res.status(400).json();
+                      }
+                      if (result) {
+                        // res.status(200).json(result);
+                      } else {
+                        console.log("글쓰기 포인트 적립 에러 발생 2 : " + req.body.email);
+                        res.status(400).json();
+                      }
+                  });
                 }
-            });
+              }
+              });
+            
+            // for(var i =0; i< result.point.length; i++) {
+            //   if (getFormattedDate(new Date(result.point[i].createdAt)) == getFormattedDate(new Date())) {
+            //     if(result.point[i].reason=="skinqna" || result.point[i].reason=="뷰티플 글쓰기 작성") {
+            //       return res.status(400);
+            //       //         // 'msg': '하루 한번만 포인트가 누적됩니다!!'
+            //     }
+            //   }
+            // }
+            // //커뮤니티 글 작성시 1회/일 50점을 쌓아 준다 2020-05-25
+            // User.update({
+            //   email : req.body.email
+            // }, {
+            //   $push: {
+            //     userpoint : {point: 50, updatedAt: new Date(), status: 'skinqna'}
+            //   }, $inc: { //미션당 사용사긴 외에 일반적인 플리닉의 총 사용시간도 구해야 함 20191028
+            //     "totaluserpoint": 50
+            //   }
+            // }, function(err, result2){
+            //   if(err) {
+            //     // return res.status(400).json(err);
+            //   } else {
+            //     // return res.status(201).json({
+            //       // 'msg': '커뮤니티 작성 포인트가 누적되었습니다111!!'
+            //     // });
+            //   }
+            //   });
+            
+
+            //포인트 로그 플리닉샵 --> 플리닉으로 변경 2021-03-04
+            // PointLog.update({
+            //   email: req.body.email
+            // }, {
+            //     $push: { point: prePointLog },
+            //     $inc: { "totalPoint": 50 }
+            //   }, (err, result) => {
+            //     if (err) {
+            //       console.log("글쓰기 포인트 적립 에러 발생 : " + req.body.email);
+            //       res.status(400).json();
+            //     }
+            //     if (result) {
+            //       // res.status(200).json(result);
+            //     } else {
+            //       console.log("글쓰기 포인트 적립 에러 발생 2 : " + req.body.email);
+            //       res.status(400).json();
+            //     }
+            // });
           } else {
             // //검색결과가 없으면 신규 등록
             // User.update({
@@ -254,10 +301,6 @@ exports.skinQnaUpdate = (req, res) => {
 };
 
 exports.replySave = (req, res) => {
-  // console.log(req.body.email);
-  // console.log(req.body.id);
-  // console.log(req.body.comment);
-
   var newReply = req.body
   SkinQna.update({
     _id: req.body.id
@@ -273,26 +316,49 @@ exports.replySave = (req, res) => {
       //2021-03-04 게시글 댓글 작성시 포인트 적립 5포인트
       var prePointLog = {
         reason: "게시글 댓글 작성",
-        point: 5,
+        point: 10,
         status : 'skinqnaReply'
       }
-      //포인트 로그 플리닉샵 --> 플리닉으로 변경 2021-03-04
-      PointLog.update({
+
+      var reviewCount = 0;
+      
+      //포인트 로그 플리닉샵 --> 2021-04-27 포인트 적립 로직 1일5회 제한 으로 변경
+      PointLog.findOne({
         email: req.body.email
-      }, {
-          $push: { point: prePointLog },
-          $inc: { "totalPoint": 5 }
-        }, (err, result) => {
-          if (err) {
-            console.log("게시글 댓글 작성 포인트 적립 에러 발생 : " + req.body.email);
-            res.status(400).json();
-          }
-          if (result) {
-            // res.status(200).json(result);
-          } else {
-            console.log("게시글 댓글 작성 에러 발생 2 : " + req.body.email);
-            res.status(400).json();
-          }
+      }, (err, data) => {
+        
+        if (err) {
+          console.log("게시글 댓글 작성 포인트 적립 에러 발생 : " + req.body.email);
+          res.status(400).json();
+        }
+          
+        for (var i = 0; i < data.point.length; i++) {
+          if (getFormattedDate(data.point[i].createdAt) == getFormattedDate(new Date())) {
+            if (data.point[i].reason == '게시글 댓글 작성') {
+              reviewCount++;
+            }
+          } 
+        }
+          
+        if (5 > reviewCount) {
+          PointLog.update({
+            email: req.body.email
+          }, {
+              $push: { point: prePointLog },
+              $inc: { "totalPoint": 10 }
+            }, (err, result) => {
+              if (err) {
+                console.log("게시글 댓글 작성 포인트 적립 에러 발생 : " + req.body.email);
+                res.status(400).json();
+              }
+              if (result) {
+                // res.status(200).json(result);
+              } else {
+                console.log("게시글 댓글 작성 에러 발생 2 : " + req.body.email);
+                res.status(400).json();
+              }
+          });
+        } 
       });
 
       // console.log("result tags : " + JSON.stringify(post2));

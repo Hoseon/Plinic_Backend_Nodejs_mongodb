@@ -360,6 +360,57 @@ router.post('/', s3upload.fields([{
           'msg': '뷰티노트가 등록되지 않았습니다. <br /> Error : ' + err
         });
       }
+      
+      if (data) {
+        var isReview = false;
+        for (var i = 0; i < data.point.length; i++) {
+          if (getFormattedDate(data.point[i].createdAt) == getFormattedDate(new Date())) {
+            if (data.point[i].reason == '뷰티플 글쓰기 작성') {
+              // console.log(getFormattedDate(data.point[i].createdAt) + " : " + getFormattedDate(new Date()));
+              isReview = true;
+            }
+          } 
+        }
+
+        if (isReview) { //오늘 톡을 작성한게 있다면 포인트 적립 없이 진행
+          console.log("뷰티플 글쓰기 작성은 되었으나 포인트는 적립되지 않음");
+        } else { //오늘 톡을 작성한게 있다면 포인트 적립 진행
+          PointLog.update({
+            email: req.body.email
+          }, {
+              $push: { point: prePointLog },
+              $inc: { "totalPoint": 50 }
+            }, (err, result) => {
+              if (err) {
+                console.log("글쓰기 포인트 적립 에러 발생 : " + req.body.email);
+                res.status(400).json();
+              }
+              if (result) {
+                // res.status(200).json(result);
+              } else {
+                console.log("글쓰기 포인트 적립 에러 발생 2 : " + req.body.email);
+                res.status(400).json();
+              }
+          });
+        }
+      }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
       var newTags = req.body.tags.replace(/\"/g, "").replace(/\\/g, "").replace(/\[/g, "").replace(/\]/g, "");
       Tags.update({
         _id: '5d2c39cc9cc12aae489d2f08'
@@ -368,91 +419,112 @@ router.post('/', s3upload.fields([{
           tags: newTags
         }
       }, function(err, post2) {
-        if (err) {
-          console.log("tags error : " + err);
-        } else {
-          //2020-05-25 이부분에 글쓰기 포인트 적립 로직 추가
-          User.findOne({
-            email: req.body.email
-          },
-          function(err, result) {
-            if (result) {
-              for(var i =0; i< result.userpoint.length; i++) {
-                if (getFormattedDate(new Date(result.userpoint[i].updatedAt)) == getFormattedDate(new Date())) {
-                  if(result.userpoint[i].status=="skinqna" || result.userpoint[i].status=="뷰티플 글쓰기 작성") {
-                    return res.status(400);
-                  }
-                }
-              }
-              //커뮤니티 글 작성시 1회/일 50점을 쌓아 준다 2020-05-25
-              User.update({
-                email : req.body.email
-              }, {
-                $push: {
-                  userpoint : {point: 50, updatedAt: new Date(), status: 'skinqna'}
-                }, $inc: { //미션당 사용사긴 외에 일반적인 플리닉의 총 사용시간도 구해야 함 20191028
-                  "totaluserpoint": 50
-                }
-              }, function(err, result2){
-                if(err) {
-                  // return res.status(400).json(err);
-                } else {
-                  // return res.status(201).json({
-                    // 'msg': '커뮤니티 작성 포인트가 누적되었습니다111!!'
-                  // });
-                }
-                });
+        // if (err) {
+        //   console.log("tags error : " + err);
+        // } else {
+        //   //2020-05-25 이부분에 글쓰기 포인트 적립 로직 추가
+        //   User.findOne({
+        //     email: req.body.email
+        //   },
+        //   function(err, result) {
+        //     if (result) {
+        //       for(var i =0; i< result.userpoint.length; i++) {
+        //         if (getFormattedDate(new Date(result.userpoint[i].updatedAt)) == getFormattedDate(new Date())) {
+        //           if(result.userpoint[i].status=="skinqna" || result.userpoint[i].status=="뷰티플 글쓰기 작성") {
+        //             return res.status(400);
+        //           }
+        //         }
+        //       }
+        //       //커뮤니티 글 작성시 1회/일 50점을 쌓아 준다 2020-05-25
+        //       User.update({
+        //         email : req.body.email
+        //       }, {
+        //         $push: {
+        //           userpoint : {point: 50, updatedAt: new Date(), status: 'skinqna'}
+        //         }, $inc: { //미션당 사용사긴 외에 일반적인 플리닉의 총 사용시간도 구해야 함 20191028
+        //           "totaluserpoint": 50
+        //         }
+        //       }, function(err, result2){
+        //         if(err) {
+        //           // return res.status(400).json(err);
+        //         } else {
+        //           // return res.status(201).json({
+        //             // 'msg': '커뮤니티 작성 포인트가 누적되었습니다111!!'
+        //           // });
+        //         }
+        //         });
               
-              var prePointLog = {
-                reaso: "뷰티플 글쓰기 작성",
-                point: 50,
-                status : true
-              }
+        //       var prePointLog = {
+        //         reaso: "뷰티플 글쓰기 작성",
+        //         point: 50,
+        //         status : true
+        //       }
 
-              PointLog.update({
-                email: req.body.email
-              }, {
-                  $push: { point: prePointLog },
-                  $inc: { "totalPoint": 50 }
-                }, (err, result) => {
-                  if (err) {
-                    console.log("글쓰기 포인트 적립 에러 발생 : " + req.body.email);
-                    res.status(400).json();
-                  }
-                  if (result) {
-                    res.status(200).json(result);
-                  } else {
-                    console.log("글쓰기 포인트 적립 에러 발생 2 : " + req.body.email);
-                    res.status(400).json();
-                  }
-              });
-            } else {
-              // //검색결과가 없으면 신규 등록
-              // User.update({
-              //   email : req.body.email
-              // }, {
-              //   $push: {
-              //     userpoint : {point: 50, updatedAt: new Date(), status: 'skinqna'}
-              //   }, $inc: { //미션당 사용사긴 외에 일반적인 플리닉의 총 사용시간도 구해야 함 20191028
-              //     "totaluserpoint": 50
-              //   }
-              // }, function(err, result2){
-              //   if(err) {
-              //     return res.status(400).json(err);
-              //   } else {
-              //     return res.status(201).json({
-              //       'msg': '커뮤니티 작성 포인트가 누적되었습니다222!!'
-              //     });
-              //   }
-              // });
-            }
-          });
-        }
+        //       PointLog.update({
+        //         email: req.body.email
+        //       }, {
+        //           $push: { point: prePointLog },
+        //           $inc: { "totalPoint": 50 }
+        //         }, (err, result) => {
+        //           if (err) {
+        //             console.log("글쓰기 포인트 적립 에러 발생 : " + req.body.email);
+        //             res.status(400).json();
+        //           }
+        //           if (result) {
+        //             res.status(200).json(result);
+        //           } else {
+        //             console.log("글쓰기 포인트 적립 에러 발생 2 : " + req.body.email);
+        //             res.status(400).json();
+        //           }
+        //       });
+        //     } else {
+        //       // //검색결과가 없으면 신규 등록
+        //       // User.update({
+        //       //   email : req.body.email
+        //       // }, {
+        //       //   $push: {
+        //       //     userpoint : {point: 50, updatedAt: new Date(), status: 'skinqna'}
+        //       //   }, $inc: { //미션당 사용사긴 외에 일반적인 플리닉의 총 사용시간도 구해야 함 20191028
+        //       //     "totaluserpoint": 50
+        //       //   }
+        //       // }, function(err, result2){
+        //       //   if(err) {
+        //       //     return res.status(400).json(err);
+        //       //   } else {
+        //       //     return res.status(201).json({
+        //       //       'msg': '커뮤니티 작성 포인트가 누적되었습니다222!!'
+        //       //     });
+        //       //   }
+        //       // });
+        //     }
+        //   });
+        // }
       })
       return res.status(201).json(data);
     });
   });
-}); // create
+  });
+
+
+router.post('/:id/recomments', function(req, res) {
+  // console.log(req.body);
+  var newComment = req.body;
+  SkinQna.update({
+    "comments._id" : req.params.id 
+  }, {
+    $push: {
+      "comments.$.recomments" : newComment
+    }
+  }, function(err, post) {
+    if (err) return res.json({
+      success: false,
+      message: err
+    });
+    return res.status(201).json({
+      'msg': '커뮤니티 작성 포인트가 누적되었습니다!!'
+    });
+  });
+}); 
 
 
 router.post('/qnaUpdate/:id', s3upload.fields([{

@@ -316,7 +316,7 @@ router.get('/getMoviePlinicList3ea', function(req, res) {
 
 //대댓글 기능 추가 2020-11-23
 router.post('/:id/recomments', function(req, res) {
-  console.log(req.body);
+  // console.log(req.body);
   var newComment = req.body;
   BeautyMovie.update({
     "comments._id" : req.params.id
@@ -337,7 +337,7 @@ router.post('/:id/recomments', function(req, res) {
 
 //댓글 기능 추가 2020-11-23
 router.post('/:id/topcomments', function(req, res) {
-  console.log(req.body);
+  // console.log(req.body);
   var newComment = req.body;
   BeautyMovie.updateOne({
     _id : req.params.id
