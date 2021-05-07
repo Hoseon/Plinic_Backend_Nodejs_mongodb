@@ -1,6 +1,7 @@
 var mongoose = require('mongoose');
 
 var orderSchema = mongoose.Schema({
+  author: {type:mongoose.Schema.Types.ObjectId, ref:'User', required:true},
   email: { type: String, required: true },
   paid_at: { type: Date }, //주문일
   started_at : { type: Date }, //결제 시작시각

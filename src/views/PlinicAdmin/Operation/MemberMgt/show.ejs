@@ -35,7 +35,9 @@
       <!-- 10단길이의 첫번째 열 -->
       <div class="col-md-10">
         <div class="col-sm-2">
-          <img width="146" height="146" src="https://plinic.s3.ap-northeast-2.amazonaws.com/image-1593492322970"
+          <!-- <img width="146" height="146" src="https://plinic.s3.ap-northeast-2.amazonaws.com/<%= post.imagePath %>"
+            class="img-thumbnail" alt="..."> -->
+            <img width="146" height="146" src="<%= post.imagePath %>"
             class="img-thumbnail" alt="...">
         </div>
         <div class="col-sm-7">
@@ -43,22 +45,22 @@
             <li class="col-6 text-center" style="padding-top: 15px;">
               <img class="bi x0 y0 w1 h0" alt=""
                 src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABMAAAAYCAIAAACX9VFYAAAACXBIWXMAABYlAAAWJQFJUiTwAAAA9ElEQVQ4y62UsQ2EMAxFrVO6dEhImYIJKFkiQ+CGkjE8Qwagp/QetAjadC5yBacDkePIRfe6RPr5+U5sEBEiMsZAAsYYIhKREAIQEfwIEYUQINHt5CwikMc0TQ/I5d9KRGRmZkbEH9J778MBEamqKs55VjrnQoRz7l55Mtzw3t/U1lqrtY4jaK2ttTc5Mz0BYBiG+LiPm/+rbeJ7XipT/q2Kd5umKcvyvVzXdRzHm4TMfFVbZj72435bRNw6/Qsi8o79UlprQzLbDMnpz6Io9ngAwMwphsuyGGO2aaL6vm/btq5rItrPu6DrunmeiUgpBdlT8wm1t21/1HefmAAAAABJRU5ErkJggg==" />
-              <span>닉네임</span>
+              <span><%= post.name %></span>
             </li>
             <li class="col-6 text-center" style="padding-top:15px;">
-              <img class="bi x0 y0 w1 h1" alt=""
+              <img class="bi x0 y0 w1 h1" alt="" style="padding-top: 5px;"
                 src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABMAAAATCAIAAAD9MqGbAAAACXBIWXMAABYlAAAWJQFJUiTwAAAA6ElEQVQ4y62TsY3FIAyG/aIMYYYIG0RKwRIswQ6wAivRI5EBoKFJGzoicUUk9O5dIHfRfRVg/5bBP1AacM4ZY6UNtALee2PMvfI2r5RijPHe1+0AAAAQY7TWnusQglKKEEIIUUqt63qeW2tjjFB5r+qco5TCDyilzrnmPVNKiAgNEDGldK0UQkAXIcS18rLPj56/KRlj56vCL8g5b9vGOc85D/M8wzMedzvUwLIsfeVnwj9M5aETjDFa6+phKSUiIqKUsmq01u/e7jk+59xx/Ks1yRDCvu/TNN1P5a8/+9Vxz3Ec4zi2ol9esymMNZ+oqAAAAABJRU5ErkJggg==" />
-              <span>피부타입</span>
+              <span><%= post.skincomplaint %></span>
             </li>
             <li class="col-6 text-center" style="padding-top: 15px;">
               <img class="bi x0 y0 w0 h1" alt=""
                 src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAATCAIAAAAF0lpsAAAACXBIWXMAABYlAAAWJQFJUiTwAAABFElEQVQ4y6VSu5HEIAzlZimAUMHWQBU0QRNkLsA1UINKIHLqChgHznBMrEyBLuBm72bWZxvvC6WZp/fRg5m11uu6EpHqBwAMwzBNk4oxqo8RY3wYY5Zl+ZDIGKNEJKUEAPcoACClJCLKOVdKYeZxHHtZxnFk5lKKc+7/0SGOzr9EIuKBUwBAxPNAvPe1ViIKIbxvQwhEVGv13l+tszm11raJtbZ56X6XGKOIMDMiIiIzi0gfi7U259yOe++JiIi8901mzvkl8wjteM55N0gAaDcQ8Tzm0yCbzJ3IAWCe51b89QTaE8zz/KP9vaCuNH+rZObdl7mO9lyqy86BTSUi93z9dSciXyLSRtu23SB6Pp9aa6XUNwFB8ZFl+l5kAAAAAElFTkSuQmCC" />
-              <span>ID@gmail.com</span>
+              <span><%= post.email %></span>
             </li>
             <li class="col-6 text-center" style="padding-top: 15px;">
               <img class="bi x0 y0 w1 h0" alt=""
                 src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAYCAIAAAB8wupbAAAACXBIWXMAABYlAAAWJQFJUiTwAAAA20lEQVQ4y+WUvRGEIBBGv3MuM7EAIwvYAoxpwiboYYuhIQJCNzHCxMB8L/B+OEWHi+9FsHyPYYYFaIKIMDMRiYiIEBEzi0iawXvknMOLTXhPnXN7gZmRsBMAMPNH8N7jm6MAwHv/FIioRCAiVcVx4UzY6lUIAcWEEKplWcqFcRxv67rO87xbaNsWwDRNu3pd1/fsTsco0kspP9IwDBV+5P+Evu+rpmnKha7r8s13hojk2zvLs72zDyjL5wGpqrX2Om2tvfoEjv2W+TVUNcbIzMaYLWeMYeYYY5p5AHP+9D7fAoGMAAAAAElFTkSuQmCC" />
-              <span>2020-03-15(가입 일자)</span>
+              <span><%= post.getFormattedDate(post.created) %>(가입 일자)</span>
             </li>
           </ul>
         </div>
@@ -206,7 +208,7 @@
                   <table class="table-bordered table table-striped table-hover">
                     <tr>
                       <th class="text-center" style="padding-top: 15px;">아이디</th>
-                      <td class="text-left" style="padding-top: 15px;">ID@gmail.com</td>
+                      <td class="text-left" style="padding-top: 15px;"><%= post.email %></td>
                       <th width="174" class="text-center" style="padding-top: 15px;">비밀번호</th>
                       <td width="300">
                         <span class="float_left" style="padding-top: 10px;">****** 노출없음</span>
@@ -214,30 +216,32 @@
                       </td>
                     </tr>
                     <tr>
-                      <th class="col-2" style="text-align: center;">닉네임</th>
-                      <td class="text-left" class="text-left">닉네임</td>
+                      <th class="col-2" style="text-align: center;">이름</th>
+                      <td class="text-left" class="text-left"><%= post.name %></td>
                       <th class="text-center">생년월일</th>
-                      <td class="text-left"></td>
+                      <td class="text-left"><%= post.birthday %></td>
                     </tr>
                     <tr>
                       <th class="col-2" style="text-align: center;">피부 타입</th>
-                      <td class="text-left" class="text-left"></td>
+                      <td class="text-left" class="text-left"><%= post.skincomplaint %></td>
                       <th class="text-center">적립금</th>
-                      <td class="text-left"></td>
+                      <td class="text-left"><%= post.totaluserpoint %></td>
                     </tr>
                     <tr>
                       <th class="col-2" style="text-align: center;">가입 일자</th>
-                      <td class="text-left" class="text-left">2020-03-15</td>
+                      <td class="text-left" class="text-left"><%= post.getFormattedDate(post.created) %></td>
                       <th class="text-center">최종 방문일</th>
                       <td class="text-left"></td>
                     </tr>
-                    <tr>
-                      <th class="text-center" style="padding-top:40px;">주소</th>
-                      <td colspan="3" class="text-left" height="100"></td>
-                    </tr>
+                    <% //if(orders) { %>
+                      <tr>
+                        <th class="text-center" style="padding-top:40px;">주소</th>
+                        <td colspan="3" class="text-left" height="100"><%=// orders.buyer_addr %></td>
+                      </tr>
+                    <% //} %>
                     <tr>
                       <th class="text-center">연락처</th>
-                      <td colspan="3" class="text-left"></td>
+                      <td colspan="3" class="text-left"><%= post.phonenumber %></td>
                     </tr>
                     <tr>
                       <th class="text-center" style="padding-top:40px;">메모</th>
@@ -296,36 +300,40 @@
                           <th class="text-center">포인트 사용</th>
                         </tr>
                       </thead>
-                      <tbody>
-                        <tr>
-                          <th rowspan="2" style="padding-top: 25px;"><input class="form-check-input" type="checkbox"
-                              value="" id="flexCheckDisabled" disabled></th>
-                          <th colspan="1" class="text-center" style="padding-top: 10px;">2021-03-05 11:00:12
-                          </th>
-                          <th rowspan="2" class="text-center" style="padding-top: 30px;">결제 확인중</th>
-                          <th rowspan="2" class="text-center" style="padding-top: 30px;">뷰셀리온 콜라겐 드링크 5000
-                            -4주분(20ml x28병)</th>
-                          <th rowspan="2" class="text-center" style="padding-top: 30px;">2</th>
-                          <th colspan="1" class="text-center" style="padding-top: 10px;">CJ택배</th>
-                          <th rowspan="2" class="text-center" style="padding-top: 30px;">이요진</th>
-                          <th rowspan="2" class="text-center" style="padding-top: 30px;">카드 결제</th>
-                          <th colspan="1" class="text-center" style="padding-top: 10px;">25,000원</th>
-                          <th rowspan="2" class="text-center" style="padding-top: 30px;"
-                            onclick="location.href='/orders/show'">보기
-                          </th>
-                        </tr>
-                        <tr>
-                          <th class="text-center" style="padding-top: 10px;">2150643124512</th>
-                          <th class="text-center" style="padding-top: 10px;">2012542658462</th>
-                          <th class="text-center" style="padding-top: 10px;">4500P</th>
-                        </tr>
-                      </tbody>
-                      <tfoot>
-                        <th class="text-center" colspan="5">합계</th>
-                        <th class="text-center">총 결제 금액:<span>1,500,000</span></th>
-                        <th class="text-center" colspan="2">총 입금액:<span>950,000</span></th>
-                        <th class="text-center" colspan="2">미수금:<span>550,000</span></th>
-                      </tfoot>
+                      <% if(post[0]) { %>
+                        <%// orders.forEach(function(orders) { %>
+                          <tbody>
+                            <tr>
+                              <th rowspan="2" style="padding-top: 25px;"><input class="form-check-input" type="checkbox"
+                                  value="" id="flexCheckDisabled" disabled></th>
+                              <th colspan="1" class="text-center" style="padding-top: 10px;" data-highlight="<%= search.highlight.paid_at %>"><%= post[0].paid_at %>
+                              </th>
+                              <th rowspan="2" class="text-center" style="padding-top: 30px;" data-highlight="<%= search.highlight.imp_uid %>"><%= post[0].status %></th>
+                              <th rowspan="2" class="text-center" style="padding-top: 30px;">뷰셀리온 콜라겐 드링크 5000
+                                -4주분(20ml x28병)</th>
+                              <th rowspan="2" class="text-center" style="padding-top: 30px;">2</th>
+                              <th colspan="1" class="text-center" style="padding-top: 10px;">CJ택배</th>
+                              <th rowspan="2" class="text-center" style="padding-top: 30px;">이요진</th>
+                              <th rowspan="2" class="text-center" style="padding-top: 30px;">카드 결제</th>
+                              <th colspan="1" class="text-center" style="padding-top: 10px;">25,000원</th>
+                              <th rowspan="2" class="text-center" style="padding-top: 30px;"
+                                onclick="location.href='/orders/show'">보기
+                              </th>
+                            </tr>
+                            <tr>
+                              <th class="text-center" style="padding-top: 10px;">2150643124512</th>
+                              <th class="text-center" style="padding-top: 10px;">2012542658462</th>
+                              <th class="text-center" style="padding-top: 10px;">4500P</th>
+                            </tr>
+                          </tbody>
+                          <tfoot>
+                            <th class="text-center" colspan="5">합계</th>
+                            <th class="text-center">총 결제 금액:<span>1,500,000</span></th>
+                            <th class="text-center" colspan="2">총 입금액:<span>950,000</span></th>
+                            <th class="text-center" colspan="2">미수금:<span>550,000</span></th>
+                          </tfoot>
+                        <%// }) %>
+                      <% } %>
                     </table>
                   </div>
                 </div>
