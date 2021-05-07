@@ -116,8 +116,7 @@
                     <div class="row">
                         <div class="col-md-12">
                             <h1 class="page-header">
-                                FAQ 게시판
-                                <!-- <small> 챌린지 관리 Sub제목</small> -->
+                                FAQ(자주하는 질문) 게시판
                             </h1>
                         </div>
                     </div>
@@ -137,8 +136,6 @@
                                     <div class="admin_top_info">
                                         0 항목, 1/1 페이지
                                     </div>
-                                    <!-- <form role="form" action="/comments" method="post"
-                                    enctype="multipart/form-data"> -->
                                     <div class="admin_search_container">
                                         <input type="hidden" name="table" value="notice">
                                         <input type="hidden" name="mode" value="">
@@ -174,10 +171,16 @@
                                                     </tr>
                                                 </thead>
                                                 <tbody>
+                                                <% if(faq==null || faq.length==0) { %>
+                                                    <tr class="noData">
+                                                        <td colspan="5">There is no data to show :(</td>
+                                                    </tr>
+                                                <% } %>
+                                                <% faq.forEach(function(post, index){ %>
                                                     <tr>
-                                                        <td>1</td>
-                                                        <td>공지사항 게시판 인덱스 부분</td>
-                                                        <td>관리자</td>
+                                                        <td></td>
+                                                        <td><%= post.title %></td>
+                                                        <td></td>
                                                         <td>2020/12/28</td>
                                                         <td></td>
                                                         <td class="center">
@@ -185,6 +188,7 @@
                                                                 id="exampleCheck1">
                                                         </td>
                                                     </tr>
+                                                <% }) %>
                                                 </tbody>
                                             </table>
 
@@ -223,7 +227,6 @@
 
                                         </div>
                                     </div>
-                                    <!-- </form> -->
                                 </div>
                             </div>
                         </div>

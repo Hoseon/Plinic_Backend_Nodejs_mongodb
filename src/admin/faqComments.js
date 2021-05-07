@@ -1,10 +1,8 @@
 var express = require("express");
 var router = express.Router();
 var mongoose = require("mongoose");
-var Qna = require("../models/Qna");
-var QnaCounter = require("../models/QnaCounter");
-var Carezone = require("../models/Carezone");
-var CarezoneCounter = require("../models/CarezoneCounter");
+var Faq = require("../models/Faq");
+var FaqCounter = require("../models/FaqCounter");
 var async = require("async");
 var User_admin = require("../models/User_admin");
 var multer = require("multer");
@@ -83,30 +81,22 @@ const sftpconfig = {
   password: "g100210!!"
 };
 
-router.get("/Main", function (req, res) {
-  return res.render("PlinicAdmin/Contents/Main/index", {});
-});
-//콘텐츠관리 메인 화면
-
-router.get("/Challenge", function (req, res) {
-  return res.render("PlinicAdmin/Contents/ChallengeMgt/index", {});
-});
-//콘텐츠관리 챌린지 화면
-
-router.get('/Challenge/newIndex', function (req, res) {
+router.get('/', function (req, res) {
   var vistorCounter = null;
   var page = Math.max(1, req.query.page) > 1 ? parseInt(req.query.page) : 1;
   var limit = Math.max(1, req.query.limit) > 1 ? parseInt(req.query.limit) : 7;
   var search = createSearch(req.query);
-  async.waterfall([function (callback) {
-    CarezoneCounter.findOne({
-      name: "carezone"
+  async.waterfall([
+    function (callback) {
+    FaqCounter.findOne({
+      name: "faq"
     }, function (err, counter) {
       if (err) callback(err);
       vistorCounter = counter;
       callback(null);
     });
-  }, function (callback) {
+  }, 
+  function (callback) {
     if (!search.findUser) return callback(null);
     User_admin.find(search.findUser, function (err, users) {
       if (err) callback(err);
@@ -127,7 +117,7 @@ router.get('/Challenge/newIndex', function (req, res) {
     });
   }, function (callback) {
     if (search.findUser && !search.findPost.$or) return callback(null, null, 0);
-    Carezone.count(search.findPost, function (err, count) {
+    Faq.count(search.findPost, function (err, count) {
       if (err) callback(err);
       skip = (page - 1) * limit;
       maxPage = Math.ceil(count / limit);
@@ -135,17 +125,23 @@ router.get('/Challenge/newIndex', function (req, res) {
     });
   }, function (skip, maxPage, callback) {
     if (search.findUser && !search.findPost.$or) return callback(null, [], 0);
-    Carezone.find(search.findPost).sort({ "seq": 1 }).populate("author").sort({ "seq": 1, "updatedAt": -1 }).skip(skip).limit(limit).exec(function (err, carezone) {
+    Faq.find(search.findPost)
+    .sort({ "seq": 1 })
+    .populate("author")
+    .sort({ "seq": 1, "updatedAt": -1 })
+    .skip(skip)
+    .limit(limit)
+    .exec(function (err, faq) {
       if (err) callback(err);
-      callback(null, carezone, maxPage);
+      callback(null, faq, maxPage);
     });
-  }], function (err, carezone, maxPage) {
+  }], function (err, faq, maxPage) {
     if (err) return res.json({
       success: false,
       message: err
     });
-    return res.render("PlinicAdmin/Contents/ChallengeMgt/index", {
-      carezone: carezone,
+    return res.render("PlinicAdmin/Contents/Comments/Faq/index", {
+      faq: faq,
       user: req.user,
       page: page,
       maxPage: maxPage,
@@ -155,7 +151,22 @@ router.get('/Challenge/newIndex', function (req, res) {
       postsMessage: req.flash("postsMessage")[0]
     });
   });
-}); // new index
+}); // index
+
+router.get("/Comments/Faq/show", function (req, res) {
+  return res.render("PlinicAdmin/Contents/Comments/Faq/show", {});
+});
+//FAQ 게시판 상세 화면
+
+router.get("/Comments/Faq/new", function (req, res) {
+  return res.render("PlinicAdmin/Contents/Comments/Faq/new", {});
+});
+//FAQ 게시판 답변 화면
+
+router.get("/Comments/Faq/edit", function (req, res) {
+  return res.render("PlinicAdmin/Contents/Comments/Faq/edit", {});
+});
+//FAQ 게시판 수정 화면
 
 
 router.get("/Challenge/new", function (req, res) {
@@ -511,31 +522,6 @@ router.put('/Challenge/SeqUpdate/:id', isLoggedIn, function (req, res, next) {
     res.redirect('/contents/Challenge/newIndex');
   });
 });
-
-router.get("/Comments/Faq", function (req, res) {
-  return res.render("PlinicAdmin/Contents/Comments/Faq/index", {});
-});
-//FAQ 게시판 리스트 화면
-
-router.get("/Comments/Faq/show", function (req, res) {
-  return res.render("PlinicAdmin/Contents/Comments/Faq/show", {});
-});
-//FAQ 게시판 상세 화면
-
-router.get("/Comments/Faq/new", function (req, res) {
-  return res.render("PlinicAdmin/Contents/Comments/Faq/new", {});
-});
-//FAQ 게시판 답변 화면
-
-router.get("/Comments/Faq/edit", function (req, res) {
-  return res.render("PlinicAdmin/Contents/Comments/Faq/edit", {});
-});
-//FAQ 게시판 수정 화면
-
-router.get("/", function (req, res) {
-  return res.render("PlinicAdmin/bootstraptest/index", {});
-});
-// index
 
 function isLoggedIn(req, res, next) {
   if (req.isAuthenticated()) {

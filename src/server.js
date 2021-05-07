@@ -13,6 +13,7 @@ var Image = require('./models/image');
 var FtpImage = require('./models/FtpImage');
 var UserImage = require('./models/UserImage');
 var Address = require('./models/Address');
+var ADBanner = require('./models/ADBanner');
 var Banner = require('./models/Banner');
 var TopBanner = require('./models/TopBanner');
 var Carezone = require('./models/Carezone');

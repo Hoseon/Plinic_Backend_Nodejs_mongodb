@@ -41,12 +41,12 @@
                                     <tr>
                                         <th class="text-center" style="padding-top: 15px;">기간</th>
                                         <td colspan="3">
-                                            <% if(typeof testSearch.findAfter == "undefined" || testSearch.findAfter == null || testSearch.findAfter == "") {%>
+                                            <% if(typeof search.findAfter == "undefined" || search.findAfter == null || search.findAfter == "") {%>
                                                 <div class="row g-4 align-self-center">
                                                     <div class="col-2">
                                                         <select class="form-select" aria-label="Default select example" name="searchType" <%= search.searchType=="author!"?"disabled":"" %>>
                                                             <% var select %>
-                                                            <option disabled selected>조건선택</option>
+                                                            <option selected>조건선택</option>
                                                             <option value="deliver_completed"
                                                             <%= search.searchType=="deliver_completed"?select="selected":"" %>>배송 완료</option>
                                                             <option value="cencel_completed"
@@ -106,11 +106,11 @@
                                                         <label class="form-check-label" for="inlineCheckbox7">1년</label>
                                                     </div>
                                                     <!-- <div class="col-3" id="dateType">
-                                                        <input type="date" id="dateFrom" name="from" style="float: left; height: 30px;">
+                                                        <input type="date" id="start" name="from" style="float: left; height: 30px;">
                                                         <span style="float: left; width: 35px; padding-top: 10px;">
                                                             ~
                                                         </span>
-                                                        <input type="date" id="dateTo" name="to" style="float: left; height: 30px;">
+                                                        <input type="date" id="end" name="to" style="float: left; height: 30px;">
                                                     </div> -->
                                                 </div>
                                             <% } else { %>
@@ -119,7 +119,7 @@
 
                                                         <select class="form-select" aria-label="Default select example" name="searchType" <%= search.searchType=="author!"?"disabled":"" %>>
                                                             <% var select %>
-                                                            <option disabled selected>조건선택</option>
+                                                            <option selected>조건선택</option>
                                                             <option value="deliver_completed"
                                                             <%= search.searchType=="deliver_completed"?select="selected":"" %>>배송 완료</option>
                                                             <option value="cencel_completed"
@@ -153,45 +153,45 @@
                                                     </div>
                                                     <div class="col-1">
                                                         <input type="checkbox" class="form-check-input" name="termCheck[all]" 
-                                                        value="true" id="inlineCheckbox1" <% if(testSearch.findAfter.all) { %> checked <% } %>/>
+                                                        value="true" id="inlineCheckbox1" <% if(search.findAfter.all) { %> checked <% } %>/>
                                                         <label class="form-check-label" for="inlineCheckbox1">전체</label>
                                                     </div>
                                                     <div class="col-1">
                                                         <input type="checkbox" class="form-check-input" name="termCheck[dday]" 
-                                                        value="true" id="inlineCheckbox2" <% if(testSearch.findAfter.dday) { %> checked <% } %>/>
+                                                        value="true" id="inlineCheckbox2" <% if(search.findAfter.dday) { %> checked <% } %>/>
                                                         <label class="form-check-label" for="inlineCheckbox2">오늘</label>
                                                     </div>
                                                     <div class="col-1">
                                                         <input type="checkbox" class="form-check-input" name="termCheck[threeDay]" 
-                                                        value="true" id="inlineCheckbox3" <% if(testSearch.findAfter.threeDay) { %> checked <% } %>/>
+                                                        value="true" id="inlineCheckbox3" <% if(search.findAfter.threeDay) { %> checked <% } %>/>
                                                         <label class="form-check-label" for="inlineCheckbox3">3일</label>
                                                     </div>
                                                     <div class="col-1">
                                                         <input type="checkbox" class="form-check-input" name="termCheck[weeklyy]" 
-                                                        value="true" id="inlineCheckbox4" <% if(testSearch.findAfter.weeklyy) { %> checked <% } %>/>
+                                                        value="true" id="inlineCheckbox4" <% if(search.findAfter.weeklyy) { %> checked <% } %>/>
                                                         <label class="form-check-label" for="inlineCheckbox4">7일</label>
                                                     </div>
                                                     <div class="col-1">
                                                         <input type="checkbox" class="form-check-input" name="termCheck[monthy]" 
-                                                        value="true" id="inlineCheckbox5" <% if(testSearch.findAfter.monthy) { %> checked <% } %>/>
+                                                        value="true" id="inlineCheckbox5" <% if(search.findAfter.monthy) { %> checked <% } %>/>
                                                         <label class="form-check-label" for="inlineCheckbox5">1개월</label>
                                                     </div>
                                                     <div class="col-1">
                                                         <input type="checkbox" class="form-check-input" name="termCheck[threeMonthy]" 
-                                                        value="true" id="inlineCheckbox6" <% if(testSearch.findAfter.threeMonthy) { %> checked <% } %>/>
+                                                        value="true" id="inlineCheckbox6" <% if(search.findAfter.threeMonthy) { %> checked <% } %>/>
                                                         <label class="form-check-label" for="inlineCheckbox6">3개월</label>
                                                     </div>
                                                     <div class="col-1">
                                                         <input type="checkbox" class="form-check-input" name="termCheck[year]" 
-                                                        value="true" id="inlineCheckbox7" <% if(testSearch.findAfter.year) { %> checked <% } %>/>
+                                                        value="true" id="inlineCheckbox7" <% if(search.findAfter.year) { %> checked <% } %>/>
                                                         <label class="form-check-label" for="inlineCheckbox7">1년</label>
                                                     </div>
                                                     <!-- <div class="col-3" id="dateType">
-                                                        <input type="date" id="dateFrom" name="from" style="float: left; height: 30px;">
+                                                        <input type="date" id="start" name="from" style="float: left; height: 30px;">
                                                         <span style="float: left; width: 35px; padding-top: 10px;">
                                                             ~
                                                         </span>
-                                                        <input type="date" id="dateTo" name="to" style="float: left; height: 30px;">
+                                                        <input type="date" id="end" name="to" style="float: left; height: 30px;">
                                                     </div> -->
                                                 </div>
                                             <% } %>
@@ -217,7 +217,7 @@
                                                 <div class="col-2">
                                                     <select class="form-select" aria-label="Default select example" name="searchType" <%= search.searchType=="author!"?"disabled":"" %>>
                                                         <% var select %>
-                                                        <option disabled selected>조건선택</option>
+                                                        <option selected>조건선택</option>
                                                         <option value="imp_uid"
                                                         <%= search.searchType=="imp_uid"?select="selected":"" %>>주문 번호</option>
                                                         <!-- <option value="buyer_email"
@@ -252,50 +252,93 @@
                                     <tr>
                                         <th class="col-2" style="text-align: center; padding-top: 15px;">주문 상태</th>
                                         <td colspan="3">
-                                            <div class="row g-4 align-self-center">
-                                                <div class="col-2">
-                                                    <select class="form-select" aria-label="Default select example">
-                                                        <option selected>주문 관리</option>
-                                                        <option value="1">취소 관리</option>
-                                                        <option value="2">반품 관리</option>
-                                                        <option value="3">교환 관리</option>
-                                                    </select>
-                                                </div>
-                                                <div class="col-10">
-                                                    <div class="row g-4 align-items-center" style="padding-top: 12px;">
-                                                        <div class="col-2">
-                                                            <input class="form-check-input" type="checkbox"
-                                                                id="inlineCheckbox8" value="option1">
-                                                            <label class="form-check-label" for="inlineCheckbox8">결제
-                                                                확인중</label>
-                                                        </div>
-                                                        <div class="col-2">
-                                                            <input class="form-check-input" type="checkbox"
-                                                                id="inlineCheckbox9" value="option2">
-                                                            <label class="form-check-label" for="inlineCheckbox9">결제
-                                                                확인</label>
-                                                        </div>
-                                                        <div class="col-2">
-                                                            <input class="form-check-input" type="checkbox"
-                                                                id="inlineCheckbox10" value="option3">
-                                                            <label class="form-check-label" for="inlineCheckbox10">배송
-                                                                준비중</label>
-                                                        </div>
-                                                        <div class="col-2">
-                                                            <input class="form-check-input" type="checkbox"
-                                                                id="inlineCheckbox11" value="option4">
-                                                            <label class="form-check-label"
-                                                                for="inlineCheckbox11">배송중</label>
-                                                        </div>
-                                                        <div class="col-2">
-                                                            <input class="form-check-input" type="checkbox"
-                                                                id="inlineCheckbox12" value="option5">
-                                                            <label class="form-check-label" for="inlineCheckbox12">배송
-                                                                완료</label>
+                                                <div class="row g-4 align-self-center">
+                                                    <div class="col-2">
+                                                        <select class="form-select" aria-label="Default select example" <%= search.searchType=="author!"?"disabled":"" %> disabled>
+                                                            <% var select %>
+                                                            <option selected>조건선택</option>
+                                                            <option value="status_ready,paid,deliver_ready,deliver_during,deliver_completed"
+                                                            <%= search.searchType=="status_ready,paid,deliver_ready,deliver_during,deliver_completed"?select="selected":"" %>>주문 관리</option>
+                                                            <option value="cencel_request,cencel_progress,cencel_completed"
+                                                            <%= search.searchType=="cencel_request,cencel_progress,cencel_completed"?select="selected":"" %>>취소 관리</option>
+                                                            <option value="return_request,return_progress,return_completed"
+                                                            <%= search.searchType=="return_request,return_progress,return_completed"?select="selected":"" %>>반품 관리</option>
+                                                            <option value="swap_request,swap_during,swap_completed"
+                                                            <%= search.searchType=="swap_request,swap_during,swap_completed"?select="selected":"" %>>교환 관리</option>
+                                                        </select>
+                                                    </div>
+                                                    <% if(typeof search.findAfter == "undefined" || search.findAfter == null || search.findAfter == "") {%>
+                                                    <div class="col-10">
+                                                        <div class="row g-4 align-items-center" style="padding-top: 12px;">
+                                                            <div class="col-2">
+                                                                <input class="form-check-input" type="checkbox"
+                                                                    id="inlineCheckbox8" value="true" name="termCheck[status_ready]">
+                                                                <label class="form-check-label" for="inlineCheckbox8">결제
+                                                                    확인중</label>
+                                                            </div>
+                                                            <div class="col-2">
+                                                                <input class="form-check-input" type="checkbox"
+                                                                    id="inlineCheckbox9" value="true" name="termCheck[paid]">
+                                                                <label class="form-check-label" for="inlineCheckbox9">결제
+                                                                    확인</label>
+                                                            </div>
+                                                            <div class="col-2">
+                                                                <input class="form-check-input" type="checkbox"
+                                                                    id="inlineCheckbox10" value="true" name="termCheck[deliver_ready]">
+                                                                <label class="form-check-label" for="inlineCheckbox10">배송
+                                                                    준비중</label>
+                                                            </div>
+                                                            <div class="col-2">
+                                                                <input class="form-check-input" type="checkbox"
+                                                                    id="inlineCheckbox11" value="true" name="termCheck[deliver_during]">
+                                                                <label class="form-check-label"
+                                                                    for="inlineCheckbox11">배송중</label>
+                                                            </div>
+                                                            <div class="col-2">
+                                                                <input class="form-check-input" type="checkbox"
+                                                                    id="inlineCheckbox12" value="true" name="termCheck[deliver_completed]">
+                                                                <label class="form-check-label" for="inlineCheckbox12">배송
+                                                                    완료</label>
+                                                            </div>
                                                         </div>
                                                     </div>
+                                                    <% } else { %>
+                                                        <div class="col-10">
+                                                            <div class="row g-4 align-items-center" style="padding-top: 12px;">
+                                                                <div class="col-2">
+                                                                    <input class="form-check-input" type="checkbox" <% if(search.findAfter.status_ready) { %> checked <% } %>
+                                                                        id="inlineCheckbox8" value="true" name="termCheck[status_ready]">
+                                                                    <label class="form-check-label" for="inlineCheckbox8">결제
+                                                                        확인중</label>
+                                                                </div>
+                                                                <div class="col-2">
+                                                                    <input class="form-check-input" type="checkbox" <% if(search.findAfter.paid) { %> checked <% } %>
+                                                                        id="inlineCheckbox9" value="true" name="termCheck[paid]">
+                                                                    <label class="form-check-label" for="inlineCheckbox9">결제
+                                                                        확인</label>
+                                                                </div>
+                                                                <div class="col-2">
+                                                                    <input class="form-check-input" type="checkbox" <% if(search.findAfter.deliver_ready) { %> checked <% } %>
+                                                                        id="inlineCheckbox10" value="true" name="termCheck[deliver_ready]">
+                                                                    <label class="form-check-label" for="inlineCheckbox10">배송
+                                                                        준비중</label>
+                                                                </div>
+                                                                <div class="col-2">
+                                                                    <input class="form-check-input" type="checkbox" <% if(search.findAfter.deliver_during) { %> checked <% } %>
+                                                                        id="inlineCheckbox11" value="true" name="termCheck[deliver_during]">
+                                                                    <label class="form-check-label"
+                                                                        for="inlineCheckbox11">배송중</label>
+                                                                </div>
+                                                                <div class="col-2">
+                                                                    <input class="form-check-input" type="checkbox" <% if(search.findAfter.deliver_completed) { %> checked <% } %>
+                                                                        id="inlineCheckbox12" value="true" name="termCheck[deliver_completed]">
+                                                                    <label class="form-check-label" for="inlineCheckbox12">배송
+                                                                        완료</label>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    <% } %>
                                                 </div>
-                                            </div>
                                         </td>
                                     </tr>
                                 </form>
@@ -533,6 +576,26 @@
 <script src="/js/jquery-1.10.2.js"></script>
 <script src="/js/bootstrap.min.js"></script>
 <script>
+
+
+
+
+    var start = document.getElementById('start');
+    var end = document.getElementById('end');
+
+    start.addEventListener('change', function() {
+        if (start.value)
+            end.min = start.value;
+    }, false);
+    end.addEventLiseter('change', function() {
+        if (end.value)
+            start.max = end.value;
+    }, false);
+
+
+
+
+
 
     var check = false;
 

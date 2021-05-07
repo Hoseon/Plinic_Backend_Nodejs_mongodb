@@ -77,10 +77,9 @@ router.get('/', function(req, res) {
   var limit = Math.max(1, req.query.limit) > 1 ? parseInt(req.query.limit) : 80;
   var search = createSearch(req.query);
   var testSearch = createSearchTest(req.query);
+  // var dateSearch = createSearchTests(req.query);
   async.waterfall([
     function(callback) {
-      // var created = new Date();
-      // created.setDate(created.getDate()-7);
     if (!search.findUser) return callback(null);
     User.find(search.findUser, function(err, users) {
       if (err) callback(err);
@@ -100,9 +99,10 @@ router.get('/', function(req, res) {
       callback(null);
     });
   }, function(callback) {
-      if (search.findUser && !search.findPost.$or || testSearch.findUser && testSearch.dayCreated[0].created.$gte) 
+      if (search.findUser && !search.findPost.$or 
+        || testSearch.findUser && testSearch.dayCreated[0].created.$gte) 
       return callback(null, null, 0);
-      User.count(search.findPost || testSearch.dayCreated[0].created.$gte, function(err, count) {
+      User,Orders.count(search.findPost || testSearch.dayCreated[0].created.$gte, function(err, count) {
         if (err) callback(err);
         skip = (page - 1) * limit;
         maxPage = Math.ceil(count / limit);
@@ -111,43 +111,46 @@ router.get('/', function(req, res) {
 
   }, 
   function(skip, maxPage, callback) {
-    if (search.findUser && !search.findPost.$or || testSearch.findUser && testSearch.dayCreated[0].created.$gte) 
+    if (search.findUser && !search.findPost.$or 
+      || testSearch.findUser && testSearch.dayCreated[0].created.$gte) 
     return callback(null, [], 0);
 
     if(testSearch.dayCreated[0]) {
-      User.find(testSearch.dayCreated[0])
+      User,Orders.find(testSearch.dayCreated[0])
       .sort({created : -1})
       .skip(skip)
       .limit(limit)
-      .exec(function(err, user) {
+      .exec(function(err, user, orders) {
         if (err) callback(err);
-        callback(null, user, maxPage);
+        callback(null, user, maxPage, orders);
       });
     } else {
       User.find(search.findPost)
       .sort({created : -1})
       .skip(skip)
       .limit(limit)
-      .exec(function(err, user) {
+      .exec(function(err, user, orders) {
         if (err) callback(err);
-        callback(null, user, maxPage);
+        callback(null, user, maxPage, orders);
       });
     }
   },
   ], 
-  function(err, user, maxPage) {
+  function(err, user, maxPage, orders) {
     if (err) return res.json({
       success: false,
       message: err
     });
     return res.render("PlinicAdmin/Operation/MemberMgt/index", {
       users: user,
+      orders: orders,
       user: req.user,
       page: page,
       maxPage: maxPage,
       urlQuery: req._parsedUrl.query,
       search: search,
       testSearch : testSearch,
+      // dateSearch: dateSearch,
       counter: vistorCounter,
       postsMessage: req.flash("postsMessage")[0]
     });
@@ -237,6 +240,30 @@ router.get("/:id", function (req, res) {
 // }); // 회원 통합 주문내역 show
 
 
+router.delete('/rowdel/:id', isLoggedIn, function(req, res, next) {
+  User.findOneAndRemove({
+    _id: req.params.id,
+    // author: req.user._id
+  }, function(err, post) {
+    if (err) return res.json({
+      success: false,
+      message: err
+    });
+    var params = {
+      Bucket: 'plinic',
+      Delete: { // required
+      }
+    };
+    s3.deleteObjects(params, function(err, data){
+      if(err) {
+        console.log("케어존 수정 아마존 파일 삭제 에러 : " + "err : " + err);
+        res.status(500);
+      }
+      else console.log("케어존 수정 이전 파일 삭제 완료 : " + JSON.stringify(data));
+    });
+    res.redirect('/members/');
+  });
+}); //row 삭제
 
 
 function isLoggedIn(req, res, next) {
@@ -375,6 +402,7 @@ function createSearchTest(querie) {
   }
   
 }
+
 
 function createSearch(queries) {
   var findPost = {},

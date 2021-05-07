@@ -130,18 +130,14 @@
                                                     </div>
                                                 </div>
                                             <% } %>
-                                            <%// if(typeof dateSearch.finsAfter == "undefined" || dateSearch.finsAfter == null || dateSearch.finsAfter == "") {%>
                                             <!-- 날짜.. -->
                                             <!-- <div class="col-12" id="dateType">
-                                                <input type="date" id="dateFrom" name="from" style="float: left; height: 30px;">
+                                                <input type="date" id="dateFrom" style="float: left; height: 30px;">
                                                 <span style="float: left; width: 100px; padding-top: 10px;">
                                                     ~
                                                 </span>
-                                                <input type="date" id="dateTo" name="to" style="float: left; height: 30px;">
+                                                <input type="date" id="dateTo" style="float: left; height: 30px;">
                                             </div> -->
-                                            <%// } else { %>
-
-                                            <%// } %>
                                         </td>
                                     </tr>
                                 </form>
@@ -223,9 +219,8 @@
                                                                 onclick="window.location = '/members/<%= post._id %>?<%= urlQuery %>'">보기</button>
                                                             </div>
                                                             <div class="col-6 p-0 m-0">
-                                                                <form>
-                                                                    <button class="btn btn-primary btn btn-danger"
-                                                                        type="button">탈퇴</button>
+                                                                <form action="/members/rowdel/<%= post._id %>?_method=delete" method="post">
+                                                                    <button type="submit" class="btn btn-danger">탈퇴</button>
                                                                 </form>
                                                             </div>
                                                         </div>

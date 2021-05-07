@@ -198,27 +198,41 @@
                                                 </table>
 
                                                 <div class="row">
-                                                    <div class="col-auto me-auto" style="padding-top:10px;">
-                                                        <button class="btn btn-primary btn btn-danger" type="button">삭제</button>
-                                                    </div>
+                                                    <div class="col-auto me-auto"></div>
                                                     <div class="col-auto">
-                                                            <nav aria-label="Page navigation example">
-                                                                <ul class="pagination pagination-sm justify-content-center">
-                                                                    <li class="page-item">
+                                                        <nav aria-label="Page navigation example">
+                                                            <ul class="pagination pagination-sm justify-content-center">
+                                                                <%
+                                                                    var offset = 4;
+                                                                    var partialQuery;
+                                                                    if(urlQuery) partialQuery = "&"+urlQuery.replace(/page=(.*?)(&|$)/ig,"");
+                                                                %>
+                        
+                                                                <li class="page-item disabled">
                                                                     <a class="page-link" href="#" aria-label="Previous">
                                                                         <span aria-hidden="true">&laquo;</span>
                                                                     </a>
-                                                                    </li>
-                                                                    <li class="page-item"><a class="page-link" href="#">1</a></li>
-                                                                    <li class="page-item"><a class="page-link" href="#">2</a></li>
-                                                                    <li class="page-item"><a class="page-link" href="#">3</a></li>
-                                                                    <li class="page-item">
-                                                                    <a class="page-link" href="#" aria-label="Next">
-                                                                        <span aria-hidden="true">&raquo;</span>
-                                                                    </a>
-                                                                    </li>
-                                                                </ul>
-                                                            </nav>
+                                                                </li>
+                        
+                                                                <% for(i=1;i<=maxPage;i++){ %>
+                        
+                                                                    <% if(i<=offset || i>maxPage-offset || (i>=page-(offset-1) && i<=page+(offset-1))){ %>
+                                                                        <% if(i != page){ %>
+                                                                            <li class="page-item"><a class="page-link" href="/challengeComments/?page=<%= i %><%= partialQuery %>"><%= i %></a></li>
+                                                                        <% } else { %>
+                                                                            <li class="page-item" name="currentPage" aria-current="page"><a class="page-link" href="#"><%= i %></a></li>
+                                                                        <% } %>
+                                                                    <% } else if(i == offset+1 || i == maxPage-offset){ %>
+                                                                            <li>...</li>
+                                                                    <% } %>
+                                                                <%}%>
+                                                                <li class="page-item disabled">
+                                                                <a class="page-link" href="#" aria-label="Next">
+                                                                    <span aria-hidden="true">&raquo;</span>
+                                                                </a>
+                                                                </li>
+                                                            </ul>
+                                                        </nav>
                                                     </div>
                                                 </div>
                                                 

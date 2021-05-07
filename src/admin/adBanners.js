@@ -1,10 +1,7 @@
 var express = require("express");
 var router = express.Router();
 var mongoose = require("mongoose");
-var Qna = require("../models/Qna");
-var QnaCounter = require("../models/QnaCounter");
-var Carezone = require("../models/Carezone");
-var CarezoneCounter = require("../models/CarezoneCounter");
+var ADBanner = require("../models/ADBanner");
 var async = require("async");
 var User_admin = require("../models/User_admin");
 var multer = require("multer");
@@ -83,30 +80,13 @@ const sftpconfig = {
   password: "g100210!!"
 };
 
-router.get("/Main", function (req, res) {
-  return res.render("PlinicAdmin/Contents/Main/index", {});
-});
-//콘텐츠관리 메인 화면
-
-router.get("/Challenge", function (req, res) {
-  return res.render("PlinicAdmin/Contents/ChallengeMgt/index", {});
-});
-//콘텐츠관리 챌린지 화면
-
-router.get('/Challenge/newIndex', function (req, res) {
+router.get('/', function (req, res) {
   var vistorCounter = null;
   var page = Math.max(1, req.query.page) > 1 ? parseInt(req.query.page) : 1;
   var limit = Math.max(1, req.query.limit) > 1 ? parseInt(req.query.limit) : 7;
   var search = createSearch(req.query);
-  async.waterfall([function (callback) {
-    CarezoneCounter.findOne({
-      name: "carezone"
-    }, function (err, counter) {
-      if (err) callback(err);
-      vistorCounter = counter;
-      callback(null);
-    });
-  }, function (callback) {
+  async.waterfall([
+  function (callback) {
     if (!search.findUser) return callback(null);
     User_admin.find(search.findUser, function (err, users) {
       if (err) callback(err);
@@ -126,26 +106,34 @@ router.get('/Challenge/newIndex', function (req, res) {
       callback(null);
     });
   }, function (callback) {
-    if (search.findUser && !search.findPost.$or) return callback(null, null, 0);
-    Carezone.count(search.findPost, function (err, count) {
+    if (search.findUser && !search.findPost.$or) 
+    return callback(null, null, 0);
+    ADBanner.count(search.findPost, function (err, count) {
       if (err) callback(err);
       skip = (page - 1) * limit;
       maxPage = Math.ceil(count / limit);
       callback(null, skip, maxPage);
     });
   }, function (skip, maxPage, callback) {
-    if (search.findUser && !search.findPost.$or) return callback(null, [], 0);
-    Carezone.find(search.findPost).sort({ "seq": 1 }).populate("author").sort({ "seq": 1, "updatedAt": -1 }).skip(skip).limit(limit).exec(function (err, carezone) {
+    if (search.findUser && !search.findPost.$or) 
+    return callback(null, [], 0);
+    ADBanner.find(search.findPost)
+    .sort({ "seq": 1 })
+    .populate("author")
+    .sort({ "seq": 1, "updatedAt": -1 })
+    .skip(skip)
+    .limit(limit)
+    .exec(function (err, adbanner) {
       if (err) callback(err);
-      callback(null, carezone, maxPage);
+      callback(null, adbanner, maxPage);
     });
-  }], function (err, carezone, maxPage) {
+  }], function (err, adbanner, maxPage) {
     if (err) return res.json({
       success: false,
       message: err
     });
-    return res.render("PlinicAdmin/Contents/ChallengeMgt/index", {
-      carezone: carezone,
+    return res.render("PlinicAdmin/Contents/ADBanner/index", {
+      adbanner: adbanner,
       user: req.user,
       page: page,
       maxPage: maxPage,
@@ -157,380 +145,184 @@ router.get('/Challenge/newIndex', function (req, res) {
   });
 }); // new index
 
-
-router.get("/Challenge/new", function (req, res) {
-  return res.render("PlinicAdmin/Contents/ChallengeMgt/new", {});
-});
-//콘텐츠관리 챌린지 신규 등록 화면
-
-router.post('/Challenge/', s3upload.fields([
-  { name: 'image' }, { name: 'homeimage' }, { name: 'challenge_image1' }, { name: 'challenge_image2' }, { name: 'challenge_image3' }, { name: 'challenge_image4' }, { name: 'challenge_image5' }]), isLoggedIn, function (req, res, next) {
-    async.waterfall([function (callback) {
-      CarezoneCounter.findOne({
-        name: "carezone"
-      }, function (err, counter) {
-        if (err) callback(err);
-        if (counter) {
-          callback(null, counter);
-        } else {
-          CarezoneCounter.create({
-            name: "carezone",
-            totalCount: 0
-          }, function (err, counter) {
-            if (err) return res.json({
-              success: false,
-              message: err
-            });
-            callback(null, counter);
-          });
-        }
-      });
-    }], function (callback, counter) {
-      var newPost = req.body.post;
-      newPost.author = req.user._id;
-      newPost.numId = counter.totalCount + 1;
-      req.body.post.filename = req.files['image'][0].key;
-      req.body.post.originalName = req.files['image'][0].originalname;
-      req.body.post.homeimage_filename = req.files['homeimage'][0].key;
-      req.body.post.homeimage_originalname = req.files['homeimage'][0].originalname;
-      // req.body.post.prodfilename = req.files['prodimage'][0].key;
-      // req.body.post.prodoriginalname = req.files['prodimage'][0].originalname;
-      req.body.post.challenge_image1_filename = req.files['challenge_image1'][0].key;
-      req.body.post.challenge_image1_originalname = req.files['challenge_image1'][0].originalname;
-
-      if (req.files['challenge_image2']) {
-        req.body.post.challenge_image2_filename = req.files['challenge_image2'][0].key;
-        req.body.post.challenge_image2_originalname = req.files['challenge_image2'][0].originalname;
-      }
-      if (req.files['challenge_image3']) {
-        req.body.post.challenge_image3_filename = req.files['challenge_image3'][0].key;
-        req.body.post.challenge_image3_originalname = req.files['challenge_image3'][0].originalname;
-      }
-      if (req.files['challenge_image4']) {
-        req.body.post.challenge_image4_filename = req.files['challenge_image4'][0].key;
-        req.body.post.challenge_image4_originalname = req.files['challenge_image4'][0].originalname;
-      }
-      if (req.files['challenge_image5']) {
-        req.body.post.challenge_image5_filename = req.files['challenge_image5'][0].key;
-        req.body.post.challenge_image5_originalname = req.files['challenge_image5'][0].originalname;
-      }
-      Carezone.create(req.body.post, function (err, post) {
-        if (err) return res.json({
-          success: false,
-          message: err
-        });
-        counter.totalCount++;
-        counter.save();
-        res.redirect('/contents/Challenge/newIndex');
-      });
-    });
-  }); // create
-
-router.delete('/Challenge/:id', isLoggedIn, function (req, res, next) {
-  console.log(req);
-  Carezone.findOneAndRemove({
+router.delete('/rowdel/:id', isLoggedIn, function(req, res, next) {
+  ADBanner.findOneAndRemove({
     _id: req.params.id,
     // author: req.user._id
-  }, function (err, post) {
+  }, function(err, post) {
     if (err) return res.json({
       success: false,
       message: err
     });
-    if (!post) return res.json({
-      success: false,
-      message: "No data found to delete"
-    });
     var params = {
       Bucket: 'plinic',
       Delete: { // required
-        Objects: [ // required
-          { Key: post.filename },
-          { Key: post.prodfilename },
-          { Key: post.homeimage },
-          { Key: post.challenge_image1_filename },
-          { Key: post.challenge_image2_filename },
-          { Key: post.challenge_image3_filename },
-          { Key: post.challenge_image4_filename },
-          { Key: post.challenge_image5_filename }
-        ]
       }
     };
-    s3.deleteObjects(params, function (err, data) {
-      console.log()
-      if (err) {
+    s3.deleteObjects(params, function(err, data){
+      if(err) {
         console.log("케어존 수정 아마존 파일 삭제 에러 : " + "err : " + err);
         res.status(500);
       }
       else console.log("케어존 수정 이전 파일 삭제 완료 : " + JSON.stringify(data));
     });
-    res.redirect('/contents/Challenge/newIndex');
+    res.redirect('/adBanners/');
   });
-}); //destroy
+}); //row 삭제
 
-router.get("/Challenge/:id", function (req, res) {
-  Carezone.findById(req.params.id)
+router.get("/:id", function (req, res) {
+  ADBanner.findById(req.params.id)
     .populate(['author', 'comments.author'])
     .exec(function (err, post) {
       if (err) return res.json({
         success: false,
         message: err
       });
-      post.views++;
-      post.save();
 
-      //배너 이미지 가져 오기 20190502
-      //res.setHeader('Content-Type', 'image/jpeg');
+      // console.log(post);
+
       var url = 'https://plinic.s3.ap-northeast-2.amazonaws.com/' + post.filename;
-      var prod_url = 'https://plinic.s3.ap-northeast-2.amazonaws.com/' + post.prodfilename;
-      var homeImage = 'https://plinic.s3.ap-northeast-2.amazonaws.com/' + post.homeimage_filename;
-      var challenge_url1 = 'https://plinic.s3.ap-northeast-2.amazonaws.com/' + post.challenge_image1_filename;
-      var challenge_url2 = 'https://plinic.s3.ap-northeast-2.amazonaws.com/' + post.challenge_image2_filename;
-      var challenge_url3 = 'https://plinic.s3.ap-northeast-2.amazonaws.com/' + post.challenge_image3_filename;
-      var challenge_url4 = 'https://plinic.s3.ap-northeast-2.amazonaws.com/' + post.challenge_image4_filename;
-      var challenge_url5 = 'https://plinic.s3.ap-northeast-2.amazonaws.com/' + post.challenge_image5_filename;
-      //fs.createReadStream(path.join(__dirname, '../uploads/', post.filename)).pipe(res);
-      // console.log(post.day);
-      res.render("PlinicAdmin/Contents/ChallengeMgt/show", {
+
+      var twourl = 'https://plinic.s3.ap-northeast-2.amazonaws.com/' + post.twoFileName;
+
+      var threeurl = 'https://plinic.s3.ap-northeast-2.amazonaws.com/' + post.threeFileName;
+
+      res.render("PlinicAdmin/Contents/ADBanner/show", {
         post: post,
         url: url,
-        prod_url: prod_url,
-        homeImage: homeImage,
-        challenge_url1: challenge_url1,
-        challenge_url2: challenge_url2,
-        challenge_url3: challenge_url3,
-        challenge_url4: challenge_url4,
-        challenge_url5: challenge_url5,
+        twourl: twourl,
+        threeurl: threeurl,
         urlQuery: req._parsedUrl.query,
         user: req.user,
         search: createSearch(req.query)
       });
     });
-});
-//콘텐츠관리 챌린지 Show
+}); //광고배너 Show
 
-router.get('/Challenge/:id/edit', isLoggedIn, function (req, res) {
-  Carezone.findById(req.params.id, function (err, post) {
-    // var url = req.protocol + '://' + req.get('host') + '/carezone_images/' + post._id;
+router.get('/:id/edit', isLoggedIn, function (req, res) {
+  ADBanner.findById(req.params.id, function (err, post) {
     var url = 'https://plinic.s3.ap-northeast-2.amazonaws.com/' + post.filename;
-    // var prod_url = req.protocol + '://' + req.get('host') + '/prod_images/' + post._id;
-    var prod_url = 'https://plinic.s3.ap-northeast-2.amazonaws.com/' + post.prodfilename;
-    // var challenge_url1 = req.protocol + '://' + req.get('host') + '/challenge_image1/' + post._id;
-    var homeImage = 'https://plinic.s3.ap-northeast-2.amazonaws.com/' + post.homeimage_filename;
 
-    var challenge_url1 = 'https://plinic.s3.ap-northeast-2.amazonaws.com/' + post.challenge_image1_filename;
-    // var challenge_url2 = req.protocol + '://' + req.get('host') + '/challenge_image2/' + post._id;
-    var challenge_url2 = 'https://plinic.s3.ap-northeast-2.amazonaws.com/' + post.challenge_image2_filename;
-    // var challenge_url3 = req.protocol + '://' + req.get('host') + '/challenge_image3/' + post._id;
-    var challenge_url3 = 'https://plinic.s3.ap-northeast-2.amazonaws.com/' + post.challenge_image3_filename;
-    // var challenge_url4 = req.protocol + '://' + req.get('host') + '/challenge_image4/' + post._id;
-    var challenge_url4 = 'https://plinic.s3.ap-northeast-2.amazonaws.com/' + post.challenge_image4_filename;
-    // var challenge_url5 = req.protocol + '://' + req.get('host') + '/challenge_image5/' + post._id;
-    var challenge_url5 = 'https://plinic.s3.ap-northeast-2.amazonaws.com/' + post.challenge_image5_filename;
+    var twourl = 'https://plinic.s3.ap-northeast-2.amazonaws.com/' + post.twoFileName;
 
+    var threeurl = 'https://plinic.s3.ap-northeast-2.amazonaws.com/' + post.threeFileName;
+
+    //보여주기 및 삭제
     var prefilename = post.filename; //이전 파일들은 삭제
-    var preoriginalName = post.originalName; //이전 파일들은 삭제
+    var preoriginaFileName = post.originalName; //이전 파일들은 삭제
 
-    var preprodfilename = post.prodfilename;
-    var preprodoriginalname = post.prodoriginalname;
+    var pretwoFileName = post.twoFileName;
+    var pretwoOriginalName = post.twoOriginalName;
 
-    var homeimage_filename = post.homeimage_filename;
-    var homeimage_originalname = post.homeimage_originalname;
+    var prethreeFileName = post.threeFileName;
+    var prethreeOriginalName = post.threeOriginalName;
 
-    var pre_challenge1_filename = post.challenge_image1_filename;
-    var pre_challenge1_originalfilename = post.challenge_image1_originalname;
 
-    var pre_challenge2_filename = post.challenge_image2_filename;
-    var pre_challenge2_originalfilename = post.challenge_image2_originalname;
-
-    var pre_challenge3_filename = post.challenge_image3_filename;
-    var pre_challenge3_originalfilename = post.challenge_image3_originalname;
-
-    var pre_challenge4_filename = post.challenge_image4_filename;
-    var pre_challenge4_originalfilename = post.challenge_image4_originalname;
-
-    var pre_challenge5_filename = post.challenge_image5_filename;
-    var pre_challenge5_originalfilename = post.challenge_image5_originalname;
 
     if (err) return res.json({
       success: false,
       message: err
     });
-    // if (!req.user._id.equals(post.author)) return res.json({
-    //   success: false,
-    //   message: "Unauthrized Attempt"
-    // });
-    res.render("PlinicAdmin/Contents/ChallengeMgt/edit", {
+    res.render("PlinicAdmin/Contents/ADBanner/edit", {
       post: post,
       prefilename: prefilename,
-      preoriginalName: preoriginalName,
-      preprodfilename: preprodfilename,
-      preprodoriginalname: preprodoriginalname,
-      prehomeimage_filename: homeimage_filename,
-      prehomeimage_originalname: homeimage_originalname,
-      pre_challenge1_filename: pre_challenge1_filename,
-      pre_challenge1_originalname: pre_challenge1_originalfilename,
-      pre_challenge2_filename: pre_challenge2_filename,
-      pre_challenge2_originalname: pre_challenge2_originalfilename,
-      pre_challenge3_filename: pre_challenge3_filename,
-      pre_challenge3_originalname: pre_challenge3_originalfilename,
-      pre_challenge4_filename: pre_challenge4_filename,
-      pre_challenge4_originalname: pre_challenge4_originalfilename,
-      pre_challenge5_filename: pre_challenge5_filename,
-      pre_challenge5_originalname: pre_challenge5_originalfilename,
+      preoriginaFileName : preoriginaFileName,
+      pretwoFileName: pretwoFileName,
+      pretwoOriginalName: pretwoOriginalName,
+      prethreeFileName: prethreeFileName,
+      prethreeOriginalName: prethreeOriginalName,
       url: url,
-      prod_url: prod_url,
-      homeImage: homeImage,
-      challenge_url1: challenge_url1,
-      challenge_url2: challenge_url2,
-      challenge_url3: challenge_url3,
-      challenge_url4: challenge_url4,
-      challenge_url5: challenge_url5,
+      twourl: twourl,
+      threeurl: threeurl,
       user: req.user
     });
   });
-}); // 콘텐츠관리 챌린지 edit
+}); // 상품 edit 페이지
 
-router.put('/Challenge/:id', s3upload.fields([{
-  name: 'image'
-}, {
-  name: 'prodimage'
-}, {
-  name: 'homeimage'
-}, {
-  name: 'challenge_image1'
-}, {
-  name: 'challenge_image2'
-}, {
-  name: 'challenge_image3'
-}, {
-  name: 'challenge_image4'
-}, {
-  name: 'challenge_image5'
-}]), isLoggedIn, function (req, res, next) {
-  req.body.post.updatedAt = Date.now();
-  req.body.post.filename = req.files['image'][0].key;
-  req.body.post.originalName = req.files['image'][0].originalname;
-  // req.body.post.prodfilename = req.files['prodimage'][0].key;
-  // req.body.post.prodoriginalname = req.files['prodimage'][0].originalname;
-  req.body.post.homeimage_filename = req.files['homeimage'][0].key;
-  req.body.post.homeimage_originalname = req.files['homeimage'][0].originalname;
-  req.body.post.challenge_image1_filename = req.files['challenge_image1'][0].key;
-  req.body.post.challenge_image1_originalname = req.files['challenge_image1'][0].originalname;
-
-  if (req.files['challenge_image2']) {
-    req.body.post.challenge_image2_filename = req.files['challenge_image2'][0].key;
-    req.body.post.challenge_image2_originalname = req.files['challenge_image2'][0].originalname;
+router.put('/Adbanneredit/:id', s3upload.fields([{
+    name: 'image'
+  }, {
+    name: 'twoimage'
+  }, {
+    name: 'threeimage'
   }
-  if (req.files['challenge_image3']) {
-    req.body.post.challenge_image3_filename = req.files['challenge_image3'][0].key;
-    req.body.post.challenge_image3_originalname = req.files['challenge_image3'][0].originalname;
-  }
+]), isLoggedIn, function (req, res, next) {
+    req.body.post.updatedAt = Date.now();
+    req.body.post.filename = req.files['image'][0].key;
+    req.body.post.originalName = req.files['image'][0].originalname;
 
-  if (req.files['challenge_image4']) {
-    req.body.post.challenge_image4_filename = req.files['challenge_image4'][0].key;
-    req.body.post.challenge_image4_originalname = req.files['challenge_image4'][0].originalname;
-  }
+    req.body.post.twoFileName = req.files['twoimage'][0].key;
+    req.body.post.twoOriginalName = req.files['twoimage'][0].originalname;
 
-  if (req.files['challenge_image5']) {
-    req.body.post.challenge_image5_filename = req.files['challenge_image5'][0].key;
-    req.body.post.challenge_image5_originalname = req.files['challenge_image5'][0].originalname;
-  }
-
-  var params = {
-    Bucket: 'plinic',
-    Delete: { // required
-      Objects: [ // required
-        {
-          Key: req.body.prefilename // required
-        },
-        {
-          Key: req.body.preprodfilename // required
-        },
-        {
-          Key: req.body.pre_challenge1_filename // required
-        },
-        {
-          Key: req.body.pre_challenge2_filename // required
-        },
-        {
-          Key: req.body.pre_challenge3_filename // required
-        },
-        {
-          Key: req.body.pre_challenge4_filename // required
-        },
-        {
-          Key: req.body.pre_challenge5_filename // required
-        },
-        {
-          Key: req.body.pre_challenge5_filename // required
-        },
-
-      ]
-    }
-  };
-  s3.deleteObjects(params, function (err, data) {
-    if (err) {
-      console.log("케어존 수정 아마존 파일 삭제 에러 : " + req.body.prefilename + "err : " + err);
-      res.status(500);
-    }
-    else console.log("케어존 수정 이전 파일 삭제 완료 : " + JSON.stringify(data));
-    Carezone.findOneAndUpdate({
-      _id: req.params.id,
-      // author: req.user._id
-    }, req.body.post, function (err, post) {
-      if (err) return res.json({
-        success: false,
-        message: err
+    req.body.post.threeFileName = req.files['threeimage'][0].key;
+    req.body.post.threeOriginalName = req.files['threeimage'][0].originalname;
+  
+    var params = {
+      Bucket: 'plinic',
+      Delete: { // required
+        Objects: [ // required
+          {
+            Key: req.body.prefilename // required
+          },
+          {
+            Key: req.body.pretwoFileName // required
+          },
+          {
+            Key: req.body.prethreeFileName // required
+          },
+        ]
+      }
+    };
+    s3.deleteObjects(params, function (err, data) {
+      if (err) {
+        console.log("케어존 수정 아마존 파일 삭제 에러 : " + req.body.prefilename + "err : " + err);
+        res.status(500);
+      }
+      else console.log("케어존 수정 이전 파일 삭제 완료 : " + JSON.stringify(data));
+      ADBanner.findOneAndUpdate({
+        _id: req.params.id,
+        // author: req.user._id
+      }, req.body.post, function (err, post) {
+        if (err) return res.json({
+          success: false,
+          message: err
+        });
+        if (!post) return res.json({
+          success: false,
+          message: "No data found to update"
+        });
+        res.redirect('/adBanners/');
       });
-      if (!post) return res.json({
-        success: false,
-        message: "No data found to update"
-      });
-      res.redirect('/contents/Challenge/' + req.params.id);
     });
-  });
-}); //update
-
-router.put('/Challenge/SeqUpdate/:id', isLoggedIn, function (req, res, next) {
-  // console.log(req.params.id);
-  // console.log(req.body);
-  // console.log(req.body.seq[0]);
-  req.body.seq = req.body.seq[0];
-  req.body.updatedAt = Date.now();
-  Carezone.findOneAndUpdate({
-    _id: req.body.seqNumberId[0],
-  }, req.body, function (err, post) {
-    if (err) return res.json({
-      success: false,
-      message: err
-    });
-    if (!post) return res.json({
-      success: false,
-      message: "No data found to update"
-    });
-    res.redirect('/contents/Challenge/newIndex');
-  });
-});
-
-router.get("/ADBanner", function (req, res) {
-  return res.render("PlinicAdmin/Contents/ADBanner/index", {});
-});
-//광고배너 리스트 화면
+  }); // 광고 배너 update
 
 router.get("/ADBanner/new", function (req, res) {
   return res.render("PlinicAdmin/Contents/ADBanner/new", {});
 });
 //광고배너 신규 등록 화면
 
-router.get("/ADBanner/edit", function (req, res) {
-  return res.render("PlinicAdmin/Contents/ADBanner/edit", {});
-});
-//광고배너 수정 화면
+router.post('/create', s3upload.fields([
+  { name: 'image' }, { name: 'twoimage' }, { name: 'threeimage' }]), isLoggedIn, function (req, res, next) {
+      var newPost = req.body.post;
+      newPost.author = req.user._id;
+      req.body.post.filename = req.files['image'][0].key;
+      req.body.post.originalName = req.files['image'][0].originalname;
 
-router.get("/", function (req, res) {
-  return res.render("PlinicAdmin/bootstraptest/index", {});
-});
-// index
+      req.body.post.twoFileName = req.files['twoimage'][0].key;
+      req.body.post.twoOriginalName = req.files['twoimage'][0].originalname;
+
+      req.body.post.threeFileName = req.files['threeimage'][0].key;
+      req.body.post.threeOriginalName = req.files['threeimage'][0].originalname;
+
+      ADBanner.create(req.body.post, function (err, post) {
+        if (err) return res.json({
+          success: false,
+          message: err
+        });
+        res.redirect('/adBanners/');
+      });
+    // });
+  }); // create
 
 function isLoggedIn(req, res, next) {
   if (req.isAuthenticated()) {
