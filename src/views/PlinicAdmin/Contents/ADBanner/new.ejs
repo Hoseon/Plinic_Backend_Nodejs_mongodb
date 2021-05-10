@@ -46,175 +46,118 @@
                                     배너 정보
                                 </div>
                                 <br>
-                                <form role="form" action="" method="post" enctype="multipart/form-data">
-                                    <label class="col-md-2 text-center">메인배너</label>
-                                    <div class="row align-items-center w-75 mb-3">
-                                        <div class="col-md-6">
-                                            <div class="imgUp">
-                                                <div class="imagePreview"></div>
-                                                <label class="btn btn-primary">
-                                                    Upload
-                                                    <input name="homeimage" type="file"
-                                                        class="uploadFile img form-control" value="Upload Photo"
-                                                        style="width: 0px;height: 0px;overflow: hidden;" required
-                                                        accept=".jpg, .jpeg, .png">
-                                                </label>
-                                            </div>
-                                        </div>
-                                        <div class="col-md-6">
-                                            <div class="imgUp">
-                                                <div class="imagePreview"></div>
-                                                <label class="btn btn-primary">
-                                                    Upload
-                                                    <input name="homeimage" type="file"
-                                                        class="uploadFile img form-control" value="Upload Photo"
-                                                        style="width: 0px;height: 0px;overflow: hidden;" required
-                                                        accept=".jpg, .jpeg, .png">
-                                                </label>
-                                            </div>
-                                        </div>
+                                <form role="form" action="/adBanners/create" method="post" enctype="multipart/form-data">
+                                    <label class="col-md-2 text-center">제목</label>
+                                    <div class="form-floating col-md-5">
+                                        <input name="post[title]" class="form-control" data-validate="data">
                                     </div>
-                                    <label class="col-md-2 text-center">메인배너 링크</label>
-                                    <div class="panel-body" style="padding-top:0px;padding-bottom:15px;">
+                                    <div class="row align-items-center w-75 mb-3">
+                                    </div>
+                                    <label class="col-md-2 text-center">배너</label>
+                                    <div class="panel-body">
                                         <div class="table-responsive dataTables_wrapper form-inline">
                                             <table
                                                 class="table table-bordered  table-condensed table-hover  text-center">
                                                 <thead>
                                                     <tr>
-                                                        <th class="text-center" width="200">파일명</th>
+                                                        <th class="text-center" width="300">배너 이미지</th>
                                                         <th class="text-center">코멘트</th>
                                                         <th class="text-center">링크주소</th>
                                                     </tr>
                                                 </thead>
                                                 <tbody>
                                                     <tr>
-                                                        <td class="text-left">bannar_PNG</td>
-                                                        <td>
-                                                            <textarea class="form-control" id="floatingTextarea2"
-                                                                style="width: 400px;"></textarea>
-                                                        </td>
-                                                        <td>
-                                                            <input name="s_it_name" class="form-control" type="text"
-                                                                value="" style="width: 400px;">
-                                                        </td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td class="text-left">john-doe.jpg</td>
-                                                        <td>
-                                                            <textarea class="form-control" id="floatingTextarea2"
-                                                                style="width: 400px;"></textarea>
-                                                        </td>
-                                                        <td>
-                                                            <input name="s_it_name" class="form-control" type="text"
-                                                                value="" style="width: 400px;">
-                                                        </td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td class="text-left" colspan="3">
-                                                            <div class="d-grid gap-2 d-md-flex">
-                                                                <button class="btn btn-primary me-md-2 btn btn-success"
-                                                                    type="button">업로드</button>
-                                                                <button class="btn btn-primary btn btn-danger"
-                                                                    type="reset">되돌리기</button>
+                                                        <td class="text-left">
+                                                            <div class="imgUp">
+                                                                <div class="imagePreview"></div>
+                                                                <label class="btn btn-primary">
+                                                                    Upload
+                                                                    <input name="image" type="file"
+                                                                        class="uploadFile img form-control" 
+                                                                        value="Upload Photo"
+                                                                        style="width: 0px;height: 0px;overflow: hidden;"
+                                                                        accept=".jpg, .jpeg, .png"
+                                                                        required>
+                                                                </label>
                                                             </div>
+                                                        </td>
+                                                        <td>
+                                                            <textarea class="form-control" id="floatingTextarea"
+                                                                style="width: 400px;" name="post[body]"></textarea>
+                                                        </td>
+                                                        <td>
+                                                            <input class="cvRequired" style="width: 400px; height: 35px;" type="text" 
+                                                            name="post[url]" cvRqErrMsg="Title is required." cvRqErrTo="#cvErrTitle" value="">
+                                                            <div id="cvErrTitle" class="message"></div>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="text-left">
+                                                            <div class="imgUp">
+                                                                <div class="imagePreview"></div>
+                                                                <label class="btn btn-primary">
+                                                                    Upload
+                                                                    <input name="twoimage" type="file"
+                                                                        class="uploadFile img form-control" 
+                                                                        value="Upload Photo"
+                                                                        style="width: 0px;height: 0px;overflow: hidden;"
+                                                                        accept=".jpg, .jpeg, .png"
+                                                                        required>
+                                                                </label>
+                                                            </div>
+                                                        </td>
+                                                        <td>
+                                                            <textarea class="form-control" id="floatingTextarea2"
+                                                                style="width: 400px;" name="post[twoBody]"></textarea>
+                                                        </td>
+                                                        <td>
+                                                            <input class="cvRequired" style="width: 400px; height: 35px;" type="text" 
+                                                            name="post[twoUrl]" cvRqErrMsg="Title is required." cvRqErrTo="#towCvErrTitle" value="">
+                                                            <div id="towCvErrTitle" class="message"></div>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="text-left">
+                                                            <div class="imgUp">
+                                                                <div class="imagePreview"></div>
+                                                                <label class="btn btn-primary">
+                                                                    Upload
+                                                                    <input name="threeimage" type="file"
+                                                                        class="uploadFile img form-control" 
+                                                                        value="Upload Photo"
+                                                                        style="width: 0px;height: 0px;overflow: hidden;"
+                                                                        accept=".jpg, .jpeg, .png"
+                                                                        required>
+                                                                </label>
+                                                            </div>
+                                                        </td>
+                                                        <td>
+                                                            <textarea class="form-control" id="floatingTextarea3"
+                                                                style="width: 400px;" name="post[ThreeBody]"></textarea>
+                                                        </td>
+                                                        <td>
+                                                            <input class="cvRequired" style="width: 400px; height: 35px;" type="text" 
+                                                            name="post[threeUrl]" cvRqErrMsg="Title is required." cvRqErrTo="#threeCvErrTitle" value="">
+                                                            <div id="threeCvErrTitle" class="message"></div>
                                                         </td>
                                                     </tr>
                                                 </tbody>
                                             </table>
-                                        </div>
-                                    </div>
-                                    <label class="col-md-2 text-center">Body 배너</label>
-                                    <div class="row align-items-center w-75 mb-3">
-                                        <div class="col-md-4">
-                                            <div class="imgUp">
-                                                <div class="imagePreview"></div>
-                                                <label class="btn btn-primary">
-                                                    Upload
-                                                    <input name="homeimage" type="file"
-                                                        class="uploadFile img form-control" value="Upload Photo"
-                                                        style="width: 0px;height: 0px;overflow: hidden;" required
-                                                        accept=".jpg, .jpeg, .png">
-                                                </label>
-                                            </div>
-                                        </div>
-                                        <div class="col-md-4">
-                                            <div class="imgUp">
-                                                <div class="imagePreview"></div>
-                                                <label class="btn btn-primary">
-                                                    Upload
-                                                    <input name="homeimage" type="file"
-                                                        class="uploadFile img form-control" value="Upload Photo"
-                                                        style="width: 0px;height: 0px;overflow: hidden;" required
-                                                        accept=".jpg, .jpeg, .png">
-                                                </label>
-                                            </div>
-                                        </div>
-                                        <div class="col-md-4">
-                                            <div class="imgUp">
-                                                <div class="imagePreview"></div>
-                                                <label class="btn btn-primary">
-                                                    Upload
-                                                    <input name="homeimage" type="file"
-                                                        class="uploadFile img form-control" value="Upload Photo"
-                                                        style="width: 0px;height: 0px;overflow: hidden;" required
-                                                        accept=".jpg, .jpeg, .png">
-                                                </label>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <label class="col-md-2 text-center">Body 배너 링크</label>
-                                    <div class="panel-body" style="padding-top:0px;padding-bottom:15px;">
-                                        <div class="table-responsive dataTables_wrapper form-inline">
-                                            <table
-                                                class="table table-bordered  table-condensed table-hover  text-center">
-                                                <thead>
-                                                    <tr>
-                                                        <th class="text-center" width="200">파일명</th>
-                                                        <th class="text-center">코멘트</th>
-                                                        <th class="text-center">링크주소</th>
-                                                    </tr>
-                                                </thead>
-                                                <tbody>
-                                                    <tr>
-                                                        <td class="text-left" colspan="3">
-                                                            <div class="d-grid gap-2 d-md-flex">
-                                                                <button class="btn btn-primary me-md-2 btn btn-success"
-                                                                    type="button">업로드</button>
-                                                                <button class="btn btn-primary btn btn-danger"
-                                                                    type="reset">되돌리기</button>
-                                                            </div>
-                                                        </td>
-                                                    </tr>
-                                                </tbody>
-                                            </table>
-                                        </div>
-                                    </div>
-                                    <label class="col-md-2 text-center">Body 내용</label>
-                                    <div style="padding-top:0px;padding-bottom:15px;">
-                                        <div class="form-floating col-md-10">
-                                            <textarea class="form-control" placeholder="Leave a comment here"
-                                                id="floatingTextarea2" style="height: 100px"></textarea>
                                         </div>
                                     </div>
 
                                     <div class="d-grid gap-2 d-md-block" style="padding-top:100px;padding-bottom:15px;">
-                                        <button type="submit" class="w-15 m-1 btn btn-primary btn btn-danger btn-sm"
+                                        <button type="submit" class="w-15 m-1 btn btn-primary btn-sm"
                                             style="margin:0 auto !important;">저장</button>
                                     </div>
                                 </form>
                             </div>
                         </div>
-
                     </div>
-                    <!-- <footer><p>All right reserved. Template by: <a href="http://webthemez.com">WebThemez</a></p></footer> -->
                 </div>
             </div>
         </div>
     </div>
-
-
-
-
 </body>
 
 <script src="/js/jquery-1.10.2.js"></script>
