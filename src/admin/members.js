@@ -100,9 +100,9 @@ router.get('/', function(req, res) {
     });
   }, function(callback) {
       if (search.findUser && !search.findPost.$or 
-        || testSearch.findUser && testSearch.dayCreated[0].created.$gte) 
+        || testSearch.findUser && testSearch.dayCreated[0].created) 
       return callback(null, null, 0);
-      User,Orders.count(search.findPost || testSearch.dayCreated[0].created.$gte, function(err, count) {
+      User.count(search.findPost || testSearch.dayCreated[0].created, function(err, count) {
         if (err) callback(err);
         skip = (page - 1) * limit;
         maxPage = Math.ceil(count / limit);
@@ -112,38 +112,38 @@ router.get('/', function(req, res) {
   }, 
   function(skip, maxPage, callback) {
     if (search.findUser && !search.findPost.$or 
-      || testSearch.findUser && testSearch.dayCreated[0].created.$gte) 
+      || testSearch.findUser && testSearch.dayCreated[0].created) 
     return callback(null, [], 0);
 
     if(testSearch.dayCreated[0]) {
-      User,Orders.find(testSearch.dayCreated[0])
+      User.find(testSearch.dayCreated[0])
       .sort({created : -1})
       .skip(skip)
       .limit(limit)
-      .exec(function(err, user, orders) {
+      .exec(function(err, user) {
         if (err) callback(err);
-        callback(null, user, maxPage, orders);
+        callback(null, user, maxPage);
       });
     } else {
       User.find(search.findPost)
       .sort({created : -1})
       .skip(skip)
       .limit(limit)
-      .exec(function(err, user, orders) {
+      .exec(function(err, user) {
         if (err) callback(err);
-        callback(null, user, maxPage, orders);
+        callback(null, user, maxPage);
       });
     }
   },
   ], 
-  function(err, user, maxPage, orders) {
+  function(err, user, maxPage) {
     if (err) return res.json({
       success: false,
       message: err
     });
     return res.render("PlinicAdmin/Operation/MemberMgt/index", {
       users: user,
-      orders: orders,
+      // orders: orders,
       user: req.user,
       page: page,
       maxPage: maxPage,
@@ -161,17 +161,17 @@ router.get('/', function(req, res) {
 router.get("/:id", function (req, res) {
   Orders.aggregate([
     { $match: { _id : mongoose.Types.ObjectId(req.params.id)}},
-    { $unwind: "$author" },
+    // { $unwind: "$author" },
     { $project: {
-        paid_at: "$paid_at",
-        imp_uid: "$imp_uid",
-        status: "$status",
-        product_name: "$product_name",
+        paid_at: 1,
+        imp_uid: 1,
+        status: 1,
+        product_name: 1,
         productCount: 1,
-        deliverCompany: "$deliverCompany",
+        deliverCompany: 1,
         deliverNo: 1,
-        buyer_name: "$buyer_name",
-        pay_method: "$pay_method",
+        buyer_name: 1,
+        pay_method: 1,
         amount: 1,
         usePoint: 1,
       }
@@ -195,7 +195,6 @@ router.get("/:id", function (req, res) {
         prod_url: prod_url,
         urlQuery: req._parsedUrl.query,
         user: req.user,
-        // postDate: getFormattedDate(post[0].updatedAt),
         search: createSearch(req.query)
       });
     });

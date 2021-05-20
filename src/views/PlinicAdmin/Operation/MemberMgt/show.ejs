@@ -300,15 +300,15 @@
                           <th class="text-center">포인트 사용</th>
                         </tr>
                       </thead>
-                      <% if(post[0]) { %>
+                      <%// if(post[0]) { %>
                         <%// orders.forEach(function(orders) { %>
                           <tbody>
                             <tr>
                               <th rowspan="2" style="padding-top: 25px;"><input class="form-check-input" type="checkbox"
                                   value="" id="flexCheckDisabled" disabled></th>
-                              <th colspan="1" class="text-center" style="padding-top: 10px;" data-highlight="<%= search.highlight.paid_at %>"><%= post[0].paid_at %>
+                              <th colspan="1" class="text-center" style="padding-top: 10px;" data-highlight="<%= search.highlight.paid_at %>"><%= orders.paid_at %>
                               </th>
-                              <th rowspan="2" class="text-center" style="padding-top: 30px;" data-highlight="<%= search.highlight.imp_uid %>"><%= post[0].status %></th>
+                              <th rowspan="2" class="text-center" style="padding-top: 30px;" data-highlight="<%= search.highlight.imp_uid %>"><%= orders.status %></th>
                               <th rowspan="2" class="text-center" style="padding-top: 30px;">뷰셀리온 콜라겐 드링크 5000
                                 -4주분(20ml x28병)</th>
                               <th rowspan="2" class="text-center" style="padding-top: 30px;">2</th>
@@ -333,7 +333,7 @@
                             <th class="text-center" colspan="2">미수금:<span>550,000</span></th>
                           </tfoot>
                         <%// }) %>
-                      <% } %>
+                      <%// } %>
                     </table>
                   </div>
                 </div>
