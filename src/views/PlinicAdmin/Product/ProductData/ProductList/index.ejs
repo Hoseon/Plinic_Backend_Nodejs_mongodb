@@ -384,17 +384,21 @@
                                                                 </td>
                                                                 <td class="align-middle">
                                                                 <% if(post.noPublic == false) { %>
+                                                                    <label class="col-md-3 text-left">공개</label>
                                                                     <input class="form-check-input" type="checkbox" value=false disabled
                                                                     name="post[noPublic]">
                                                                     <br>
                                                                     <div>/</div>
+                                                                    <label class="col-md-3 text-left">비공개&nbsp;</label>
                                                                     <input class="form-check-input" type="checkbox" value=true
                                                                         name="post[noPublic]">
                                                                 <% } else if(post.noPublic == true) { %>
+                                                                    <label class="col-md-3 text-left">공개</label>
                                                                     <input class="form-check-input" type="checkbox" value=false
                                                                         name="post[noPublic]">
                                                                     <br>
                                                                     <div>/</div>
+                                                                    <label class="col-md-3 text-left">비공개&nbsp;</label>
                                                                     <input class="form-check-input" type="checkbox" value=true disabled
                                                                         name="post[noPublic]">
                                                                 <% } %>

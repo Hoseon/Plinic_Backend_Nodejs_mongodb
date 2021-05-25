@@ -246,18 +246,18 @@
                               </div>
                             </div>
                           </div>
-                          <!-- 활성화 -->
+                          <!-- 활성화 여부 -->
                           <div class="row align-items-center w-75 mb-3">
-                            <label class="col-md-3 text-left">활성화</label>
+                            <label class="col-md-3 text-left">활성화 여부</label>
                             <div class="col-md-9">
                               <label class="radio-inline">
-                                <input type="radio" name="optionsRadiosInline" id="optionsRadiosInline1" value=true
-                                  checked="" required>활성화
-                              </label>
-                              <label class="radio-inline">
-                                <input type="radio" name="optionsRadiosInline" id="optionsRadiosInline2" value=false
-                                  required>비활성화
-                              </label>
+                                <input name="post[useYN]" type="radio"
+                                    id="optionsRadiosInline1" value=true checked required <%=post.useYN ? "checked" : "value=false" %>>활성화
+                            </label>
+                            <label class="radio-inline">
+                                <input name="post[useYN]" type="radio" 
+                                    id="optionsRadiosInline2" value=false required <%=!post.useYN ? "checked" : "value=false" %>>비활성화
+                            </label>
                             </div>
                           </div>
                         </div>

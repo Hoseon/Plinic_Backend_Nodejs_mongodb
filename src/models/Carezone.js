@@ -83,6 +83,7 @@ var carezoneSchema = mongoose.Schema({
   chaljogun: String,
   chalgigan: String,
   seq: Number,
+  useYN: {type:Boolean}, // 활성화,비활성화
 });
 
 carezoneSchema.methods.getFormattedDate = function (date) {
