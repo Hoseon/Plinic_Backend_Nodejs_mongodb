@@ -513,6 +513,49 @@ router.put('/Challenge/SeqUpdate/:id', isLoggedIn, function (req, res, next) {
   });
 });
 
+
+router.post('/Challenge/UseYUpdate/:id', function(req, res) {
+  // console.log(req.body);
+  var newstatus = req.body;
+  Carezone.findOneAndUpdate({
+    _id: req.params.id,
+  }, 
+  req.body.post,
+  {
+    $push: {
+      body: newstatus,
+    }
+  }, 
+  function(err, post) {
+    if (err) return res.json({
+      success: false,
+      message: err
+    });
+    res.redirect("/contents/Challenge/newIndex");
+  });
+}); // 활성화 업데이트
+
+router.post('/Challenge/UseNUpdate/:id', function(req, res) {
+  // console.log(req.body);
+  var newstatus = req.body;
+  Carezone.findOneAndUpdate({
+    _id: req.params.id,
+  }, 
+  req.body.post,
+  {
+    $push: {
+      body: newstatus,
+    }
+  }, 
+  function(err, post) {
+    if (err) return res.json({
+      success: false,
+      message: err
+    });
+    res.redirect("/contents/Challenge/newIndex");
+  });
+}); // 비활성화 업데이트
+
 router.get("/BeautyTip/PostMgt", function (req, res) {
   return res.render("PlinicAdmin/Contents/BeautyTip/PostMgt/index", {});
 });

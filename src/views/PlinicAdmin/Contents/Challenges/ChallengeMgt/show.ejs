@@ -316,20 +316,20 @@
                                                           </div>
                                                       </div>
                                                   </div>
-                                                  <!-- 활성화 -->
+                                                  <!-- 활성화 여부 -->
                                                   <div class="row align-items-center w-75 mb-3">
-                                                      <label class="col-md-3 text-left">활성화</label>
+                                                      <label class="col-md-3 text-left">활성화 여부</label>
                                                       <div class="col-md-9">
-                                                          <label class="radio-inline">
-                                                              <input type="radio" name="optionsRadiosInline"
-                                                                  id="optionsRadiosInline1" value="option1" checked=""
-                                                                  required>활성화
-                                                          </label>
-                                                          <label class="radio-inline">
-                                                              <input type="radio" name="optionsRadiosInline"
-                                                                  id="optionsRadiosInline2" value="option2"
-                                                                  required>비활성화
-                                                          </label>
+                                                        <label class="radio-inline">
+                                                            <input type="radio" name="post[useYN]"
+                                                                id="optionsRadiosInline1" value="true"
+                                                                required disabled <%= post.useYN ? 'checked' : 'value=true' %>>활성화
+                                                        </label>
+                                                        <label class="radio-inline">
+                                                            <input type="radio" name="post[useYN]"
+                                                                id="optionsRadiosInline2" value="false"
+                                                                required disabled <%= post.useYN ?  "value=false" : "checked"%>>비활성화
+                                                        </label>
                                                       </div>
                                                   </div>
                                               </div>

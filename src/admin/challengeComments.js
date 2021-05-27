@@ -619,13 +619,25 @@ function createSearch(queries) {
       });
       highlight.title = queries.searchText;
     }
-    if (searchTypes.indexOf("body") >= 0) {
+    if (searchTypes.indexOf("comment") >= 0) {
+      var comments = req.body.comment;
+      comment = comments.comment;
       postQueries.push({
-        body: {
+        comment: {
           $regex: new RegExp(queries.searchText, "i")
         }
       });
-      highlight.body = queries.searchText;
+      highlight.comment = queries.searchText;
+    }
+    if (searchTypes.indexOf("email") >= 0) {
+      var comments = req.body.comment;
+      email = comments.email;
+      postQueries.push({
+        email: {
+          $regex: new RegExp(queries.searchText, "i")
+        }
+      });
+      highlight.email = queries.searchText;
     }
     if (searchTypes.indexOf("author!") >= 0) {
       findUser = {

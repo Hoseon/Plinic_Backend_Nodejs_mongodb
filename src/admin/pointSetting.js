@@ -1,7 +1,7 @@
 var express = require("express");
 var router = express.Router();
 var mongoose = require("mongoose");
-var Qna = require("../models/Qna");
+var PointSetting = require("../models/PointSetting");
 var QnaCounter = require("../models/QnaCounter");
 var async = require("async");
 var User_admin = require("../models/User_admin");
@@ -14,6 +14,7 @@ var fs = require("fs");
 var del = require("del");
 var http = require("http");
 var FCM = require("fcm-node");
+const { post } = require("request");
 var serverKey = "AIzaSyCAcTA318i_SVCMl94e8SFuXHhI5VtXdhU";
 var fcm = new FCM(serverKey);
 
@@ -60,10 +61,232 @@ const sftpconfig = {
   password: "g100210!!"
 };
 
-router.get("/", function (req, res) {
-  return res.render("PlinicAdmin/Operation/PointSetting-Mgt/index", {});
-});
-// 포인트 설정 리스트 화면
+router.get('/', function (req, res) {
+  var vistorCounter = null;
+  var page = Math.max(1, req.query.page) > 1 ? parseInt(req.query.page) : 1;
+  var limit = Math.max(1, req.query.limit) > 1 ? parseInt(req.query.limit) : 7;
+  var search = createSearch(req.query);
+  async.waterfall([
+  function (callback) {
+    if (!search.findUser) return callback(null);
+    PointSetting.find(search.findUser, function (err, users) {
+      if (err) callback(err);
+      var or = [];
+      users.forEach(function (user) {
+        or.push({
+          author: mongoose.Types.ObjectId(user._id)
+        });
+      });
+      if (search.findPost.$or) {
+        search.findPost.$or = search.findPost.$or.concat(or);
+      } else if (or.length > 0) {
+        search.findPost = {
+          $or: or
+        };
+      }
+      callback(null);
+    });
+  }, function (callback) {
+    if (search.findUser && !search.findPost.$or) return callback(null, null, 0);
+    PointSetting.count(search.findPost, function (err, count) {
+      if (err) callback(err);
+      skip = (page - 1) * limit;
+      maxPage = Math.ceil(count / limit);
+      callback(null, skip, maxPage);
+    });
+  }, function (skip, maxPage, callback) {
+    if (search.findUser && !search.findPost.$or) return callback(null, [], 0);
+    PointSetting.find(search.findPost).sort({ "seq": 1 }).populate("author").sort({ "seq": 1, "updatedAt": -1 }).skip(skip).limit(limit).exec(function (err, pointSetting) {
+      if (err) callback(err);
+      callback(null, pointSetting, maxPage);
+    });
+  }], function (err, pointSetting, maxPage) {
+    if (err) return res.json({
+      success: false,
+      message: err
+    });
+    return res.render("PlinicAdmin/Operation/PointSetting-Mgt/index", {
+      pointSetting: pointSetting,
+      user: req.user,
+      page: page,
+      maxPage: maxPage,
+      urlQuery: req._parsedUrl.query,
+      search: search,
+      postsMessage: req.flash("postsMessage")[0]
+    });
+  });
+}); // 포인트 설정 리스트 화면
+
+router.post('/pointSettingUpdate/', isLoggedIn, function (req, res, next) {
+      var newPost = req.body.post;
+      console.log(req.body.post);
+      console.log(req.body.post.point.length);
+      newPost.author = req.user._id;
+      for(var i = 0; req.body.post.point.length > i; i ++) {
+        if(i == 0) { //회원가입
+          PointSetting.findOneAndUpdate({
+            pointAt : "회원가입"
+          }, {
+            usePoint : req.body.post.usePoint[i], // ejs에서 넘어오는 회원가입 사용여부
+            point: req.body.post.point[i], //ejs에서 넘어온 회원가입시 포인트 점수 제한
+            daylimit: req.body.post.daylimit[i], //ejs 에서 넘어온 1일 최대 적립 회수
+          }
+          , function (err, result1) {
+            if(err){
+              console.log("에러 ");
+              res.status(400).json();
+            }
+            if(result1) {
+              console.log("성공 ");
+              res.status(200).json();
+            }
+          }
+          );
+        } else if(i == 1) { //리뷰글 등록시
+          PointSetting.findOneAndUpdate({
+            pointAt : "리뷰글"
+          }, {
+            usePoint : req.body.post.usePoint[i], // ejs에서 넘어오는 회원가입 사용여부
+            point: req.body.post.point[i], //ejs에서 넘어온 회원가입시 포인트 점수 제한
+            daylimit: req.body.post.daylimit[i], //ejs 에서 넘어온 1일 최대 적립 회수
+          }
+          , function (err, result1) {
+            if(err){
+              console.log("에러 ");
+              res.status(400).json();
+            }
+            if(result1) {
+              console.log("성공 ");
+              res.status(200).json();
+            }
+          }
+          );
+        }
+        else if(i == 2) { //게시글 등록시
+          PointSetting.findOneAndUpdate({
+            pointAt : "게시글"
+          }, {
+            usePoint : req.body.post.usePoint[i], // ejs에서 넘어오는 회원가입 사용여부
+            point: req.body.post.point[i], //ejs에서 넘어온 회원가입시 포인트 점수 제한
+            daylimit: req.body.post.daylimit[i], //ejs 에서 넘어온 1일 최대 적립 회수
+          }
+          , function (err, result1) {
+            if(err){
+              console.log("에러 ");
+              res.status(400).json();
+            }
+            if(result1) {
+              console.log("성공 ");
+              res.status(200).json();
+            }
+          }
+          );
+        }
+        else if(i == 3) { //댓글 등록시
+          PointSetting.findOneAndUpdate({
+            pointAt : "댓글"
+          }, {
+            usePoint : req.body.post.usePoint[i], // ejs에서 넘어오는 회원가입 사용여부
+            point: req.body.post.point[i], //ejs에서 넘어온 회원가입시 포인트 점수 제한
+            daylimit: req.body.post.daylimit[i], //ejs 에서 넘어온 1일 최대 적립 회수
+          }
+          , function (err, result1) {
+            if(err){
+              console.log("에러 ");
+              res.status(400).json();
+            }
+            if(result1) {
+              console.log("성공 ");
+              res.status(200).json();
+            }
+          }
+          );
+        }
+        else if(i == 4) { //SNS 공유시
+          PointSetting.findOneAndUpdate({
+            pointAt : "SNS"
+          }, {
+            usePoint : req.body.post.usePoint[i], // ejs에서 넘어오는 회원가입 사용여부
+            point: req.body.post.point[i], //ejs에서 넘어온 회원가입시 포인트 점수 제한
+            daylimit: req.body.post.daylimit[i], //ejs 에서 넘어온 1일 최대 적립 회수
+          }
+          , function (err, result1) {
+            if(err){
+              console.log("에러 ");
+              res.status(400).json();
+            }
+            if(result1) {
+              console.log("성공 ");
+              res.status(200).json();
+            }
+          }
+          );
+        }
+        else if(i == 5) { //피부 케어시
+          PointSetting.findOneAndUpdate({
+            pointAt : "피부케어"
+          }, {
+            usePoint : req.body.post.usePoint[i], // ejs에서 넘어오는 회원가입 사용여부
+            point: req.body.post.point[i], //ejs에서 넘어온 회원가입시 포인트 점수 제한
+            daylimit: req.body.post.daylimit[i], //ejs 에서 넘어온 1일 최대 적립 회수
+          }
+          , function (err, result1) {
+            if(err){
+              console.log("에러 ");
+              res.status(400).json();
+            }
+            if(result1) {
+              console.log("성공 ");
+              res.status(200).json();
+            }
+          }
+          );
+        }
+        else if(i == 6) { //피부 측정시
+          PointSetting.findOneAndUpdate({
+            pointAt : "피부측정"
+          }, {
+            usePoint : req.body.post.usePoint[i], // ejs에서 넘어오는 회원가입 사용여부
+            point: req.body.post.point[i], //ejs에서 넘어온 회원가입시 포인트 점수 제한
+            daylimit: req.body.post.daylimit[i], //ejs 에서 넘어온 1일 최대 적립 회수
+          }
+          , function (err, result1) {
+            if(err){
+              console.log("에러 ");
+              res.status(400).json();
+            }
+            if(result1) {
+              console.log("성공 ");
+              res.status(200).json();
+            }
+          }
+          );
+        }
+        else if(i == 7) { //출석 체크시
+          PointSetting.findOneAndUpdate({
+            pointAt : "출석체크"
+          }, {
+            usePoint : req.body.post.usePoint[i], // ejs에서 넘어오는 회원가입 사용여부
+            point: req.body.post.point[i], //ejs에서 넘어온 회원가입시 포인트 점수 제한
+            daylimit: req.body.post.daylimit[i], //ejs 에서 넘어온 1일 최대 적립 회수
+          }
+          , function (err, result1) {
+            if(err){
+              console.log("에러 ");
+              res.status(400).json();
+            }
+            if(result1) {
+              console.log("성공 ");
+              res.status(200).json();
+            }
+          }
+          );
+          // return res.redirect('/pointSetting/');
+          // res.redirect('/pointSetting/');
+        }
+      }
+      res.redirect('/pointSetting/');
+  }); // update
 
 router.get("/new", function (req, res) {
   return res.render("PlinicAdmin/Operation/PointSetting-Mgt/new", {});

@@ -42,7 +42,7 @@
                                 <th scope="col">댓글</th>
                                 <th scope="col">글쓴이</th>
                                 <th scope="col">업데이트일</th>
-                                <th scope="col">활성화</th>
+                                <th scope="col">활성화 여부</th>
                                 <th scope="col">노출순서 및 관리</th>
                                 </tr>
                             </thead>
@@ -65,7 +65,13 @@
                                         <td class="align-middle"><%= post.comments.length %></td>
                                         <td class="align-middle"><%= post.author.nickname %></td>
                                         <td class="align-middle"><%= post.getFormattedDate(post.createdAt) %></td>
-                                        <td class="align-middle">활성화</td>
+                                        <td class="align-middle">
+                                            <% if(post.useYN == true)  { %>
+                                                활성화
+                                            <% } else if(post.useYN == false)  { %>
+                                                비활성화
+                                            <% } %>
+                                        </td>
                                         <td class="align-middle">
                                                 <div class="row mb-3 align-middle">
                                                         <div class="row align-middle">
@@ -108,8 +114,14 @@
                                 <form class="float_left" name="frmSubmit">
                                     <button class="btn btn-primary" type="button" onclick="selectDelRow(this)">삭제</button>
                                 </form>
-                                <button class="btn btn-primary" type="button">활성화</button>
-                                <button class="btn btn-primary" type="button">비활성화</button>
+                                <form class="float_left" name="useYFormSubmit">
+                                    <button class="btn btn-primary" type="button" onclick="useYChange(this)">활성화</button>
+                                    <input type="hidden" name="post[useYN]" id="optionsRadiosInline1" value="true">
+                                </form>
+                                <form class="float_left" name="useNFormSubmit">
+                                    <button class="btn btn-primary" type="button" onclick="useNChange(this)">비활성화</button>
+                                    <input type="hidden" name="post[useYN]" id="optionsRadiosInline2" value="false">
+                                </form>
                             </div>
                             <div class="col-md-4">
                                 <nav aria-label="Page navigation example">
@@ -217,6 +229,94 @@
 <script src="/js/bootstrap.min.js"></script>
 <script src="/js/jquery.tablednd.0.7.min.js"></script>
 <script>
+
+function useYChange(chk) {
+        var chk = document.getElementsByName("del_unit[]"); // 체크박스객체를 담는다
+        var len = chk.length;    //체크박스의 전체 개수
+        var checkRow = '';      //체크된 체크박스의 value를 담기위한 변수
+        var checkCnt = 0;        //체크된 체크박스의 개수
+        var checkLast = '';      //체크된 체크박스 중 마지막 체크박스의 인덱스를 담기위한 변수
+        var rowid = '';             //체크된 체크박스의 모든 value 값을 담는다
+        var cnt = 0;
+
+        for (var i = 0; i < len; i++) {
+            if (chk[i].checked == true) {
+                checkCnt++;        //체크된 체크박스의 개수
+                checkLast = i;     //체크된 체크박스의 인덱스
+            }
+        }
+        for (var i = 0; i < len; i++) {
+            if (chk[i].checked == true) {  //체크가 되어있는 값 구분
+                checkRow = chk[i].value;
+                if (checkCnt == 1) {                            //체크된 체크박스의 개수가 한 개 일때,
+                    rowid += "" + checkRow + "";        //'value'의 형태 (뒤에 ,(콤마)가 붙지않게)
+                } else {                                            //체크된 체크박스의 개수가 여러 개 일때,
+                    if (i == checkLast) {                     //체크된 체크박스 중 마지막 체크박스일 때,
+                        rowid += "" + checkRow + "";  //'value'의 형태 (뒤에 ,(콤마)가 붙지않게)
+                    } else {
+                        rowid += "" + checkRow + ",";	 //'value',의 형태 (뒤에 ,(콤마)가 붙게)
+                    }
+                }
+                cnt++;
+                checkRow = '';    //checkRow초기화.
+            }
+            // alert(rowid);    //'value1', 'value2', 'value3' 의 형태로 출력된다.
+        }
+
+        if (confirm('적용 하시겠습니까?')) {
+            // alert(rowid);
+            var useYFormSubmit = document.useYFormSubmit;
+            useYFormSubmit.method = "post";
+            useYFormSubmit.target = "_self";
+            useYFormSubmit.action = "/contents/Challenge/UseYUpdate/" + rowid + "?_method=post";
+            useYFormSubmit.submit();
+        }
+    }
+
+    function useNChange(chk) {
+        var chk = document.getElementsByName("del_unit[]"); // 체크박스객체를 담는다
+        var len = chk.length;    //체크박스의 전체 개수
+        var checkRow = '';      //체크된 체크박스의 value를 담기위한 변수
+        var checkCnt = 0;        //체크된 체크박스의 개수
+        var checkLast = '';      //체크된 체크박스 중 마지막 체크박스의 인덱스를 담기위한 변수
+        var rowid = '';             //체크된 체크박스의 모든 value 값을 담는다
+        var cnt = 0;
+
+        for (var i = 0; i < len; i++) {
+            if (chk[i].checked == true) {
+                checkCnt++;        //체크된 체크박스의 개수
+                checkLast = i;     //체크된 체크박스의 인덱스
+            }
+        }
+        for (var i = 0; i < len; i++) {
+            if (chk[i].checked == true) {  //체크가 되어있는 값 구분
+                checkRow = chk[i].value;
+                if (checkCnt == 1) {                            //체크된 체크박스의 개수가 한 개 일때,
+                    rowid += "" + checkRow + "";        //'value'의 형태 (뒤에 ,(콤마)가 붙지않게)
+                } else {                                            //체크된 체크박스의 개수가 여러 개 일때,
+                    if (i == checkLast) {                     //체크된 체크박스 중 마지막 체크박스일 때,
+                        rowid += "" + checkRow + "";  //'value'의 형태 (뒤에 ,(콤마)가 붙지않게)
+                    } else {
+                        rowid += "" + checkRow + ",";	 //'value',의 형태 (뒤에 ,(콤마)가 붙게)
+                    }
+                }
+                cnt++;
+                checkRow = '';    //checkRow초기화.
+            }
+            // alert(rowid);    //'value1', 'value2', 'value3' 의 형태로 출력된다.
+        }
+
+        if (confirm('적용 하시겠습니까?')) {
+            // alert(rowid);
+            var useNFormSubmit = document.useNFormSubmit;
+            useNFormSubmit.method = "post";
+            useNFormSubmit.target = "_self";
+            useNFormSubmit.action = "/contents/Challenge/UseNUpdate/" + rowid + "?_method=post";
+            useNFormSubmit.submit();
+        }
+    }
+
+
     function seqChange(seq) {
         // var chk = document.getElementsByName("quant["+seq+"]")[0].value; // 체크박스객체를 담는다
         var chk = document.getElementsByName("seqNumberId["+seq+"]")[0].value; // 체크박스객체를 담는다

@@ -153,6 +153,9 @@ router.get('/', function (req, res) {
   });
 }); // index
 
+
+
+
 router.get("/Comments/Faq/show", function (req, res) {
   return res.render("PlinicAdmin/Contents/Comments/Faq/show", {});
 });
