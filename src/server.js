@@ -1,4 +1,5 @@
 const express = require('express');
+const kakao_auth = require('./kakao_auth.js');
 var passport = require('passport');
 var mongoose = require('mongoose');
 const MongoClient = require("mongodb").MongoClient;
@@ -2692,6 +2693,16 @@ module.exports = function (app) {
     } else {
       res.sendStatus(400);
     }
+  });
+
+  app.get("/callbacks/kakao/sign_in", function (req, res, next) {
+    const redirect = `webauthcallback://success?${new URLSearchParams(request.query).toString()}`
+    console.log(redirect);
+    res.redirect(307, redirect);
+  });
+
+  app.post("/callbacks/kakao/token", function (req, res, next) {
+    
   });
 
   

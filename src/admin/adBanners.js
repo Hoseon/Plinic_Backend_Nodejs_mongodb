@@ -145,6 +145,17 @@ router.get('/', function (req, res) {
   });
 }); // new index
 
+router.get('/getadbanners/', function (req, res) {
+  ADBanner.findOne({}, function(error, data){
+    if(error) {
+      return res.status(400).json(err);
+    }
+    if(data) {
+      res.status(201).json(data);
+    }
+  })
+});
+
 router.delete('/rowdel/:id', isLoggedIn, function(req, res, next) {
   ADBanner.findOneAndRemove({
     _id: req.params.id,
@@ -239,6 +250,7 @@ router.get('/:id/edit', isLoggedIn, function (req, res) {
   });
 }); // 상품 edit 페이지
 
+
 router.put('/Adbanneredit/:id', s3upload.fields([{
     name: 'image'
   }, {
@@ -323,6 +335,8 @@ router.post('/create', s3upload.fields([
       });
     // });
   }); // create
+
+
 
 function isLoggedIn(req, res, next) {
   if (req.isAuthenticated()) {
