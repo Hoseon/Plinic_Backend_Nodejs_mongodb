@@ -172,6 +172,7 @@ exports.registerUser = (req, res) => {
     newUser.totaluserpoint = 5000;
     newUser.save((err, user) => {
       if (err) {
+        console.log(err);
         return res.status(400).json({
           'msg': '회원가입이 되지 않습니다. <br/> 관리자에게 문의 해주세요.'
         });
@@ -811,7 +812,8 @@ exports.challengeUpdate2 = (req, res) => {
 
   Challenge.findOne({
       missionID: req.body.id,
-      email: req.body.email
+      email: req.body.email,
+      missioncomplete: false
     },
     function (err, result) {
       var todayPoints = 0;
@@ -856,7 +858,8 @@ exports.challengeUpdate2 = (req, res) => {
           if (isupdate) {
             Challenge.update({
               missionID: req.body.id,
-              email: req.body.email
+              email: req.body.email,
+              missioncomplete: false
             }, {
               $push: {
                 dailycheck: dailycheck,
@@ -889,7 +892,8 @@ exports.challengeUpdate2 = (req, res) => {
 
           Challenge.update({
             missionID: req.body.id,
-            email: req.body.email
+            email: req.body.email,
+            missioncomplete: false
           }, {
             $push: {
               usedmission: newPoint

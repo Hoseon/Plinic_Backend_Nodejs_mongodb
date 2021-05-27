@@ -25,6 +25,7 @@
     "express": "^4.16.4",
     "express-session": "^1.16.1",
     "fcm-node": "^1.5.2",
+    "firebase-admin": "9.9.0",
     "fs": "0.0.1-security",
     "ftp-simple": "^0.3.0",
     "jsonwebtoken": "^8.5.1",

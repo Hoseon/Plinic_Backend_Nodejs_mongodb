@@ -436,6 +436,7 @@ router.get('/list', function(req, res) {
   //var carezonelist = null;
   async.waterfall([function(callback) {
     Carezone.find({
+      "useYN" : true
       // exposure: {
       //   $lte: new Date()
       // }
@@ -443,7 +444,8 @@ router.get('/list', function(req, res) {
       res.json(docs);
     }).sort({
       "seq": 1,
-      "updatedAt": -1
+      "updatedAt": -1,
+      
     });
   }]);
 });
