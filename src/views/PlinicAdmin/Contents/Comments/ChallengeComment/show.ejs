@@ -88,7 +88,7 @@
                       <td class="text-left" class="text-left">121.161.30.211</td>
                       <th class="text-center" width="250">챌린지 제목</th>
                       <td width="400" class="text-left" data-highlight="<%= search.highlight.title %>">
-                        <%= post[0].title %>
+                        <%= post.title %>
                       </td>
                     </tr>
                     <tr>
@@ -96,21 +96,46 @@
                         <%= post.contents %>
                       </td>
                     </tr>
+
                     <% } %>
                 </table>
+
                 <div class="comments">
                   <%=post[0].comment%>
+                  <div class="recomments">
+                    <% if(!post[0].rebody.length == 0) { %>
+                    ⤷&nbsp;<%=post[0].rebody%>
+                    <%// if(user && user.equals(post.author._id)) { %>
+                    <% if(user) { %>
+                        <%// console.log(user._id) %>
+                        <% console.log(post[0].commentId) %>
+                        <% console.log(post[0].recommentId) %>
+                        <form class="float_right" method="post"
+                          action="/challengeComments/<%= post[0].commentId %>/recomments/<%= post[0].recommentId %>?_method=delete&<%= urlQuery %>">
+                          <button type="button" class="w-15 m-1 btn btn-danger btn-sm"
+                            onclick="confirm('답글을 삭제하겠습니까?')?this.parentElement.submit():null;">
+                            x
+                          </button>
+                        </form>
+                    <% } %>
+                    <% } %>
+                  </div>
                   <form action="/challengeComments/recomments/<%=post[0]._id%>" method="post">
                     <input type="hidden" name="post[email]" value="<%=user.email%>" />
                     <input type="hidden" name="post[commentId]" value="<%=post[0].commentId%>" />
                     <div class="form-floating">
-                      <textarea name="post[body]" class="form-control" placeholder="Leave a comment here" id="floatingTextarea2" style="height: 100px"></textarea>
+                      <textarea name="post[body]" c lass="form-control" placeholder="Leave a comment here" id="floatingTextarea2" style="height: 100px"></textarea>
                       <label for="floatingTextarea2">관리자 댓글 달기</label>
                     </div>
                     <button type="submit">댓글 저장</button>
                     <div id="cvErrTitle" class="message"></div>
                   </form>
                 </div>
+
+
+
+
+
               </div>
             </div>
           </div>

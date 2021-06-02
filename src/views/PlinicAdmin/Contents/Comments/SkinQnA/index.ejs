@@ -8,6 +8,7 @@
 </head>
 <script type="text/javascript" src="/js/jquery-1.10.2.js"></script>
 <script>
+
     $(document).ready(function () {
         $(".active").removeClass("active");
         $("#contents").addClass("active");
@@ -150,14 +151,6 @@
                                         </select>
                                         <input type="text" name="keyword" size="15" value="">
                                         <input type="submit" value="검색" class="btn btn-primary">
-
-                                        <div class="text-right" style="padding:0;">
-                                            <button class="btn btn-primary btn btn-danger" type="button"
-                                                onclick="location.href='/skinqnaComments/Comments/SkinQna/show'">
-                                                <i class="bi bi-pencil"></i>show 임시
-                                            </button>
-                                        </div>
-
                                     </div>
                                     <div class="panel-body" style="padding-top:0px;padding-bottom:15px;">
                                         <div class="table-responsive dataTables_wrapper form-inline">
@@ -165,65 +158,114 @@
                                                 class="table table-bordered  table-condensed table-hover  text-center">
                                                 <thead>
                                                     <tr>
-                                                        <th class="text-center">No</th>
-                                                        <th class="text-center" width="700">제목</th>
+                                                        <th class="text-center">제목</th>
                                                         <th class="text-center">작성자</th>
                                                         <th class="text-center">작성일</th>
-                                                        <th class="text-center">첨부</th>
-                                                        <th class="text-center">✓</th>
+                                                        <th class="text-center">좋아요</th>
+                                                        <th class="text-center">조회수</th>
+                                                        <th class="text-center">베스트고민 등록</th>
+                                                        <th class="text-center"></th>
                                                     </tr>
                                                 </thead>
+                                                <% if(skinqna == null || skinqna.length == 0){ %>
+                                                    <tr class="noData">
+                                                        <td colspan="5">There is no data to show :(</td>
+                                                    </tr>
+                                                <% } %>
+                                                <% skinqna.forEach(function(post){ %>
                                                 <tbody>
                                                     <tr>
-                                                        <td>1</td>
-                                                        <td>피부고민 게시판 인덱스 부분</td>
-                                                        <td>fefjweweofji</td>
-                                                        <td>2018/12/28</td>
-                                                        <td></td>
-                                                        <td class="center">
-                                                            <input type="checkbox" class="form-check-input"
-                                                                id="exampleCheck1">
+                                                        <td onclick="window.location = '/skinqnaComments/<%= post._id %>?<%= urlQuery %>'">
+                                                            [<%= post.select %>] [<%= post.title %>]
+                                                            <span class="comments">(<%= post.comments.length %>)</span>
+                                                            <%=// console.log(sum) %>
                                                         </td>
+                                                        <td class="text-center" onclick="window.location = '/skinqnaComments/<%= post._id %>?<%= urlQuery %>'"><%= post.email %></td>
+                                                        <td><%= post.getFormattedDate(post.createdAt) %></td>
+                                                        <td><%= post.like %></td>
+                                                        <td><%= post.views %></td>
+                                                        <form action="/skinqnaComments/<%= post._id %>/editorUpdate" method="post" name="formname">
+                                                            <td>
+                                                                <% if(post.editor == false) { %>
+                                                                    <label class="col-md-3 text-left">등록&nbsp;</label>
+                                                                    <input class="form-check-input" type="checkbox" value=true
+                                                                        name="post[editor]">
+                                                                    <br>
+                                                                    <div>/</div>
+                                                                    <label class="col-md-3 text-left">해제</label>
+                                                                    <input class="form-check-input" type="checkbox" value=false disabled
+                                                                        name="post[editor]">
+                                                                <% } else if(post.editor == true) { %>
+                                                                    <label class="col-md-3 text-left">등록&nbsp;</label>
+                                                                    <input class="form-check-input" type="checkbox" value=true disabled
+                                                                        name="post[editor]">
+                                                                    <br>
+                                                                    <div>/</div>
+                                                                    <label class="col-md-3 text-left">해제</label>
+                                                                    <input class="form-check-input" type="checkbox" value=false
+                                                                        name="post[editor]">
+                                                                <% } %>
+                                                            </td>
+                                                            <td class="center">
+                                                                <button type="submit" class="btn btn-info">변경</button>
+                                                            </td>
+                                                        </form>
                                                     </tr>
                                                 </tbody>
+                                                <% }) %>
                                             </table>
 
-                                            <div class="row">
-                                                <div class="col-auto me-auto" style="padding-top:10px;">
-                                                    <button class="btn btn-primary" type="button"
+                                            <!-- <div class="row">
+                                                <div class="col-md-4 d-grid gap-2 d-md-block">
+                                                    <button class="btn btn-primary float_left" type="button"
                                                         onclick="location.href='/skinqnaComments/Comments/SkinQna/new'">작성</button>
-                                                    <form>
+                                                    <form class="float_left" name="frmSubmit">
                                                         <button class="btn btn-primary btn btn-danger"
-                                                            type="button">삭제</button>
+                                                            type="button" onclick="">삭제</button>
                                                     </form>
                                                 </div>
-                                                <div class="col-auto">
-                                                    <nav aria-label="Page navigation example">
-                                                        <ul class="pagination pagination-sm justify-content-center">
-                                                            <li class="page-item">
-                                                                <a class="page-link" href="#" aria-label="Previous">
-                                                                    <span aria-hidden="true">&laquo;</span>
-                                                                </a>
-                                                            </li>
-                                                            <li class="page-item"><a class="page-link" href="#">1</a>
-                                                            </li>
-                                                            <li class="page-item"><a class="page-link" href="#">2</a>
-                                                            </li>
-                                                            <li class="page-item"><a class="page-link" href="#">3</a>
-                                                            </li>
-                                                            <li class="page-item">
-                                                                <a class="page-link" href="#" aria-label="Next">
-                                                                    <span aria-hidden="true">&raquo;</span>
-                                                                </a>
-                                                            </li>
-                                                        </ul>
-                                                    </nav>
-                                                </div>
-                                            </div>
-
+                                            </div> -->
                                         </div>
                                     </div>
                                     <!-- </form> -->
+                                    <div class="row">
+                                        <div class="col-auto me-auto"></div>
+                                        <div class="col-auto">
+                                            <nav aria-label="Page navigation example">
+                                                <ul class="pagination pagination-sm justify-content-center">
+                                                    <%
+                                                        var offset = 4;
+                                                        var partialQuery;
+                                                        if(urlQuery) partialQuery = "&"+urlQuery.replace(/page=(.*?)(&|$)/ig,"");
+                                                    %>
+            
+                                                    <li class="page-item disabled">
+                                                        <a class="page-link" href="#" aria-label="Previous">
+                                                            <span aria-hidden="true">&laquo;</span>
+                                                        </a>
+                                                    </li>
+            
+                                                    <% for(i=1;i<=maxPage;i++){ %>
+            
+                                                        <% if(i<=offset || i>maxPage-offset || (i>=page-(offset-1) && i<=page+(offset-1))){ %>
+                                                            <% if(i != page){ %>
+                                                                <li class="page-item"><a class="page-link" href="/skinqnaComments/?page=<%= i %><%= partialQuery %>"><%= i %></a></li>
+                                                            <% } else { %>
+                                                                <li class="page-item" name="currentPage" aria-current="page"><a class="page-link" href="#"><%= i %></a></li>
+                                                            <% } %>
+                                                        <% } else if(i == offset+1 || i == maxPage-offset){ %>
+                                                                <li>...</li>
+                                                        <% } %>
+                                                    <%}%>
+                                                    <li class="page-item disabled">
+                                                    <a class="page-link" href="#" aria-label="Next">
+                                                        <span aria-hidden="true">&raquo;</span>
+                                                    </a>
+                                                    </li>
+                                                </ul>
+                                            </nav>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>

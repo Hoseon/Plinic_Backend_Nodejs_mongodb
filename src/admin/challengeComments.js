@@ -265,8 +265,6 @@ router.get("/:id", function (req, res) {
         success: false,
         message: err
       });
-      post.views++;
-      post.save();
 
       //배너 이미지 가져 오기 20190502
       //res.setHeader('Content-Type', 'image/jpeg');
@@ -312,6 +310,11 @@ router.get("/comments/:id/:commentId", function (req, res) {
         comment: "$comments.comment",
         updatedAt: "$comments.updatedAt",
         commentId: req.params.id,
+        rebody: "$comments.recomments.body",
+        // recommentId: "$comments.recomments.parent_id",
+        recommentId: "$comments.recomments._id",
+        // recommentId: req.params.recommentId
+        // re_id: req.params.recommentId
       }
     }
     // { $unwind: "$comments" },
@@ -348,7 +351,7 @@ router.post('/recomments/:id/', function (req, res) {
     }
   }, function(err, post) {
     if (err) return res.json({
-      success: false,
+      success: false, 
       message: err
     });
       
@@ -358,6 +361,36 @@ router.post('/recomments/:id/', function (req, res) {
     // });
   });
 }); //create a recomment
+
+router.delete('/:commentId/recomments/:recommentId', function(req, res) {
+  Carezone.findOneAndRemove({
+    // "comments._id" : req.params.id
+    // _id : req.params.commentId
+   "comments.recomments._id" : req.params.id
+  }, {
+    // $pull: {
+    //   recomments: {
+    //     _id: req.params.recommentId
+    //     // "recomments._id" : req.params.recommentId
+    //   }
+    // }
+  },
+  function(err, post) {
+    console.log(post);
+    if(err) {
+      console.log(err);
+      return res.json({
+        success: false,
+        message: err
+      });
+    } 
+    res.redirect('/challengeComments/comments/' + req.params.commentId + '/' + req.params.recommentId + "?" + req._parsedUrl.query.replace(/_method=(.*?)(&|$)/ig, ""));
+    
+    // res.redirect('/contents/Challenge/newIndex' + req.params.commentId + "?" + req._parsedUrl.query.replace(/_method=(.*?)(&|$)/ig, ""));
+  });
+}); //대댓글 삭제
+
+
 
 router.get('/:id/edit', isLoggedIn, function (req, res) {
   Carezone.findById(req.params.id, function (err, post) {

@@ -216,7 +216,22 @@
                                                                         <input type="checkbox" class="form-check-input" id="exampleCheck1">
                                                                     </td>
                                                                 </tr>
+
+                                                                <% if(comment.recomments) { %>
+                                                                    <% comment.recomments.forEach(function(recomments) { %>
+                                                                    <tr>
+                                                                        <td colspan="4">⤷&nbsp;<%= recomments.body %></td>
+                                                                        <td><%= post.getFormattedDate(recomments.createdAt) %></td>
+                                                                        <td class="center">
+                                                                            <input type="checkbox" class="form-check-input" id="exampleCheck1">
+                                                                        </td>
+                                                                    </tr>
+                                                                    <% }) %>
+                                                                <% } %>
+
+
                                                                 <% }) %>
+
                                                             <% } %>
                                                         <% }) %>
                                                     </tbody>
