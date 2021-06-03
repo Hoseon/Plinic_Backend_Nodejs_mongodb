@@ -220,8 +220,9 @@
                                                                 <% if(comment.recomments) { %>
                                                                     <% comment.recomments.forEach(function(recomments) { %>
                                                                     <tr>
-                                                                        <td colspan="4">⤷&nbsp;<%= recomments.body %></td>
-                                                                        <td><%= post.getFormattedDate(recomments.createdAt) %></td>
+                                                                        <td colspan="4"><pre>⤷&nbsp;<%= recomments.body %></pre></td>
+                                                                        <td class="text-center"><%= post.getFormattedDate(recomments.createdAt) %></td>
+                                                                        <td></td>
                                                                         <td class="center">
                                                                             <input type="checkbox" class="form-check-input" id="exampleCheck1">
                                                                         </td>

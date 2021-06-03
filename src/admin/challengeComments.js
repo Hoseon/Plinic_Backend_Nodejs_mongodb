@@ -148,11 +148,6 @@ router.get('/', function (req, res) {
   });
 }); // new index
 
-router.get("/new", function (req, res) {
-  return res.render("PlinicAdmin/Contents/ChallengeMgt/new", {});
-});
-//콘텐츠관리 챌린지 신규 등록 화면
-
 router.post('/', s3upload.fields([
   { name: 'image' }, { name: 'homeimage' }, { name: 'challenge_image1' }, { name: 'challenge_image2' }, { name: 'challenge_image3' }, { name: 'challenge_image4' }, { name: 'challenge_image5' }]), isLoggedIn, function (req, res, next) {
     async.waterfall([function (callback) {
@@ -362,18 +357,19 @@ router.post('/recomments/:id/', function (req, res) {
   });
 }); //create a recomment
 
-router.delete('/:commentId/recomments/:recommentId', function(req, res) {
+router.delete('/:id/recomments/:recommentId', function(req, res) {
+  
   Carezone.findOneAndRemove({
     // "comments._id" : req.params.id
-    // _id : req.params.commentId
-   "comments.recomments._id" : req.params.id
+    _id : req.params.id
+  //  "comments.recomments._id" : req.params.recommentId
   }, {
-    // $pull: {
-    //   recomments: {
-    //     _id: req.params.recommentId
-    //     // "recomments._id" : req.params.recommentId
-    //   }
-    // }
+    $pull: {
+      recomments: {
+        _id: req.params.recommentId
+        // "recomments._id" : req.params.recommentId
+      }
+    }
   },
   function(err, post) {
     console.log(post);
@@ -384,9 +380,8 @@ router.delete('/:commentId/recomments/:recommentId', function(req, res) {
         message: err
       });
     } 
-    res.redirect('/challengeComments/comments/' + req.params.commentId + '/' + req.params.recommentId + "?" + req._parsedUrl.query.replace(/_method=(.*?)(&|$)/ig, ""));
-    
-    // res.redirect('/contents/Challenge/newIndex' + req.params.commentId + "?" + req._parsedUrl.query.replace(/_method=(.*?)(&|$)/ig, ""));
+    // res.redirect('/challengeComments/comments/' + req.params.commentId + '/' + req.params.recommentId + "?" + req._parsedUrl.query.replace(/_method=(.*?)(&|$)/ig, ""));
+    res.redirect('/challengeComments/' + "?" + req._parsedUrl.query.replace(/_method=(.*?)(&|$)/ig, ""));
   });
 }); //대댓글 삭제
 
@@ -602,25 +597,10 @@ router.put('/Challenge/SeqUpdate/:id', isLoggedIn, function (req, res, next) {
 // });
 //챌린지 댓글 리스트 화면
 
-router.get("/Comments/ChallengeComment/show", function (req, res) {
-  return res.render("PlinicAdmin/Contents/Comments/ChallengeComment/show", {});
-});
+// router.get("/Comments/ChallengeComment/show", function (req, res) {
+//   return res.render("PlinicAdmin/Contents/Comments/ChallengeComment/show", {});
+// });
 //챌린지 댓글 상세 화면
-
-router.get("/Comments/ChallengeComment/new", function (req, res) {
-  return res.render("PlinicAdmin/Contents/Comments/ChallengeComment/new", {});
-});
-//챌린지 댓글 답변 화면
-
-router.get("/Comments/ChallengeComment/edit", function (req, res) {
-  return res.render("PlinicAdmin/Contents/Comments/ChallengeComment/edit", {});
-});
-//챌린지 댓글 수정 화면
-
-router.get("/", function (req, res) {
-  return res.render("PlinicAdmin/bootstraptest/index", {});
-});
-// index
 
 function isLoggedIn(req, res, next) {
   if (req.isAuthenticated()) {

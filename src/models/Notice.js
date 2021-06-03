@@ -18,11 +18,13 @@ var noticeSchema = mongoose.Schema({
     title: String,
     name: String,
     pushtoken: String,
+    isDelete: {type: Boolean, default: false},
     recomments: [{ //대댓글
       body: {type:String},
       email: {type:String},
       parent_id: {type:String},
-      createdAt: {type:Date, default:Date.now}
+      createdAt: {type:Date, default:Date.now},
+      isDelete: {type: Boolean, default: false},
     }],
   }],
   createdAt: {type:Date, default:Date.now},

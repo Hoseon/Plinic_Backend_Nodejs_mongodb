@@ -297,25 +297,51 @@ router.post('/:id/comments', function(req, res) {
 }); //댓글 작성
 
 
-router.delete('/:postId/comments/:commentId', function(req, res) {
-  SkinQna.findOneAndUpdate({
-      _id: req.params.postId
-    }, {
-      $pull: {
-        comments: {
-          _id: req.params.commentId
-        }
-      }
-    },
-    function(err, post) {
-      if (err) return res.json({
-        success: false,
-        message: err
-      });
-      res.redirect('/skinqnaComments/' + req.params.postId + "?" +
-        req._parsedUrl.query.replace(/_method=(.*?)(&|$)/ig, ""));
-    });
-}); //댓글 삭제
+// router.post('/:id/comments/:commentId', function(req, res) {
+//   SkinQna.findOneAndUpdate({
+//       _id: req.params.id
+//     }, {
+//       $push: {
+//         comments: {
+//           _id: req.params.commentId,
+//         }
+//       }
+//     },
+//     function(err, post) {
+//       if (err) return res.json({
+//         success: false,
+//         message: err
+//       });
+//       res.redirect('/skinqnaComments/' + req.params.id + "?" + req._parsedUrl.query);
+//     });
+// }); //댓글 삭제
+
+// router.post('/:id/:commentId/commentsDel/', function(req, res) {
+//   var newdel = req.body;
+//   SkinQna.findOneAndUpdate({
+//     _id: req.params.id,
+//     // "comments._id": req.params.commentId
+//   }, 
+//   req.body.comment,
+//   {
+//     $push: {
+//       comments: {
+//         // _id: req.params.commentId,
+//         // "comments.recomments._id" : req.params.recommentId
+//         // "comments._id": req.params.commentId,
+//         body: newdel
+//       }
+//     }
+//   },
+//   function(err, post) {
+//     if(err) return res.json({
+//       success: false,
+//       message: err
+//     });
+//     res.redirect('/skinqnaComments/' + req.params.id + "?" + req._parsedUrl.query);
+//     // res.redirect('/skinqnaComments/');
+//   });
+// }); //댓글 삭제
 
 
 router.post('/:commentId/:id/recomments/', function(req, res) {
@@ -339,27 +365,92 @@ router.post('/:commentId/:id/recomments/', function(req, res) {
   });
 }); // 대댓글 작성
 
-router.delete('/:postId/recomments/:recommentId', function(req, res) {
-  SkinQna.findOneAndUpdate({
-    _id: req.params.postId,
-    // "comments._id": req.params.commentId
-  }, {
-    $pull: {
-      recomments: {
-        _id: req.params.recommentId
-        // "comments.recomments._id" : req.params.recommentId
-      }
-    }
-  },
-  function(err, post) {
-    if(err) return res.json({
-      success: false,
-      message: err
-    });
-    res.redirect('/skinqnaComments/' + req.params.postId + "?" +
-      req._parsedUrl.query.replace(/_method=(.*?)(&|$)/ig, ""));
-  });
-}); //대댓글 삭제
+// router.post('/:id/recomments/:recommentId', function(req, res) {
+//   var newdel = req.body;
+//   SkinQna.findOneAndUpdate({
+//     _id: req.params.id,
+//     // "comments._id": req.params.commentId
+//   }, 
+//   req.body.recomments,
+//   {
+//     $push: {
+//       recomments: {
+//         // _id: req.params.recommentId,
+//         // "comments.recomments._id" : req.params.recommentId
+//         body: newdel
+//       }
+//     }
+//   },
+//   function(err, post) {
+//     if(err) return res.json({
+//       success: false,
+//       message: err
+//     });
+//     res.redirect('/skinqnaComments/'  + req.params.id + "?" + req._parsedUrl.query);
+//   });
+// }); //대댓글 삭제
+
+// router.post('/:id/recomments/:commentId/:recommentId', function(req, res) {
+//   console.log(req.body);
+//   SkinQna.findOneAndUpdate({
+//       // "comments.recomments._id": req.params.recommentId,
+//       "_id": req.params.id,
+//       "comments": {
+//         "recomments.$": {
+//           id: req.params.commentId,
+//           "recomments._id" : req.params.recommentId
+//         }
+//       }
+//       // "comments.$.recomments._id": req.params.recommentId,
+//     },
+//     {
+//       "$set" : {
+//         "comments.$.recomments.isDelete": req.body.recomments.isDelete
+//       }
+//     },
+//     // req.body,
+//     function (err, recomments) {
+//       console.log(recomments);
+//       // if (err) return res.json({
+//       //   success: false,
+//       //   message: err
+//       // });
+//       // if (!recomments) return res.json({
+//       //   success: false,
+//       //   message: "No data found to update"
+//       // });
+//       res.redirect('/skinqnaComments/'  + req.params.id + "?" + req._parsedUrl.query);
+//     });
+//    }); //대댓글 삭제
+
+   router.post('/:id/recomments/:recommentId', function(req, res) {
+    console.log(req.body);
+    SkinQna.findOneAndUpdate(
+      {
+        _id: '60b6fa0c0a2b3bdacf8227f9',
+        "comments.recomments._id" : "60b83108d33d0c7196161c43"
+      },
+      // {
+      //   $set : {
+      //     "comments.$.recomments.isDelete" : true
+      //   } 
+      // },
+      req.body,
+      function (err, recomments) {
+        console.log(recomments);
+        // if (err) return res.json({
+        //   success: false,
+        //   message: err
+        // });
+        // if (!recomments) return res.json({
+        //   success: false,
+        //   message: "No data found to update"
+        // });
+        res.redirect('/skinqnaComments/'  + req.params.id + "?" + req._parsedUrl.query);
+      });
+     }); //대댓글 삭제
+
+
 
 router.post('/:id/editorUpdate', function (req, res, next) {
 
@@ -419,16 +510,6 @@ router.delete('/del/:id', isLoggedIn, function(req, res, next) {
     res.redirect('/skinqnaComments/');
   });
 }); //게시글 삭제
-
-// router.get("/Comments/SkinQna/new", function (req, res) {
-//   return res.render("PlinicAdmin/Contents/Comments/SkinQna/new", {});
-// });
-//피부고민 게시판 답변 화면
-
-// router.get("/Comments/SkinQna/edit", function (req, res) {
-//   return res.render("PlinicAdmin/Contents/Comments/SkinQna/edit", {});
-// });
-//피부고민 게시판 수정 화면
 
 function isLoggedIn(req, res, next) {
   if (req.isAuthenticated()) {

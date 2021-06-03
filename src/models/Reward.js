@@ -36,7 +36,8 @@ var rewardSchema = mongoose.Schema({
   comments: [{
     body: {type:String},
     author: {type:mongoose.Schema.Types.ObjectId, ref:'user_admin'},
-    createdAt: {type:Date, default:Date.now}
+    createdAt: {type:Date, default:Date.now},
+    isDelete: {type: Boolean, default: false},
   }],
 });
 

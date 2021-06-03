@@ -9,7 +9,8 @@ var bannerSchema = mongoose.Schema({
   comments: [{
     body: {type:String, required:true},
     author: {type:mongoose.Schema.Types.ObjectId, ref:'user_admin', required:true},
-    createdAt: {type:Date, default:Date.now}
+    createdAt: {type:Date, default:Date.now},
+    isDelete: {type: Boolean, default: false},
   }],
   createdAt: {type:Date, default:Date.now},
   updatedAt: Date,
