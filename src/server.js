@@ -1,5 +1,6 @@
 const express = require('express');
 const kakao_auth = require('./kakao_auth.js');
+const naver_auth = require('./naver_auth.js');
 var passport = require('passport');
 var mongoose = require('mongoose');
 const MongoClient = require("mongodb").MongoClient;
@@ -46,7 +47,9 @@ var multer = require('multer');
 var sftpStorage = require('multer-sftp');
 let Client = require('ssh2-sftp-client');
 // let sftp = new Client();
+const url = require('url')
 var path = require('path');
+var dotenv = require('dotenv');
 var fs = require('fs');
 var del = require('del');
 var session = require('express-session');
@@ -172,6 +175,8 @@ var sftpUpload = multer({
 module.exports = function (app) {
   var app = express();
   app.use(cors());
+  //환경 셋팅 필요
+  dotenv.config({ path: path.join(__dirname, '.env') })
 
   // get our request parameters
   app.use(express.static(path.join(__dirname, 'public')));
@@ -2685,6 +2690,60 @@ module.exports = function (app) {
     })
   });
 
+  app.post("/callbacks/sign_in_with_apple", (request, response) => {
+    const redirect = `intent://callback?${new URLSearchParams(
+      request.body
+    ).toString()}#Intent;package=${
+      process.env.ANDROID_PACKAGE_IDENTIFIER
+    };scheme=signinwithapple;end`;
+
+    console.log(`Redirecting to ${redirect}`);
+
+    response.redirect(307, redirect);
+  });
+
+  app.post("/sign_in_with_apple", async (request, response) => {
+    console.log("sign_in_with_apple Login");
+    const auth = new AppleAuth(
+      {
+        // use the bundle ID as client ID for native apps, else use the service ID for web-auth flows
+        // https://forums.developer.apple.com/thread/118135
+        client_id:
+          request.query.useBundleId === "true"
+            ? process.env.BUNDLE_ID
+            : process.env.SERVICE_ID,
+        team_id: process.env.TEAM_ID,
+        redirect_uri:
+          "https://admin.g1p.xyz/callbacks/sign_in_with_apple", // does not matter here, as this is already the callback that verifies the token after the redirection
+        key_id: process.env.KEY_ID
+      },
+      process.env.KEY_CONTENTS.replace(/\|/g, "\n"),
+      "text"
+    );
+    console.log("애플 로그인 성공 정보 :::");
+    console.log(request.query);
+  
+    const accessToken = await auth.accessToken(request.query.code);
+  
+    const idToken = jwt.decode(accessToken.id_token);
+  
+    const userID = idToken.sub;
+  
+    console.log(idToken);
+  
+    // `userEmail` and `userName` will only be provided for the initial authorization with your app
+    const userEmail = idToken.email;
+    const userName = `${request.query.firstName} ${request.query.lastName}`;
+  
+    // 👷🏻‍♀️ TODO: Use the values provided create a new session for the user in your system
+    const sessionID = `NEW SESSION ID for ${userID} / ${userEmail} / ${userName}`;
+  
+    console.log(`sessionID = ${sessionID}`);
+  
+    response.json({ sessionId: sessionID });
+  });
+
+
 
   app.post("/setServerLog", function (req, res, next) {
     if (req.body) {
@@ -2695,16 +2754,40 @@ module.exports = function (app) {
     }
   });
 
-  app.get("/callbacks/kakao/sign_in", function (req, res, next) {
-    const redirect = `webauthcallback://success?${new URLSearchParams(request.query).toString()}`
-    console.log(redirect);
-    res.redirect(307, redirect);
+  app.post('/callbacks/apple/sign_in_with_apple', async (request, response) => {
+    const redirect = `applink://plinic2snslogin?${new url.URLSearchParams(request.body).toString()}`;
+
+    console.log(`Redirecting to ${redirect}`);
+    response.redirect(307, redirect);
   });
 
-  app.post("/callbacks/kakao/token", function (req, res, next) {
-    
-  });
+  app.get('/callbacks/kakao/sign_in', async (request, response) => {
+    //Authentication Code 받아 돌려줄 api 
+    const redirect = `webauthcallback://success?${new url.URLSearchParams(request.query).toString()}`;
+    console.log(`Redirecting to ${redirect}`);
+    response.redirect(307, redirect);
+  })
 
+  app.post('/callbacks/kakao/token', async (request, response) => {
+    //발급 받은 kakao AccessCode로 사용자 확인후 firebase 로 custom token 생성하기 위한 api
+    kakao_auth.createFirebaseToken(request.body["accessToken"],(resulst)=>{
+      response.send(resulst);
+    });
+  })
+
+  app.get('/callbacks/naver/sign_in', async (request, response) => {
+    //Authentication Code 받아 돌려줄 api 
+    const redirect = `webauthcallback://success?${new url.URLSearchParams(request.query).toString()}`;
+    console.log(`Redirecting to ${redirect}`);
+    response.redirect(307, redirect);
+  })
+
+  app.post('/callbacks/naver/token', async (request, response) => {
+    //발급 받은 kakao AccessCode로 사용자 확인후 firebase 로 custom token 생성하기 위한 api
+    naver_auth.createFirebaseToken(request.body["accessToken"],(resulst)=>{
+      response.send(resulst);
+    });
+  })
   
 
 
@@ -2741,6 +2824,7 @@ module.exports = function (app) {
 
   connection.once('open', () => {
     console.log('MongoDB database connection established successfully!');
+
   });
 
   connection.on('error', (err) => {
