@@ -56,6 +56,7 @@
         <input placeholder="비밀번호486확인" class="rounded-0 form-control" id="cvMatWPassword" type="password" name="user[passwordConfirmation]" value="">
         <div id="cvErrPasswordConfirmation" class="message"></div>
         <input placeholder="너이름" class="cvRequired rounded-0 form-control" type="text" name="user[nickname]" cvRqErrMsg="이름을 입력해주세요." cvRqErrTo="#cvErrNickname" value="<%= formData?formData.nickname:"" %>">
+        <input type="hidden" name="user[nameAdmin]" value="true" />
         <div id="cvErrNickname" class="message"><%= nicknameError?nicknameError:"" %></div>
         <button class="w-100 h-120 btn btn-sm btn-primary rounded-0" type="submit">회원가입</button>
     </div>

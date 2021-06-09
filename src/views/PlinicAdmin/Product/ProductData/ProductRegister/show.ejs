@@ -76,6 +76,7 @@
         action="/qna/<%=post._id%>/comments?<%= urlQuery %>" method="post">
         <input type="hidden" name="id" value="<%=post._id%>" /> <!-- 관리자가 댓글을 작성할시에 푸시 알림 클릭시 해당 창으로 이동 할 수 있도록 조치-->
         <input type="hidden" name="pushtoken" value="<%=post.pushtoken%>" /> <!-- 관리자가 댓글을 작성할시에 푸시 알림이 가도록 설정 -->
+        <input type="hidden" name="comment[isDelete]" value=false />
         <textarea class="cvRequired" type="text" name="comment[body]"
           cvRqErrMsg="comments is empty." cvRqErrTo="#cvErrTitle" <%= user?"":"disabled" %>
           placeholder="<%= user?"Add comment here":"로그인 한 후 문의하기 댓글을 작성해주세요.." %>"></textarea>

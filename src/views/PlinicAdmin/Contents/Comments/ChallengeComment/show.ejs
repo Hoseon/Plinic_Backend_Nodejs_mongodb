@@ -107,24 +107,28 @@
                       <% if(!post[0].rebody.length == 0) { %>
                       ⤷&nbsp;<%=post[0].rebody%>
                       <%// if(user && user.equals(post.author._id)) { %>
-                      <% if(user) { %>
                           <%// console.log(user._id) %>
-                          <% console.log(post[0]._id) %>
-                          <% console.log(post[0].recommentId) %>
-                          <form class="float_right" method="post"
-                            action="/challengeComments/<%= post[0]._id %>/recomments/<%= post[0].recommentId %>?_method=delete&<%= urlQuery %>">
+                          <!-- <form class="float_right" method="post"
+                            action="/challengeComments/<%=// post[0]._id %>/recomments/<%=// post[0].recommentId %>?_method=delete&<%=// urlQuery %>">
                             <button type="button" class="w-15 m-1 btn btn-danger btn-sm"
                               onclick="confirm('답글을 삭제하겠습니까?')?this.parentElement.submit():null;">
                               x
                             </button>
+                          </form> -->
+                          <form class="float_right" method="post"
+                            action="/challengeComments/<%= post[0]._id %>/recomments/<%= post[0].recommentId %>">
+                            <input type="hidden" name="recomments[body]" value="<%= post[0].rebody %>"/>
+                            <input type="hidden" name="recomments[isDelete]" value="true" />
+                            <button type="submit" class="w-15 m-1 btn btn-danger btn-sm">
+                              x
+                            </button>
                           </form>
-                      <% } %>
                       <% } %>
                     </div>
                   </div>
                   <form action="/challengeComments/recomments/<%=post[0]._id%>" method="post">
                     <input type="hidden" name="post[email]" value="<%=user.email%>" />
-                    <input type="hidden" name="post[isDelete]" value=false />
+                    <input type="hidden" name="recomments[isDelete]" value=false />
                     <input type="hidden" name="post[commentId]" value="<%=post[0].commentId%>" />
                     <div class="form-floating">
                       <textarea name="post[body]" c lass="form-control" placeholder="Leave a comment here" id="floatingTextarea2" style="height: 100px"></textarea>

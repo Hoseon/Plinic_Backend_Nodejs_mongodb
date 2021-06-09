@@ -200,40 +200,51 @@
                                                                 <td colspan="5">There is no data to show :(</td>
                                                             </tr>
                                                         <% } %>
+                                                            <%// if(commentCount) %>
+                                                            <%//console.log(commentCount)%>
+                                                        
                                                         <% carezone.forEach(function(post){ %>
-                                                            <% if(post.comments) { %>
-                                                                <% post.comments.forEach(function(comment){ %>
-                                                                <tr onclick="window.location = '/challengeComments/comments/<%= post._id%>/<%= comment._id%>?<%= urlQuery %>'">
+                                                            <%console.log(post)%>
+                                                            <%// if(post.comments) { %>
+                                                                <%// post.comments.forEach(function(comment){ %>
+                                                                <tr onclick="window.location = '/challengeComments/comments/<%= post._id%>/<%= post.comments._id%>?<%= urlQuery %>'">
                                                                     <td><%= post.numId %></td>
                                                                     <td class="text-center" data-highlight="<%= search.highlight.title %>">
                                                                         [<%= post.title %>]
                                                                     </td>
-                                                                    <td style="max-width: 100px;" class="text-truncate align-middle" ><%= comment.comment %></td>
-                                                                    <td><%= comment.email %></td>
-                                                                    <td><%= post.getFormattedDate(comment.updatedAt) %></td>
+                                                                    <td style="max-width: 100px;" class="text-truncate align-middle" ><%= post.comments.comment %></td>
+                                                                    <td><%= post.comments.email %></td>
+                                                                    <td><%=// post.getFormattedDate(post.comments.updatedAt) %>
+                                                                        <%= post.comments.updatedAt %>
+                                                                    </td>
                                                                     <td></td>
                                                                     <td class="center">
                                                                         <input type="checkbox" class="form-check-input" id="exampleCheck1">
                                                                     </td>
                                                                 </tr>
 
-                                                                <% if(comment.recomments) { %>
-                                                                    <% comment.recomments.forEach(function(recomments) { %>
+                                                                <%// if(comment.recomments) { %>
+                                                                    <% post.comments.recomments.forEach(function(recomments) { %><!-- console.log 결과 recomments는 [] 배열로 이루어져 있어서 forEach가 가능함 -->
+                                                                        <% if(recomments.isDelete === false) { %>
                                                                     <tr>
+                                                                        <%// console.log(post.comments[0]) %>
                                                                         <td colspan="4"><pre>⤷&nbsp;<%= recomments.body %></pre></td>
-                                                                        <td class="text-center"><%= post.getFormattedDate(recomments.createdAt) %></td>
+                                                                        <td class="text-center"><%=// post.getFormattedDate(recomments.createdAt) %>
+                                                                            <%= recomments.createdAt %>
+                                                                        </td>
                                                                         <td></td>
                                                                         <td class="center">
                                                                             <input type="checkbox" class="form-check-input" id="exampleCheck1">
                                                                         </td>
                                                                     </tr>
+                                                                    <% } %>
                                                                     <% }) %>
-                                                                <% } %>
+                                                                <%// } %>
 
 
-                                                                <% }) %>
+                                                                <%// }) %>
 
-                                                            <% } %>
+                                                            <%// } %>
                                                         <% }) %>
                                                     </tbody>
                                                 </table>

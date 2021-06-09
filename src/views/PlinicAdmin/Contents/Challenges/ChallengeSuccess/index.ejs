@@ -42,6 +42,7 @@
                             <th scope="col">시작날짜</th>
                             <!--                                <th scope="col">종료날짜</th>-->
                             <th scope="col">받는사람(고객명)</th>
+                            <th scope="col">받는사람 이메일</th>
                             <th scope="col">송장번호</th>
                         </tr>
                         </thead>
@@ -70,6 +71,7 @@
                                 <td class="align-middle"><%= post.getFormattedDate(post.createdAt) %></td>
                                 <!--                                        <td class="align-middle"></td>-->
                                 <td class="align-middle"><%= post.name %></td>
+                                <td class="align-middle"><%= post.email %></td>
                                 <td class="align-middle"></td>
                             </tr>
                         <% }) %>

@@ -82,6 +82,156 @@ const sftpconfig = {
   user: "g1partners1",
   password: "g100210!!"
 };
+router.get("/test", function (req, res) {
+  Carezone.aggregate([
+    {$unwind: '$comments'},
+    // { $group: { _id: "$comments._id" } },
+    {$project : {
+      // _id: '$comments._id',
+      seq:0,
+      // _id:1,
+      // 'comments._id': 1,
+      // 'comments' : "$comments"
+    }},
+    {$sort : 
+      {'comments.updatedAt': -1}
+  }
+  ],function(err, count) {
+    if(err) {
+      console.log(err);
+    }
+    if(count) {
+      console.log(count);
+      res.json(count);
+    }
+  })
+});
+
+// router.get('/', function (req, res) {
+//   var vistorCounter = null;
+//   var page = Math.max(1, req.query.page) > 1 ? parseInt(req.query.page) : 1;
+//   var limit = Math.max(1, req.query.limit) > 1 ? parseInt(req.query.limit) : 7;
+//   var search = createSearch(req.query);
+//   async.waterfall([
+//     function (callback) {
+//     CarezoneCounter.findOne({
+//       name: "carezone"
+//     }, function (err, counter) {
+//       if (err) callback(err);
+//       vistorCounter = counter;
+//       callback(null);
+//     });
+//   }, 
+  
+//   function (callback) {
+//     if (!search.findUser) return callback(null);
+//     User_admin.find(search.findUser, function (err, users) {
+//       if (err) callback(err);
+//       var or = [];
+//       users.forEach(function (user) {
+//         or.push({
+//           author: mongoose.Types.ObjectId(user._id)
+//         });
+//       });
+//       if (search.findPost.$or) {
+//         search.findPost.$or = search.findPost.$or.concat(or);
+//       } else if (or.length > 0) {
+//         search.findPost = {
+//           $or: or
+//         };
+//       }
+//       callback(null);
+//     });
+//   }, 
+
+
+//   function (callback) { 
+//     // if (!search.findUser) return callback(null);
+//     Carezone.aggregate([
+//       {$unwind: '$comments'},
+//       {$project : {
+//         _id:0,
+//         // 'comments' : "$comments"
+//       }},
+//       {$sort : 
+//         {'comments.updatedAt': -1}
+//     }
+//     ],function(err, commentCount) {
+//       if(err) callback(err);
+      
+//         // for(var i = 0; commentCount > i; i ++) {
+//         //   console.log(commentCount[i]);
+//         //   var last = commentCount[i].comments.updatedAt
+//         // }
+
+//         // console.log(last);
+        
+//         // var last = commentCount
+//         // var countLenght = count.comments
+//         // var commentCount = [];
+        
+//         // res.json(count);
+//         callback(null);
+
+//       // callback(null);
+//     });
+//   },
+  
+//   function (callback) {
+//     if (search.findUser && !search.findPost.$or) return callback(null, null, null, 0);
+//     Carezone.count(search.findPost, function (err, count) {
+//       if (err) callback(err);
+//       skip = (page - 1) * limit;
+//       maxPage = Math.ceil(count / limit);
+//       callback(null, skip, maxPage);
+//     });
+//   }, 
+  
+//   function (skip, maxPage, callback) {
+//     // if(Carezone.comments) {
+//     if (search.findUser && !search.findPost.$or) return callback(null, null, [], 0);
+
+//     Carezone.find(search.findPost)
+    
+
+//     // .populate("author")
+//     // .sort({"comments.updatedAt": -1 })
+//     // .sort({"commentCount": -1, "seq": -1})
+//     // .sort({commentCount: -1})
+//     // carezone.comments.sort(sortFunction())
+//     .skip(skip)
+//     .limit(limit)
+//     .exec(function (err, carezone, commentCount) {
+//       if (err) callback(err);
+//       callback(null, carezone, maxPage, commentCount);
+//     });
+
+//   // }
+
+//   }
+// ], 
+// function (err, carezone, maxPage, commentCount) {
+//     if (err) return res.json({
+//       success: false,
+//       message: err
+//     });
+//     return res.render("PlinicAdmin/Contents/Comments/ChallengeComment/index", {
+//       commentCount: commentCount,
+//       carezone: carezone,
+//       user: req.user,
+//       page: page,
+//       maxPage: maxPage,
+//       urlQuery: req._parsedUrl.query,
+//       search: search,
+//       counter: vistorCounter,
+//       postsMessage: req.flash("postsMessage")[0]
+//     });
+//   }); // )
+// }); // new index
+
+
+
+
 
 
 router.get('/', function (req, res) {
@@ -89,7 +239,8 @@ router.get('/', function (req, res) {
   var page = Math.max(1, req.query.page) > 1 ? parseInt(req.query.page) : 1;
   var limit = Math.max(1, req.query.limit) > 1 ? parseInt(req.query.limit) : 7;
   var search = createSearch(req.query);
-  async.waterfall([function (callback) {
+  async.waterfall([
+    function (callback) {
     CarezoneCounter.findOne({
       name: "carezone"
     }, function (err, counter) {
@@ -97,7 +248,9 @@ router.get('/', function (req, res) {
       vistorCounter = counter;
       callback(null);
     });
-  }, function (callback) {
+  }, 
+  
+  function (callback) {
     if (!search.findUser) return callback(null);
     User_admin.find(search.findUser, function (err, users) {
       if (err) callback(err);
@@ -116,21 +269,58 @@ router.get('/', function (req, res) {
       }
       callback(null);
     });
-  }, function (callback) {
-    if (search.findUser && !search.findPost.$or) return callback(null, null, 0);
+  }, 
+
+  
+  function (callback) {
+    if (search.findUser && !search.findPost.$or) return callback(null, null, null, 0);
     Carezone.count(search.findPost, function (err, count) {
       if (err) callback(err);
       skip = (page - 1) * limit;
       maxPage = Math.ceil(count / limit);
       callback(null, skip, maxPage);
     });
-  }, function (skip, maxPage, callback) {
+  }, 
+  
+  function (skip, maxPage, callback) {
     if (search.findUser && !search.findPost.$or) return callback(null, [], 0);
-    Carezone.find(search.findPost).sort({ "seq": 1 }).populate("author").sort({ "seq": 1, "updatedAt": -1 }).skip(skip).limit(limit).exec(function (err, carezone) {
+    Carezone.aggregate([
+      // { $match: { _id : mongoose.Types.ObjectId(req.params.id)}},
+      {$unwind: '$comments'},
+      // { $match: { "comments._id": mongoose.Types.ObjectId(req.params.commentId) } },
+      // { $match: { "comments._id": "$comments._id" } },
+      {$project : {
+        // _id: '$comments._id',
+        // _id: 0,
+        seq: 0,
+        // '$comments._id':1,
+        // 'comments' : "$comments"
+        
+      }},
+      // {$group: {_id: '$comments._id'}}, 
+      {$sort : 
+        {'comments.updatedAt': -1}
+    }
+    ],function (err, carezone) {
       if (err) callback(err);
       callback(null, carezone, maxPage);
     });
-  }], function (err, carezone, maxPage) {
+    // console.log(comments)
+    // Carezone.find(search.findPost)
+    // // .populate("author")
+    // // .sort({"comments.updatedAt": -1 })
+    // // .sort({"commentCount": -1, "seq": -1})
+    // .sort({commentCount: -1})
+    // .skip(skip)
+    // .limit(limit)
+    // .exec(function (err, carezone) {
+    //   if (err) callback(err);
+    //   callback(null, carezone, maxPage);
+    // }
+    // );
+  }
+], 
+function (err, carezone, maxPage) {
     if (err) return res.json({
       success: false,
       message: err
@@ -145,8 +335,11 @@ router.get('/', function (req, res) {
       counter: vistorCounter,
       postsMessage: req.flash("postsMessage")[0]
     });
-  });
+  }); // )
 }); // new index
+
+
+
 
 router.post('/', s3upload.fields([
   { name: 'image' }, { name: 'homeimage' }, { name: 'challenge_image1' }, { name: 'challenge_image2' }, { name: 'challenge_image3' }, { name: 'challenge_image4' }, { name: 'challenge_image5' }]), isLoggedIn, function (req, res, next) {
@@ -296,6 +489,7 @@ router.get("/comments/:id/:commentId", function (req, res) {
   Carezone.aggregate([
     { $match: { _id : mongoose.Types.ObjectId(req.params.id)}},
     { $unwind: "$comments" },
+    // { $sort: { "comments.updatedAt": -1 }},
     { $match: { "comments._id": mongoose.Types.ObjectId(req.params.commentId) } },
     { "$project": {
         _id: "$comments._id",
@@ -357,32 +551,51 @@ router.post('/recomments/:id/', function (req, res) {
   });
 }); //create a recomment
 
-router.delete('/:id/recomments/:recommentId', function(req, res) {
+// router.delete('/:id/recomments/:recommentId', function(req, res) {
   
-  Carezone.findOneAndRemove({
-    // "comments._id" : req.params.id
-    _id : req.params.id
-  //  "comments.recomments._id" : req.params.recommentId
-  }, {
-    $pull: {
-      recomments: {
-        _id: req.params.recommentId
-        // "recomments._id" : req.params.recommentId
+//   Carezone.findOneAndRemove({
+//     // "comments._id" : req.params.id
+//     _id : req.params.id
+//   //  "comments.recomments._id" : req.params.recommentId
+//   }, {
+//     $pull: {
+//       recomments: {
+//         _id: req.params.recommentId
+//         // "recomments._id" : req.params.recommentId
+//       }
+//     }
+//   },
+//   function(err, post) {
+//     console.log(post);
+//     if(err) {
+//       console.log(err);
+//       return res.json({
+//         success: false,
+//         message: err
+//       });
+//     } 
+//     // res.redirect('/challengeComments/comments/' + req.params.commentId + '/' + req.params.recommentId + "?" + req._parsedUrl.query.replace(/_method=(.*?)(&|$)/ig, ""));
+//     res.redirect('/challengeComments/' + "?" + req._parsedUrl.query.replace(/_method=(.*?)(&|$)/ig, ""));
+//   });
+// }); //대댓글 삭제
+
+router.post('/:id/recomments/:recommentId', function (req, res) {
+  console.log(req.body);
+  Carezone.findOneAndUpdate(
+    {
+      // _id: '60b6fa0c0a2b3bdacf8227f9',
+      "comments.recomments._id": req.params.recommentId
+    },
+    {
+      $set: {
+        "comments.$.recomments": req.body.recomments
       }
-    }
-  },
-  function(err, post) {
-    console.log(post);
-    if(err) {
-      console.log(err);
-      return res.json({
-        success: false,
-        message: err
-      });
-    } 
-    // res.redirect('/challengeComments/comments/' + req.params.commentId + '/' + req.params.recommentId + "?" + req._parsedUrl.query.replace(/_method=(.*?)(&|$)/ig, ""));
-    res.redirect('/challengeComments/' + "?" + req._parsedUrl.query.replace(/_method=(.*?)(&|$)/ig, ""));
-  });
+    },
+    req.body,
+    function (err, recomments) {
+      console.log(recomments);
+      res.redirect('/challengeComments/');
+    });
 }); //대댓글 삭제
 
 
@@ -686,5 +899,11 @@ function getFormattedDate(date) {
 function get2digits(num) {
   return ("0" + num).slice(-2);
 }
+
+function sortFunction(a,b){  
+  var dateA = a.updatedAt.getTime();
+  var dateB = b.updatedAt.getTime();
+  return dateB >dateA  ? 1 : -1;  
+};
 
 

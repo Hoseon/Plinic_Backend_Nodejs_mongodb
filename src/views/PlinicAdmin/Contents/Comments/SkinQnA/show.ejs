@@ -123,27 +123,37 @@
                         <div class="panel-body">
                           <% if(comment.recomments) { %>
                             <%comment.recomments.forEach(function(recomments) { %>
-                              <div class="recomment">
-                                <div class="top">
-                                  답글 작성자 : <b><%= recomments.email %></b>
-                                  (작성일 : <span><%= post.getFormattedDate(recomments.createdAt) %> , 
-                                  <%= post.getFormattedTime(recomments.createdAt) %> )</span>
-                                  <form class="float_right" method="post"
-                                        action="/skinqnaComments/<%= post._id %>/recomments/<%= recomments._id %>">
-                                        <!-- <input type="hidden" name="recomments[email]" value="<%=// user.email %>"/> -->
-                                        <!-- <input type="hidden" name="recomments[recommentId]" value="<%=//recomments._id%>" /> -->
-                                        <input type="hidden" name="recomments[isDelete]" value="true" />
-                                    <button type="submit" class="w-15 m-1 btn btn-danger btn-sm">
-                                      x
-                                    </button>
-                                  </form>
+                              <% if(recomments.isDelete === false) { %>
+                                <div class="recomment">
+                                  <div class="top">
+                                    답글 작성자 : 
+                                    <% if(user.nameAdmin === false) { %>
+                                    <b>
+                                      <%= recomments.email %>
+                                    </b>
+                                    <% } else if(user.nameAdmin === true) { %>
+                                    <b>
+                                      관리자
+                                    </b>
+                                    <% } %>
+                                    (작성일 : <span><%= post.getFormattedDate(recomments.createdAt) %> , 
+                                    <%= post.getFormattedTime(recomments.createdAt) %> )</span>
+                                    <form class="float_right" method="post"
+                                          action="/skinqnaComments/<%= post._id %>/recomments/<%= recomments._id %>">
+                                          <input type="hidden" name="recomments[email]" value="<%= user.email %>"/>
+                                          <input type="hidden" name="recomments[body]" value="<%= recomments.body %>"/>
+                                          <!-- <input type="hidden" name="recomments[recommentId]" value="<%=//recomments._id%>" /> -->
+                                          <input type="hidden" name="recomments[isDelete]" value="true" />
+                                      <button type="submit" class="w-15 m-1 btn btn-danger btn-sm">
+                                        x
+                                      </button>
+                                    </form>
+                                  </div>
+                                  <div class="body">
+                                    <pre><%= recomments.body %></pre>
+                                  </div>
                                 </div>
-                                <div class="body">
-                                  <pre><%= recomments.body %></pre>
-                                </div>
-                              </div>
-
-
+                              <% } %>
                             <% }) %>
                           <% } %>
                         </div>

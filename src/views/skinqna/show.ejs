@@ -77,6 +77,7 @@
           <% } %>
           <form class="addComment checkValidation" action="/skinqna/<%=post._id%>/comments?<%= urlQuery %>"
             method="post">
+            <input type="hidden" name="comment[isDelete]" value=false />
             <textarea class="cvRequired" type="text" name="comment[body]" cvRqErrMsg="comments is empty."
               cvRqErrTo="#cvErrTitle" <%= user?"":"disabled" %>
               placeholder="<%= user?"Add comment here":"Please login to make a comment" %>"></textarea>
