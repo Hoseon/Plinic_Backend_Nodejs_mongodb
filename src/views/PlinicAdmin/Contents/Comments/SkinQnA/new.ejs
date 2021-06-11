@@ -11,6 +11,7 @@
     $(document).ready(function () {
         $(".active").removeClass("active");
         $("#contents").addClass("active");
+        $("#forms-collapse2").addClass('show');
     });
 </script>
 <title>Hello, world!</title>
@@ -40,14 +41,33 @@
                         <div class="col-lg-12">
                             <div class="panel panel-default">
                                 <div class="panel-heading">
-                                    내용보기
+                                    피부고민 등록
                                 </div>
                                 <br>
                                 <form action="" method="post" enctype="multipart/form-data">
                                     <div class="form-group row">
-                                        <label class="col-sm-2 text-center control-label" for="name">제목</label>
+                                        <label class="col-sm-2 text-center control-label" for="name">베스트고민 등록 여부</label>
+                                        <div class="col-sm-3 controls">
+                                            <input class="form-check-input" type="checkbox" id="inlineCheckbox1"
+                                                value="true" name="post[editor]">
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-sm-2 text-center control-label" for="name">피부고민 분류</label>
+                                        <div class="col-sm-2 controls">
+                                            <select name="post[select]" class="form-select"
+                                                    aria-label="Default select example" cvRqErrMsg="제목을 입력 주세요." cvRqErrTo="#cvErrTitle">
+                                                <option value="[이벤트]">[이벤트]</option>
+                                                <option value="[공지]">[공지]</option>
+                                                <option value="[점검]">[점검]</option>
+                                                <option value="[장애]">[장애]</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-sm-2 text-center control-label" for="name">피부고민 제목</label>
                                         <div class="col-sm-10 controls">
-                                            <input name="name" id="name" class="form-control" value=""
+                                            <input name="post[title]" id="name" class="form-control" value=""
                                                 data-validate="data">
                                         </div>
                                     </div>

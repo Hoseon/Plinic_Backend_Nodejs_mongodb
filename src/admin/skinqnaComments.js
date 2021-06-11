@@ -1,8 +1,8 @@
 var express = require("express");
 var router = express.Router();
 var mongoose = require("mongoose");
-var Qna = require("../models/Qna");
-var QnaCounter = require("../models/QnaCounter");
+var SkinQna = require("../models/SkinQna");
+var SkinQnaCounter = require("../models/SkinQnaCounter");
 var Carezone = require("../models/Carezone");
 var CarezoneCounter = require("../models/CarezoneCounter");
 var async = require("async");
@@ -83,24 +83,19 @@ const sftpconfig = {
   password: "g100210!!"
 };
 
-router.get("/Main", function (req, res) {
-  return res.render("PlinicAdmin/Contents/Main/index", {});
-});
-//콘텐츠관리 메인 화면
+router.get('/', function (req, res) {
+  // var newPost = req.body.post;
+  // var commentSum = newPost.comments.length;
+  // var recommentSum = newPost.comments.recomments.length;
+  // var sum = commentSum + recommentSum
 
-router.get("/Challenge", function (req, res) {
-  return res.render("PlinicAdmin/Contents/ChallengeMgt/index", {});
-});
-//콘텐츠관리 챌린지 화면
-
-router.get('/Challenge/newIndex', function (req, res) {
   var vistorCounter = null;
   var page = Math.max(1, req.query.page) > 1 ? parseInt(req.query.page) : 1;
   var limit = Math.max(1, req.query.limit) > 1 ? parseInt(req.query.limit) : 7;
   var search = createSearch(req.query);
   async.waterfall([function (callback) {
-    CarezoneCounter.findOne({
-      name: "carezone"
+    SkinQnaCounter.findOne({
+      name: "skinqna"
     }, function (err, counter) {
       if (err) callback(err);
       vistorCounter = counter;
@@ -127,7 +122,7 @@ router.get('/Challenge/newIndex', function (req, res) {
     });
   }, function (callback) {
     if (search.findUser && !search.findPost.$or) return callback(null, null, 0);
-    Carezone.count(search.findPost, function (err, count) {
+    SkinQna.count(search.findPost, function (err, count) {
       if (err) callback(err);
       skip = (page - 1) * limit;
       maxPage = Math.ceil(count / limit);
@@ -135,17 +130,23 @@ router.get('/Challenge/newIndex', function (req, res) {
     });
   }, function (skip, maxPage, callback) {
     if (search.findUser && !search.findPost.$or) return callback(null, [], 0);
-    Carezone.find(search.findPost).sort({ "seq": 1 }).populate("author").sort({ "seq": 1, "updatedAt": -1 }).skip(skip).limit(limit).exec(function (err, carezone) {
+    SkinQna.find(search.findPost)
+    .populate("author")
+    .sort({ editor: -1 , "createdAt": -1})
+    .skip(skip)
+    .limit(limit)
+    .exec(function (err, skinqna) {
       if (err) callback(err);
-      callback(null, carezone, maxPage);
+      callback(null, skinqna, maxPage);
     });
-  }], function (err, carezone, maxPage) {
+  }], function (err, skinqna, maxPage) {
     if (err) return res.json({
       success: false,
       message: err
     });
-    return res.render("PlinicAdmin/Contents/ChallengeMgt/index", {
-      carezone: carezone,
+    return res.render("PlinicAdmin/Contents/Comments/SkinQna/index", {
+      skinqna: skinqna,
+      // sum: sum,
       user: req.user,
       page: page,
       maxPage: maxPage,
@@ -155,122 +156,102 @@ router.get('/Challenge/newIndex', function (req, res) {
       postsMessage: req.flash("postsMessage")[0]
     });
   });
-}); // new index
+}); // 피부고민 게시판 화면
 
-
-router.get("/Challenge/new", function (req, res) {
-  return res.render("PlinicAdmin/Contents/ChallengeMgt/new", {});
-});
-//콘텐츠관리 챌린지 신규 등록 화면
-
-router.post('/Challenge/', s3upload.fields([
-  { name: 'image' }, { name: 'homeimage' }, { name: 'challenge_image1' }, { name: 'challenge_image2' }, { name: 'challenge_image3' }, { name: 'challenge_image4' }, { name: 'challenge_image5' }]), isLoggedIn, function (req, res, next) {
-    async.waterfall([function (callback) {
-      CarezoneCounter.findOne({
-        name: "carezone"
-      }, function (err, counter) {
-        if (err) callback(err);
-        if (counter) {
+router.post('/', s3upload.fields([{
+  name: 'image'
+}]), function(req, res, next) {
+  async.waterfall([function(callback) {
+    SkinQnaCounter.findOne({
+      name: "skinqna"
+    }, function(err, counter) {
+      if (err) callback(err);
+      if (counter) {
+        callback(null, counter);
+      } else {
+        SkinQnaCounter.create({
+          name: "skinqna",
+          totalCount: 0
+        }, function(err, counter) {
+          if (err) return res.json({
+            success: false,
+            message: err
+          });
           callback(null, counter);
-        } else {
-          CarezoneCounter.create({
-            name: "carezone",
-            totalCount: 0
-          }, function (err, counter) {
-            if (err) return res.json({
-              success: false,
-              message: err
-            });
-            callback(null, counter);
+        });
+      }
+    });
+  }], function(callback, counter) {
+    let newNote = SkinQna();
+    newNote.email = req.body.email;
+    newNote.select = req.body.select;
+    newNote.title = req.body.title;
+    newNote.contents = req.body.contents;
+    newNote.pushtoken = req.body.pushtoken;
+    newNote.tags = JSON.stringify(req.body.tags).replace(/\"/g, "").replace(/\\/g, "").replace(/\[/g, "").replace(/\]/g, "");
+    newNote.numId = counter.totalCount + 1;
+    newNote.filename = req.files['image'][0].key;
+    newNote.originalName = req.files['image'][0].originalname;
+    newNote.save((err, data) => {
+      if (err) {
+        console.log(err);
+        return res.status(400).json({
+          'msg': '뷰티노트가 등록되지 않았습니다. <br /> Error : ' + err
+        });
+      }
+      
+      if (data) {
+        var isReview = false;
+        for (var i = 0; i < data.point.length; i++) {
+          if (getFormattedDate(data.point[i].createdAt) == getFormattedDate(new Date())) {
+            if (data.point[i].reason == '뷰티플 글쓰기 작성') {
+              // console.log(getFormattedDate(data.point[i].createdAt) + " : " + getFormattedDate(new Date()));
+              isReview = true;
+            }
+          } 
+        }
+
+        if (isReview) { //오늘 톡을 작성한게 있다면 포인트 적립 없이 진행
+          console.log("뷰티플 글쓰기 작성은 되었으나 포인트는 적립되지 않음");
+        } else { //오늘 톡을 작성한게 있다면 포인트 적립 진행
+          PointLog.update({
+            email: req.body.email
+          }, {
+              $push: { point: prePointLog },
+              $inc: { "totalPoint": 50 }
+            }, (err, result) => {
+              if (err) {
+                console.log("글쓰기 포인트 적립 에러 발생 : " + req.body.email);
+                res.status(400).json();
+              }
+              if (result) {
+                // res.status(200).json(result);
+              } else {
+                console.log("글쓰기 포인트 적립 에러 발생 2 : " + req.body.email);
+                res.status(400).json();
+              }
           });
         }
-      });
-    }], function (callback, counter) {
-      var newPost = req.body.post;
-      newPost.author = req.user._id;
-      newPost.numId = counter.totalCount + 1;
-      req.body.post.filename = req.files['image'][0].key;
-      req.body.post.originalName = req.files['image'][0].originalname;
-      req.body.post.homeimage_filename = req.files['homeimage'][0].key;
-      req.body.post.homeimage_originalname = req.files['homeimage'][0].originalname;
-      // req.body.post.prodfilename = req.files['prodimage'][0].key;
-      // req.body.post.prodoriginalname = req.files['prodimage'][0].originalname;
-      req.body.post.challenge_image1_filename = req.files['challenge_image1'][0].key;
-      req.body.post.challenge_image1_originalname = req.files['challenge_image1'][0].originalname;
+      }
+      var newTags = req.body.tags.replace(/\"/g, "").replace(/\\/g, "").replace(/\[/g, "").replace(/\]/g, "");
+      Tags.update({
+        _id: '5d2c39cc9cc12aae489d2f08'
+      }, {
+        $push: {
+          tags: newTags
+        }
+      }, function(err, post2) {
 
-      if (req.files['challenge_image2']) {
-        req.body.post.challenge_image2_filename = req.files['challenge_image2'][0].key;
-        req.body.post.challenge_image2_originalname = req.files['challenge_image2'][0].originalname;
-      }
-      if (req.files['challenge_image3']) {
-        req.body.post.challenge_image3_filename = req.files['challenge_image3'][0].key;
-        req.body.post.challenge_image3_originalname = req.files['challenge_image3'][0].originalname;
-      }
-      if (req.files['challenge_image4']) {
-        req.body.post.challenge_image4_filename = req.files['challenge_image4'][0].key;
-        req.body.post.challenge_image4_originalname = req.files['challenge_image4'][0].originalname;
-      }
-      if (req.files['challenge_image5']) {
-        req.body.post.challenge_image5_filename = req.files['challenge_image5'][0].key;
-        req.body.post.challenge_image5_originalname = req.files['challenge_image5'][0].originalname;
-      }
-      Carezone.create(req.body.post, function (err, post) {
-        if (err) return res.json({
-          success: false,
-          message: err
-        });
-        counter.totalCount++;
-        counter.save();
-        res.redirect('/contents/Challenge/newIndex');
-      });
+      })
+      return res.status(201).json(data);
     });
-  }); // create
-
-router.delete('/Challenge/:id', isLoggedIn, function (req, res, next) {
-  console.log(req);
-  Carezone.findOneAndRemove({
-    _id: req.params.id,
-    // author: req.user._id
-  }, function (err, post) {
-    if (err) return res.json({
-      success: false,
-      message: err
-    });
-    if (!post) return res.json({
-      success: false,
-      message: "No data found to delete"
-    });
-    var params = {
-      Bucket: 'plinic',
-      Delete: { // required
-        Objects: [ // required
-          { Key: post.filename },
-          { Key: post.prodfilename },
-          { Key: post.homeimage },
-          { Key: post.challenge_image1_filename },
-          { Key: post.challenge_image2_filename },
-          { Key: post.challenge_image3_filename },
-          { Key: post.challenge_image4_filename },
-          { Key: post.challenge_image5_filename }
-        ]
-      }
-    };
-    s3.deleteObjects(params, function (err, data) {
-      console.log()
-      if (err) {
-        console.log("케어존 수정 아마존 파일 삭제 에러 : " + "err : " + err);
-        res.status(500);
-      }
-      else console.log("케어존 수정 이전 파일 삭제 완료 : " + JSON.stringify(data));
-    });
-    res.redirect('/contents/Challenge/newIndex');
   });
-}); //destroy
+  });
 
-router.get("/Challenge/:id", function (req, res) {
-  Carezone.findById(req.params.id)
+router.get('/:id', function(req, res) {
+  SkinQna.findById(req.params.id)
     .populate(['author', 'comments.author'])
-    .exec(function (err, post) {
+    .exec(function(err, post) {
       if (err) return res.json({
         success: false,
         message: err
@@ -280,161 +261,112 @@ router.get("/Challenge/:id", function (req, res) {
 
       //배너 이미지 가져 오기 20190502
       //res.setHeader('Content-Type', 'image/jpeg');
+      // var url = req.protocol + '://' + req.get('host') + '/skinqnaimage/' + post._id;
       var url = 'https://plinic.s3.ap-northeast-2.amazonaws.com/' + post.filename;
-      var prod_url = 'https://plinic.s3.ap-northeast-2.amazonaws.com/' + post.prodfilename;
-      var homeImage = 'https://plinic.s3.ap-northeast-2.amazonaws.com/' + post.homeimage_filename;
-      var challenge_url1 = 'https://plinic.s3.ap-northeast-2.amazonaws.com/' + post.challenge_image1_filename;
-      var challenge_url2 = 'https://plinic.s3.ap-northeast-2.amazonaws.com/' + post.challenge_image2_filename;
-      var challenge_url3 = 'https://plinic.s3.ap-northeast-2.amazonaws.com/' + post.challenge_image3_filename;
-      var challenge_url4 = 'https://plinic.s3.ap-northeast-2.amazonaws.com/' + post.challenge_image4_filename;
-      var challenge_url5 = 'https://plinic.s3.ap-northeast-2.amazonaws.com/' + post.challenge_image5_filename;
+      // var url = req.protocol + '://' + 'plinic.cafe24app.com' + '/skinqnaimage/' + post._id;
+      // var prod_url = req.protocol + '://' + req.get('host') + '/skinqna_prodimages/' + post._id;
       //fs.createReadStream(path.join(__dirname, '../uploads/', post.filename)).pipe(res);
-      // console.log(post.day);
-      res.render("PlinicAdmin/Contents/ChallengeMgt/show", {
+      res.render("PlinicAdmin/Contents/Comments/SkinQna/show", {
         post: post,
         url: url,
-        prod_url: prod_url,
-        homeImage: homeImage,
-        challenge_url1: challenge_url1,
-        challenge_url2: challenge_url2,
-        challenge_url3: challenge_url3,
-        challenge_url4: challenge_url4,
-        challenge_url5: challenge_url5,
+        // sum: sum,
+        // prod_url: prod_url,
         urlQuery: req._parsedUrl.query,
         user: req.user,
         search: createSearch(req.query)
       });
     });
-});
-//콘텐츠관리 챌린지 Show
+}); // 피부고민 게시판 상세 화면
 
-router.get('/Challenge/:id/edit', isLoggedIn, function (req, res) {
-  Carezone.findById(req.params.id, function (err, post) {
-    // var url = req.protocol + '://' + req.get('host') + '/carezone_images/' + post._id;
-    var url = 'https://plinic.s3.ap-northeast-2.amazonaws.com/' + post.filename;
-    // var prod_url = req.protocol + '://' + req.get('host') + '/prod_images/' + post._id;
-    var prod_url = 'https://plinic.s3.ap-northeast-2.amazonaws.com/' + post.prodfilename;
-    // var challenge_url1 = req.protocol + '://' + req.get('host') + '/challenge_image1/' + post._id;
-    var homeImage = 'https://plinic.s3.ap-northeast-2.amazonaws.com/' + post.homeimage_filename;
-
-    var challenge_url1 = 'https://plinic.s3.ap-northeast-2.amazonaws.com/' + post.challenge_image1_filename;
-    // var challenge_url2 = req.protocol + '://' + req.get('host') + '/challenge_image2/' + post._id;
-    var challenge_url2 = 'https://plinic.s3.ap-northeast-2.amazonaws.com/' + post.challenge_image2_filename;
-    // var challenge_url3 = req.protocol + '://' + req.get('host') + '/challenge_image3/' + post._id;
-    var challenge_url3 = 'https://plinic.s3.ap-northeast-2.amazonaws.com/' + post.challenge_image3_filename;
-    // var challenge_url4 = req.protocol + '://' + req.get('host') + '/challenge_image4/' + post._id;
-    var challenge_url4 = 'https://plinic.s3.ap-northeast-2.amazonaws.com/' + post.challenge_image4_filename;
-    // var challenge_url5 = req.protocol + '://' + req.get('host') + '/challenge_image5/' + post._id;
-    var challenge_url5 = 'https://plinic.s3.ap-northeast-2.amazonaws.com/' + post.challenge_image5_filename;
-
-    var prefilename = post.filename; //이전 파일들은 삭제
-    var preoriginalName = post.originalName; //이전 파일들은 삭제
-
-    var preprodfilename = post.prodfilename;
-    var preprodoriginalname = post.prodoriginalname;
-
-    var homeimage_filename = post.homeimage_filename;
-    var homeimage_originalname = post.homeimage_originalname;
-
-    var pre_challenge1_filename = post.challenge_image1_filename;
-    var pre_challenge1_originalfilename = post.challenge_image1_originalname;
-
-    var pre_challenge2_filename = post.challenge_image2_filename;
-    var pre_challenge2_originalfilename = post.challenge_image2_originalname;
-
-    var pre_challenge3_filename = post.challenge_image3_filename;
-    var pre_challenge3_originalfilename = post.challenge_image3_originalname;
-
-    var pre_challenge4_filename = post.challenge_image4_filename;
-    var pre_challenge4_originalfilename = post.challenge_image4_originalname;
-
-    var pre_challenge5_filename = post.challenge_image5_filename;
-    var pre_challenge5_originalfilename = post.challenge_image5_originalname;
-
+router.post('/:id/comments', function(req, res) {
+  var newComment = req.body.comment;
+  newComment.author = req.user._id;
+  SkinQna.findOneAndUpdate({
+    _id: req.params.id
+  }, {
+    $push: {
+      comments: newComment
+    }
+  }, function(err, post) {
     if (err) return res.json({
       success: false,
       message: err
     });
-    // if (!req.user._id.equals(post.author)) return res.json({
-    //   success: false,
-    //   message: "Unauthrized Attempt"
-    // });
-    res.render("PlinicAdmin/Contents/ChallengeMgt/edit", {
-      post: post,
-      prefilename: prefilename,
-      preoriginalName: preoriginalName,
-      preprodfilename: preprodfilename,
-      preprodoriginalname: preprodoriginalname,
-      prehomeimage_filename: homeimage_filename,
-      prehomeimage_originalname: homeimage_originalname,
-      pre_challenge1_filename: pre_challenge1_filename,
-      pre_challenge1_originalname: pre_challenge1_originalfilename,
-      pre_challenge2_filename: pre_challenge2_filename,
-      pre_challenge2_originalname: pre_challenge2_originalfilename,
-      pre_challenge3_filename: pre_challenge3_filename,
-      pre_challenge3_originalname: pre_challenge3_originalfilename,
-      pre_challenge4_filename: pre_challenge4_filename,
-      pre_challenge4_originalname: pre_challenge4_originalfilename,
-      pre_challenge5_filename: pre_challenge5_filename,
-      pre_challenge5_originalname: pre_challenge5_originalfilename,
-      url: url,
-      prod_url: prod_url,
-      homeImage: homeImage,
-      challenge_url1: challenge_url1,
-      challenge_url2: challenge_url2,
-      challenge_url3: challenge_url3,
-      challenge_url4: challenge_url4,
-      challenge_url5: challenge_url5,
-      user: req.user
-    });
+    res.redirect('/skinqnaComments/' + req.params.id + "?" + req._parsedUrl.query);
   });
-}); // 콘텐츠관리 챌린지 edit
+}); //댓글 작성
 
-router.put('/Challenge/:id', s3upload.fields([{
-  name: 'image'
-}, {
-  name: 'prodimage'
-}, {
-  name: 'homeimage'
-}, {
-  name: 'challenge_image1'
-}, {
-  name: 'challenge_image2'
-}, {
-  name: 'challenge_image3'
-}, {
-  name: 'challenge_image4'
-}, {
-  name: 'challenge_image5'
-}]), isLoggedIn, function (req, res, next) {
-  req.body.post.updatedAt = Date.now();
-  req.body.post.filename = req.files['image'][0].key;
-  req.body.post.originalName = req.files['image'][0].originalname;
-  // req.body.post.prodfilename = req.files['prodimage'][0].key;
-  // req.body.post.prodoriginalname = req.files['prodimage'][0].originalname;
-  req.body.post.homeimage_filename = req.files['homeimage'][0].key;
-  req.body.post.homeimage_originalname = req.files['homeimage'][0].originalname;
-  req.body.post.challenge_image1_filename = req.files['challenge_image1'][0].key;
-  req.body.post.challenge_image1_originalname = req.files['challenge_image1'][0].originalname;
+router.post('/:commentId/:id/recomments/', function(req, res) {
+  // console.log(req.body);
+  var newComment = req.body.recomments;
+  SkinQna.findOneAndUpdate({
+    "comments._id" : req.params.commentId 
+  }, {
+    $push: {
+      "comments.$.recomments" : newComment
+    }
+  }, function(err, post) {
+    if (err) return res.json({
+      success: false,
+      message: err
+    });
+    // return res.status(201).json({
+    //   'msg': '커뮤니티 작성 포인트가 누적되었습니다!!'
+    // });
+    res.redirect('/skinqnaComments/' + req.params.id + "?" + req._parsedUrl.query);
+  });
+}); // 대댓글 작성
 
-  if (req.files['challenge_image2']) {
-    req.body.post.challenge_image2_filename = req.files['challenge_image2'][0].key;
-    req.body.post.challenge_image2_originalname = req.files['challenge_image2'][0].originalname;
-  }
-  if (req.files['challenge_image3']) {
-    req.body.post.challenge_image3_filename = req.files['challenge_image3'][0].key;
-    req.body.post.challenge_image3_originalname = req.files['challenge_image3'][0].originalname;
-  }
+router.post('/:id/recomments/:recommentId', function (req, res) {
+  console.log(req.body);
+  SkinQna.findOneAndUpdate(
+    {
+      // _id: '60b6fa0c0a2b3bdacf8227f9',
+      "comments.recomments._id": req.params.recommentId
+    },
+    {
+      $set: {
+        "comments.$.recomments": req.body.recomments
+      }
+    },
+    req.body,
+    function (err, recomments) {
+      console.log(recomments);
+      res.redirect('/skinqnaComments/' + req.params.id + "?" + req._parsedUrl.query);
+    });
+}); //대댓글 삭제
 
-  if (req.files['challenge_image4']) {
-    req.body.post.challenge_image4_filename = req.files['challenge_image4'][0].key;
-    req.body.post.challenge_image4_originalname = req.files['challenge_image4'][0].originalname;
-  }
+// router.get('/skinCommentDel', function(req, res) {
+//   //var carezonelist = null;
+//   async.waterfall([function(callback) {
+//     SkinQna.find({
+//       'comments.recomments.isDelete': false
+//     }, function(err, docs) {
+//       res.json(docs);
+//     })
+//   }]);
+// }); //대댓글 isDelete 필드 false일 때만 보여주기
 
-  if (req.files['challenge_image5']) {
-    req.body.post.challenge_image5_filename = req.files['challenge_image5'][0].key;
-    req.body.post.challenge_image5_originalname = req.files['challenge_image5'][0].originalname;
-  }
+router.post("/test", function (req, res) {
+  SkinQna.find(
+    {
+      // "comments.recomments._id": "60c054ac180b5f136d24a502",
+      "comments.$.recomments": req.body.recomments,
+      'comments.recomments.isDelete': false
+    },
+     function (err, docs) {
+      if (err) {
+        console.log(err);
+      }
+      if (docs) {
+        console.log(docs);
+        res.json(docs);
+      }
+    })
+});
+
+
+router.post('/:id/editorUpdate', function (req, res, next) {
 
   var params = {
     Bucket: 'plinic',
@@ -446,35 +378,12 @@ router.put('/Challenge/:id', s3upload.fields([{
         {
           Key: req.body.preprodfilename // required
         },
-        {
-          Key: req.body.pre_challenge1_filename // required
-        },
-        {
-          Key: req.body.pre_challenge2_filename // required
-        },
-        {
-          Key: req.body.pre_challenge3_filename // required
-        },
-        {
-          Key: req.body.pre_challenge4_filename // required
-        },
-        {
-          Key: req.body.pre_challenge5_filename // required
-        },
-        {
-          Key: req.body.pre_challenge5_filename // required
-        },
 
       ]
     }
   };
   s3.deleteObjects(params, function (err, data) {
-    if (err) {
-      console.log("케어존 수정 아마존 파일 삭제 에러 : " + req.body.prefilename + "err : " + err);
-      res.status(500);
-    }
-    else console.log("케어존 수정 이전 파일 삭제 완료 : " + JSON.stringify(data));
-    Carezone.findOneAndUpdate({
+    SkinQna.findOneAndUpdate({
       _id: req.params.id,
       // author: req.user._id
     }, req.body.post, function (err, post) {
@@ -486,56 +395,35 @@ router.put('/Challenge/:id', s3upload.fields([{
         success: false,
         message: "No data found to update"
       });
-      res.redirect('/contents/Challenge/' + req.params.id);
+      res.redirect('/skinqnaComments/');
     });
   });
-}); //update
+}); //베스트고민 update
 
-router.put('/Challenge/SeqUpdate/:id', isLoggedIn, function (req, res, next) {
-  // console.log(req.params.id);
-  // console.log(req.body);
-  // console.log(req.body.seq[0]);
-  req.body.seq = req.body.seq[0];
-  req.body.updatedAt = Date.now();
-  Carezone.findOneAndUpdate({
-    _id: req.body.seqNumberId[0],
-  }, req.body, function (err, post) {
+router.delete('/del/:id', isLoggedIn, function(req, res, next) {
+  SkinQna.findOneAndRemove({
+    _id: req.params.id,
+    // author: req.user._id
+  }, function(err, post) {
     if (err) return res.json({
       success: false,
       message: err
     });
-    if (!post) return res.json({
-      success: false,
-      message: "No data found to update"
+    var params = {
+      Bucket: 'plinic',
+      Delete: { // required
+      }
+    };
+    s3.deleteObjects(params, function(err, data){
+      if(err) {
+        console.log("케어존 수정 아마존 파일 삭제 에러 : " + "err : " + err);
+        res.status(500);
+      }
+      else console.log("케어존 수정 이전 파일 삭제 완료 : " + JSON.stringify(data));
     });
-    res.redirect('/contents/Challenge/newIndex');
+    res.redirect('/skinqnaComments/');
   });
-});
-
-router.get("/Comments/SkinQna", function (req, res) {
-  return res.render("PlinicAdmin/Contents/Comments/SkinQna/index", {});
-});
-//피부고민 게시판 리스트 화면
-
-router.get("/Comments/SkinQna/show", function (req, res) {
-  return res.render("PlinicAdmin/Contents/Comments/SkinQna/show", {});
-});
-//피부고민 게시판 상세 화면
-
-router.get("/Comments/SkinQna/new", function (req, res) {
-  return res.render("PlinicAdmin/Contents/Comments/SkinQna/new", {});
-});
-//피부고민 게시판 답변 화면
-
-router.get("/Comments/SkinQna/edit", function (req, res) {
-  return res.render("PlinicAdmin/Contents/Comments/SkinQna/edit", {});
-});
-//피부고민 게시판 수정 화면
-
-router.get("/", function (req, res) {
-  return res.render("PlinicAdmin/bootstraptest/index", {});
-});
-// index
+}); //게시글 삭제
 
 function isLoggedIn(req, res, next) {
   if (req.isAuthenticated()) {
@@ -567,13 +455,13 @@ function createSearch(queries) {
       });
       highlight.title = queries.searchText;
     }
-    if (searchTypes.indexOf("body") >= 0) {
+    if (searchTypes.indexOf("email") >= 0) {
       postQueries.push({
-        body: {
+        email: {
           $regex: new RegExp(queries.searchText, "i")
         }
       });
-      highlight.body = queries.searchText;
+      highlight.email = queries.searchText;
     }
     if (searchTypes.indexOf("author!") >= 0) {
       findUser = {

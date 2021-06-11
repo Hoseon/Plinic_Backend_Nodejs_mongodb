@@ -10,11 +10,15 @@ var beautyMovieSchema = mongoose.Schema({
     email: {type:String},
     body: {type:String},
     createdAt: {type:Date, default:Date.now},
+    isDelete: {type: Boolean, default: false}, //true일 경우 삭제(가려짐)
+    nameAdmin: {type: Boolean, default: true}, //관리자 페이지에서 쓰면 true로 넘겨서 이메일 대신 '관리자'로 보이게끔
     recomments: [{ //대댓글
       body: {type:String},
       email: {type:String},
       parent_id: {type:String},
-      createdAt: {type:Date, default:Date.now}
+      createdAt: {type:Date, default:Date.now},
+      isDelete: {type: Boolean, default: false}, //true일 경우 삭제(가려짐)
+      nameAdmin: {type: Boolean, default: true}, //관리자 페이지에서 쓰면 true로 넘겨서 이메일 대신 '관리자'로 보이게끔
     }],
   }],
   createdAt: {type:Date, default:Date.now},

@@ -88,7 +88,7 @@
                       <td class="text-left" class="text-left">121.161.30.211</td>
                       <th class="text-center" width="250">챌린지 제목</th>
                       <td width="400" class="text-left" data-highlight="<%= search.highlight.title %>">
-                        <%= post[0].title %>
+                        <%= post.title %>
                       </td>
                     </tr>
                     <tr>
@@ -96,21 +96,63 @@
                         <%= post.contents %>
                       </td>
                     </tr>
+
                     <% } %>
                 </table>
+
                 <div class="comments">
-                  <%=post[0].comment%>
+                  <pre><%=post[0].comment%></pre>
+                  <% post.forEach(function(recomments) { %>
+                    <%// console.log(recomments) %> <!-- post.recomments를 콘솔에 찍어봄 -> rebody, reDelete 같이 내가 필요한 필드가 배열로 되어있는 것을 확인 -->
+                    <div class="recomments">
+                      <table class="table-bordered table table-striped table-hover">
+                      <thead>
+                          <tr>
+                              <th class="text-center">답글</th>
+                          </tr>
+                      </thead>
+                        <% recomments.rebody.forEach(function(rebody) { %> <!-- recomments안에 배열로 되어있는 rebody를 forEach로 풀어준다. -->
+                        <%// recomments.reDelete.forEach(function(reDelete) { %> <!-- recomments.reDelete도 풀어준다. -->
+                        <%// recomments.recommentId.forEach(function(recommentId) { %>
+                          <%// if(recomments.reDelete === false) { %>
+                          <tbody>
+                          <td>⤷&nbsp;<%=rebody%> <!-- forEach된 rebody를 풀어준다. -->
+                            <% console.log(rebody) %>
+                            <form class="float_right" method="post"
+                              action="/challengeComments/<%= post[0]._id %>/recomments/<%= recomments.recommentId %>">
+                              <input type="hidden" name="recomments[body]" value="<%= rebody %>"/>
+                              <input type="hidden" name="recomments[isDelete]" value="true" />
+                              <button type="submit" class="w-15 m-1 btn btn-danger btn-sm">
+                                x
+                              </button>
+                            </form>
+                          </td>
+                        </tbody>
+                        <%// } %>
+                        <%// }) %>
+                        <%// }) %>
+                        <% }) %>
+                      </table>
+                    </div>
+                  <% }) %>
                   <form action="/challengeComments/recomments/<%=post[0]._id%>" method="post">
                     <input type="hidden" name="post[email]" value="<%=user.email%>" />
+                    <input type="hidden" name="post[isDelete]" value=false />
+                    <input type="hidden" name="post[nameAdmin]" value="true" />
                     <input type="hidden" name="post[commentId]" value="<%=post[0].commentId%>" />
                     <div class="form-floating">
-                      <textarea name="post[body]" class="form-control" placeholder="Leave a comment here" id="floatingTextarea2" style="height: 100px"></textarea>
+                      <textarea name="post[body]" c lass="form-control" placeholder="Leave a comment here" id="floatingTextarea2" style="height: 100px"></textarea>
                       <label for="floatingTextarea2">관리자 댓글 달기</label>
                     </div>
                     <button type="submit">댓글 저장</button>
                     <div id="cvErrTitle" class="message"></div>
                   </form>
                 </div>
+
+
+
+
+
               </div>
             </div>
           </div>
