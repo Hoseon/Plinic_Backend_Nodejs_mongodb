@@ -102,22 +102,39 @@
 
                 <div class="comments">
                   <pre><%=post[0].comment%></pre>
-                  <div class="recomments">
-                    <div class="panel-body">
-                      <%// if(!post[0].rebody.length == 0) { %>
-                      <% if(post[0].reDelete[0] === false) { %> <!-- reDelete도 배열로 되어있기에 [0]으로 배열안까지 들어감 -->
-                      ⤷&nbsp;<%=post[0].rebody%>
-                          <form class="float_right" method="post"
-                            action="/challengeComments/<%= post[0]._id %>/recomments/<%= post[0].recommentId %>">
-                            <input type="hidden" name="recomments[body]" value="<%= post[0].rebody %>"/>
-                            <input type="hidden" name="recomments[isDelete]" value="true" />
-                            <button type="submit" class="w-15 m-1 btn btn-danger btn-sm">
-                              x
-                            </button>
-                          </form>
-                      <% } %>
+                  <% post.forEach(function(recomments) { %>
+                    <%// console.log(recomments) %> <!-- post.recomments를 콘솔에 찍어봄 -> rebody, reDelete 같이 내가 필요한 필드가 배열로 되어있는 것을 확인 -->
+                    <div class="recomments">
+                      <table class="table-bordered table table-striped table-hover">
+                      <thead>
+                          <tr>
+                              <th class="text-center">답글</th>
+                          </tr>
+                      </thead>
+                        <% recomments.rebody.forEach(function(rebody) { %> <!-- recomments안에 배열로 되어있는 rebody를 forEach로 풀어준다. -->
+                        <%// recomments.reDelete.forEach(function(reDelete) { %> <!-- recomments.reDelete도 풀어준다. -->
+                        <%// recomments.recommentId.forEach(function(recommentId) { %>
+                          <%// if(recomments.reDelete === false) { %>
+                          <tbody>
+                          <td>⤷&nbsp;<%=rebody%> <!-- forEach된 rebody를 풀어준다. -->
+                            <% console.log(rebody) %>
+                            <form class="float_right" method="post"
+                              action="/challengeComments/<%= post[0]._id %>/recomments/<%= recomments.recommentId %>">
+                              <input type="hidden" name="recomments[body]" value="<%= rebody %>"/>
+                              <input type="hidden" name="recomments[isDelete]" value="true" />
+                              <button type="submit" class="w-15 m-1 btn btn-danger btn-sm">
+                                x
+                              </button>
+                            </form>
+                          </td>
+                        </tbody>
+                        <%// } %>
+                        <%// }) %>
+                        <%// }) %>
+                        <% }) %>
+                      </table>
                     </div>
-                  </div>
+                  <% }) %>
                   <form action="/challengeComments/recomments/<%=post[0]._id%>" method="post">
                     <input type="hidden" name="post[email]" value="<%=user.email%>" />
                     <input type="hidden" name="post[isDelete]" value=false />

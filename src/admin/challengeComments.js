@@ -206,6 +206,7 @@ function (err, carezone, maxPage) {
       urlQuery: req._parsedUrl.query,
       search: search,
       counter: vistorCounter,
+      // commentsDate: getFormattedDate(carezone.comments.updatedAt),
       postsMessage: req.flash("postsMessage")[0]
     });
   }); // )
@@ -362,7 +363,6 @@ router.get("/comments/:id/:commentId", function (req, res) {
   Carezone.aggregate([
     { $match: { _id : mongoose.Types.ObjectId(req.params.id)}},
     { $unwind: "$comments" },
-    // { $sort: { "comments.updatedAt": -1 }},
     { $match: { "comments._id": mongoose.Types.ObjectId(req.params.commentId) } },
     { "$project": {
         _id: "$comments._id",
@@ -374,14 +374,17 @@ router.get("/comments/:id/:commentId", function (req, res) {
         commentId: req.params.id,
         rebody: "$comments.recomments.body",
         reDelete: "$comments.recomments.isDelete",
-        // recommentId: "$comments.recomments.parent_id",
         recommentId: "$comments.recomments._id",
-        // recommentId: req.params.recommentId
-        // re_id: req.params.recommentId
       }
-    }
-    // { $unwind: "$comments" },
-
+    },
+  //    { $group: "$recomments" },
+  //    { $match: { "recomments._id": mongoose.Types.ObjectId(req.params.recommentId) } },
+  //    { "$project": {
+  //     rebody: "$recomments.body",
+  //     reDelete: "$recomments.isDelete",
+  //     recommentId: "$recomments._id",
+  //   }
+  // }
   ])
     .exec(function (err, post) {
       if (err) return res.json({

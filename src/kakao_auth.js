@@ -69,10 +69,13 @@ function createFirebaseToken(kakaoAccessToken,callback) {
 
   Async.waterfall([
     (next)=>{
-      requestMe(kakaoAccessToken,(error,response,boy)=>{
+      requestMe(kakaoAccessToken, (error, response, boy) => {
+        console.log("111111");
         console.log(response)
-        const body =response // JSON.parse(response)
+        const body = response // JSON.parse(response)
+        console.log("22222222");        
         console.log(body)
+        console.log("33333333");        
         const userId = `kakao:${body.id}`
         if (!userId) {
           return response.status(404)
@@ -104,28 +107,39 @@ function createFirebaseToken(kakaoAccessToken,callback) {
       });
     },
     (userRecord, next) => {
+      console.log("4444444");
       console.log(userRecord.email);
+      console.log("5555555555");
       admin.auth().getUserByEmail(userRecord.email).then((userRecord)=>{
         next(null,userRecord);
-      }).catch((error)=>{
+      }).catch((error) => {
+        console.log("6666666666");
         console.log(error);
+        console.log("77777777777");
         admin.auth().createUser(userRecord).then((user)=>{
           next(null,user)
         })
       })
     },
     (userRecord, next) => {
+      console.log("88888888888");
       console.log(userRecord);
+      console.log("999999999999");
       console.log("**************");
+      console.log("1001010101010101010");
       const userId = userRecord.uid
       console.log(`creating a custom firebase token based on uid ${userId}`)
-      admin.auth().createCustomToken(userId, {provider: 'KAKAO'}).then((result)=>{
+      admin.auth().createCustomToken(userId, { provider: 'KAKAO' }).then((result) => {
+        console.log("111111-111111-11111");
         console.log(result);  
+        console.log("2222222-22222222-2222222");
         next(null , result);
       });
     }
-  ],(err, results) => {
+  ], (err, results) => {
+    console.log("33333333333-33333333333-33333333");
       console.log(results)
+      console.log("44444444-4444444444444-444444444444444");
       callback(results);
   });
 
