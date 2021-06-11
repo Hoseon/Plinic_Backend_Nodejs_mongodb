@@ -10,7 +10,8 @@ var beautySchema = mongoose.Schema({
     body: {type:String, required:true},
     author: {type:mongoose.Schema.Types.ObjectId, ref:'user_admin', required:true},
     createdAt: {type:Date, default:Date.now},
-    isDelete: {type: Boolean, default: false},
+    isDelete: {type: Boolean, default: false}, //true일 경우 삭제(가려짐)
+    nameAdmin: {type: Boolean, default: true}, //관리자 페이지에서 쓰면 true로 넘겨서 이메일 대신 '관리자'로 보이게끔
   }],
   createdAt: {type:Date, default:Date.now},
   updatedAt: Date,

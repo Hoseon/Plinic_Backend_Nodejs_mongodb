@@ -160,6 +160,7 @@
                         <div class="panel-body">
                           <form action="/skinqnaComments/<%= comment._id %>/<%= post._id %>/recomments/" method="post">
                             <input type="hidden" name="recomments[isDelete]" value=false />
+                            <input type="hidden" name="recomments[nameAdmin]" value="true" />
                             <input type="hidden" name="recomments[email]" value="<%= user.email %>"/>
                             <input type="hidden" name="id" value="<%=post._id%>" />
                             <textarea class="cvRequired" type="text" name="recomments[body]" cvRqErrMsg="comments is empty."
@@ -176,6 +177,7 @@
                   <form action="/skinqnaComments/<%= post._id %>/comments?<%= urlQuery %>" method="post">
                     <!-- <input type="hidden" name="comment[commentId]" value="<%=// post.commentId %>"/> -->
                     <input type="hidden" name="comment[isDelete]" value=false />
+                    <input type="hidden" name="comment[nameAdmin]" value="true" />
                     <input type="hidden" name="comment[email]" value="<%= user.email %>" />
                     <textarea class="cvRequired" type="text" name="comment[comment]" cvRqErrMsg="comments is empty."
                       cvRqErrTo="#cvErrTitle"></textarea>

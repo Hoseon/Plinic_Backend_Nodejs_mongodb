@@ -167,7 +167,8 @@
                                       <input type="hidden" name="recomments[email]" value="<%= user.email %>" />
                                       <input type="hidden" name="id" value="<%=post._id%>" />
                                       <input type="hidden" name="pushtoken" value="<%= comment.pushtoken %>" />
-                                      <input type="hidden" name="comment[isDelete]" value=false />
+                                      <input type="hidden" name="recomments[isDelete]" value=false />
+                                      <input type="hidden" name="recomments[nameAdmin]" value="true" />
                                       <div class="col-8">
                                         <textarea type="text" name="recomments[body]" class="form-control" cvRqErrMsg="미션 성공자에게 푸시 알림을 보냅니다."
                                           cvRqErrTo="#cvErrTitle" <%= user?"":"disabled" %> 
@@ -196,6 +197,7 @@
                           <div class="row">
                             <input type="hidden" name="comment[email]" value="<%= user.email %>" />
                             <input type="hidden" name="comment[isDelete]" value=false />
+                            <input type="hidden" name="comment[nameAdmin]" value="true" />
                             <!-- <input type="hidden" name="id" value="<%=//post._id%>" /> -->
                             <!-- <input type="hidden" name="pushtoken" value="<%=// post.pushtoken %>" /> -->
                             <div class="col-8">

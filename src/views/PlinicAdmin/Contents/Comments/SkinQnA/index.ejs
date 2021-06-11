@@ -134,100 +134,119 @@
                             <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne"
                                 data-bs-parent="#accordionExample">
                                 <div class="accordion-body">
-
-                                    <div class="admin_top_info">
-                                        0 항목, 1/1 페이지
-                                    </div>
-                                    <!-- <form role="form" action="/comments" method="post"
-                                    enctype="multipart/form-data"> -->
-                                    <div class="admin_search_container">
-                                        <input type="hidden" name="table" value="notice">
-                                        <input type="hidden" name="mode" value="">
-                                        <input type="hidden" name="pg" value="">
-                                        <select name="opr">
-                                            <option value="vsubject">제목</option>
-                                            <option value="vname">작성자</option>
-                                            <option value="vcontent">내용</option>
-                                        </select>
-                                        <input type="text" name="keyword" size="15" value="">
-                                        <input type="submit" value="검색" class="btn btn-primary">
-                                    </div>
-                                    <div class="panel-body" style="padding-top:0px;padding-bottom:15px;">
-                                        <div class="table-responsive dataTables_wrapper form-inline">
-                                            <table
-                                                class="table table-bordered  table-condensed table-hover  text-center">
-                                                <thead>
-                                                    <tr>
-                                                        <th class="text-center">제목</th>
-                                                        <th class="text-center">작성자</th>
-                                                        <th class="text-center">작성일</th>
-                                                        <th class="text-center">좋아요</th>
-                                                        <th class="text-center">조회수</th>
-                                                        <th class="text-center">베스트고민 등록</th>
-                                                        <th class="text-center"></th>
-                                                    </tr>
-                                                </thead>
-                                                <% if(skinqna == null || skinqna.length == 0){ %>
-                                                    <tr class="noData">
-                                                        <td colspan="5">There is no data to show :(</td>
-                                                    </tr>
-                                                <% } %>
-                                                <% skinqna.forEach(function(post){ %>
-                                                <tbody>
-                                                    <tr>
-                                                        <td onclick="window.location = '/skinqnaComments/<%= post._id %>?<%= urlQuery %>'">
-                                                            [<%= post.select %>] [<%= post.title %>]
-                                                            <span class="comments">(<%= post.comments.length %>)</span>
-                                                            <%=// console.log(sum) %>
-                                                        </td>
-                                                        <td class="text-center" onclick="window.location = '/skinqnaComments/<%= post._id %>?<%= urlQuery %>'"><%= post.email %></td>
-                                                        <td><%= post.getFormattedDate(post.createdAt) %></td>
-                                                        <td><%= post.like %></td>
-                                                        <td><%= post.views %></td>
-                                                        <form action="/skinqnaComments/<%= post._id %>/editorUpdate" method="post" name="formname">
-                                                            <td>
-                                                                <% if(post.editor == false) { %>
-                                                                    <label class="col-md-3 text-left">등록&nbsp;</label>
-                                                                    <input class="form-check-input" type="checkbox" value=true
-                                                                        name="post[editor]">
-                                                                    <br>
-                                                                    <div>/</div>
-                                                                    <label class="col-md-3 text-left">해제</label>
-                                                                    <input class="form-check-input" type="checkbox" value=false disabled
-                                                                        name="post[editor]">
-                                                                <% } else if(post.editor == true) { %>
-                                                                    <label class="col-md-3 text-left">등록&nbsp;</label>
-                                                                    <input class="form-check-input" type="checkbox" value=true disabled
-                                                                        name="post[editor]">
-                                                                    <br>
-                                                                    <div>/</div>
-                                                                    <label class="col-md-3 text-left">해제</label>
-                                                                    <input class="form-check-input" type="checkbox" value=false
-                                                                        name="post[editor]">
-                                                                <% } %>
+                                    <table class="table-bordered table table-striped table-hover">
+                                        <form class="checkValidation" action="/skinqnaComments/" id="search">
+                                            <tr>
+                                                <th class="text-center" style="padding-top: 15px;">검색 조건</th>
+                                                <td colspan="3">
+                                                    <div class="row g-4 align-self-center">
+                                                        <div class="col-2">
+                                                            <select class="form-select" aria-label="Default select example" name="searchType" <%= search.searchType=="author!"?"disabled":"" %>>
+                                                                <% var select %>
+                                                                <option value="title,email"
+                                                                <%= search.searchType=="title,email"?select="selected":"" %>>제목+작성자</option>
+                                                                <option value="title"
+                                                                <%= search.searchType=="title"?select="selected":"" %>>제목</option>
+                                                                <option value="email"
+                                                                <%= search.searchType=="email"?select="selected":"" %>>작성자</option>
+                                                                <%if(search.searchType=="author!"){%>
+                                                                <option value="author!"
+                                                                    <%= search.searchType=="author!"?select="selected":"" %>>Author</option>
+                                                                <%} else {%>
+                                                                <option value="author"
+                                                                    <%= search.searchType=="author"?select="selected":"" %>>Author</option>
+                                                                <%}%>
+                                                            </select>
+                                                        </div>
+                                                        <div class="col-5">
+                                                            <input class="cvMinLength" cvMinLength="2"
+                                                            cvMinLenErrTo="#searchError" style="float: left; width: 300px; height: 28px;"
+                                                            cvMinLenErrMsg="It should be at least 2 characters"
+                                                            type="text" name="searchText" value="<%= select?search.searchText:"" %>"
+                                                            <%= search.searchType=="author!"?"disabled":"" %>>
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                                <td rowspan="2">
+                                                    <div class="row justify-content-center">
+                                                        <div class="col-6 p-0 m-0">
+                                                            <button type="submit" id="btnSearch"  class="btn btn-info" <%= search.searchType=="author!"?"disabled":"" %>>검색</button>
+                                                        </div>
+                                                        <%if(search.searchType){%>
+                                                        <div class="col-6 p-0 m-0">
+                                                            <button type="button" class="btn btn-secondary" onclick="window.location = '/skinqnaComments?page=1'">취소</button>
+                                                        </div>
+                                                        <%}%>
+                                                        <div class="message" id="searchError"></div>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        </form>
+                                    </table>
+                                        <div class="panel-body" style="padding-top:0px;padding-bottom:15px;">
+                                            <div class="table-responsive dataTables_wrapper form-inline">
+                                                <table
+                                                    class="table table-bordered  table-condensed table-hover  text-center">
+                                                    <thead>
+                                                        <tr>
+                                                            <th class="text-center">제목</th>
+                                                            <th class="text-center">작성자</th>
+                                                            <th class="text-center">작성일</th>
+                                                            <th class="text-center">좋아요</th>
+                                                            <th class="text-center">조회수</th>
+                                                            <th class="text-center">베스트고민 등록</th>
+                                                            <th class="text-center"></th>
+                                                        </tr>
+                                                    </thead>
+                                                    <% if(skinqna == null || skinqna.length == 0){ %>
+                                                        <tr class="noData">
+                                                            <td colspan="5">There is no data to show :(</td>
+                                                        </tr>
+                                                    <% } %>
+                                                    <% skinqna.forEach(function(post){ %>
+                                                    <tbody>
+                                                        <tr>
+                                                            <td onclick="window.location = '/skinqnaComments/<%= post._id %>?<%= urlQuery %>'">
+                                                                [<%= post.select %>] [<%= post.title %>]
+                                                                <span class="comments">(<%= post.comments.length %>)</span>
+                                                                <%=// console.log(sum) %>
                                                             </td>
-                                                            <td class="center">
-                                                                <button type="submit" class="btn btn-info">변경</button>
-                                                            </td>
-                                                        </form>
-                                                    </tr>
-                                                </tbody>
-                                                <% }) %>
-                                            </table>
-
-                                            <!-- <div class="row">
-                                                <div class="col-md-4 d-grid gap-2 d-md-block">
-                                                    <button class="btn btn-primary float_left" type="button"
-                                                        onclick="location.href='/skinqnaComments/Comments/SkinQna/new'">작성</button>
-                                                    <form class="float_left" name="frmSubmit">
-                                                        <button class="btn btn-primary btn btn-danger"
-                                                            type="button" onclick="">삭제</button>
-                                                    </form>
-                                                </div>
-                                            </div> -->
+                                                            <td class="text-center" onclick="window.location = '/skinqnaComments/<%= post._id %>?<%= urlQuery %>'"><%= post.email %></td>
+                                                            <td><%= post.getFormattedDate(post.createdAt) %></td>
+                                                            <td><%= post.like %></td>
+                                                            <td><%= post.views %></td>
+                                                            <form action="/skinqnaComments/<%= post._id %>/editorUpdate" method="post" name="formname">
+                                                                <td>
+                                                                    <% if(post.editor == false) { %>
+                                                                        <label class="col-md-3 text-left">등록&nbsp;</label>
+                                                                        <input class="form-check-input" type="checkbox" value=true
+                                                                            name="post[editor]">
+                                                                        <br>
+                                                                        <div>/</div>
+                                                                        <label class="col-md-3 text-left">해제</label>
+                                                                        <input class="form-check-input" type="checkbox" value=false disabled
+                                                                            name="post[editor]">
+                                                                    <% } else if(post.editor == true) { %>
+                                                                        <label class="col-md-3 text-left">등록&nbsp;</label>
+                                                                        <input class="form-check-input" type="checkbox" value=true disabled
+                                                                            name="post[editor]">
+                                                                        <br>
+                                                                        <div>/</div>
+                                                                        <label class="col-md-3 text-left">해제</label>
+                                                                        <input class="form-check-input" type="checkbox" value=false
+                                                                            name="post[editor]">
+                                                                    <% } %>
+                                                                </td>
+                                                                <td class="center">
+                                                                    <button type="submit" class="btn btn-info">변경</button>
+                                                                </td>
+                                                            </form>
+                                                        </tr>
+                                                    </tbody>
+                                                    <% }) %>
+                                                </table>
+                                            </div>
                                         </div>
-                                    </div>
-                                    <!-- </form> -->
                                     <div class="row">
                                         <div class="col-auto me-auto"></div>
                                         <div class="col-auto">

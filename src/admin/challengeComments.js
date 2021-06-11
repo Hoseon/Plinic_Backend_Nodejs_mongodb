@@ -107,133 +107,6 @@ router.get("/test", function (req, res) {
   })
 });
 
-// router.get('/', function (req, res) {
-//   var vistorCounter = null;
-//   var page = Math.max(1, req.query.page) > 1 ? parseInt(req.query.page) : 1;
-//   var limit = Math.max(1, req.query.limit) > 1 ? parseInt(req.query.limit) : 7;
-//   var search = createSearch(req.query);
-//   async.waterfall([
-//     function (callback) {
-//     CarezoneCounter.findOne({
-//       name: "carezone"
-//     }, function (err, counter) {
-//       if (err) callback(err);
-//       vistorCounter = counter;
-//       callback(null);
-//     });
-//   }, 
-  
-//   function (callback) {
-//     if (!search.findUser) return callback(null);
-//     User_admin.find(search.findUser, function (err, users) {
-//       if (err) callback(err);
-//       var or = [];
-//       users.forEach(function (user) {
-//         or.push({
-//           author: mongoose.Types.ObjectId(user._id)
-//         });
-//       });
-//       if (search.findPost.$or) {
-//         search.findPost.$or = search.findPost.$or.concat(or);
-//       } else if (or.length > 0) {
-//         search.findPost = {
-//           $or: or
-//         };
-//       }
-//       callback(null);
-//     });
-//   }, 
-
-
-//   function (callback) { 
-//     // if (!search.findUser) return callback(null);
-//     Carezone.aggregate([
-//       {$unwind: '$comments'},
-//       {$project : {
-//         _id:0,
-//         // 'comments' : "$comments"
-//       }},
-//       {$sort : 
-//         {'comments.updatedAt': -1}
-//     }
-//     ],function(err, commentCount) {
-//       if(err) callback(err);
-      
-//         // for(var i = 0; commentCount > i; i ++) {
-//         //   console.log(commentCount[i]);
-//         //   var last = commentCount[i].comments.updatedAt
-//         // }
-
-//         // console.log(last);
-        
-//         // var last = commentCount
-//         // var countLenght = count.comments
-//         // var commentCount = [];
-        
-//         // res.json(count);
-//         callback(null);
-
-//       // callback(null);
-//     });
-//   },
-  
-//   function (callback) {
-//     if (search.findUser && !search.findPost.$or) return callback(null, null, null, 0);
-//     Carezone.count(search.findPost, function (err, count) {
-//       if (err) callback(err);
-//       skip = (page - 1) * limit;
-//       maxPage = Math.ceil(count / limit);
-//       callback(null, skip, maxPage);
-//     });
-//   }, 
-  
-//   function (skip, maxPage, callback) {
-//     // if(Carezone.comments) {
-//     if (search.findUser && !search.findPost.$or) return callback(null, null, [], 0);
-
-//     Carezone.find(search.findPost)
-    
-
-//     // .populate("author")
-//     // .sort({"comments.updatedAt": -1 })
-//     // .sort({"commentCount": -1, "seq": -1})
-//     // .sort({commentCount: -1})
-//     // carezone.comments.sort(sortFunction())
-//     .skip(skip)
-//     .limit(limit)
-//     .exec(function (err, carezone, commentCount) {
-//       if (err) callback(err);
-//       callback(null, carezone, maxPage, commentCount);
-//     });
-
-//   // }
-
-//   }
-// ], 
-// function (err, carezone, maxPage, commentCount) {
-//     if (err) return res.json({
-//       success: false,
-//       message: err
-//     });
-//     return res.render("PlinicAdmin/Contents/Comments/ChallengeComment/index", {
-//       commentCount: commentCount,
-//       carezone: carezone,
-//       user: req.user,
-//       page: page,
-//       maxPage: maxPage,
-//       urlQuery: req._parsedUrl.query,
-//       search: search,
-//       counter: vistorCounter,
-//       postsMessage: req.flash("postsMessage")[0]
-//     });
-//   }); // )
-// }); // new index
-
-
-
-
-
-
 router.get('/', function (req, res) {
   var vistorCounter = null;
   var page = Math.max(1, req.query.page) > 1 ? parseInt(req.query.page) : 1;
@@ -500,6 +373,7 @@ router.get("/comments/:id/:commentId", function (req, res) {
         updatedAt: "$comments.updatedAt",
         commentId: req.params.id,
         rebody: "$comments.recomments.body",
+        reDelete: "$comments.recomments.isDelete",
         // recommentId: "$comments.recomments.parent_id",
         recommentId: "$comments.recomments._id",
         // recommentId: req.params.recommentId
@@ -514,7 +388,6 @@ router.get("/comments/:id/:commentId", function (req, res) {
         success: false,
         message: err
       });
-      // console.log(post);
       // res.status(200).json(post);
       // console.log(post);
       res.render("PlinicAdmin/Contents/Comments/ChallengeComment/show", {
@@ -551,33 +424,6 @@ router.post('/recomments/:id/', function (req, res) {
   });
 }); //create a recomment
 
-// router.delete('/:id/recomments/:recommentId', function(req, res) {
-  
-//   Carezone.findOneAndRemove({
-//     // "comments._id" : req.params.id
-//     _id : req.params.id
-//   //  "comments.recomments._id" : req.params.recommentId
-//   }, {
-//     $pull: {
-//       recomments: {
-//         _id: req.params.recommentId
-//         // "recomments._id" : req.params.recommentId
-//       }
-//     }
-//   },
-//   function(err, post) {
-//     console.log(post);
-//     if(err) {
-//       console.log(err);
-//       return res.json({
-//         success: false,
-//         message: err
-//       });
-//     } 
-//     // res.redirect('/challengeComments/comments/' + req.params.commentId + '/' + req.params.recommentId + "?" + req._parsedUrl.query.replace(/_method=(.*?)(&|$)/ig, ""));
-//     res.redirect('/challengeComments/' + "?" + req._parsedUrl.query.replace(/_method=(.*?)(&|$)/ig, ""));
-//   });
-// }); //대댓글 삭제
 
 router.post('/:id/recomments/:recommentId', function (req, res) {
   console.log(req.body);
@@ -804,17 +650,6 @@ router.put('/Challenge/SeqUpdate/:id', isLoggedIn, function (req, res, next) {
   });
 });
 
-////////////////////////////////////// 게시판 댓글
-// router.get("/Comments/ChallengeComment", function(req, res) {
-//   return res.render("PlinicAdmin/Contents/Comments/ChallengeComment/index", {});
-// });
-//챌린지 댓글 리스트 화면
-
-// router.get("/Comments/ChallengeComment/show", function (req, res) {
-//   return res.render("PlinicAdmin/Contents/Comments/ChallengeComment/show", {});
-// });
-//챌린지 댓글 상세 화면
-
 function isLoggedIn(req, res, next) {
   if (req.isAuthenticated()) {
     return next();
@@ -846,18 +681,19 @@ function createSearch(queries) {
       highlight.title = queries.searchText;
     }
     if (searchTypes.indexOf("comment") >= 0) {
-      var comments = req.body.comment;
-      comment = comments.comment;
+      // var comments = req.body.comment;
+      // comment = comments.comment;
       postQueries.push({
-        comment: {
+        "comments.$.comment": {
           $regex: new RegExp(queries.searchText, "i")
         }
       });
       highlight.comment = queries.searchText;
     }
     if (searchTypes.indexOf("email") >= 0) {
-      var comments = req.body.comment;
-      email = comments.email;
+      // var comments = req.body.comments;
+      
+      // email = comments.email;
       postQueries.push({
         email: {
           $regex: new RegExp(queries.searchText, "i")
@@ -892,18 +728,19 @@ function createSearch(queries) {
   };
 }
 
-function getFormattedDate(date) {
-  return date.getFullYear() + "-" + get2digits(date.getMonth() + 1) + "-" + get2digits(date.getDate());
-};
-
 function get2digits(num) {
   return ("0" + num).slice(-2);
 }
 
-function sortFunction(a,b){  
-  var dateA = a.updatedAt.getTime();
-  var dateB = b.updatedAt.getTime();
-  return dateB >dateA  ? 1 : -1;  
+function getFormattedDate(date) {
+  return date.getFullYear() + "-" + get2digits(date.getMonth() + 1) + "-" + get2digits(date.getDate());
 };
+
+
+// function sortFunction(a,b){  
+//   var dateA = a.updatedAt.getTime();
+//   var dateB = b.updatedAt.getTime();
+//   return dateB >dateA  ? 1 : -1;  
+// };
 
 

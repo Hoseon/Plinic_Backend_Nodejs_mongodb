@@ -455,13 +455,13 @@ function createSearch(queries) {
       });
       highlight.title = queries.searchText;
     }
-    if (searchTypes.indexOf("body") >= 0) {
+    if (searchTypes.indexOf("email") >= 0) {
       postQueries.push({
-        body: {
+        email: {
           $regex: new RegExp(queries.searchText, "i")
         }
       });
-      highlight.body = queries.searchText;
+      highlight.email = queries.searchText;
     }
     if (searchTypes.indexOf("author!") >= 0) {
       findUser = {
