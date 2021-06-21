@@ -27,203 +27,133 @@
                     <div class="row">
                         <div class="col-md-12">
                             <h1 class="page-header">
-                                챌린지 관리
+                                챌린지 참여인원 관리
                                 <!-- <small> 챌린지 관리 Sub제목</small> -->
                             </h1>
                         </div>
                     </div>
+                    <%// challenge.forEach(function(post2){ %>
+                    <%// if(challenge.reward == false) { %>
+                        <!-- <div class="row g-4 align-items-left">
+                            <div class="col-2">
+                            현재 챌린지 참여 인원
+                                <span>
+                                    <%// console.log(post2.dailycheck.length) %>
+                                    (<%=// post2.dailycheck.length %>)명
+                                </span>
+                            </div>
+                        </div> -->
+                        <%// if(challenge) { %>
+                        <%// if(challenge.reward == false) { %>
+                        <!-- <tr class="noData">
+                            <td colspan="5">현재 챌린지 참여 인원
+                                <span class="dailycheck">(<%=// challenge.length %>)</span>
+                                <span class="dailycheck">(<%=// challenge.reward %>)</span>
+                                <%// console.log(challenge) %>
+                            </td>
+                          </tr> -->
+                        <%// } %>
+                        <%// } %>
+                    <%// } %>
+                    <%// }) %>
+
+                        <form class="checkValidation" action="/challengeOngoing/" id="search">
+                            <%// if(typeof testSearch.findAfter == "undefined" || testSearch.findAfter == null || testSearch.findAfter == "") {%>
+                            
+                            <%// } else { %>
+                                <div class="row g-4 align-self-center">
+                                    <div class="col-2">
+                                        <input type="hidden" class="form-check-input" name="termCheck[weeklyy]" 
+                                            value="true" id="inlineCheckbox2" <%// if(testSearch.findAfter.weeklyy)  %>/>
+                                    </div>
+                                </div>
+                            <%// } %>
+                                <!-- <div class="row justify-content-center">
+                                    <div class="col-12">
+                                        <button type="submit" id="btnSearch"  class="btn btn-info" <%=// search.searchType=="author!"?"disabled":"" %>>확인</button>
+                                    </div>
+                                </div> -->
+                        </form>
+
                     <div class="table-responsive">
                         <table class="table table-striped table-bordered table-image text-center" id="table-1">
                             <thead>
                                 <tr>
                                 <th scope="col"></th>
-                                <th scope="col">홈 이미지</th>
-                                <th scope="col">콘텐츠 제목</th>
-                                <th scope="col">댓글</th>
-                                <th scope="col">글쓴이</th>
-                                <th scope="col">업데이트일</th>
-                                <th scope="col">활성화 여부</th>
-                                <th scope="col">노출순서 및 관리</th>
+                                <th scope="col">챌린지</th>
+                                <th scope="col">아이디</th>
+                                <th scope="col">시작 날짜</th>
+                                <th scope="col">회차</th>
+                                <th scope="col">진행 여부</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                <% if(carezone == null || carezone.length == 0){ %>
+                                <% if(challenge == null || challenge.length == 0){ %>
                                     <tr class="noData">
                                         <td colspan="5">There is no data to show :(</td>
                                     </tr>
                                 <% } %>
-                                <% carezone.forEach(function(post, index){ %>
+                                <% challenge.forEach(function(post, index){ %>
+                                    <% if(post.missioncomplete === false && post.reward === false) { %>
                                     <tr>
                                         <th scope="row" class="align-middle">
                                             <div>
                                                 <input type="checkbox" onclick="selectCheckRow(this)" name="del_unit[]" value="<%= post._id %>">
-                                                <!-- <label class="form-check-label" for="flexCheckDefault"></label> -->
                                             </div>
                                         </th>
-                                        <td onclick="window.location = '/contents/Challenge/<%= post._id %>?<%= urlQuery %>'" class="align-middle"><img style="max-width: 120px;" src="https://plinic.s3.ap-northeast-2.amazonaws.com/<%= post.homeimage_filename %>" class="img-thumbnail" alt="..."></td>
-                                        <td onclick="window.location = '/contents/Challenge/<%= post._id %>?<%= urlQuery %>'" class="align-middle"><u><%= post.title %></u></td>
-                                        <td class="align-middle"><%= post.comments.length %></td>
-                                        <td class="align-middle"><%= post.author.nickname %></td>
+                                        <%// console.log(post) %>
+                                        <td class="align-middle"><u><%= post.title %></u></td>
+                                        <td class="align-middle"><u><%= post.email %></u></td>
                                         <% var realTime = post.createdAt %>
                                         <% realTime.setHours(realTime.getHours() - 9); %>
-                                        <td class="align-middle"><%= post.getFormattedDate(post.createdAt) %></td>
-                                        <td class="align-middle">
-                                            <% if(post.useYN == true)  { %>
-                                                활성화
-                                            <% } else if(post.useYN == false)  { %>
-                                                비활성화
+                                        <td class="align-middle"><%= post.getFormattedDate(post.createdAt) %>
+                                        </td>
+                                        <td class="align-middle"><%= post.dailycheck.length %>일차
+                                        <% console.log(post.dailycheck) %>
+                                        </td>
+                                        <% var toDay = new Date(); %>
+                                        <% var createdDay = post.createdAt %>
+                                        <%if(post.dailycheck.length == 0) { %>
+                                            <%// console.log(toDay) %>
+                                            <%// console.log(createdDay) %>
+                                            <!--시작 날짜가 오늘 날짜보다 크거나(클 수가 없음) 같으면 진행중 else는 실패. 일반적인 데이터끼리는 시간까지 나오기 때문에 값이 같을 수가 없어서 getDate로 해당 일로 비교값 사용-->
+                                            <% if(createdDay.getDate() >= toDay.getDate()) { %>
+                                                <td class="align-middle">
+                                                    진행중
+                                                </td>
+                                            <% } else { %>
+                                                <td class="align-middle">
+                                                    실패
+                                                </td>
                                             <% } %>
-                                        </td>
-                                        <td class="align-middle">
-                                                <div class="row mb-3 align-middle">
-                                                        <div class="row align-middle">
-                                                            <div class="col align-middle p-0">
-                                                                <span class="input-group-btn">
-                                                                    <button type="button" class="btn btn-danger btn-number"  data-type="minus" data-field="seq[<%= index %>]">
-                                                                    <span class="glyphicon glyphicon-minus"></span>
-                                                                    </button>
-                                                                </span></div>
-                                                            <div class="col align-middle p-0">
-                                                                <input type="number" readonly value="<%= post.seq %>" name="seq[<%= index %>]" class="form-control text-center w-100 align-middle" min="1" max="100"></div>
-                                                            <div class="col p-0">
-                                                                <span class="input-group-btn">
-                                                                    <button type="button" class="btn btn-success btn-number" data-type="plus" data-field="seq[<%= index %>]">
-                                                                        <span class="glyphicon glyphicon-plus"></span>
-                                                                    </button>
-                                                                </span></div>
-                                                        </div>
-                                                </div>
-                                                <div class="row justify-content-center">
-                                                        <div class="col-6 p-0 m-0">
-                                                            <form name="seqFormSubmit<%= index %>">
-                                                                <button class="btn btn-primary" type="button"
-                                                                onclick="seqChange('<%= index %>')">변경하기</button>
-                                                                <input type="hidden" value="<%= post.seq %>" name="seq[<%= index %>]"></div>
-                                                                <input type="hidden" value="<%= post._id %>"  name="seqNumberId[<%= index %>]">
-                                                            </form>
-                                                        <div class="col-6 p-0 m-0">
-                                                         <button type="button" class="btn btn-secondary" disabled>변경바로가기</button>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                        </td>
+                                        <% } else if(post.dailycheck.length > 0) { %>
+                                            <!--회차가 0보다 큰 애들은 오늘날짜 - 시작날짜가 회차보다 작거나 같으면 진행중 아니면 실패 -->
+                                            <%// console.log(toDay.getDate() - createdDay.getDate()) %>
+                                            <% if(toDay.getDate() - createdDay.getDate() < post.dailycheck.length ) { %>
+                                                <td class="align-middle">
+                                                    진행중
+                                                </td>
+                                            <% } else { %>
+                                                <td class="align-middle">
+                                                    실패
+                                                </td>
+                                            <% } %>
+                                        <% } %>
                                     </tr>
+                                    <% } %>
                                 <% }) %>
                             </tbody>
                         </table>
-                        <div class="row">
-                            <div class="col-md-4 d-grid gap-2 d-md-block">
-                                <form class="float_left" name="frmSubmit">
-                                    <button class="btn btn-primary" type="button" onclick="selectDelRow(this)">삭제</button>
-                                </form>
-                                <form class="float_left" name="useYFormSubmit">
-                                    <button class="btn btn-primary" type="button" onclick="useYChange(this)">활성화</button>
-                                    <input type="hidden" name="post[useYN]" id="optionsRadiosInline1" value="true">
-                                </form>
-                                <form class="float_left" name="useNFormSubmit">
-                                    <button class="btn btn-primary" type="button" onclick="useNChange(this)">비활성화</button>
-                                    <input type="hidden" name="post[useYN]" id="optionsRadiosInline2" value="false">
-                                </form>
-                            </div>
-                            <div class="col-md-4">
-                                <nav aria-label="Page navigation example">
-                                    <ul class="pagination pagination-sm justify-content-center">
-                                        <%
-                                            var offset = 4;
-                                            var partialQuery;
-                                            if(urlQuery) partialQuery = "&"+urlQuery.replace(/page=(.*?)(&|$)/ig,"");
-                                        %>
 
-                                        <li class="page-item disabled">
-                                            <a class="page-link" href="#" aria-label="Previous">
-                                                <span aria-hidden="true">&laquo;</span>
-                                            </a>
-                                        </li>
 
-                                        <% for(i=1;i<=maxPage;i++){ %>
 
-                                            <% if(i<=offset || i>maxPage-offset || (i>=page-(offset-1) && i<=page+(offset-1))){ %>
-                                                <% if(i != page){ %>
-                                                    <!-- <li>[<a href="/carezone?page=<%= i %><%= partialQuery %>"> <%= i %> </a>]</li> -->
-                                                    <li class="page-item"><a class="page-link" href="/contents/Challenge/newIndex/?page=<%= i %><%= partialQuery %>"><%= i %></a></li>
-                                                <% } else { %>
-                                                    <li class="page-item" name="currentPage" aria-current="page"><a class="page-link" href="#"><%= i %></a></li>
-                                                <% } %>
-                                            <% } else if(i == offset+1 || i == maxPage-offset){ %>
-                                                    <li>...</li>
-                                            <% } %>
-                                        <%}%>
-                                        <li class="page-item disabled">
-                                        <a class="page-link" href="#" aria-label="Next">
-                                            <span aria-hidden="true">&raquo;</span>
-                                        </a>
-                                        </li>
-                                    </ul>
-                                </nav>
-                            </div>
-                            <div class="col-md-4">
-                                <div class="d-grid d-md-block d-md-flex justify-content-md-end">
-                                    <button type="button" onclick="location.href='/contents/Challenge/new'" class="btn btn-primary me-md-2">신규 등록</button>
-                                </div>
-                            </div>
-                        </div>
-                        <!-- <div class="floats">
-                                <div class="counter float-start">
-                                  <% if(counter){ %>
-                                    Total <%= counter.totalCount %> visitors<br>
-                                    (today: <%= counter.todayCount %>)
-                                  <% } %>
-                                </div>
-                                <div class="search float-end">
-                                  <form class="checkValidation" action="/carezone/" id="search">
-                                    <select class="form-select" name="searchType" <%= search.searchType=="author!"?"disabled":"" %>>
-                                      <% var select %>
-                                      <option value="title,body"
-                                        <%= search.searchType=="title,body"?select="selected":"" %>>Title+Body</option>
-                                      <option value="title"
-                                        <%= search.searchType=="title"?select="selected":"" %>>Title</option>
-                                      <option value="body"
-                                        <%= search.searchType=="body"?select="selected":"" %>>Body</option>
-                                      <%if(search.searchType=="author!"){%>
-                                        <option value="author!"
-                                          <%= search.searchType=="author!"?select="selected":"" %>>Author</option>
-                                      <%} else {%>
-                                        <option value="author"
-                                          <%= search.searchType=="author"?select="selected":"" %>>Author</option>
-                                      <%}%>
-                                    </select>
-                                    <input class="form-control" cvMinLength="2"
-                                      cvMinLenErrTo="#searchError"
-                                      cvMinLenErrMsg="It should be at least 2 characters"
-                                      type="text" name="searchText" value="<%= select?search.searchText:"" %>"
-                                      <%= search.searchType=="author!"?"disabled":"" %>>
-                                    <button type="submit" <%= search.searchType=="author!"?"disabled":"" %>>search</button>
-                                    <%if(search.searchType){%>
-                                      <button type="button" onclick="window.location = '/carezone?page=1'">cancel</button>
-                                    <%}%>
-                                    <div class="message" id="searchError"></div>
-                                  </form>
-                                </div>
-                        </div> -->
+
+
                     </div>
                 </div>
             </div>
         </div>
     </div>
-
-
-
-
-
-    <!-- <table id="table-1" cellspacing="0" cellpadding="2" >
-            <tr id="1"><td>1</td><td>One</td><td>some text</td></tr>
-            <tr id="1"><td>2</td><td>Two</td><td>some text</td></tr>
-            <tr id="1"><td>3</td><td>Three</td><td>some text</td></tr>
-            <tr id="1"><td>4</td><td>Four</td><td>some text</td></tr>
-            <tr id="1"><td>5</td><td>Five</td><td>some text</td></tr>
-            <tr id="1"><td>6</td><td>Six</td><td>some text</td></tr>
-        </table> -->
-
 
 </body>
 <script src="/js/custom-scripts.js"></script>

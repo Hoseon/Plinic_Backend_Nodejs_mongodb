@@ -59,6 +59,8 @@
           </td>
           <td style="width : 100px"><%= post.editor ? "에디터 추천" : "" %></td>
           <td><%= post.views %></td>
+          <% var realTime = post.createdAt %>
+          <% realTime.setHours(realTime.getHours() - 9); %>
           <td><%= post.getFormattedDate(post.createdAt) %></td>
           <td class="highlight" data-highlight="<%= search.highlight.author %>"><%= post.author.nickname %></td>
         </tr>

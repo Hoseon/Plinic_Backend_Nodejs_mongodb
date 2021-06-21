@@ -27,10 +27,14 @@
         <%= post.views %> views
       </div>
       <div class="timestamp"><span>Created:</span>
+        <% var realTime = post.createdAt %>
+        <% realTime.setHours(realTime.getHours() - 9); %>
         <%= post.getFormattedTime(post.createdAt) %>, <%= post.getFormattedDate(post.createdAt) %>
       </div>
       <% if(post.updatedAt) { %>
         <div class="timestamp"><span>Updated:</span>
+          <% var realTime = post.updatedAt %>
+          <% realTime.setHours(realTime.getHours() - 9); %>
           <%= post.getFormattedTime(post.updatedAt) %>, <%= post.getFormattedDate(post.updatedAt) %>
         </div>
       <% } %>
@@ -55,6 +59,8 @@
         <% post.comments.forEach(function(comment){ %>
           <div class="comment">
             <div class="top">
+              <% var realTime = comment.createdAt %>
+              <% realTime.setHours(realTime.getHours() - 9); %>
               (<%= post.getFormattedTime(comment.createdAt) %>,
               <%= post.getFormattedDate(comment.createdAt) %>)
 

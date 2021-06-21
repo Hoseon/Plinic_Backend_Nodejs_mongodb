@@ -65,6 +65,8 @@
                     <td class="text-left"><%= post.email %></td>
                     <th class="text-center" width="250">작성일</th>
                     <td width="400" class="text-left">
+                      <% var realTime = post.createdAt %>
+                      <% realTime.setHours(realTime.getHours() - 9); %>
                       <%= post.getFormattedDate(post.createdAt) %>, <%= post.getFormattedTime(post.createdAt) %>
                     </td>
                   </tr>
@@ -106,6 +108,8 @@
                       <div class="comment">
                         <div class="top">
                           댓글 작성자 : <b><%= comment.email %></b>
+                          <% var realTime = comment.createdAt %>
+                          <% realTime.setHours(realTime.getHours() - 9); %>
                           (작성일 : <span><%= post.getFormattedDate(comment.createdAt) %> ,
                           <%= post.getFormattedTime(comment.createdAt) %> )</span>
                           <form class="float_right" method="post"
@@ -136,6 +140,8 @@
                                       관리자
                                     </b>
                                     <% } %>
+                                    <% var realTime = recomments.createdAt %>
+                                    <% realTime.setHours(realTime.getHours() - 9); %>
                                     (작성일 : <span><%= post.getFormattedDate(recomments.createdAt) %> , 
                                     <%= post.getFormattedTime(recomments.createdAt) %> )</span>
                                     <form class="float_right" method="post"

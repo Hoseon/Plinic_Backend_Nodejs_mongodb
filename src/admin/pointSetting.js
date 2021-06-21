@@ -62,56 +62,22 @@ const sftpconfig = {
 };
 
 router.get('/', function (req, res) {
-  var vistorCounter = null;
-  var page = Math.max(1, req.query.page) > 1 ? parseInt(req.query.page) : 1;
-  var limit = Math.max(1, req.query.limit) > 1 ? parseInt(req.query.limit) : 7;
-  var search = createSearch(req.query);
   async.waterfall([
   function (callback) {
-    if (!search.findUser) return callback(null);
-    PointSetting.find(search.findUser, function (err, users) {
+    PointSetting.find()
+    .sort({ "pointAt": -1 })
+    .exec(function (err, pointSetting) {
       if (err) callback(err);
-      var or = [];
-      users.forEach(function (user) {
-        or.push({
-          author: mongoose.Types.ObjectId(user._id)
-        });
-      });
-      if (search.findPost.$or) {
-        search.findPost.$or = search.findPost.$or.concat(or);
-      } else if (or.length > 0) {
-        search.findPost = {
-          $or: or
-        };
-      }
-      callback(null);
+      callback(null, pointSetting);
     });
-  }, function (callback) {
-    if (search.findUser && !search.findPost.$or) return callback(null, null, 0);
-    PointSetting.count(search.findPost, function (err, count) {
-      if (err) callback(err);
-      skip = (page - 1) * limit;
-      maxPage = Math.ceil(count / limit);
-      callback(null, skip, maxPage);
-    });
-  }, function (skip, maxPage, callback) {
-    if (search.findUser && !search.findPost.$or) return callback(null, [], 0);
-    PointSetting.find(search.findPost).sort({ "seq": 1 }).populate("author").sort({ "seq": 1, "updatedAt": -1 }).skip(skip).limit(limit).exec(function (err, pointSetting) {
-      if (err) callback(err);
-      callback(null, pointSetting, maxPage);
-    });
-  }], function (err, pointSetting, maxPage) {
+  }], function (err, pointSetting) {
     if (err) return res.json({
       success: false,
       message: err
     });
     return res.render("PlinicAdmin/Operation/PointSetting-Mgt/index", {
       pointSetting: pointSetting,
-      user: req.user,
-      page: page,
-      maxPage: maxPage,
       urlQuery: req._parsedUrl.query,
-      search: search,
       postsMessage: req.flash("postsMessage")[0]
     });
   });
@@ -155,10 +121,10 @@ router.post('/pointSettingUpdate/', isLoggedIn, function (req, res, next) {
               console.log("에러 ");
               res.status(400).json();
             }
-            if(result1) {
-              console.log("성공 ");
-              res.status(200).json();
-            }
+            // if(result1) {
+            //   console.log("성공 ");
+            //   res.status(200).json();
+            // }
           }
           );
         }
@@ -175,10 +141,10 @@ router.post('/pointSettingUpdate/', isLoggedIn, function (req, res, next) {
               console.log("에러 ");
               res.status(400).json();
             }
-            if(result1) {
-              console.log("성공 ");
-              res.status(200).json();
-            }
+            // if(result1) {
+            //   console.log("성공 ");
+            //   res.status(200).json();
+            // }
           }
           );
         }
@@ -195,10 +161,10 @@ router.post('/pointSettingUpdate/', isLoggedIn, function (req, res, next) {
               console.log("에러 ");
               res.status(400).json();
             }
-            if(result1) {
-              console.log("성공 ");
-              res.status(200).json();
-            }
+            // if(result1) {
+            //   console.log("성공 ");
+            //   res.status(200).json();
+            // }
           }
           );
         }
@@ -215,10 +181,10 @@ router.post('/pointSettingUpdate/', isLoggedIn, function (req, res, next) {
               console.log("에러 ");
               res.status(400).json();
             }
-            if(result1) {
-              console.log("성공 ");
-              res.status(200).json();
-            }
+            // if(result1) {
+            //   console.log("성공 ");
+            //   res.status(200).json();
+            // }
           }
           );
         }
@@ -235,10 +201,10 @@ router.post('/pointSettingUpdate/', isLoggedIn, function (req, res, next) {
               console.log("에러 ");
               res.status(400).json();
             }
-            if(result1) {
-              console.log("성공 ");
-              res.status(200).json();
-            }
+            // if(result1) {
+            //   console.log("성공 ");
+            //   res.status(200).json();
+            // }
           }
           );
         }
@@ -255,10 +221,10 @@ router.post('/pointSettingUpdate/', isLoggedIn, function (req, res, next) {
               console.log("에러 ");
               res.status(400).json();
             }
-            if(result1) {
-              console.log("성공 ");
-              res.status(200).json();
-            }
+            // if(result1) {
+            //   console.log("성공 ");
+            //   res.status(200).json();
+            // }
           }
           );
         }

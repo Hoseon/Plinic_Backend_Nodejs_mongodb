@@ -212,6 +212,8 @@
                                                                 <%=// console.log(sum) %>
                                                             </td>
                                                             <td class="text-center" onclick="window.location = '/skinqnaComments/<%= post._id %>?<%= urlQuery %>'"><%= post.email %></td>
+                                                            <% var realTime = post.createdAt %>
+                                                            <% realTime.setHours(realTime.getHours() - 9); %>
                                                             <td><%= post.getFormattedDate(post.createdAt) %></td>
                                                             <td><%= post.like %></td>
                                                             <td><%= post.views %></td>

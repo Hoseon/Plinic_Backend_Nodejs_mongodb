@@ -78,6 +78,8 @@
                                                                 <%= post.title %>
                                                             </td>
                                                             <td class="text-center">
+                                                                <% var realTime = post.createdAt %>
+                                                                <% realTime.setHours(realTime.getHours() - 9); %>
                                                                 <%= post.getFormattedDate(post.createdAt) %>
                                                                 <%= post.getFormattedTime(post.createdAt) %>
                                                             </td>
@@ -87,6 +89,8 @@
                                                             </td>
                                                         <% } else { %>
                                                             <td class="text-center">
+                                                                <% var realTime = post.updatedAt %>
+                                                                <% realTime.setHours(realTime.getHours() - 9); %>
                                                                 <%= post.getFormattedDate(post.updatedAt) %>
                                                                 <%= post.getFormattedTime(post.updatedAt) %>
                                                             </td>

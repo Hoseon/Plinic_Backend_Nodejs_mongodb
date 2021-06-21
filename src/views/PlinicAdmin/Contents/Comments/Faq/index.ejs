@@ -183,6 +183,8 @@
                                                             <td></td>
                                                             <td><%= post.category %>&nbsp;<%= post.title %></td>
                                                             <td><%= comment.body %></td>
+                                                            <% var realTime = comment.createdAt %>
+                                                            <% realTime.setHours(realTime.getHours() - 9); %>
                                                             <td><%= post.getFormattedDate(comment.createdAt) %></td>
                                                             <td></td>
                                                             <td class="center">

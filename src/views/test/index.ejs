@@ -69,6 +69,8 @@
             <span class="comments">(<%= post.comments.length %>)</span>
           </td>
           <td><%= post.views %></td>
+          <% var realTime = post.createdAt %>
+          <% realTime.setHours(realTime.getHours() - 9); %>
           <td><%= post.getFormattedDate(post.createdAt) %></td>
           <td class="highlight" data-highlight="<%= search.highlight.author %>"><%= post.author.nickname %></td>
         </tr>

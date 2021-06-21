@@ -217,6 +217,8 @@
                                                                     <td style="max-width: 100px;" class="text-truncate align-middle" data-highlight="<%= search.highlight.comment %>"><%= post.comments.comment %></td>
                                                                     <td data-highlight="<%= search.highlight.email %>"><%= post.comments.email %></td>
                                                                     <td><%=// post.getFormattedDate(post.comments.updatedAt) %>
+                                                                        <% var realTime = post.comments.updatedAt %>
+                                                                        <% realTime.setHours(realTime.getHours() -9); %>
                                                                         <%= post.comments.updatedAt %>
                                                                         <%=// commentsDate %> <!--challengeComments. js 209-->
                                                                     </td>
@@ -230,9 +232,20 @@
                                                                     <% post.comments.recomments.forEach(function(recomments) { %><!-- console.log 결과 recomments는 [] 배열로 이루어져 있어서 forEach가 가능함 -->
                                                                         <% if(recomments.isDelete === false) { %>
                                                                     <tr>
-                                                                        <%// console.log(post.comments[0]) %>
-                                                                        <td colspan="4"><pre>⤷&nbsp;<%= recomments.body %></pre></td>
+                                                                        <%// console.log(recomments) %>
+                                                                        <td colspan="4"><pre class="float_left">⤷&nbsp;<%= recomments.body %></pre>
+                                                                            <form class="float_left" method="post"
+                                                                            action="/challengeComments/<%= post._id %>/recomments/<%= recomments._id %>">
+                                                                            <input type="hidden" name="recomments[body]" value="<%= recomments.body %>"/>
+                                                                            <input type="hidden" name="recomments[isDelete]" value="true" />
+                                                                            <button type="submit" class="w-15 m-1 btn btn-danger btn-sm">
+                                                                              x
+                                                                            </button>
+                                                                          </form>
+                                                                        </td>
                                                                         <td class="text-center"><%=// post.getFormattedDate(recomments.createdAt) %>
+                                                                            <% var realTime = recomments.createdAt %>
+                                                                            <% realTime.setHours(realTime.getHours() -9); %>
                                                                             <%= recomments.createdAt %>
                                                                         </td>
                                                                         <td></td>

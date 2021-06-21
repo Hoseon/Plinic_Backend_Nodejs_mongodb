@@ -426,6 +426,8 @@
                                                                     onclick="selectCheckRow(this)">
                                                             </th>
                                                             <th colspan="1" style="padding-top: 15px;">
+                                                                <% var realTime = post.paid_at %>
+                                                                <% realTime.setHours(realTime.getHours() -9); %>
                                                                 <%= post.getFormattedDate(post.paid_at) %>
                                                                     <%= post.getFormattedTime(post.paid_at) %>
                                                             </th>

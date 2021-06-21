@@ -37,9 +37,13 @@
         <%= post.views %> views
       </div>
       <div class="timestamp"><span>Created:</span>
+        <% var realTime = post.createdAt %>
+        <% realTime.setHours(realTime.getHours() - 9); %>
         <%= post.getFormattedTime(post.createdAt) %>, <%= post.getFormattedDate(post.createdAt) %>
       </div>
       <% if(post.updatedAt) { %>
+        <% var realTime = post.updatedAt %>
+        <% realTime.setHours(realTime.getHours() - 9); %>
         <div class="timestamp"><span>Updated:</span>
           <%= post.getFormattedTime(post.updatedAt) %>, <%= post.getFormattedDate(post.updatedAt) %>
         </div>

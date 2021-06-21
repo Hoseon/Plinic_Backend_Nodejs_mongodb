@@ -58,6 +58,8 @@
           </td>
           <td style="width : 100px"><%= post.editor ? "인기노트" : "" %></td>
           <td><%= post.views %></td>
+          <% var realTime = post.createdAt %>
+          <% realTime.setHours(realTime.getHours() - 9); %>
           <td><%= post.getFormattedDate(post.createdAt) %></td>
         </tr>
       <% }) %>

@@ -176,6 +176,8 @@
                                                     </td>
                                                     <td onclick="window.location = '/beautyTip/CommuBeauty/<%= post._id %>?<%= urlQuery %>'"
                                                         class="align-middle"><%= post.author.nickname %></td>
+                                                    <% var realTime = post.createdAt %>
+                                                    <% realTime.setHours(realTime.getHours() - 9); %>
                                                     <td class="align-middle"><%= post.getFormattedDate(post.createdAt) %></td>
                                                     <% if(!post.isEmpty(post.visible)) { %>
                                                         <td class="align-middle">활성화</td>
