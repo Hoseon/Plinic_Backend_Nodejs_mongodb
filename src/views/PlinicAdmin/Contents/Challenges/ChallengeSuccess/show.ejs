@@ -172,6 +172,8 @@
                                                     <div class="row align-items-center w-75 mb-3">
                                                         <label class="col-md-3 text-left">미션종료일</label>
                                                         <div class="col-md-9">
+                                                            <% var realTime = post.createdAt %>
+                                                            <% realTime.setHours(realTime.getHours() - 9); %>
                                                             <input class="form-control" name="post[product]"
                                                                    maxlength="20" placeholder="20자 이내" readonly
                                                                    value="<%= post.getFormattedDate(post.createdAt) %>">
@@ -230,6 +232,8 @@
                                                             <div class="row p-2 comment">
                                                                 <div class="top">
                                                                     <b><%= comment.author.nickname %></b>
+                                                                    <% var realTime = comment.createdAt %>
+                                                                    <% realTime.setHours(realTime.getHours() - 9); %>
                                                                     (<%= post.getFormattedTime(comment.createdAt) %>,
                                                                     <%= post.getFormattedDate(comment.createdAt) %>)
                                                                     <% if(user && user.equals(comment.author._id)) { %>

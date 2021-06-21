@@ -49,6 +49,8 @@
                   </tr>
                   <tr>
                     <th class="text-center">주문 일자</th>
+                    <% var realTime = post.paid_at %>
+                    <% realTime.setHours(realTime.getHours() - 9); %>
                     <td class="text-left"><%= post.getFormattedDate(post.paid_at) %> <%= post.getFormattedTime(post.paid_at) %></td>
                   </tr>
                   <tr>

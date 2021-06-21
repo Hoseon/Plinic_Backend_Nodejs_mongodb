@@ -227,6 +227,8 @@
                                         <td onclick="window.location = '/movies/<%= post._id %>?<%= urlQuery %>'" style="max-width: 150px;" class="align-middle text-truncate"><%= post.body %></td>
                                         <td onclick="window.location = '/movies/<%= post._id %>?<%= urlQuery %>'" class="align-middle"><%= post.views %></td>
                                         <td class="align-middle"><%= post.author.nickname %></td>
+                                        <% var realTime = post.createdAt %>
+                                        <% realTime.setHours(realTime.getHours() - 9); %>
                                         <td class="align-middle"><%= post.getFormattedDate(post.createdAt) %></td>
                                         <td class="align-middle">
                                                 <div class="row mb-3 align-middle">

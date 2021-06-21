@@ -952,6 +952,8 @@ module.exports = function (app) {
   app.use('/groups', require('./admin/groups'));
   // 포인트 설정
   app.use('/pointSetting', require('./admin/pointSetting'));
+  // 챌린지 참여인원 관리
+  app.use('/challengeOngoing', require('./admin/challengeOngoing'));
 
   app.get('/ejs', (req, res) => {
     res.render('home');

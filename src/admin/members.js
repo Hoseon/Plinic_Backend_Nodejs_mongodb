@@ -159,24 +159,6 @@ router.get('/', function(req, res) {
 
 
 router.get("/:id", function (req, res) {
-  Orders.aggregate([
-    { $match: { _id : mongoose.Types.ObjectId(req.params.id)}},
-    // { $unwind: "$author" },
-    { $project: {
-        paid_at: 1,
-        imp_uid: 1,
-        status: 1,
-        product_name: 1,
-        productCount: 1,
-        deliverCompany: 1,
-        deliverNo: 1,
-        buyer_name: 1,
-        pay_method: 1,
-        amount: 1,
-        usePoint: 1,
-      }
-    }
-  ])
   User.findById(req.params.id)
     .populate(['author', 'orders'])
     .exec(function (err, post) {
@@ -199,44 +181,6 @@ router.get("/:id", function (req, res) {
       });
     });
 }); // 회원 정보 show
-
-
-// router.get("/:id", function (req, res) {
-//   Orders.aggregate([
-//     console.log(Orders),
-//     { $match: { _id : mongoose.Types.ObjectId(req.params.id)}},
-//     { $project: {
-//         paid_at: 1,
-//         imp_uid: 1,
-//         status: 1,
-//         product_name: 1,
-//         productCount: 1,
-//         deliverCompany: 1,
-//         deliverNo: 1,
-//         buyer_name: 1,
-//         pay_method: 1,
-//         amount: 1,
-//         usePoint: 1,
-//       }
-//     }
-//   ])
-//     .exec(function (err, post) {
-//       if (err) return res.json({
-//         success: false,
-//         message: err
-//       });
-//       // console.log(post);
-//       res.render("PlinicAdmin/Operation/MemberMgt/show", {
-//         post: post,
-//         postDate: getFormattedDate(post[0].updatedAt),
-//         url: url,
-//         prod_url: prod_url,
-//         urlQuery: req._parsedUrl.query,
-//         user: req.user,
-//         search: createSearch(req.query)
-//       });
-//     });
-// }); // 회원 통합 주문내역 show
 
 
 router.delete('/rowdel/:id', isLoggedIn, function(req, res, next) {

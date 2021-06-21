@@ -61,5 +61,6 @@ challengeSchema.methods.getFormattedTime = function (date) {
 function get2digits(num){
   return ("0" + num).slice(-2);
 }
+
 var Challenge = mongoose.model('challenge',challengeSchema);
 module.exports = Challenge;

@@ -59,6 +59,8 @@
           </td>
           <td style="width : 150px"><%= post.editor ? "베스트 고민" : "" %></td>
           <td><%= post.views %></td>
+          <% var realTime = post.createdAt %>
+          <% realTime.setHours(realTime.getHours() - 9); %>
           <td><%= post.getFormattedDate(post.createdAt) %></td>
           <td><%= post.email %></td>
         </tr>

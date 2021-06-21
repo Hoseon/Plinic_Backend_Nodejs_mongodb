@@ -5,8 +5,10 @@ var Qna = require("../models/Qna");
 var QnaCounter = require("../models/QnaCounter");
 var Carezone = require("../models/Carezone");
 var CarezoneCounter = require("../models/CarezoneCounter");
+var Challenge = require("../models/Challenge");
 var async = require("async");
 var User_admin = require("../models/User_admin");
+var User = require("../models/user");
 var multer = require("multer");
 // var FTPStorage = require('multer-ftp');
 var sftpStorage = require("multer-sftp");
@@ -21,6 +23,7 @@ var fcm = new FCM(serverKey);
 
 var multerS3 = require('multer-s3');
 const AWS = require("aws-sdk");
+// const Challenge = require("../models/Challenge");
 AWS.config.loadFromPath(__dirname + "/../config/awsconfig.json");
 let s3 = new AWS.S3();
 let s3upload = multer({
@@ -82,141 +85,209 @@ const sftpconfig = {
   user: "g1partners1",
   password: "g100210!!"
 };
-router.get("/test", function (req, res) {
-  Carezone.aggregate([
-    {$unwind: '$comments'},
-    // { $group: { _id: "$comments._id" } },
-    {$project : {
-      // _id: '$comments._id',
-      seq:0,
-      // _id:1,
-      // 'comments._id': 1,
-      // 'comments' : "$comments"
-    }},
-    {$sort : 
-      {'comments.updatedAt': -1}
-  }
-  ],function(err, count) {
-    if(err) {
-      console.log(err);
-    }
-    if(count) {
-      console.log(count);
-      res.json(count);
-    }
-  })
-});
+
+// router.get('/', function (req, res) {
+//   var vistorCounter = null;
+//   var page = Math.max(1, req.query.page) > 1 ? parseInt(req.query.page) : 1;
+//   var limit = Math.max(1, req.query.limit) > 1 ? parseInt(req.query.limit) : 100;
+//   var search = createSearch(req.query);
+//   var testSearch = createSearchTest(req.query);
+//   async.waterfall([
+//     function (callback) {
+//     Challenge.findOne({
+//       name: "challenge"
+//     }, function (err, counter) {
+//       if (err) callback(err);
+//       vistorCounter = counter;
+//       callback(null);
+//     });
+//   }, function (callback) {
+//     if (!search.findUser) return callback(null);
+//     Challenge.find(search.findUser, function (err, users) {
+//       if (err) callback(err);
+//       var or = [];
+//       users.forEach(function (user) {
+//         or.push({
+//           author: mongoose.Types.ObjectId(user._id)
+//         });
+//       });
+//       if (search.findPost.$or) {
+//         search.findPost.$or = search.findPost.$or.concat(or);
+//       } else if (or.length > 0) {
+//         search.findPost = {
+//           $or: or
+//         };
+//       }
+//       callback(null);
+//     });
+//   }, function (callback) {
+//     if (search.findUser && !search.findPost.$or
+//       || testSearch.findUser && testSearch.dayCreated[0].createdAt) return callback(null, null, 0);
+//     Challenge.count(search.findPost, function (err, count) {
+//       if (err) callback(err);
+//       skip = (page - 1) * limit;
+//       maxPage = Math.ceil(count / limit);
+//       callback(null, skip, maxPage);
+//     });
+//   }, function (skip, maxPage, callback) {
+//     if (search.findUser && !search.findPost.$or
+//       || testSearch.findUser && testSearch.dayCreated[0].createdAt) return callback(null, [], 0);
+    
+//     if(testSearch.dayCreated[0]) {
+//       Challenge.find(testSearch.dayCreated[0])
+//     // .sort({ "seq": 1, "createdAt": -1 })
+//     .sort({createdAt:-1})
+//     .skip(skip)
+//     .limit(limit)
+//     .exec(function (err, challenge) {
+//       if (err) callback(err);
+//       callback(null, challenge, maxPage);
+//     });
+//   } else {
+//     Challenge.find(search.findPost)
+//     // .sort({ "seq": 1, "createdAt": -1 })
+//     .sort({createdAt:-1})
+//     .skip(skip)
+//     .limit(limit)
+//     .exec(function (err, challenge) {
+//       if (err) callback(err);
+//       callback(null, challenge, maxPage);
+//     });
+//   }
+//   }], function (err, challenge, maxPage) {
+//     if (err) return res.json({
+//       success: false,
+//       message: err
+//     });
+//     return res.render("PlinicAdmin/Contents/Challenges/ChallengeOngoing/index", {
+//       challenge: challenge,
+//       user: req.user,
+//       page: page,
+//       maxPage: maxPage,
+//       urlQuery: req._parsedUrl.query,
+//       search: search,
+//       testSearch: testSearch,
+//       counter: vistorCounter,
+//       postsMessage: req.flash("postsMessage")[0]
+//     });
+//   });
+// }); // new index
+
+// router.get("/test", function (req, res) {
+//   async.waterfall([
+
+//   //   function (callback) {
+//   //     var today = new Date();
+//   //       var preToday = new Date();
+//   //       today.setDate(today.getDate());
+//   //       preToday.setDate(preToday.getDate()-7);
+//   //       Challenge.find({
+//   //       createdAt: {
+//   //         $gte: preToday,
+//   //         $lte: today,
+//   //       }
+//   //     }, function (err, docs) {
+//   //     if (err) {
+//   //       res.status(400).json(err);
+//   //     }
+//   //       if (docs) {
+
+
+//   //         console.log(docs)
+
+
+//   //       }
+//   //     callback(null, docs);
+//   //   });
+//   // },
+
+//     function (callback) {
+
+//         var today = new Date();
+//         var preToday = new Date();
+//         today.setDate(today.getDate());
+//         preToday.setDate(preToday.getDate()-7);
+        
+//         Challenge.find({
+//         createdAt: {
+//           $gte: preToday,
+//           $lte: today,
+//         },
+//       }
+      
+//       )
+//       .sort({"createdAt":-1})
+//       .exec(function (err, challenge) {
+//         if (err)  {
+//         callback(err)
+//         };
+//           if (challenge) {
+//           }
+//         callback(null, challenge);
+//       });
+//     }
+//   ], function(err, count) {
+//       if(err) {
+//         console.log(err);
+//       }
+//       if(count) {
+//         // console.log(count);
+//         res.json(count);
+//       }
+//     });
+//   }); 
+
 
 router.get('/', function (req, res) {
-  var vistorCounter = null;
-  var page = Math.max(1, req.query.page) > 1 ? parseInt(req.query.page) : 1;
-  var limit = Math.max(1, req.query.limit) > 1 ? parseInt(req.query.limit) : 7;
-  var search = createSearch(req.query);
   async.waterfall([
-    function (callback) {
-    CarezoneCounter.findOne({
-      name: "carezone"
-    }, function (err, counter) {
-      if (err) callback(err);
-      vistorCounter = counter;
-      callback(null);
-    });
-  }, 
-  
   function (callback) {
-    if (!search.findUser) return callback(null);
-    Carezone.find(search.findUser, function (err, users) {
-      if (err) callback(err);
-      var or = [];
-      users.forEach(function (user) {
-        or.push({
-          author: mongoose.Types.ObjectId(user._id)
-        });
-      });
-      if (search.findPost.$or) {
-        search.findPost.$or = search.findPost.$or.concat(or);
-      } else if (or.length > 0) {
-        search.findPost = {
-          $or: or
-        };
-      }
-      callback(null);
-    });
-  }, 
+    //   var today = new Date();
+    //   var preToday = new Date();
+    //   today.setDate(today.getDate());
+    //   preToday.setDate(preToday.getDate()-6);
+    // Challenge.find({
+    //   createdAt: {
+    //     $gte: preToday,
+    //     $lte: today,
+    //   }
+    // })
 
-  
-  function (callback) {
-    if (search.findUser && !search.findPost.$or) return callback(null, null, null, 0);
-    Carezone.count(search.findPost, function (err, count) {
+      var today = new Date();
+      var preToday = new Date();
+      today.setDate(today.getDate());
+      preToday.setDate(preToday.getDate()-6);
+      Challenge.find({
+      createdAt: {
+        $gte: preToday,
+        $lte: today,
+      },
+    })
+    .sort({"createdAt":-1})
+    .exec(function (err, challenge) {
       if (err) callback(err);
-      skip = (page - 1) * limit;
-      maxPage = Math.ceil(count / limit);
-      callback(null, skip, maxPage);
+      callback(null, challenge);
     });
-  }, 
-  
-  function (skip, maxPage, callback) {
-    if (search.findUser && !search.findPost.$or) return callback(null, [], 0);
-    Carezone.aggregate([
-      // { $match: { _id : mongoose.Types.ObjectId(req.params.id)}},
-      {$unwind: '$comments'},
-      // { $match: { "comments._id": mongoose.Types.ObjectId(req.params.commentId) } },
-      // { $match: { "comments._id": "$comments._id" } },
-      {$project : {
-        // _id: '$comments._id',
-        // _id: 0,
-        seq: 0,
-        // '$comments._id':1,
-        // 'comments' : "$comments"
-        
-      }},
-      // {$group: {_id: '$comments._id'}}, 
-      {$sort : 
-        {'comments.updatedAt': -1}
-    }
-    ],function (err, carezone) {
-      if (err) callback(err);
-      callback(null, carezone, maxPage);
-    });
-    // console.log(comments)
-    // Carezone.find(search.findPost)
-    // // .populate("author")
-    // // .sort({"comments.updatedAt": -1 })
-    // // .sort({"commentCount": -1, "seq": -1})
-    // .sort({commentCount: -1})
-    // .skip(skip)
-    // .limit(limit)
-    // .exec(function (err, carezone) {
-    //   if (err) callback(err);
-    //   callback(null, carezone, maxPage);
-    // }
-    // );
-  }
-], 
-function (err, carezone, maxPage) {
+  }], function (err, challenge) {
     if (err) return res.json({
       success: false,
       message: err
     });
-    return res.render("PlinicAdmin/Contents/Comments/ChallengeComment/index", {
-      carezone: carezone,
-      user: req.user,
-      page: page,
-      maxPage: maxPage,
+    return res.render("PlinicAdmin/Contents/Challenges/ChallengeOngoing/index", {
+      challenge: challenge,
       urlQuery: req._parsedUrl.query,
-      search: search,
-      counter: vistorCounter,
-      // commentsDate: getFormattedDate(carezone.comments.updatedAt),
+      // counter: vistorCounter,
       postsMessage: req.flash("postsMessage")[0]
     });
-  }); // )
+  });
 }); // new index
 
 
+router.get("/Challenge/new", function (req, res) {
+  return res.render("PlinicAdmin/Contents/Challenges/ChallengeSuccess/new", {});
+});
+//콘텐츠관리 챌린지 신규 등록 화면
 
-
-router.post('/', s3upload.fields([
-  { name: 'image' }, { name: 'homeimage' }, { name: 'challenge_image1' }, { name: 'challenge_image2' }, { name: 'challenge_image3' }, { name: 'challenge_image4' }, { name: 'challenge_image5' }]), isLoggedIn, function (req, res, next) {
+router.post('/Challenge/', s3upload.fields([{ name: 'image' }, { name: 'homeimage' }, { name: 'challenge_image1' }, { name: 'challenge_image2' }, { name: 'challenge_image3' }, { name: 'challenge_image4' }, { name: 'challenge_image5' }]), isLoggedIn, function (req, res, next) {
     async.waterfall([function (callback) {
       CarezoneCounter.findOne({
         name: "carezone"
@@ -278,7 +349,7 @@ router.post('/', s3upload.fields([
     });
   }); // create
 
-router.delete('/:id', isLoggedIn, function (req, res, next) {
+router.delete('/Challenge/:id', isLoggedIn, function (req, res, next) {
   console.log(req);
   Carezone.findOneAndRemove({
     _id: req.params.id,
@@ -319,31 +390,27 @@ router.delete('/:id', isLoggedIn, function (req, res, next) {
   });
 }); //destroy
 
-router.get("/:id", function (req, res) {
-  Carezone.findById(req.params.id)
+router.get("/Challenge/:id", function (req, res) {
+  Reward.findById(req.params.id)
     .populate(['author', 'comments.author'])
     .exec(function (err, post) {
       if (err) return res.json({
         success: false,
         message: err
       });
+      post.views++;
+      post.save();
 
       //배너 이미지 가져 오기 20190502
       //res.setHeader('Content-Type', 'image/jpeg');
       // var url = 'https://plinic.s3.ap-northeast-2.amazonaws.com/' + post.filename;
-      // var prod_url = 'https://plinic.s3.ap-northeast-2.amazonaws.com/' + post.prodfilename;
-      // var homeImage = 'https://plinic.s3.ap-northeast-2.amazonaws.com/' + post.homeimage_filename;
-      // var challenge_url1 = 'https://plinic.s3.ap-northeast-2.amazonaws.com/' + post.challenge_image1_filename;
-      // var challenge_url2 = 'https://plinic.s3.ap-northeast-2.amazonaws.com/' + post.challenge_image2_filename;
-      // var challenge_url3 = 'https://plinic.s3.ap-northeast-2.amazonaws.com/' + post.challenge_image3_filename;
-      // var challenge_url4 = 'https://plinic.s3.ap-northeast-2.amazonaws.com/' + post.challenge_image4_filename;
-      // var challenge_url5 = 'https://plinic.s3.ap-northeast-2.amazonaws.com/' + post.challenge_image5_filename;
+      var prod_url = 'https://plinic.s3.ap-northeast-2.amazonaws.com/' + post.prodfilename;
       //fs.createReadStream(path.join(__dirname, '../uploads/', post.filename)).pipe(res);
       // console.log(post.day);
-      res.render("PlinicAdmin/Contents/Comments/ChallengeComment/show", {
+      res.render("PlinicAdmin/Contents/Challenges/ChallengeSuccess/show", {
         post: post,
         // url: url,
-        // prod_url: prod_url,
+        prod_url: prod_url,
         // homeImage: homeImage,
         // challenge_url1: challenge_url1,
         // challenge_url2: challenge_url2,
@@ -356,106 +423,9 @@ router.get("/:id", function (req, res) {
       });
     });
 });
-//챌린지댓글 Show
+//콘텐츠관리 챌린지 Show
 
-router.get("/comments/:id/:commentId", function (req, res) {
-
-  Carezone.aggregate([
-    { $match: { _id : mongoose.Types.ObjectId(req.params.id)}},
-    { $unwind: "$comments" },
-    { $match: { "comments._id": mongoose.Types.ObjectId(req.params.commentId) } },
-    { "$project": {
-        _id: "$comments._id",
-        title: "$comments.title",
-        body: "$comments.body",
-        name:"$comments.name",
-        comment: "$comments.comment",
-        updatedAt: "$comments.updatedAt",
-        commentId: req.params.id,
-        rebody: "$comments.recomments.body",
-        reDelete: "$comments.recomments.isDelete",
-        recommentId: "$comments.recomments._id",
-      }
-    },
-    // { $unwind: "$rcomments" },
-    // { "$project": {
-    //   rebody: "$recomments.body",
-    //   reDelete: "$recomments.isDelete",
-    //   recommentId: "$recomments._id",
-    // }},
-  //    { $group: "$recomments" },
-  //    { $match: { "recomments._id": mongoose.Types.ObjectId(req.params.recommentId) } },
-  //    { "$project": {
-  //     rebody: "$recomments.body",
-  //     reDelete: "$recomments.isDelete",
-  //     recommentId: "$recomments._id",
-  //   }
-  // }
-  ])
-    .exec(function (err, post) {
-      if (err) return res.json({
-        success: false,
-        message: err
-      });
-      // res.status(200).json(post);
-      // console.log(post);
-      res.render("PlinicAdmin/Contents/Comments/ChallengeComment/show", {
-        post: post,
-        urlQuery: req._parsedUrl.query,
-        user: req.user,
-        search: createSearch(req.query),
-        postDate: getFormattedDate(post[0].updatedAt),
-      });
-    });
-});
-//챌린지댓글 comments Show
-
-//대댓글 기능 추가 2020-11-23
-router.post('/recomments/:id/', function (req, res) {
-  console.log(req.body.post);
-  var newComment = req.body.post;
-  Carezone.update({
-    "comments._id" : req.params.id
-  }, {
-    $push: {
-      "comments.$.recomments" : newComment
-    }
-  }, function(err, post) {
-    if (err) return res.json({
-      success: false, 
-      message: err
-    });
-      
-    res.redirect('/challengeComments/comments/' + req.body.post.commentId + '/' + req.params.id);
-    // return res.status(201).json({
-    //   'msg': '커뮤니티 작성 포인트가 누적되었습니다!!'
-    // });
-  });
-}); //create a recomment
-
-
-router.post('/:id/recomments/:recommentId', function (req, res) {
-  console.log(req.body);
-  Carezone.findOneAndUpdate(
-    {
-      // _id: '60b6fa0c0a2b3bdacf8227f9',
-      "comments.recomments._id": req.params.recommentId
-    },
-    {
-      $set: {
-        "comments.$.recomments": req.body.recomments
-      }
-    },
-    req.body,
-    function (err, recomments) {
-      console.log(recomments);
-      res.redirect('/challengeComments/');
-    });
-}); //대댓글 삭제
-
-
-
-router.get('/:id/edit', isLoggedIn, function (req, res) {
+router.get('/Challenge/:id/edit', isLoggedIn, function (req, res) {
   Carezone.findById(req.params.id, function (err, post) {
     // var url = req.protocol + '://' + req.get('host') + '/carezone_images/' + post._id;
     var url = 'https://plinic.s3.ap-northeast-2.amazonaws.com/' + post.filename;
@@ -537,7 +507,7 @@ router.get('/:id/edit', isLoggedIn, function (req, res) {
   });
 }); // 콘텐츠관리 챌린지 edit
 
-router.put('/:id', s3upload.fields([{
+router.put('/Challenge/:id', s3upload.fields([{
   name: 'image'
 }, {
   name: 'prodimage'
@@ -659,6 +629,86 @@ router.put('/Challenge/SeqUpdate/:id', isLoggedIn, function (req, res, next) {
   });
 });
 
+router.post('/:id/comments', function(req, res) {
+
+  //사용자의 Email을 User Collection에서 찾아서 PushToken키를 가져온다.
+  var pushtoken = '';
+  if(req.body.email !== '') {
+    User.findOne({
+      email : req.body.email
+    },function(err, User) {
+      if(User) {
+        var message = { //this may vary according to the message type (single recipient, multicast, topic, et cetera)
+          to: User.pushtoken,
+          // collapse_key: 'your_collapse_key',
+
+          notification: {
+            // "title": this.beautyNoteOneLoadData.title,
+            // "body": this.registerReply.comment,
+            // "subtitle" : '댓글알림 subtitle',
+            // "badge": 1,
+            title: '플리닉 보상 알림',
+            body: req.body.comment.body,
+            sound: "default",
+            click_action: "FCM_PLUGIN_ACTIVITY",
+          },
+
+          data: { //you can send only notification or only data(or include both)
+            mode: "myqna",
+            id: req.body.id
+          }
+        };
+
+        fcm.send(message, function(err, response) {
+          if (err) {
+            console.log("챌린지 보상 푸시 전송 실패 " + req.body.email);
+          } else {
+            console.log("Successfully sent with response: ", response);
+          }
+        });
+      }
+    });
+  }
+
+
+  var newComment = req.body.comment;
+  newComment.author = req.user._id;
+  Reward.update({
+    _id: req.params.id
+  }, {
+    $push: {
+      comments: newComment
+    }
+  }, function(err, post) {
+    if (err) return res.json({
+      success: false,
+      message: err
+    });
+    res.redirect('/challengeSuccess/Challenge/' + req.params.id + "?" + req._parsedUrl.query);
+  });
+}); //create a comment
+
+router.delete('/:postId/comments/:commentId', function(req, res) {
+  Reward.update({
+        _id: req.params.postId
+      }, {
+        $pull: {
+          comments: {
+            _id: req.params.commentId
+          }
+        }
+      },
+      function(err, post) {
+        if (err) return res.json({
+          success: false,
+          message: err
+        });
+        res.redirect('/challengeSuccess/Challenge/' + req.params.postId + "?" +
+            req._parsedUrl.query.replace(/_method=(.*?)(&|$)/ig, ""));
+      });
+}); //destroy a comment
+
+
 function isLoggedIn(req, res, next) {
   if (req.isAuthenticated()) {
     return next();
@@ -689,26 +739,13 @@ function createSearch(queries) {
       });
       highlight.title = queries.searchText;
     }
-    if (searchTypes.indexOf("comment") >= 0) {
-      // var comments = req.body.comment;
-      // comment = comments.comment;
+    if (searchTypes.indexOf("body") >= 0) {
       postQueries.push({
-        "comments.$.comment": {
+        body: {
           $regex: new RegExp(queries.searchText, "i")
         }
       });
-      highlight.comment = queries.searchText;
-    }
-    if (searchTypes.indexOf("email") >= 0) {
-      // var comments = req.body.comments;
-      
-      // email = comments.email;
-      postQueries.push({
-        email: {
-          $regex: new RegExp(queries.searchText, "i")
-        }
-      });
-      highlight.email = queries.searchText;
+      highlight.body = queries.searchText;
     }
     if (searchTypes.indexOf("author!") >= 0) {
       findUser = {
@@ -737,19 +774,76 @@ function createSearch(queries) {
   };
 }
 
-function get2digits(num) {
-  return ("0" + num).slice(-2);
+
+
+function createSearchTest(querie) {
+  if (!isEmpty2(querie.termCheck)) {
+    var dayCreated = [];//기간별 조희
+    var findAfter = {
+    };
+    if (!isEmpty2(querie.termCheck)) {
+      var createdAt = new Date();
+      if(isEmpty2(!querie.termCheck.weeklyy)) {
+        var today = new Date();
+        var preToday = createdAt.setDate(createdAt.getDate()-6);
+        
+        dayCreated.push({
+          createdAt: {
+            $gte: preToday,
+            $lte: today,
+          }
+        });
+      } else {
+        dayCreated.push();
+      }
+      isEmpty2(!querie.termCheck.weeklyy) ? findAfter.weeklyy = true : findAfter.weeklyy = false;
+    }
+
+    return {
+      findAfter: findAfter,
+      dayCreated : dayCreated
+    };
+
+  } else {
+    var dayCreated = [];
+    var findAfter = {
+      weeklyy: false,
+    };
+    if (!isEmpty2(querie.termCheck)) {
+      var createdAt = new Date();
+      if(isEmpty2(!querie.termCheck.weeklyy)) {
+        var today = new Date();
+        var preToday = createdAt.setDate(createdAt.getDate()-6);
+        dayCreated.push({
+          createdAt: {
+            $gte: preToday,
+            $lte: today,
+          }
+        });
+      } else {
+      }
+      isEmpty2(!querie.termCheck.weeklyy) ? findAfter.weeklyy = true : findAfter.weeklyy = false;
+    }
+    return {
+      findAfter: findAfter,
+      dayCreated: dayCreated
+    };
+  }
 }
 
-function getFormattedDate(date) {
-  return date.getFullYear() + "-" + get2digits(date.getMonth() + 1) + "-" + get2digits(date.getDate());
-};
 
 
-// function sortFunction(a,b){  
-//   var dateA = a.updatedAt.getTime();
-//   var dateB = b.updatedAt.getTime();
-//   return dateB >dateA  ? 1 : -1;  
+// function get2digits(num) {
+//   return ("0" + num).slice(-2);
+// }
+
+// function getFormattedDate(date) {
+//   return date.getFullYear() + "-" + get2digits(date.getMonth() + 1) + "-" + get2digits(date.getDate());
 // };
 
-
+function isEmpty2(str) {
+  if(typeof str == "undefined" || str == null || str == "")
+    return true;
+  else
+    return false ;
+}

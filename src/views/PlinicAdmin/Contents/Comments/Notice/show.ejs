@@ -11,6 +11,7 @@
   $(document).ready(function () {
     $(".active").removeClass("active");
     $("#contents").addClass("active");
+    $('#forms-collapse2').addClass('show');
   });
 </script>
 <title>Hello, world!</title>
@@ -60,6 +61,8 @@
                         <td class="text-left"><%=// post.author.nickname %></td>
                         <th class="text-center" width="250">작성일</th>
                         <td width="400" class="text-left">
+                          <% var realTime = post.createdAt %>
+                          <% realTime.setHours(realTime.getHours() - 9); %>
                           <%=post.getFormattedDate(post.createdAt)%>
                         </td>
                       </tr>
@@ -103,6 +106,8 @@
                                 <div class="comment-show">
                                   <div class="comment-text mb-3"><%= comment.body %></div>
                                   <small class="d-block">
+                                    <% var realTime = comment.createdAt %>
+                                    <% realTime.setHours(realTime.getHours() - 9); %>
                                     (작성일: <span><%= post.getFormattedTime(comment.createdAt) %>, <%= post.getFormattedDate(comment.createdAt) %> </span>)
                                   </small>
                                 </div>
@@ -135,6 +140,8 @@
                                           <div class="comment-show">
                                             <div class="comment-text mb-3"><%= recomments.body %></div>
                                             <small class="d-block">
+                                              <% var realTime = recomments.createdAt %>
+                                              <% realTime.setHours(realTime.getHours() - 9); %>
                                               (작성일: <span><%= post.getFormattedTime(recomments.createdAt) %>, <%= post.getFormattedDate(recomments.createdAt) %></span>)
                                             </small>
                                           </div>
