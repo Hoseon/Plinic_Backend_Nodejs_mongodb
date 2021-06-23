@@ -65,6 +65,7 @@ var productSchema = mongoose.Schema({
   }],
   tabName: String,
   isPlinic: { type: Boolean, default: false }, //글로우픽 데이터가 아닌 플리닉 관리자에 의해 등록된 자료
+  nextDeal: { type: Boolean, default: false }, //nextDeal이 true일 경우 어플 NEXT DEAL 단에 표시되게끔
   likeCount: {type:Number, default: 0},
   likeUser: [
     {
