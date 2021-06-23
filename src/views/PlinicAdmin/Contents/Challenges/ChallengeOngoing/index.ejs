@@ -109,7 +109,7 @@
                                         <td class="align-middle"><%= post.getFormattedDate(post.createdAt) %>
                                         </td>
                                         <td class="align-middle"><%= post.dailycheck.length %>일차
-                                        <% console.log(post.dailycheck) %>
+                                        <%// console.log(post.dailycheck) %>
                                         </td>
                                         <% var toDay = new Date(); %>
                                         <% var createdDay = post.createdAt %>
@@ -129,7 +129,7 @@
                                         <% } else if(post.dailycheck.length > 0) { %>
                                             <!--회차가 0보다 큰 애들은 오늘날짜 - 시작날짜가 회차보다 작거나 같으면 진행중 아니면 실패 -->
                                             <%// console.log(toDay.getDate() - createdDay.getDate()) %>
-                                            <% if(toDay.getDate() - createdDay.getDate() < post.dailycheck.length ) { %>
+                                            <% if(toDay.getDate() - createdDay.getDate() <= post.dailycheck.length ) { %>
                                                 <td class="align-middle">
                                                     진행중
                                                 </td>

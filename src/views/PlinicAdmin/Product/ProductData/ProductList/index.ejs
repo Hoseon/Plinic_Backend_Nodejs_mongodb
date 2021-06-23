@@ -44,7 +44,7 @@
                             <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne"
                                 data-bs-parent="#accordionExample">
                                 <div class="accordion-body">
-                                    <form action="" id="">
+                                    <!-- <form action="" id="">
                                         <table class="table-bordered table table-striped table-hover">
                                             <tr>
                                                 <th class="text-center" style="padding-top: 15px;">등록일</th>
@@ -232,7 +232,48 @@
                                                 </td>
                                             </tr>
                                         </table>
-                                    </form>
+                                    </form> -->
+
+                                        <table class="table-bordered table table-striped table-hover">
+                                            <form class="checkValidation" action="/product/" id="search">
+                                                <tr>
+                                                    <th class="text-center" style="padding-top: 15px;">검색 조건</th>
+                                                    <td colspan="3">
+                                                        <div class="row g-4 align-self-center">
+                                                            <div class="col-2">
+                                                                <select class="form-select" aria-label="Default select example" name="searchType" <%= search.searchType=="author!"?"disabled":"" %>>
+                                                                    <% var select %>
+                                                                    <option value="small_category,product_name"
+                                                                    <%= search.searchType=="small_category,product_name"?select="selected":"" %>>카테고리/상품명</option>
+                                                                    <option value="product_num"
+                                                                    <%= search.searchType=="product_num"?select="selected":"" %>>상품코드</option>
+                                                                </select>
+                                                            </div>
+                                                            <div class="col-5">
+                                                                <input class="cvMinLength" cvMinLength="2"
+                                                                cvMinLenErrTo="#searchError" style="float: left; width: 300px; height: 28px;"
+                                                                cvMinLenErrMsg="It should be at least 2 characters"
+                                                                type="text" name="searchText" value="<%= select?search.searchText:"" %>"
+                                                                <%= search.searchType=="author!"?"disabled":"" %>>
+                                                            </div>
+                                                        </div>
+                                                    </td>
+                                                    <td rowspan="2">
+                                                        <div class="row justify-content-center">
+                                                            <div class="col-6 p-0 m-0">
+                                                                <button type="submit" id="btnSearch"  class="btn btn-info" <%= search.searchType=="author!"?"disabled":"" %>>검색</button>
+                                                            </div>
+                                                            <%if(search.searchType){%>
+                                                            <div class="col-6 p-0 m-0">
+                                                                <button type="button" class="btn btn-secondary" onclick="window.location = '/product?page=1'">취소</button>
+                                                            </div>
+                                                            <%}%>
+                                                            <div class="message" id="searchError"></div>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                            </form>
+                                        </table>
 
                                         <div class="accordion-body">
                                             <div class="row g-4 align-items-center">
@@ -282,9 +323,10 @@
                                                         <th scope="col">카테고리/상품명</th>
                                                         <th scope="col">상품코드</th>
                                                         <th scope="col">판매가격</th>
-                                                        <th scope="col">적립포인트</th>
+                                                        <th scope="col">넥스트 딜 설정</th>
                                                         <th scope="col">공개/비공개</th>
                                                         <th scope="col">품절/해제</th>
+                                                        <th scope="col">적립포인트</th>
                                                         <th scope="col">재고수량</th>
                                                         <th scope="col">상품 URL</th>
                                                         <th scope="col">제조사</th>
@@ -320,11 +362,11 @@
 
                                                                 <% if( post.image_url  == null) { %>
                                                                     <img src="https://plinic.s3.ap-northeast-2.amazonaws.com/<%= post.filename %>"
-                                                                    class="img-thumbnail" alt="..." onerror="this.style.display='none'">
-                                                                <% } %> 
-                                                                <img src="<%= post.image_url %>" style="max-width:120px;"
+                                                                    style="max-width:200px;" class="img-thumbnail" alt="..." onerror="this.style.display='none'">
+                                                                <% } else { %> 
+                                                                <img src="<%= post.image_url %>" style="max-width:200px;"
                                                                 class="img-thumbnail" alt="..." onerror="this.style.display='none'">
-
+                                                                <% } %>
                                                                     <!-- <img src="https://plinic.s3.ap-northeast-2.amazonaws.com/<%=// post.filename %>"
                                                                     class="img-thumbnail" alt="..." onerror="this.style.display='none'">
                                                                     <img src="<%=// post.image_url %>" style="max-width:120px;"
@@ -368,19 +410,26 @@
                                                                     <%= post.Amount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ','); %> <!-- 판매가격 -->
                                                                     <%=// post.price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ','); %> 원 <!-- 소비자가 -->
                                                                 </td>
-                                                                <td scope="row" class="align-middle">
-                                                                    <div class="sel" style="width:120px;">
-                                                                        <select class="form-select" 
-                                                                            aria-label="Default select example">
-                                                                            <option disabled selected>포인트 설정</option>
-                                                                            <option value="use_disabled">사용안함</option>
-                                                                            <option value="price_ratio">판매가 비율</option>
-                                                                        </select>
-                                                                    </div>
-                                                                    <div class="sel-point">
-                                                                        <input type="number" name="" class="form-control"
-                                                                        value="<%=// post.maxPercent %>">
-                                                                    </div>
+                                                                <td class="align-middle">
+                                                                    <% if(post.nextDeal == false) { %>
+                                                                        <label class="col-md-3 text-left">설정&nbsp;</label>
+                                                                        <input class="form-check-input" type="checkbox" value=true
+                                                                            name="post[nextDeal]">
+                                                                        <br>
+                                                                        <div>/</div>
+                                                                        <label class="col-md-3 text-left">해제</label>
+                                                                        <input class="form-check-input" type="checkbox" value=false disabled
+                                                                        name="post[nextDeal]">
+                                                                    <% } else if(post.nextDeal == true) { %>
+                                                                        <label class="col-md-3 text-left">설정&nbsp;</label>
+                                                                        <input class="form-check-input" type="checkbox" value=true disabled
+                                                                            name="post[nextDeal]">
+                                                                        <br>
+                                                                        <div>/</div>
+                                                                        <label class="col-md-3 text-left">해제</label>
+                                                                        <input class="form-check-input" type="checkbox" value=false
+                                                                            name="post[nextDeal]">
+                                                                    <% } %>
                                                                 </td>
                                                                 <td class="align-middle">
                                                                 <% if(post.noPublic == false) { %>
@@ -419,6 +468,20 @@
                                                                     <input class="form-check-input" type="checkbox" value=false
                                                                         name="post[outofStock]" disabled>
                                                                 <% } %>
+                                                                </td>
+                                                                <td scope="row" class="align-middle">
+                                                                    <div class="sel" style="width:120px;">
+                                                                        <select class="form-select" 
+                                                                            aria-label="Default select example">
+                                                                            <option disabled selected>포인트 설정</option>
+                                                                            <option value="use_disabled">사용안함</option>
+                                                                            <option value="price_ratio">판매가 비율</option>
+                                                                        </select>
+                                                                    </div>
+                                                                    <div class="sel-point">
+                                                                        <input type="number" name="" class="form-control"
+                                                                        value="<%=// post.maxPercent %>">
+                                                                    </div>
                                                                 </td>
                                                                 <td class="d-grid gap-3"
                                                                     style="padding-top: 15px; padding-bottom: 42px;">

@@ -153,14 +153,6 @@ router.get('/', function (req, res) {
   });
 }); // index
 
-
-
-
-router.get("/Comments/Faq/show", function (req, res) {
-  return res.render("PlinicAdmin/Contents/Comments/Faq/show", {});
-});
-//FAQ 게시판 상세 화면
-
 router.get("/Comments/Faq/new", function (req, res) {
   return res.render("PlinicAdmin/Contents/Comments/Faq/new", {});
 });
@@ -170,12 +162,6 @@ router.get("/Comments/Faq/edit", function (req, res) {
   return res.render("PlinicAdmin/Contents/Comments/Faq/edit", {});
 });
 //FAQ 게시판 수정 화면
-
-
-router.get("/Challenge/new", function (req, res) {
-  return res.render("PlinicAdmin/Contents/ChallengeMgt/new", {});
-});
-//콘텐츠관리 챌린지 신규 등록 화면
 
 router.post('/Challenge/', s3upload.fields([
   { name: 'image' }, { name: 'homeimage' }, { name: 'challenge_image1' }, { name: 'challenge_image2' }, { name: 'challenge_image3' }, { name: 'challenge_image4' }, { name: 'challenge_image5' }]), isLoggedIn, function (req, res, next) {
@@ -281,8 +267,8 @@ router.delete('/Challenge/:id', isLoggedIn, function (req, res, next) {
   });
 }); //destroy
 
-router.get("/Challenge/:id", function (req, res) {
-  Carezone.findById(req.params.id)
+router.get("/:id", function (req, res) {
+  Faq.findById(req.params.id)
     .populate(['author', 'comments.author'])
     .exec(function (err, post) {
       if (err) return res.json({
@@ -292,8 +278,6 @@ router.get("/Challenge/:id", function (req, res) {
       post.views++;
       post.save();
 
-      //배너 이미지 가져 오기 20190502
-      //res.setHeader('Content-Type', 'image/jpeg');
       var url = 'https://plinic.s3.ap-northeast-2.amazonaws.com/' + post.filename;
       var prod_url = 'https://plinic.s3.ap-northeast-2.amazonaws.com/' + post.prodfilename;
       var homeImage = 'https://plinic.s3.ap-northeast-2.amazonaws.com/' + post.homeimage_filename;
@@ -302,9 +286,7 @@ router.get("/Challenge/:id", function (req, res) {
       var challenge_url3 = 'https://plinic.s3.ap-northeast-2.amazonaws.com/' + post.challenge_image3_filename;
       var challenge_url4 = 'https://plinic.s3.ap-northeast-2.amazonaws.com/' + post.challenge_image4_filename;
       var challenge_url5 = 'https://plinic.s3.ap-northeast-2.amazonaws.com/' + post.challenge_image5_filename;
-      //fs.createReadStream(path.join(__dirname, '../uploads/', post.filename)).pipe(res);
-      // console.log(post.day);
-      res.render("PlinicAdmin/Contents/ChallengeMgt/show", {
+      res.render("PlinicAdmin/Contents/Comments/Faq/show", {
         post: post,
         url: url,
         prod_url: prod_url,
@@ -319,8 +301,44 @@ router.get("/Challenge/:id", function (req, res) {
         search: createSearch(req.query)
       });
     });
-});
-//콘텐츠관리 챌린지 Show
+}); //faq Show 페이지
+
+router.post('/:id/comments', function(req, res) {
+  var newComment = req.body.comment;
+  newComment.author = req.user._id;
+  Faq.findOneAndUpdate({
+    _id: req.params.id
+  }, {
+    $push: {
+      comments: newComment
+    }
+  }, function(err, post) {
+    if (err) return res.json({
+      success: false,
+      message: err
+    });
+    res.redirect('/faqComments/' + req.params.id + "?" + req._parsedUrl.query);
+  });
+}); //댓글 작성
+
+router.post('/:id/:commentId/commentsDel/', function (req, res) {
+  console.log(req.body);
+  Faq.findOneAndUpdate(
+    {
+      // _id: '60b6fa0c0a2b3bdacf8227f9',
+      "comments._id": req.params.commentId
+    },
+    {
+      $set: {
+        comments: req.body.comments
+      }
+    },
+    req.body,
+    function (err, recomments) {
+      console.log(recomments);
+      res.redirect('/faqComments/' + req.params.id + "?" + req._parsedUrl.query);
+    });
+}); //댓글 삭제
 
 router.get('/Challenge/:id/edit', isLoggedIn, function (req, res) {
   Carezone.findById(req.params.id, function (err, post) {

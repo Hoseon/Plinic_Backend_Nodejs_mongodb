@@ -65,7 +65,7 @@ router.get('/', function (req, res) {
   async.waterfall([
     function (callback) {
     if (!search.findUser) return callback(null);
-    User_admin.find(search.findUser, function (err, users) {
+    Product.find(search.findUser, function (err, users) {
       if (err) callback(err);
       var or = [];
       users.forEach(function (user) {
@@ -477,6 +477,26 @@ router.get("/getPlinicProductDevice", function(req, res, next) {
   ]);
 });
 
+router.get("/getPlinicProductNextDeal", function(req, res, next) {
+  async.waterfall([
+    () => {
+      Product.find(
+        {
+          outofStock: false,
+          noPublic: true,
+          isPlinic: true,
+          nextDeal: true,
+        },
+        (err, docs) => {
+          if (err) res.sendStatus(400);
+
+          if (docs) res.status(201).json(docs);
+        }
+      );
+    }
+  ]);
+});
+
 router.get("/like/:product_num/:email", function(req, res, next) {
   async.waterfall([
     function(callback) {
@@ -609,21 +629,29 @@ function createSearch(queries) {
     //검색어 글자수 제한 하는 것
     var searchTypes = queries.searchType.toLowerCase().split(",");
     var postQueries = [];
-    if (searchTypes.indexOf("title") >= 0) {
+    if (searchTypes.indexOf("small_category") >= 0) {
       postQueries.push({
-        title: {
+        small_category: {
           $regex: new RegExp(queries.searchText, "i")
         }
       });
-      highlight.title = queries.searchText;
+      highlight.small_category = queries.searchText;
     }
-    if (searchTypes.indexOf("body") >= 0) {
+    if (searchTypes.indexOf("product_name") >= 0) {
       postQueries.push({
-        body: {
+        product_name: {
           $regex: new RegExp(queries.searchText, "i")
         }
       });
-      highlight.body = queries.searchText;
+      highlight.product_name = queries.searchText;
+    }
+    if (searchTypes.indexOf("product_num") >= 0) {
+      postQueries.push({
+        product_num: {
+          $regex: new RegExp(queries.searchText, "i")
+        }
+      });
+      highlight.product_num = queries.searchText;
     }
     if (searchTypes.indexOf("author!") >= 0) {
       findUser = {
