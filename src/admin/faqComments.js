@@ -163,6 +163,38 @@ router.get("/Comments/Faq/edit", function (req, res) {
 });
 //FAQ 게시판 수정 화면
 
+router.delete('/del/:id', isLoggedIn, function(req, res, next) {
+  Faq.findOneAndRemove({
+    _id: req.params.id,
+    // author: req.user._id
+  }, function(err, post) {
+    if (err) return res.json({
+      success: false,
+      message: err
+    });
+    if (!post) return res.json({
+      success: false,
+      message: "No data found to delete"
+    });
+    var params = {
+      Bucket: 'plinic',
+      Delete: { // required
+        Objects: [ // required
+          { Key: post.filename },
+        ]
+      }
+    };
+    s3.deleteObjects(params, function(err, data){
+      if(err) {
+        console.log("케어존 수정 아마존 파일 삭제 에러 : " + "err : " + err);
+        res.status(500);
+      }
+      else console.log("케어존 수정 이전 파일 삭제 완료 : " + JSON.stringify(data));
+    });
+    res.redirect('/faqComments/');
+  });
+}); // FAQ 게시판 삭제
+
 router.post('/Challenge/', s3upload.fields([
   { name: 'image' }, { name: 'homeimage' }, { name: 'challenge_image1' }, { name: 'challenge_image2' }, { name: 'challenge_image3' }, { name: 'challenge_image4' }, { name: 'challenge_image5' }]), isLoggedIn, function (req, res, next) {
     async.waterfall([function (callback) {
@@ -225,47 +257,6 @@ router.post('/Challenge/', s3upload.fields([
       });
     });
   }); // create
-
-router.delete('/Challenge/:id', isLoggedIn, function (req, res, next) {
-  console.log(req);
-  Carezone.findOneAndRemove({
-    _id: req.params.id,
-    // author: req.user._id
-  }, function (err, post) {
-    if (err) return res.json({
-      success: false,
-      message: err
-    });
-    if (!post) return res.json({
-      success: false,
-      message: "No data found to delete"
-    });
-    var params = {
-      Bucket: 'plinic',
-      Delete: { // required
-        Objects: [ // required
-          { Key: post.filename },
-          { Key: post.prodfilename },
-          { Key: post.homeimage },
-          { Key: post.challenge_image1_filename },
-          { Key: post.challenge_image2_filename },
-          { Key: post.challenge_image3_filename },
-          { Key: post.challenge_image4_filename },
-          { Key: post.challenge_image5_filename }
-        ]
-      }
-    };
-    s3.deleteObjects(params, function (err, data) {
-      console.log()
-      if (err) {
-        console.log("케어존 수정 아마존 파일 삭제 에러 : " + "err : " + err);
-        res.status(500);
-      }
-      else console.log("케어존 수정 이전 파일 삭제 완료 : " + JSON.stringify(data));
-    });
-    res.redirect('/contents/Challenge/newIndex');
-  });
-}); //destroy
 
 router.get("/:id", function (req, res) {
   Faq.findById(req.params.id)

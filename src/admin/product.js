@@ -177,22 +177,21 @@ router.get("/producPreview/:id", function (req, res) {
       });
 
       var url = 'https://plinic.s3.ap-northeast-2.amazonaws.com/' + post.filename;
-      var prod_url = 'https://plinic.s3.ap-northeast-2.amazonaws.com/' + post.prodfilename;
+      // var prod_url = 'https://plinic.s3.ap-northeast-2.amazonaws.com/' + post.prodfilename;
 
-      var productimage = 'https://plinic.s3.ap-northeast-2.amazonaws.com/' + post.filename;
-      var jepumImage = 'https://plinic.s3.ap-northeast-2.amazonaws.com/' + post.productFileName;
-      var detailimage = 'https://plinic.s3.ap-northeast-2.amazonaws.com/' + post.detailImageName;
-      var announcement = 'https://plinic.s3.ap-northeast-2.amazonaws.com/' + post.announcementFileName;
-
+      var product_url = 'https://plinic.s3.ap-northeast-2.amazonaws.com/' + post.productFileName;
+      // var jepumImage = 'https://plinic.s3.ap-northeast-2.amazonaws.com/' + post.productFileName;
+      var detail_url = 'https://plinic.s3.ap-northeast-2.amazonaws.com/' + post.detailImageName;
+      var announcement_url = 'https://plinic.s3.ap-northeast-2.amazonaws.com/' + post.announcementFileName;
 
       res.render("PlinicAdmin/Product/ProductData/ProductList/show", {
         post: post,
         url: url,
-        prod_url: prod_url,
-        productimage: productimage,
-        jepumImage: jepumImage,
-        detailimage: detailimage,
-        announcement: announcement,
+        // prod_url: prod_url,
+        product_url: product_url,
+        // jepumImage: jepumImage,
+        detail_url: detail_url,
+        announcement_url: announcement_url,
         urlQuery: req._parsedUrl.query,
         user: req.user,
         search: createSearch(req.query)
@@ -264,7 +263,9 @@ router.post("/", s3upload.fields([{ name: "productimage" }, {name: "jepumImage" 
 router.get('/ProductRegister/:id/edit', isLoggedIn, function (req, res) {
   Product.findById(req.params.id, function (err, post) {
     var url = 'https://plinic.s3.ap-northeast-2.amazonaws.com/' + post.filename;
-    var prod_url = 'https://plinic.s3.ap-northeast-2.amazonaws.com/' + post.prodfilename;
+    var product_url = 'https://plinic.s3.ap-northeast-2.amazonaws.com/' + post.productFileName;
+    var detail_url = 'https://plinic.s3.ap-northeast-2.amazonaws.com/' + post.detailImageName;
+    var announcement_url = 'https://plinic.s3.ap-northeast-2.amazonaws.com/' + post.announcementFileName;
 
     var prefilename = post.filename; //이전 파일들은 삭제
     var preoriginaFileName = post.originaFileName; //이전 파일들은 삭제
@@ -291,9 +292,14 @@ router.get('/ProductRegister/:id/edit', isLoggedIn, function (req, res) {
       predetailImageName : predetailImageName,
       predetailImageOriginalName : predetailImageOriginalName,
       preannouncementFileName : preannouncementFileName,
-      preannouncementOriginalFileName : preannouncementOriginalFileName,
+      preannouncementOriginalFileName: preannouncementOriginalFileName,
+      
+      //edit 페이지 이미지 불러오기
       url: url,
-      prod_url: prod_url,
+      product_url: product_url,
+      detail_url: detail_url,
+      announcement_url: announcement_url,
+
       user: req.user
     });
   });
@@ -311,14 +317,31 @@ router.put('/RegisterEdit/:id', s3upload.fields([{
 }]), isLoggedIn, function (req, res, next) {
   req.body.post.updatedAt = Date.now();
   req.body.post.isPlinic = true;
-  req.body.post.filename = req.files['productimage'][0].key;
-  req.body.post.originaFileName = req.files['productimage'][0].originalname;
-  req.body.post.productFileName = req.files['jepumImage'][0].key;
-  req.body.post.productOriginalName = req.files['jepumImage'][0].originalname;
-  req.body.post.detailImageName = req.files['detailimage'][0].key;
-  req.body.post.detailImageOriginalName = req.files['detailimage'][0].originalname;
-  req.body.post.announcementFileName = req.files['announcement'][0].key;
-  req.body.post.announcementOriginalFileName = req.files['announcement'][0].originalname;
+  // req.body.post.filename = req.files['productimage'][0].key;
+  // req.body.post.originaFileName = req.files['productimage'][0].originalname;
+  // req.body.post.productFileName = req.files['jepumImage'][0].key;
+  // req.body.post.productOriginalName = req.files['jepumImage'][0].originalname;
+  // req.body.post.detailImageName = req.files['detailimage'][0].key;
+  // req.body.post.detailImageOriginalName = req.files['detailimage'][0].originalname;
+  // req.body.post.announcementFileName = req.files['announcement'][0].key;
+  // req.body.post.announcementOriginalFileName = req.files['announcement'][0].originalname;
+
+  if (req.files['productimage']) {
+    req.body.post.filename = req.files['productimage'][0].key;
+    req.body.post.originaFileName = req.files['productimage'][0].originalname;
+  }
+  if (req.files['jepumImage']) {
+    req.body.post.productFileName = req.files['jepumImage'][0].key;
+    req.body.post.productOriginalName = req.files['jepumImage'][0].originalname;
+  }
+  if (req.files['detailimage']) {
+    req.body.post.detailImageName = req.files['detailimage'][0].key;
+    req.body.post.detailImageOriginalName = req.files['detailimage'][0].originalname;
+  }
+  if (req.files['announcement']) {
+    req.body.post.announcementFileName = req.files['announcement'][0].key;
+    req.body.post.announcementOriginalFileName = req.files['announcement'][0].originalname;
+  }
 
   var params = {
     Bucket: 'plinic',
@@ -483,7 +506,7 @@ router.get("/getPlinicProductNextDeal", function(req, res, next) {
       Product.find(
         {
           outofStock: false,
-          noPublic: true,
+          noPublic: false,
           isPlinic: true,
           nextDeal: true,
         },
@@ -495,7 +518,8 @@ router.get("/getPlinicProductNextDeal", function(req, res, next) {
       );
     }
   ]);
-});
+}); //관리자 페이지 넥스트 딜 true plinic로
+
 
 router.get("/like/:product_num/:email", function(req, res, next) {
   async.waterfall([

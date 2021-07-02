@@ -130,80 +130,119 @@
                             <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
                                 <div class="accordion-body">
 
-                                    <div class="admin_top_info">
-                                        4 항목, 1/1 페이지
-                                    </div>
-                                        <div class="admin_search_container">
-                                            <input type="hidden" name="table" value="notice">
-                                            <input type="hidden" name="mode" value="">
-                                            <input type="hidden" name="pg" value="">
-                                            <select name="opr">
-                                                <option value="vsubject">제목</option>
-                                                <option value="vname">작성자</option>
-                                                <option value="vcontent">내용</option>
-                                            </select>
-                                            <input type="text" name="keyword" size="15" value="">
-                                            <input type="submit" value="검색" class="btn btn-primary">
-                                        
-                                        </div>
-                                        <div class="text-right" style="padding:0;">
-                                            <button class="btn btn-primary btn btn-danger" type="button"
-                                                onclick="location.href='/productQnA/ProductData/ProductQnA/show'">
-                                                <i class="bi bi-pencil"></i>show 임시
-                                            </button>
-                                        </div>
+                                    <table class="table-bordered table table-striped table-hover">
+                                        <form class="checkValidation" action="/productQnA/" id="search">
+                                            <tr>
+                                                <th class="text-center" style="padding-top: 15px;">검색 조건</th>
+                                                <td colspan="3">
+                                                    <div class="row g-4 align-self-center">
+                                                        <div class="col-2">
+                                                            <select class="form-select" aria-label="Default select example" name="searchType" <%= search.searchType=="author!"?"disabled":"" %>>
+                                                                <% var select %>
+                                                                <option value="title"
+                                                                <%= search.searchType=="title"?select="selected":"" %>>제목</option>
+                                                            </select>
+                                                        </div>
+                                                        <div class="col-5">
+                                                            <input class="cvMinLength" cvMinLength="2"
+                                                            cvMinLenErrTo="#searchError" style="float: left; width: 300px; height: 28px;"
+                                                            cvMinLenErrMsg="It should be at least 2 characters"
+                                                            type="text" name="searchText" value="<%= select?search.searchText:"" %>"
+                                                            <%= search.searchType=="author!"?"disabled":"" %>>
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                                <td rowspan="2">
+                                                    <div class="row justify-content-center">
+                                                        <div class="col-6 p-0 m-0">
+                                                            <button type="submit" id="btnSearch"  class="btn btn-info" <%= search.searchType=="author!"?"disabled":"" %>>검색</button>
+                                                        </div>
+                                                        <%if(search.searchType){%>
+                                                        <div class="col-6 p-0 m-0">
+                                                            <button type="button" class="btn btn-secondary" onclick="window.location = '/product?page=1'">취소</button>
+                                                        </div>
+                                                        <%}%>
+                                                        <div class="message" id="searchError"></div>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        </form>
+                                    </table>
                                         <div class="panel-body" style="padding-top:0px;padding-bottom:15px;">
                                             <div class="table-responsive dataTables_wrapper form-inline">
                                                 <table class="table table-bordered  table-condensed table-hover  text-center">
                                                     <thead>
                                                         <tr>
-                                                            <th class="text-center">No</th>
-                                                            <th class="text-center">챌린지 제목</th>
-                                                            <th class="text-center" width="700">댓글 내용</th>
-                                                            <th class="text-center">작성자</th>
-                                                            <th class="text-center">작성일</th>
-                                                            <th class="text-center">첨부</th>
                                                             <th class="text-center">✓</th>
+                                                            <th class="text-center">No</th>
+                                                            <th class="text-center">상품문의 제목</th>
+                                                            <th class="text-center">조회수</th>
+                                                            <th class="text-center">작성일</th>
                                                         </tr>
                                                     </thead>
+                                                    <% if(faq == null || faq.length == 0) { %>
+                                                        <tr class="noData">
+                                                            <td colspan="5">There is no data to show :(</td>
+                                                        </tr>
+                                                    <% } %>
                                                     <tbody>
-                                                                <tr>
-                                                                    <td>4</td>
-                                                                    <td>일요일 챌린지 HA앰플 보상</td>
-                                                                    <td>국민일보 살해 암매장 50대 용의자, 졸고 있던 경찰 탓에 유치장서 숨져</td>
-                                                                    <td>akpfffjoemdid</td>
-                                                                    <td>2018/12/28</td>
-                                                                    <td></td>
-                                                                    <td class="center">
-                                                                        <input type="checkbox" class="form-check-input" id="exampleCheck1">
-                                                                    </td>
-                                                                </tr>
+                                                        <% faq.forEach(function(post) { %>
+                                                            <% if(post.category == '[상품]') { %>
+                                                            <tr onclick="window.location = '/productQnA/<%= post._id %>?<%= urlQuery %>'">
+                                                                <td class="center">
+                                                                    <input type="checkbox" class="form-check-input" id="exampleCheck1">
+                                                                </td>
+                                                                <td></td>
+                                                                <td><%= post.title %></td>
+                                                                <td><%= post.views %></td>
+                                                                <% var realTime = post.createdAt %>
+                                                                <% realTime.setHours(realTime.getHours() - 9); %>
+                                                                <td><%= post.getFormattedDate(post.createdAt) %></td>
+                                                            </tr>
+                                                            <% } %>
+                                                        <% }) %>
+
                                                     </tbody>
                                                 </table>
 
-                                                <div class="row">
-                                                    <div class="col-auto me-auto" style="padding-top:10px;">
-                                                        <button class="btn btn-primary btn btn-danger" type="button">삭제</button>
-                                                    </div>
-                                                    <div class="col-auto">
-                                                            <nav aria-label="Page navigation example">
-                                                                <ul class="pagination pagination-sm justify-content-center">
-                                                                    <li class="page-item">
-                                                                    <a class="page-link" href="#" aria-label="Previous">
-                                                                        <span aria-hidden="true">&laquo;</span>
-                                                                    </a>
-                                                                    </li>
-                                                                    <li class="page-item"><a class="page-link" href="#">1</a></li>
-                                                                    <li class="page-item"><a class="page-link" href="#">2</a></li>
-                                                                    <li class="page-item"><a class="page-link" href="#">3</a></li>
-                                                                    <li class="page-item">
-                                                                    <a class="page-link" href="#" aria-label="Next">
-                                                                        <span aria-hidden="true">&raquo;</span>
-                                                                    </a>
-                                                                    </li>
-                                                                </ul>
-                                                            </nav>
-                                                    </div>
+                                                <!-- 여기서는 qna 목록 전체 포함해서 페이지가 나옴... 검색가능하게끔-->
+                                                <div class="col-md-4">
+                                                    <nav aria-label="Page navigation example">
+                                                        <ul class="pagination pagination-sm justify-content-left">
+                                                            <%
+                                                            var offset = 4;
+                                                            var partialQuery;
+                                                            if (urlQuery) partialQuery = "&" + urlQuery.replace(/page=(.*?)(&|$)/ig, "");
+                                                            %>
+                        
+                                                            <li class="page-item disabled">
+                                                                <a class="page-link" href="#" aria-label="Previous">
+                                                                    <span aria-hidden="true">&laquo;</span>
+                                                                </a>
+                                                            </li>
+                        
+                                                            <% for(i = 1;i <= maxPage;i++){ %>
+                        
+                                                                <% if(i <= offset || i > maxPage - offset || (i >= page - (offset - 1) && i <= page + (offset - 1))){ %>
+                                                                    <% if(i != page){ %>
+                                                                        <li class="page-item"><a class="page-link"
+                                                                                                 href="/productQnA/?page=<%= i %><%= partialQuery %>"><%= i %></a>
+                                                                        </li>
+                                                                    <% } else { %>
+                                                                        <li class="page-item" name="currentPage" aria-current="page"><a
+                                                                                    class="page-link" href="#"><%= i %></a></li>
+                                                                    <% } %>
+                                                                <% } else if(i == offset + 1 || i == maxPage - offset){ %>
+                                                                    <li>...</li>
+                                                                <% } %>
+                                                            <% } %>
+                                                            <li class="page-item disabled">
+                                                                <a class="page-link" href="#" aria-label="Next">
+                                                                    <span aria-hidden="true">&raquo;</span>
+                                                                </a>
+                                                            </li>
+                                                        </ul>
+                                                    </nav>
                                                 </div>
                                                 
                                             </div>
