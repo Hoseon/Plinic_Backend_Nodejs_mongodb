@@ -110,12 +110,13 @@
                                         <label class="col-sm-2 text-center control-label" for="name">대표 이미지</label>
                                         <div class="col-sm-3 controls">
                                             <div class="imgUp">
-                                                <img class="imagePreview img-fluid" src="https://plinic.s3.ap-northeast-2.amazonaws.com/<%= prefilename %>" />
+                                                <!-- <img class="imagePreview img-fluid" src="https://plinic.s3.ap-northeast-2.amazonaws.com/<%=// prefilename %>" /> -->
+                                                <img class="imagePreview img-fluid" src="<%= url %>" />
                                                 <label class="btn btn-primary">
                                                     Upload
-                                                    <input name="productimage" type="file"
+                                                    <input name="productimage" type="file" 
                                                         class="uploadFile img form-control" value="Upload Photo"
-                                                        style="width: 0px;height: 0px;overflow: hidden;" required
+                                                        style="width: 0px;height: 0px;overflow: hidden;"
                                                         accept=".jpg, .jpeg, .png">
                                                 </label>
                                             </div>
@@ -127,12 +128,13 @@
                                         <label class="col-sm-2 text-center control-label" for="name">상품 이미지</label>
                                         <div class="col-sm-3 controls">
                                             <div class="imgUp">
-                                                <img class="imagePreview img-fluid" src="https://plinic.s3.ap-northeast-2.amazonaws.com/<%= preproductFileName %>" />
+                                                <!-- <img class="imagePreview img-fluid" src="https://plinic.s3.ap-northeast-2.amazonaws.com/<%=// preproductFileName %>" /> -->
+                                                <img class="imagePreview img-fluid" src="<%= product_url %>" />
                                                 <label class="btn btn-primary">
                                                     Upload
-                                                    <input name="jepumImage" type="file"
+                                                    <input name="jepumImage" type="file" 
                                                         class="uploadFile img form-control" value="Upload Photo"
-                                                        style="width: 0px;height: 0px;overflow: hidden;" required
+                                                        style="width: 0px;height: 0px;overflow: hidden;" 
                                                         accept=".jpg, .jpeg, .png">
                                                 </label>
                                             </div>
@@ -237,6 +239,11 @@
                                                             id="inlineCheckbox98" name="post[nextDeal]" value="true">
                                                         <label class="form-check-label" for="inlineCheckbox98">설정</label>
                                                     </div>
+                                                </div>
+                                                <div class="col-9">
+                                                    <label class="col-3">넥스트 딜 종료 날짜</label>
+                                                    <input type="date" name="post[nextDealText]" class="col-3"
+                                                        data-validate="data">
                                                 </div>
                                                 <div class="form-group row">
                                                     <label class="col-sm-2 text-center control-label" for="name">넥스트 딜 해제</label>
@@ -646,7 +653,7 @@
                                                 <label class="col-sm-2 text-center control-label" for="name">배송비
                                                     유형</label>
                                                 <div class="col-sm-3 controls">
-                                                    <select name="post[destinationType]" class="form-select" aria-label="Default select example" <%= post.destinationType %>>
+                                                    <select name="post[destinationType]" class="form-select" aria-label="Default select example" <%=// post.destinationType %>>
                                                       <option selected>쇼핑몰 기본설정 사용</option>
                                                       <option value="Yes">사용함</option>
                                                       <option value="No">사용안함</option>
@@ -666,14 +673,15 @@
                                                         aria-labelledby="headingOne" data-bs-parent="#accordionExample">
                                                         <div class="accordion-body">
                                                             <div class="imgUp">
-                                                                <img class="imagePreview img-fluid" src="https://plinic.s3.ap-northeast-2.amazonaws.com/<%= predetailImageName %>" />
+                                                                <!-- <img class="imagePreview img-fluid" src="https://plinic.s3.ap-northeast-2.amazonaws.com/<%=// predetailImageName %>" /> -->
+                                                                <img class="imagePreview img-fluid" src="<%= detail_url %>" />
                                                                 <label class="btn btn-primary">
                                                                     Upload
-                                                                    <input name="detailimage" type="file"
+                                                                    <input name="detailimage" type="file" 
                                                                         class="uploadFile img form-control"
                                                                         value="Upload Photo"
                                                                         style="width: 0px;height: 0px;overflow: hidden;"
-                                                                        required accept=".jpg, .jpeg, .png">
+                                                                         accept=".jpg, .jpeg, .png">
                                                                 </label>
                                                             </div>
                                                         </div>
@@ -694,14 +702,15 @@
                                                          aria-labelledby="headingOne" data-bs-parent="#accordionExample">
                                                         <div class="accordion-body">
                                                             <div class="w-25 imgUp">
-                                                                <img class="imagePreview img-fluid" src="https://plinic.s3.ap-northeast-2.amazonaws.com/<%= preannouncementFileName %>" />
+                                                                <!-- <img class="imagePreview img-fluid" src="https://plinic.s3.ap-northeast-2.amazonaws.com/<%=// preannouncementFileName %>" /> -->
+                                                                <img class="imagePreview img-fluid" src="<%= announcement_url %>" />
                                                                 <label class="btn btn-primary">
                                                                     Upload
-                                                                    <input name="announcement" type="file"
+                                                                    <input name="announcement" type="file" 
                                                                            class="uploadFile img form-control"
                                                                            value="Upload Photo"
                                                                            style="width: 0px;height: 0px;overflow: hidden;"
-                                                                           required accept=".jpg, .jpeg, .png">
+                                                                            accept=".jpg, .jpeg, .png">
                                                                 </label>
                                                             </div>
                                                         </div>

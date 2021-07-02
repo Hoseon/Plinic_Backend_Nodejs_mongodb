@@ -11,6 +11,7 @@
   $(document).ready(function () {
     $(".active").removeClass("active");
     $("#products").addClass("active");
+    $("#forms-collapse3").addClass('show');
   });
 </script>
 <title>Hello, world!</title>
@@ -43,77 +44,79 @@
                   내용보기
                 </div>
                 <br>
-                <button type="button" class="w-15 m-1 btn btn-success btn-sm"
-                  onclick="location.href='/productQnA/ProductData/ProductQnA/edit'">수정</button>
-                <button type="button" class="w-15 m-1 btn btn-success btn-sm"
-                  onclick="location.href='/productQnA/ProductData/ProductQnA/new'">담변</button>
-                <form>
-                  <button type="button" class="w-15 m-1 btn btn-danger btn-sm">삭제</button>
-                </form>
-                <button type="button" class="w-15 m-1 btn btn-primary btn-sm"
-                  onclick="location.href='/productQnA/ProductData/ProductQnA'">목록으로</button>
-
-                <table class="table-bordered table table-striped table-hover">
-                    <tr>
-                      <th class="text-center">제목</th>
-                      <td colspan="3" class="text-left">
-                        국민일보 살해 암매장 50대 용의자, 졸고있던 경찰 탓에 유치장서 숨져
-                      </td>
-                    </tr>
-                    <tr>
-                      <th class="text-center">이름</th>
-                      <td class="text-left">
-                        관리자
-                      </td>
-                      <th class="text-center" width="250">작성일</th>
-                      <td width="400" class="text-left">
-                        2018-12-28 17:44:45
-                      </td>
-                    </tr>
-                    <tr>
-                      <th class="col-2" style="text-align: center;">IP주소</th>
-                      <td class="text-left" class="text-left">121.161.30.211</td>
-                      <th class="text-center" width="250"></th>
-                      <td width="400" class="text-left">
-                      </td>
-                    </tr>
-                    <tr>
-                      <th class="col-2" style="text-align: center;">첨부파일</th>
-                      <td colspan="3" class="text-left">
-                        없음
-                      </td>
-                    </tr>
-                    <tr>
-                      <td colspan="4" class="text-left">
-                        지인을 살해 암매장한 혐의로 체포된 용의자가 경찰서 유치장에서 숨지는 사고가 
-                      </td>
-                    </tr>
-                </table>
-                <div class="comments">
-                  <h8>댓글 </h8>
-
-                  <div class="comment">
-                    <div class="top">
-                      <b>작성자</b>
-
-
-                    </div>
-                    <div class="body">내용</div>
-                  </div>
-
-
-                  <div>이름 관리자</div>
-
-                  <form action="" method="post">
-
-                    <textarea class="cvRequired" type="text" name="comment[body]" cvRqErrMsg="comments is empty."
-                      cvRqErrTo="#cvErrTitle"></textarea>
-                    <button type="submit">저장</button>
-                    <div id="cvErrTitle" class="message"></div>
-
+                <div class="col-md-4 d-grid gap-2 d-md-block">
+                  <form action="/productQnA/del/<%= post._id %>?_method=delete" method="post">
+                    <button type="submit" class="w-15 m-1 btn btn-danger btn-sm float_left"
+                      onclick="confirm('정말 삭제하시겠습니까?')?this.parentElement.submit():null;">삭제</button>
                   </form>
+                  <button type="button" class="w-15 m-1 btn btn-primary btn-sm float_left"
+                    onclick="location.href='/productQnA/'">목록으로</button>
+                </div>
+                <table class="table-bordered table table-striped table-hover">
+                  <tr>
+                    <th class="text-center">제목</th>
+                    <td class="text-left"><%= post.category %>&nbsp;<%= post.title %></td>
+                    <th class="text-center">조회수</th>
+                    <td class="text-left"><%= post.views %></td>
+                  </tr>
+                  <tr>
+                    <th class="text-center">작성자</th>
+                    <td class="text-left"><%= post.author.nickname %></td>
+                    <th class="text-center">작성일</th>
+                    <td class="text-left">
+                      <% var realTime = post.createdAt %>
+                      <% realTime.setHours(realTime.getHours() - 9); %>
+                      <%= post.getFormattedDate(post.createdAt) %>, <%= post.getFormattedTime(post.createdAt) %>
+                    </td>
+                  </tr>
+                </table>
+                <div class="body">
+                  <pre style="max-width: auto; white-space: normal;"><%= post.body %></pre>
                 </div>
 
+                <div class="comments">
+                  <h4>댓글<%=// post.comments?post.comments.length:"0"%><%=// console.log(sum) %></h4>
+                  <% if(post.comments) { %>
+                    <% post.comments.forEach(function(comment) { %>
+                      <% if(comment.isDelete === false) { %>
+                        <div class="comment">
+                          <div class="top">
+                            <!-- 댓글 작성자 : <b><%= //comment.author.nickname %></b> -->
+                            <% var realTime = comment.createdAt %>
+                            <% realTime.setHours(realTime.getHours() - 9); %>
+                            (작성일 : <span><%= post.getFormattedDate(comment.createdAt) %> ,
+                            <%= post.getFormattedTime(comment.createdAt) %> )</span>
+                            <form class="float_right" method="post"
+                              action="/productQnA/<%= post._id %>/<%= comment._id %>/commentsDel/">
+                              <input type="hidden" name="comments[isDelete]" value=true />
+                              <input type="hidden" name="comments[body]" value="<%= comment.body %>" />
+                              <button type="button" class="w-15 m-1 btn btn-danger btn-sm"
+                                onclick="confirm('댓글 삭제하시겠습니까?')?this.parentElement.submit():null;">
+                                x
+                              </button>  
+                            </form>
+                          </div>
+                          <div class="body">
+                            <pre><%= comment.body %></pre>
+                          </div>
+                        </div>
+                      <% } %>
+                    <% }) %>
+                  <% } %>
+
+                  <form action="/productQnA/<%= post._id %>/comments?<%= urlQuery %>" method="post">
+                    <!-- <input type="hidden" name="comment[commentId]" value="<%=// post.commentId %>"/> -->
+                    <input type="hidden" name="comment[isDelete]" value=false />
+                    <!-- <input type="hidden" name="comment[nameAdmin]" value="true" />
+                    <input type="hidden" name="comment[email]" value="<%=// user.email %>" /> -->
+                    <textarea class="cvRequired" type="text" name="comment[body]" cvRqErrMsg="comments is empty."
+                      cvRqErrTo="#cvErrTitle"></textarea>
+                    <button type="submit" class="w-15 m-1 btn btn-primary btn-sm">저장</button>
+                    <div id="cvErrTitle" class="message"></div>
+                  </form>
+                  
+
+                </div>
               </div>
             </div>
           </div>

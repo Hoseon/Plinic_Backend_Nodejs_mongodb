@@ -247,6 +247,9 @@
                                                                     <%= search.searchType=="small_category,product_name"?select="selected":"" %>>카테고리/상품명</option>
                                                                     <option value="product_num"
                                                                     <%= search.searchType=="product_num"?select="selected":"" %>>상품코드</option>
+                                                                    <option value=Amount
+                                                                    <%= search.searchType=="Amount"?select="selected":"" %>>상품가격</option>
+                                                                <!-- 여기 -->
                                                                 </select>
                                                             </div>
                                                             <div class="col-5">
@@ -335,7 +338,7 @@
                                                 </thead>
                                                 <% if(product==null || product.length==0) { %>
                                                     <tr class="noData">
-                                                        <td colspan="5">There is no data to show :(</td>
+                                                        <td colspan="14">There is no data to show :(</td>
                                                     </tr>
                                                 <% } %>
                                                 <% product.forEach(function(post, index) { %>
@@ -412,14 +415,22 @@
                                                                 </td>
                                                                 <td class="align-middle">
                                                                     <% if(post.nextDeal == false) { %>
-                                                                        <label class="col-md-3 text-left">설정&nbsp;</label>
-                                                                        <input class="form-check-input" type="checkbox" value=true
+                                                                        <div class="col-12">
+                                                                            <label class="col-md-3 text-left">설정&nbsp;</label>
+                                                                            <input class="form-check-input" type="checkbox" value=true
+                                                                                name="post[nextDeal]">
+                                                                            <br>
+                                                                            <div>/</div>
+                                                                            <label class="col-md-3 text-left">해제</label>
+                                                                            <input class="form-check-input" type="checkbox" value=false disabled
                                                                             name="post[nextDeal]">
-                                                                        <br>
-                                                                        <div>/</div>
-                                                                        <label class="col-md-3 text-left">해제</label>
-                                                                        <input class="form-check-input" type="checkbox" value=false disabled
-                                                                        name="post[nextDeal]">
+                                                                        </div>
+                                                                        <br><br>
+                                                                        <div class="col-12">
+                                                                            <label class="">넥스트 딜 종료 날짜</label>
+                                                                            <input type="date" name="post[nextDealText]" style="height: 30px;"
+                                                                                data-validate="data">
+                                                                        </div>
                                                                     <% } else if(post.nextDeal == true) { %>
                                                                         <label class="col-md-3 text-left">설정&nbsp;</label>
                                                                         <input class="form-check-input" type="checkbox" value=true disabled

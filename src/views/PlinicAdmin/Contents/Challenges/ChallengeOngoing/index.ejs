@@ -114,10 +114,10 @@
                                         <% var toDay = new Date(); %>
                                         <% var createdDay = post.createdAt %>
                                         <%if(post.dailycheck.length == 0) { %>
-                                            <%// console.log(toDay) %>
-                                            <%// console.log(createdDay) %>
                                             <!--시작 날짜가 오늘 날짜보다 크거나(클 수가 없음) 같으면 진행중 else는 실패. 일반적인 데이터끼리는 시간까지 나오기 때문에 값이 같을 수가 없어서 getDate로 해당 일로 비교값 사용-->
-                                            <% if(createdDay.getDate() >= toDay.getDate()) { %>
+                                            <%// if(createdDay.getDate() >= toDay.getDate()) { %>
+                                            <!-- 0일차 일 때, 시작날짜 ex)6/30 == 오늘날짜 ex) 6/30 일 때만 진행중이여야 함. -->
+                                            <% if(createdDay.getDate() === toDay.getDate()) { %>
                                                 <td class="align-middle">
                                                     진행중
                                                 </td>
