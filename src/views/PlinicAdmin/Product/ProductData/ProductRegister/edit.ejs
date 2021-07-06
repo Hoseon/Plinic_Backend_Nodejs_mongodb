@@ -231,7 +231,7 @@
                                     <div id="collapseOne" class="accordion-collapse collapse show"
                                         aria-labelledby="headingOne" data-bs-parent="#accordionExample">
                                         <div class="accordion-body">
-                                            <% if(post.nextDeal == false) { %>
+                                            <% if(post.nextDeal === false) { %>
                                                 <div class="form-group row">
                                                     <label class="col-sm-2 text-center control-label" for="name">넥스트 딜 설정</label>
                                                     <div class="col-1">
@@ -240,11 +240,31 @@
                                                         <label class="form-check-label" for="inlineCheckbox98">설정</label>
                                                     </div>
                                                 </div>
-                                                <div class="col-9">
-                                                    <label class="col-3">넥스트 딜 종료 날짜</label>
-                                                    <input type="date" name="post[nextDealText]" class="col-3"
-                                                        data-validate="data">
-                                                </div>
+                                                <% if(post.nextDeal === true) { %>
+                                                    <div class="w-25 imgUp">
+                                                        <img class="imagePreview img-fluid" src="<%= nextDeal_url %>" />
+                                                        <label class="btn btn-primary">
+                                                            Upload
+                                                            <input name="nextDealImage" type="file" 
+                                                                class="uploadFile img form-control"
+                                                                value="Upload Photo"
+                                                                style="width: 0px;height: 0px;overflow: hidden;"
+                                                                accept=".jpg, .jpeg, .png">
+                                                        </label>
+                                                    </div>
+                                                <% } else if(post.nextDeal === false) { %>
+                                                    <div class="w-25 imgUp">
+                                                        <img class="imagePreview img-fluid" />
+                                                        <label class="btn btn-primary">
+                                                            Upload
+                                                            <input name="nextDealImage" type="file" 
+                                                                class="uploadFile img form-control"
+                                                                value="Upload Photo"
+                                                                style="width: 0px;height: 0px;overflow: hidden;"
+                                                                accept=".jpg, .jpeg, .png">
+                                                        </label>
+                                                    </div>
+                                                <% } %>
                                                 <div class="form-group row">
                                                     <label class="col-sm-2 text-center control-label" for="name">넥스트 딜 해제</label>
                                                     <div class="col-3">
@@ -253,7 +273,7 @@
                                                         <label class="form-check-label" for="inlineCheckbox99">설정 해제</label>
                                                     </div>
                                                 </div>
-                                            <% } else if(post.nextDeal == true) { %>
+                                            <% } else if(post.nextDeal === true) { %>
                                                 <div class="form-group row">
                                                     <label class="col-sm-2 text-center control-label" for="name">넥스트 딜 설정</label>
                                                     <div class="col-1">

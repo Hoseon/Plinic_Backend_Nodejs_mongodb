@@ -152,9 +152,9 @@
                   <div class="col-sm-3 controls">
                     <div class="w-25 imgUp">
                       <div class="imagePreview img-fluid"></div>
-                      <!-- <img src="https://plinic.s3.ap-northeast-2.amazonaws.com/<%=// post.preproductFileName %>" style="max-width:120px;" 
-                          class="img-thumbnail" alt="..."> -->
-                      <img src="<%= post.image_url %>" style="max-width:120px;" class="img-thumbnail" alt="...">
+                      <img src="https://plinic.s3.ap-northeast-2.amazonaws.com/<%= post.productFileName %>" style="max-width:120px;" 
+                          class="img-thumbnail" alt="...">
+                      <!-- <img src="<%=// post.image_url %>" style="max-width:120px;" class="img-thumbnail" alt="..."> -->
                     </div>
                     <label class="col-sm-7 text-left control-label" style="margin-left:-15px;" for="name">이미지 사이즈
                       300*300</label>
@@ -267,6 +267,35 @@
                 <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne"
                   data-bs-parent="#accordionExample">
                   <div class="accordion-body">
+                    <div class="form-group row">
+                      <label class="col-sm-2 text-center control-label" for="name">넥스트 딜 여부(진행중/넥스트 딜이 아님)</label>
+                      <% if(post.nextDeal === true) { %>
+                        <div class="col-sm-10">
+                          진행중
+                        </div>
+                      <% } else if(post.nextDeal === false) { %>
+                        <div class="col-sm-10">
+                          넥스트 딜이 아님
+                        </div>
+                      <% } %>
+                    </div>
+                    <div class="form-group row">
+                      <label class="col-sm-2 text-center control-label" for="name">
+                        넥스트 딜 이미지
+                      </label>
+                      <% if(post.nextDeal === true) { %>
+                        <div class="w-25 imgUp">
+                          <div class="imagePreview img-fluid"></div>
+                          <img src="https://plinic.s3.ap-northeast-2.amazonaws.com/<%= post.nextDealfilename %>" style="max-width:120px;" 
+                              class="img-thumbnail" alt="...">
+                        </div>
+                      <% } else if(post.nextDeal === false) { %>
+                        <div class="w-25 imgUp">
+                          넥스트 딜이 아님
+                        </div>
+                      <% } %>
+                    </div>
+
                     <div class="form-group row">
                       <label class="col-sm-2 text-center control-label" for="name">
                         <span class="input_title_cion" style="color: red;">* </span>탭명

@@ -180,7 +180,8 @@ router.get("/producPreview/:id", function (req, res) {
       // var prod_url = 'https://plinic.s3.ap-northeast-2.amazonaws.com/' + post.prodfilename;
 
       var product_url = 'https://plinic.s3.ap-northeast-2.amazonaws.com/' + post.productFileName;
-      // var jepumImage = 'https://plinic.s3.ap-northeast-2.amazonaws.com/' + post.productFileName;
+      var jepumImage = 'https://plinic.s3.ap-northeast-2.amazonaws.com/' + post.productFileName;
+      var nextDealImage = 'https://plinic.s3.ap-northeast-2.amazonaws.com/' + post.nextDealfilename;
       var detail_url = 'https://plinic.s3.ap-northeast-2.amazonaws.com/' + post.detailImageName;
       var announcement_url = 'https://plinic.s3.ap-northeast-2.amazonaws.com/' + post.announcementFileName;
 
@@ -189,7 +190,8 @@ router.get("/producPreview/:id", function (req, res) {
         url: url,
         // prod_url: prod_url,
         product_url: product_url,
-        // jepumImage: jepumImage,
+        jepumImage: jepumImage,
+        nextDealImage: nextDealImage,
         detail_url: detail_url,
         announcement_url: announcement_url,
         urlQuery: req._parsedUrl.query,
@@ -199,7 +201,7 @@ router.get("/producPreview/:id", function (req, res) {
     });
 }); // 상품 상세페이지 show
 
-router.post("/", s3upload.fields([{ name: "productimage" }, {name: "jepumImage" }, { name: "detailimage" }, { name: "announcement" }]),isLoggedIn, function(req, res, next) {
+router.post("/", s3upload.fields([{ name: "productimage" }, {name: "jepumImage" }, {name: "nextDealImage"}, { name: "detailimage" }, { name: "announcement" }]),isLoggedIn, function(req, res, next) {
     async.waterfall(
       [
         function(callback) {
@@ -241,6 +243,8 @@ router.post("/", s3upload.fields([{ name: "productimage" }, {name: "jepumImage" 
         req.body.post.originaFileName = req.files["productimage"][0].originalname;
         req.body.post.productFileName = req.files["jepumImage"][0].key;
         req.body.post.productOriginalName = req.files["jepumImage"][0].originalname;
+        req.body.post.nextDealfilename = req.files["nextDealImage"][0].key;
+        req.body.post.nextDealOriginaFileName = req.files["nextDealImage"][0].originalname;
         req.body.post.detailImageName = req.files["detailimage"][0].key;
         req.body.post.detailImageOriginalName = req.files["detailimage"][0].originalname;
         req.body.post.announcementFileName = req.files["announcement"][0].key;
@@ -264,6 +268,7 @@ router.get('/ProductRegister/:id/edit', isLoggedIn, function (req, res) {
   Product.findById(req.params.id, function (err, post) {
     var url = 'https://plinic.s3.ap-northeast-2.amazonaws.com/' + post.filename;
     var product_url = 'https://plinic.s3.ap-northeast-2.amazonaws.com/' + post.productFileName;
+    var nextDeal_url = 'https://plinic.s3.ap-northeast-2.amazonaws.com/' + post.nextDealfilename;
     var detail_url = 'https://plinic.s3.ap-northeast-2.amazonaws.com/' + post.detailImageName;
     var announcement_url = 'https://plinic.s3.ap-northeast-2.amazonaws.com/' + post.announcementFileName;
 
@@ -272,6 +277,9 @@ router.get('/ProductRegister/:id/edit', isLoggedIn, function (req, res) {
 
     var preproductFileName = post.productFileName;
     var preproductOriginalName = post.productOriginalName;
+
+    var prenextDealfilename = post.nextDealfilename;
+    var prenextDealOriginaFileName = post.nextDealOriginaFileName;
 
     var predetailImageName = post.detailImageName;
     var predetailImageOriginalName = post.detailImageOriginalName;
@@ -289,6 +297,8 @@ router.get('/ProductRegister/:id/edit', isLoggedIn, function (req, res) {
       preoriginaFileName : preoriginaFileName,
       preproductFileName : preproductFileName,
       preproductOriginalName : preproductOriginalName,
+      prenextDealfilename : prenextDealfilename,
+      prenextDealOriginaFileName : prenextDealOriginaFileName,
       predetailImageName : predetailImageName,
       predetailImageOriginalName : predetailImageOriginalName,
       preannouncementFileName : preannouncementFileName,
@@ -297,9 +307,9 @@ router.get('/ProductRegister/:id/edit', isLoggedIn, function (req, res) {
       //edit 페이지 이미지 불러오기
       url: url,
       product_url: product_url,
+      nextDeal_url: nextDeal_url,
       detail_url: detail_url,
       announcement_url: announcement_url,
-
       user: req.user
     });
   });
@@ -310,6 +320,8 @@ router.put('/RegisterEdit/:id', s3upload.fields([{
   name: 'productimage'
 }, {
   name: 'jepumImage'
+}, {
+  name: 'nextDealImage'
 }, {
   name: 'detailimage'
 }, {
@@ -334,6 +346,10 @@ router.put('/RegisterEdit/:id', s3upload.fields([{
     req.body.post.productFileName = req.files['jepumImage'][0].key;
     req.body.post.productOriginalName = req.files['jepumImage'][0].originalname;
   }
+  if (req.files['nextDealImage']) {
+    req.body.post.nextDealfilename = req.files['nextDealImage'][0].key;
+    req.body.post.nextDealOriginaFileName = req.files['nextDealImage'][0].originalname;
+  }
   if (req.files['detailimage']) {
     req.body.post.detailImageName = req.files['detailimage'][0].key;
     req.body.post.detailImageOriginalName = req.files['detailimage'][0].originalname;
@@ -352,6 +368,9 @@ router.put('/RegisterEdit/:id', s3upload.fields([{
         },
         {
           Key: req.body.preproductFileName // required
+        },
+        {
+          Key: req.body.prenextDealfilename // required
         },
         {
           Key: req.body.predetailImageName // required
