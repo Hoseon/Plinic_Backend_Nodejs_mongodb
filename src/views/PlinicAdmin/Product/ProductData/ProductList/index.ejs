@@ -326,7 +326,7 @@
                                                         <th scope="col">카테고리/상품명</th>
                                                         <th scope="col">상품코드</th>
                                                         <th scope="col">판매가격</th>
-                                                        <th scope="col">넥스트 딜 설정</th>
+                                                        <!-- <th scope="col">넥스트 딜 설정</th> -->
                                                         <th scope="col">공개/비공개</th>
                                                         <th scope="col">품절/해제</th>
                                                         <th scope="col">적립포인트</th>
@@ -413,8 +413,8 @@
                                                                     <%= post.Amount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ','); %> <!-- 판매가격 -->
                                                                     <%=// post.price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ','); %> 원 <!-- 소비자가 -->
                                                                 </td>
-                                                                <td class="align-middle">
-                                                                    <% if(post.nextDeal == false) { %>
+                                                                <!-- <td class="align-middle">
+                                                                    <%// if(post.nextDeal == false) { %>
                                                                         <div class="col-12">
                                                                             <label class="col-md-3 text-left">설정&nbsp;</label>
                                                                             <input class="form-check-input" type="checkbox" value=true
@@ -431,7 +431,7 @@
                                                                             <input type="date" name="post[nextDealText]" style="height: 30px;"
                                                                                 data-validate="data">
                                                                         </div>
-                                                                    <% } else if(post.nextDeal == true) { %>
+                                                                    <%// } else if(post.nextDeal == true) { %>
                                                                         <label class="col-md-3 text-left">설정&nbsp;</label>
                                                                         <input class="form-check-input" type="checkbox" value=true disabled
                                                                             name="post[nextDeal]">
@@ -440,8 +440,8 @@
                                                                         <label class="col-md-3 text-left">해제</label>
                                                                         <input class="form-check-input" type="checkbox" value=false
                                                                             name="post[nextDeal]">
-                                                                    <% } %>
-                                                                </td>
+                                                                    <%// } %>
+                                                                </td> -->
                                                                 <td class="align-middle">
                                                                 <% if(post.noPublic == false) { %>
                                                                     <label class="col-md-3 text-left">공개</label>

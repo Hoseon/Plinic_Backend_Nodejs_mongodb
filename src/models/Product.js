@@ -66,7 +66,9 @@ var productSchema = mongoose.Schema({
   tabName: String,
   isPlinic: { type: Boolean, default: false }, //글로우픽 데이터가 아닌 플리닉 관리자에 의해 등록된 자료
   nextDeal: { type: Boolean, default: false }, //nextDeal이 true일 경우 어플 NEXT DEAL 단에 표시되게끔
-  nextDealText: Date, //이벤트 종료 날짜 설정
+  nextDealfilename: String, //대표이미지
+  nextDealOriginaFileName: String, //대표이미지
+  nextDealText: Date, //이벤트 종료 날짜 설정(미사용)
   likeCount: {type:Number, default: 0},
   likeUser: [
     {
