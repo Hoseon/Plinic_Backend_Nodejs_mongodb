@@ -261,11 +261,11 @@ router.get("/", function(req, res) {
   );
 }); // Search Test
 
-router.post("/BeautyTip/PostMgt",s3upload.single("image"),isLoggedIn,function(req, res, next) {
+router.post("/BeautyTip/PostMgt",s3upload.fields([{name: "image"}]),isLoggedIn,function(req, res, next) {
 
     showLocation = req.body.showLocation
-    req.body.post.filename = req.file.key;
-    req.body.post.originalName = req.file.originalname;
+    // req.body.post.filename = req.file.key;
+    // req.body.post.originalName = req.file.originalname;
     async.waterfall(
       [
         function(callback) {
@@ -301,8 +301,10 @@ router.post("/BeautyTip/PostMgt",s3upload.single("image"),isLoggedIn,function(re
         var newPost = req.body.post;
         newPost.author = req.user._id;
         newPost.numId = counter.totalCount + 1;
-        req.body.post.filename = req.file.key;
-        req.body.post.originalName = req.file.originalname;
+        // req.body.post.filename = req.file.key;
+        // req.body.post.originalName = req.file.originalname;
+        req.body.post.filename = req.files["image"][0].key;
+        req.body.post.originalName = req.files["image"][0].originalname;
         req.body.post.showLocation = req.body.showLocation;
         req.body.post.tabLocation = req.body.tabLocation;
         CommuBeauty.create(req.body.post, function(err, post) {
@@ -377,17 +379,17 @@ router.get("/:id/edit", isLoggedIn, function(req, res) {
   });
 }); // 콘텐츠관리 챌린지 edit
 
-router.put("/:id", s3upload.single("image"), isLoggedIn, function(
+router.put("/:id", s3upload.fields([{name:'image'}]), isLoggedIn, function(
   req,
   res,
   next
 ) {
   req.body.post.updatedAt = Date.now();
-  req.body.post.filename = req.file.key;
+  // req.body.post.filename = req.file.key;
 
-  if (req.file) {
-    req.body.post.filename = req.file.key;
-    req.body.post.originalName = req.file.originalname;
+  if (req.files['image']) {
+    req.body.post.filename = req.files['image'][0].key;
+    req.body.post.originalName = req.files['image'][0].originalname;
   }
 
   req.body.post.showLocation = req.body.showLocation;

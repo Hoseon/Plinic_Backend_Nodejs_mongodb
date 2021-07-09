@@ -117,6 +117,7 @@ router.get('/', function(req, res) {
 
     if(testSearch.dayCreated[0]) {
       User.find(testSearch.dayCreated[0])
+      .populate("author")
       .sort({created : -1})
       .skip(skip)
       .limit(limit)
@@ -126,6 +127,7 @@ router.get('/', function(req, res) {
       });
     } else {
       User.find(search.findPost)
+      .populate("author")
       .sort({created : -1})
       .skip(skip)
       .limit(limit)
@@ -159,20 +161,19 @@ router.get('/', function(req, res) {
 
 
 router.get("/:id", function (req, res) {
-  User.findById(req.params.id)
+  
+  // if(User.findById(req.params.id) && Orders.findById(req.params.id)) {
+    User.findById(req.params.id)
     .populate(['author', 'orders'])
     .exec(function (err, post) {
-      // console.log(orders)
       if (err) return res.json({
         success: false,
         message: err
       });
-      // console.log(post);
       var url = 'https://plinic.s3.ap-northeast-2.amazonaws.com/' + post.filename;
       var prod_url = 'https://plinic.s3.ap-northeast-2.amazonaws.com/' + post.prodfilename;
       res.render("PlinicAdmin/Operation/MemberMgt/show", {
         post: post,
-        // orders: orders,
         url: url,
         prod_url: prod_url,
         urlQuery: req._parsedUrl.query,
@@ -181,6 +182,48 @@ router.get("/:id", function (req, res) {
       });
     });
 }); // 회원 정보 show
+
+
+// router.get("/orders/:id", function (req, res) {
+//   Orders.findById(req.params.id)
+//     .populate(['author', 'orders'])
+//     .exec(function (err, post) {
+//       if (err) return res.json({
+//         success: false,
+//         message: err
+//       });
+//       console.log(post);
+//       res.render("PlinicAdmin/Operation/MemberMgt/oshow", {
+//         post: post,
+//         urlQuery: req._parsedUrl.query,
+//         user: req.user,
+//         search: createSearch(req.query)
+//       });
+//     });
+// }); // 회원 정보 show
+
+// router.get('/orders/:id', (req, res, next) => {
+//   Orders.findAll({    
+//     where: {user: req.user}, //조건
+//     include: [{ //포험
+//       model: User, //어느 부분인지
+//       attributes : ['id', 'nick'] //속성
+//       }],
+//     })
+//       .then((Post) => {
+//         res.render('mypage', {
+//           Post: req.food,
+//           twit : Post,
+//           user: req.user,
+//           loginError: req.flash('loginError'),
+//         });
+//         console.log(JSON.stringify(Post))
+//       })
+//       .catch((error) => {
+//         console.error(error);
+//         next(error);
+//       });
+//     });
 
 
 router.delete('/rowdel/:id', isLoggedIn, function(req, res, next) {

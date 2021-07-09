@@ -495,6 +495,69 @@ router.put('/SeqUpdate/:id', isLoggedIn, function (req, res, next) {
   });
 }); //순서변경
 
+// router.post('/:id/displayUpdate', isLoggedIn, function (req, res, next) {
+//   // console.log(req.params.id);
+//   // console.log(req.body);
+//   // console.log(req.body.seq[0]);
+//   req.body.updatedAt = Date.now();
+//   CommuBeauty.findOneAndUpdate({
+//     _id: req.params.id,
+//   }, req.body, function (err, post) {
+//     if (err) return res.json({
+//       success: false,
+//       message: err
+//     });
+//     if (!post) return res.json({
+//       success: false,
+//       message: "No data found to update"
+//     });
+//     res.redirect('/postDisplay/');
+//   });
+// }); //순서변경
+
+router.post('/:id/displayUpdate', s3upload.fields([{
+  name: 'image'
+}, {
+  name: 'prodimage'
+}]), isLoggedIn, function (req, res, next) {
+
+  var params = {
+    Bucket: 'plinic',
+    Delete: { // required
+      Objects: [ // required
+        {
+          Key: req.body.prefilename // required
+        },
+        {
+          Key: req.body.preprodfilename // required
+        },
+      ]
+    }
+  };
+  s3.deleteObjects(params, function (err, data) {
+    if (err) {
+      console.log("케어존 수정 아마존 파일 삭제 에러 : " + req.body.prefilename + "err : " + err);
+      res.status(500);
+    }
+    else console.log("케어존 수정 이전 파일 삭제 완료 : " + JSON.stringify(data));
+    // req.body.updatedAt = Date.now();
+    CommuBeauty.findOneAndUpdate({
+      _id: req.params.id,
+      // author: req.user._id
+    }, req.body.post, function (err, post) {
+      if (err) return res.json({
+        success: false,
+        message: err
+      });
+      if (!post) return res.json({
+        success: false,
+        message: "No data found to update"
+      });
+      res.redirect('/postDisplay/');
+    });
+  });
+}); //index 데이터row update
+
 function isLoggedIn(req, res, next) {
   if (req.isAuthenticated()) {
     return next();
