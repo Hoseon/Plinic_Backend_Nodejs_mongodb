@@ -146,6 +146,7 @@
                                     <th scope="col">업데이트일</th>
                                     <th scope="col">활성화</th>
                                     <th scope="col">노출순서 및 관리</th>
+                                    <th scope="col">노출순서 및 관리 입력</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -195,7 +196,8 @@
                                                                         </button>
                                                                     </span></div>        
                                                                 <div class="col align-middle p-0">
-                                                                    <input type="number" readonly value="<%= post.seq %>" name="seq[<%= index %>]" class="form-control text-center w-100 align-middle" min="1" max="100"></div>        
+                                                                    <input type="number" readonly value="<%= post.seq %>" name="seq[<%= index %>]" class="form-control text-center w-100 align-middle" min="1" max="100">
+                                                                </div>        
                                                                 <div class="col p-0">
                                                                     <span class="input-group-btn">
                                                                         <button type="button" class="btn btn-success btn-number" data-type="plus" data-field="seq[<%= index %>]">
@@ -216,6 +218,18 @@
                                                                 <button type="button" class="btn btn-secondary" disabled>변경바로가기</button>
                                                             </div>
                                                         </div>
+                                                    </td>
+                                                    <td>
+                                                        <form action="/postDisplay/<%= post._id %>/displayUpdate" method="post" name="formname">
+                                                            <div class="row justify-content-center">
+                                                                <div class="col-6 p-0 m-0">
+                                                                    <input type="number" value="<%= post.seq %>" name="post[seq]" class="form-control text-center w-100 align-middle" min="1" max="100">
+                                                                </div>
+                                                                <div class="col-6 p-0 m-0">
+                                                                    <button class="btn btn-primary" type="submit">입력 변경</button>
+                                                                </div>
+                                                            </div>
+                                                        </form>
                                                     </td>
                                                 </tr>
                                         <%})%>

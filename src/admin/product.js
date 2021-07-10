@@ -201,7 +201,9 @@ router.get("/producPreview/:id", function (req, res) {
     });
 }); // 상품 상세페이지 show
 
-router.post("/", s3upload.fields([{ name: "productimage" }, {name: "jepumImage" }, {name: "nextDealImage"}, { name: "detailimage" }, { name: "announcement" }]),isLoggedIn, function(req, res, next) {
+router.post("/", s3upload.fields([{ name: "productimage" }, {name: "jepumImage" }, 
+// {name: "nextDealImage"}, 
+{ name: "detailimage" }, { name: "announcement" }]),isLoggedIn, function(req, res, next) {
     async.waterfall(
       [
         function(callback) {
@@ -243,8 +245,8 @@ router.post("/", s3upload.fields([{ name: "productimage" }, {name: "jepumImage" 
         req.body.post.originaFileName = req.files["productimage"][0].originalname;
         req.body.post.productFileName = req.files["jepumImage"][0].key;
         req.body.post.productOriginalName = req.files["jepumImage"][0].originalname;
-        req.body.post.nextDealfilename = req.files["nextDealImage"][0].key;
-        req.body.post.nextDealOriginaFileName = req.files["nextDealImage"][0].originalname;
+        // req.body.post.nextDealfilename = req.files["nextDealImage"][0].key;
+        // req.body.post.nextDealOriginaFileName = req.files["nextDealImage"][0].originalname;
         req.body.post.detailImageName = req.files["detailimage"][0].key;
         req.body.post.detailImageOriginalName = req.files["detailimage"][0].originalname;
         req.body.post.announcementFileName = req.files["announcement"][0].key;
