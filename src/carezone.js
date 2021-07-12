@@ -477,6 +477,8 @@ router.get('/challengefirstlist', function(req, res) {
       // endmission: {     //종료일이 오늘 날짜/시간으로 지나지 않은것만 가져 온다.
       //   $gt: new Date()
       // }
+      // "useYN" : true
+      useYN : true
     }, function(err, docs) {
       res.json(docs);
     }).sort({

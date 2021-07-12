@@ -202,28 +202,28 @@ router.get("/:id", function (req, res) {
 //     });
 // }); // 회원 정보 show
 
-// router.get('/orders/:id', (req, res, next) => {
-//   Orders.findAll({    
-//     where: {user: req.user}, //조건
-//     include: [{ //포험
-//       model: User, //어느 부분인지
-//       attributes : ['id', 'nick'] //속성
-//       }],
-//     })
-//       .then((Post) => {
-//         res.render('mypage', {
-//           Post: req.food,
-//           twit : Post,
-//           user: req.user,
-//           loginError: req.flash('loginError'),
-//         });
-//         console.log(JSON.stringify(Post))
-//       })
-//       .catch((error) => {
-//         console.error(error);
-//         next(error);
-//       });
-//     });
+router.get('/orders/:id', (req, res, next) => {
+  Orders.findAll({    
+    where: {user: req.user}, //조건
+    include: [{ //포험
+      model: User, //어느 부분인지
+      attributes : ['id', 'nick'] //속성
+      }],
+    })
+      .then((Post) => {
+        res.render('mypage', {
+          Post: req.food,
+          twit : Post,
+          user: req.user,
+          loginError: req.flash('loginError'),
+        });
+        console.log(JSON.stringify(Post))
+      })
+      .catch((error) => {
+        console.error(error);
+        next(error);
+      });
+    });
 
 
 router.delete('/rowdel/:id', isLoggedIn, function(req, res, next) {
