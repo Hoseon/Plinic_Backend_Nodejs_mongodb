@@ -13,8 +13,11 @@ var http = require('http');
 var request = require('request');
 var axios = require('axios');
 const AWS = require("aws-sdk");
+const Alarm = require('../models/Alarm');
 AWS.config.loadFromPath(__dirname + "/config/awsconfig.json");
-
+var FCM = require("fcm-node");
+var serverKey = "AIzaSyCAcTA318i_SVCMl94e8SFuXHhI5VtXdhU";
+var fcm = new FCM(serverKey);
 
 function createToken(user) {
   return jwt.sign({
@@ -2575,6 +2578,79 @@ exports.isPlinicUser = (req, res) => {
       }
   }) 
 };
+
+
+//알람 테스트
+exports.alarmBuySave = (req, res) => {
+  // if (!req.body.email) {
+  //   res.status(400).json();
+  // } else if (req.body.email) {
+    // var newBody = req.body;
+
+    var newBody = Alarm(req.body);
+    newBody.createdAt = new Date();
+    newBody.save((err, result) => {
+      //에러냐
+      if (err) {
+        return res.status(400).json({
+          "msg": "실패"
+        });
+      }
+      //성공이냐
+      if (!err) {
+        //성공이면 FCM전송로직 구성
+        //사용자의 Email을 User Collection에서 찾아서 PushToken키를 가져온다.
+        var pushtoken = '';
+        // if (req.body.email !== '') {
+          User.findOne({
+            email: req.body.email
+          }, function (err, User) {
+            if (User) {
+              var message = {
+                to: User.pushtoken,
+                // collapse_key: 'your_collapse_key',
+                notification: {
+                  title: '플리닉 알림',
+                  body: req.body.alarmDesc,
+                  sound: "default",
+                  click_action: "FCM_PLUGIN_ACTIVITY",
+                },
+                // data: {
+                //   mode: "myqna",
+                //   id: req.body.id
+                // }
+              };
+              fcm.send(message, function (err, response) {
+                if (err) {
+                  console.log("푸시 전송 실패 " + req.body.email);
+                } else {
+                  console.log("Successfully sent with response: ", response);
+                }
+              });
+            }
+          });
+        // }
+      }
+    })
+    return res.status(200).json({
+      'msg': '등록 되었습니다.'
+    });
+
+    // , function (err, result) {
+    //   if (err) {
+    //     console.log(": " + req.body.email);
+    //     res.status(400).json();
+    //   }
+
+    //   if (result) {
+    //     res.status(200).json(result);
+    //   } else {
+    //     console.log(" : " + req.body.email);
+    //     res.status(400).json();
+    //   }
+    // }
+  // }
+}
 
 
 function makeRandomStr() {

@@ -202,28 +202,82 @@ router.get("/:id", function (req, res) {
 //     });
 // }); // 회원 정보 show
 
-router.get('/orders/:id', (req, res, next) => {
-  Orders.findAll({    
-    where: {user: req.user}, //조건
-    include: [{ //포험
-      model: User, //어느 부분인지
-      attributes : ['id', 'nick'] //속성
+// router.get('/orders', (req, res, next) => {
+//   Orders.findAll({
+//     where: {user: req.user}, //조건
+//     include: [{ //포험
+//       model: User, //어느 부분인지
+//       attributes : ['_id'] //속성
+//     }],
+//   })
+//   .then((Orders) => {
+//     res.render("PlinicAdmin/Operation/MemberMgt/oshow", {
+//       // Post: req.food,
+//       // twit : Post,
+//       user: req.user,
+//       loginError: req.flash('loginError'),
+//     });
+//     console.log(JSON.stringify(Orders))
+//   })
+//   .catch((error) => {
+//     console.error(error);
+//     next(error);
+//   });
+// });
+
+router.get("/test", function (req, res) {
+  
+    // User.findById(req.params.id)
+    Orders.findAll({
+      where: {user: req.user}, //조건
+      include: [{ //포험
+        model: User, //어느 부분인지
+        attributes : ['_id'] //속성
       }],
     })
-      .then((Post) => {
-        res.render('mypage', {
-          Post: req.food,
-          twit : Post,
-          user: req.user,
-          loginError: req.flash('loginError'),
-        });
-        console.log(JSON.stringify(Post))
-      })
-      .catch((error) => {
-        console.error(error);
-        next(error);
+    .populate(['author', 'orders'])
+    .exec(function (err, post) {
+      if (err) return res.json({
+        success: false,
+        message: err
+      });
+      var url = 'https://plinic.s3.ap-northeast-2.amazonaws.com/' + post.filename;
+      var prod_url = 'https://plinic.s3.ap-northeast-2.amazonaws.com/' + post.prodfilename;
+      res.render("PlinicAdmin/Operation/MemberMgt/oshow", {
+        post: post,
+        url: url,
+        prod_url: prod_url,
+        urlQuery: req._parsedUrl.query,
+        user: req.user,
+        search: createSearch(req.query)
       });
     });
+}); // 회원 정보 show
+
+// router.get("/orders/test", function (req, res) {
+//   // SkinQna.find(
+//   //   {
+//   //     // "comments.recomments._id": "60c054ac180b5f136d24a502",
+//   //     "comments.$.recomments": req.body.recomments,
+//   //     'comments.recomments.isDelete': false
+//   //   },
+//   User.findAll({
+//     // where: {user: req.user}, //조건
+//     // include: [{ //포험
+//     //   model: Orders, //어느 부분인지
+//     //   attributes : ['_id'] //속성
+//     // }],
+//   },
+//      function (err, docs) {
+//       if (err) {
+//         console.log(err);
+//       }
+//       if (docs) {
+//         console.log(docs);
+//         res.json(docs);
+//       }
+//     })
+// });
 
 
 router.delete('/rowdel/:id', isLoggedIn, function(req, res, next) {

@@ -1,11 +1,11 @@
 var mongoose = require('mongoose');
 
 var alarmSchema = mongoose.Schema({
-  alertType: { type: String},
-  alarmName : { type: String},
-  alarmCondition : { type: String},
-  alarmDesc: { type: String },
-  mange: {type: Boolean, default: false},
+  alertType: { type: String}, //경고 유형?
+  alarmName : { type: String}, // 알람 이름
+  alarmCondition : { type: String}, // 알람 상태
+  alarmDesc: { type: String }, // 알람 내용
+  mange: {type: Boolean, default: false}, // .
   createdAt: {type:Date, default:Date.now},
   updatedAt: Date,
 });
