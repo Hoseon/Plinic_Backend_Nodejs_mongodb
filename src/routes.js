@@ -168,6 +168,10 @@ routes.get('/daumPost', function(req,res){
   res.sendfile(__dirname + '/commons/post.html');
 });
 
+routes.get('/daumFlutterPost', function(req,res){
+  res.sendfile(__dirname + '/commons/flutterPost.html');
+});
+
 var juso = null;
 routes.post('/daumjuso', function(req,res) {
 	juso = null;
