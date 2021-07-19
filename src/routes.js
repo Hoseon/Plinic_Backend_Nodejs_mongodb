@@ -111,6 +111,8 @@ routes.post('/usepointupdate', userController.usePointUpdate); //일반 케어 �
 //포인트 누적후 사용자 정보 업데이트 해서 가져 오기.
 routes.post('/loaduser', userController.loadUser);
 
+//알람 테스트
+routes.post('/alarmbuysave', userController.alarmBuySave);
 
 //사용자 ID찾기,패스워드 리셋 2020-06-04
 routes.post('/findId', userController.findId);

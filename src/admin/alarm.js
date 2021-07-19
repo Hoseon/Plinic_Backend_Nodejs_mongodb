@@ -1,8 +1,8 @@
 var express = require("express");
 var router = express.Router();
 var mongoose = require("mongoose");
-var Qna = require("../models/Qna");
-var QnaCounter = require("../models/QnaCounter");
+var Alarm = require("../models/Qna");
+// var QnaCounter = require("../models/QnaCounter");
 var async = require("async");
 var User_admin = require("../models/User_admin");
 var multer = require("multer");
@@ -153,7 +153,8 @@ router.get("/:id", function (req, res) {
 
 router.post("/BeautyTip/PostMgt", isLoggedIn, function(req, res, next) {
 
-  req.body.alertType = "challDelivery";
+  // req.body.alertType = "challDelivery";
+  req.body.alertType = "challAlarm"
   req.body.alarmName = "챌린지 배송 안내";
   req.body.alarmCondition = "챌린지 배송 안내";
   req.body.alarmDesc = "챌린지 배송 안내";
@@ -214,6 +215,24 @@ router.post("/BeautyTip/PostMgt", isLoggedIn, function(req, res, next) {
   );
 }
 ); // create
+
+router.get("/buy", function(req, res, next) {
+  async.waterfall([
+    () => {
+      Alarm.find(
+        {
+          // _id: req.params.id,
+          alertType: "buyAlarm"
+        },
+        (err, docs) => {
+          if (err) res.sendStatus(400);
+
+          if (docs) res.status(201).json(docs);
+        }
+      );
+    }
+  ]);
+});
 
 function isLoggedIn(req, res, next) {
   if (req.isAuthenticated()) {
