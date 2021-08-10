@@ -2582,11 +2582,6 @@ exports.isPlinicUser = (req, res) => {
 
 //알람 테스트
 exports.alarmBuySave = (req, res) => {
-  // if (!req.body.email) {
-  //   res.status(400).json();
-  // } else if (req.body.email) {
-    // var newBody = req.body;
-
     var newBody = Alarm(req.body);
     newBody.createdAt = new Date();
     newBody.save((err, result) => {
@@ -2601,14 +2596,12 @@ exports.alarmBuySave = (req, res) => {
         //성공이면 FCM전송로직 구성
         //사용자의 Email을 User Collection에서 찾아서 PushToken키를 가져온다.
         var pushtoken = '';
-        // if (req.body.email !== '') {
           User.findOne({
             email: req.body.email
           }, function (err, User) {
             if (User) {
               var message = {
                 to: User.pushtoken,
-                // collapse_key: 'your_collapse_key',
                 notification: {
                   title: '플리닉 알림',
                   body: req.body.alarmDesc,
@@ -2629,29 +2622,36 @@ exports.alarmBuySave = (req, res) => {
               });
             }
           });
-        // }
       }
     })
     return res.status(200).json({
       'msg': '등록 되었습니다.'
     });
-
-    // , function (err, result) {
-    //   if (err) {
-    //     console.log(": " + req.body.email);
-    //     res.status(400).json();
-    //   }
-
-    //   if (result) {
-    //     res.status(200).json(result);
-    //   } else {
-    //     console.log(" : " + req.body.email);
-    //     res.status(400).json();
-    //   }
-    // }
-  // }
 }
 
+exports.getUserAlarms = (req, res) => {
+  //사용자 포인트 차감 저장 로직
+  if (!req.params.writerEmail) {
+    res.status(400).json();
+  }
+
+  Alarm.find({
+    writerEmail : req.params.writerEmail
+  }, (err, result) => {
+      if (err) {
+        console.log("사용자 알람정보 조회 실패 : " + req.params.writerEmail);
+        res.status(400).json(err);
+      }
+
+      if (result) {
+        res.status(200).json(result);
+      } else {
+        console.log("사용자 알람정보 조회 실패2 : " + req.params.writerEmail);
+        res.status(400).json(err);
+      }
+  }) 
+
+};
 
 function makeRandomStr() {
   var randomStr = "";

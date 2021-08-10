@@ -2,6 +2,8 @@ var express = require("express");
 var router = express.Router();
 var mongoose = require("mongoose");
 var Alarm = require("../models/Qna");
+var CommuBeautyCounter = require("../models/CommuBeautyCounter");
+var CommuBeauty = require("../models/CommuBeauty");
 // var QnaCounter = require("../models/QnaCounter");
 var async = require("async");
 var User_admin = require("../models/User_admin");
@@ -216,23 +218,32 @@ router.post("/BeautyTip/PostMgt", isLoggedIn, function(req, res, next) {
 }
 ); // create
 
-router.get("/buy", function(req, res, next) {
-  async.waterfall([
-    () => {
-      Alarm.find(
-        {
-          // _id: req.params.id,
-          alertType: "buyAlarm"
-        },
-        (err, docs) => {
-          if (err) res.sendStatus(400);
+// router.get("/getUserAlarms", function(req, res, next) {
+//   async.waterfall([
+//     () => {
+//       Alarm.find(
+//         {
+//           mange:true
+//         },
+//         (err, docs) => {
+//           if (err) res.sendStatus(400);
 
-          if (docs) res.status(201).json(docs);
-        }
-      );
-    }
-  ]);
-});
+//           if (docs) res.status(201).json(docs);
+//         }
+//       );
+//     }
+//   ]);
+// });
+
+// router.get('/getUserAlarms/:id', function(req, res) {
+//   async.waterfall([function(callback) {
+//     Alarm.findOne({
+//       _id: req.params.id
+//     }, function(err, docs) {
+//       res.json(docs);
+//     })
+//   }]);
+// });
 
 function isLoggedIn(req, res, next) {
   if (req.isAuthenticated()) {
