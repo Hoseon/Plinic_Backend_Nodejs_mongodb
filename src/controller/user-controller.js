@@ -2580,7 +2580,7 @@ exports.isPlinicUser = (req, res) => {
 };
 
 
-//알람 테스트
+// 알람 기능
 exports.alarmBuySave = (req, res) => {
     var newBody = Alarm(req.body);
     newBody.createdAt = new Date();
@@ -2629,8 +2629,54 @@ exports.alarmBuySave = (req, res) => {
     });
 }
 
+// 알람 확인했을 때(알람 종 카운트 숫자 변경 + 알람 페이지 알람 배경색 변경)
+exports.alarmTypeUpdate = (req, res) => {
+
+  var newReply = req.body
+  Alarm.findOneAndUpdate({
+      _id: req.params._id
+    }, {
+      $set: {
+        alarmCondition: true
+      }
+    },
+    function(err, post2) {
+      if (err) {
+        console.log("tags error : " + err);
+        return res.status(400).json({
+          'msg': '알람 타입이 수정 되지 않았습니다. <br /> Error : ' + err
+        });
+      } else {
+        return res.status(201).json(post2);
+      }
+    })
+}
+
+// 앱 밖에서 FCM 알람 확인했을 때
+exports.alarmTypeUpdate2 = (req, res) => {
+
+  var newReply = req.body
+  Alarm.findOneAndUpdate({
+      id: req.params.id
+    }, {
+      $set: {
+        alarmCondition: true
+      }
+    },
+    function(err, post2) {
+      if (err) {
+        console.log("tags error : " + err);
+        return res.status(400).json({
+          'msg': '알람 타입이 수정 되지 않았습니다. <br /> Error : ' + err
+        });
+      } else {
+        return res.status(201).json(post2);
+      }
+    })
+}
+
+// 알람 데이터 출력
 exports.getUserAlarms = (req, res) => {
-  //사용자 포인트 차감 저장 로직
   if (!req.params.writerEmail) {
     res.status(400).json();
   }
@@ -2650,8 +2696,58 @@ exports.getUserAlarms = (req, res) => {
         res.status(400).json(err);
       }
   }) 
-
+  .sort({
+    "createdAt": -1
+  })
 };
+
+// my페이지 알람 종 카운트
+exports.getAlarmTime = (req, res) => {
+  if (!req.params.writerEmail) {
+    res.status(400).json();
+  }
+
+  Alarm.find({
+    writerEmail : req.params.writerEmail,
+    alarmCondition: false
+  }, (err, result) => {
+      if (err) {
+        console.log("사용자 알람정보 조회 실패 : " + req.params.writerEmail);
+        res.status(400).json(err);
+      }
+
+      if (result) {
+        res.status(200).json(result);
+      } else {
+        console.log("사용자 알람정보 조회 실패2 : " + req.params.writerEmail);
+        res.status(400).json(err);
+      }
+  }) 
+};
+
+// 알람 전체삭제 + 선택삭제
+exports.delAlarm = (req, res) => {
+  var newReply = req.body
+  Alarm.findOneAndUpdate({
+    writerEmail : req.params.writerEmail,
+    _id: req.params._id
+    }, {
+      $set: {
+        mange: false,
+        alarmCondition: true
+      }
+    },
+    function(err, post2) {
+      if (err) {
+        console.log("tags error : " + err);
+        return res.status(400).json({
+          'msg': '알람이 삭제 되지 않았습니다. <br /> Error : ' + err
+        });
+      } else {
+        res.status(201).json(post2);
+      }
+    })
+}
 
 function makeRandomStr() {
   var randomStr = "";
