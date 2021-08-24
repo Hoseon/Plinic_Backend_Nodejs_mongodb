@@ -384,7 +384,7 @@ exports.replySave = (req, res) => {
         //성공이냐
         if (!err) {
           //성공이면 FCM전송로직 구성
-          //사용자의 Email을 User Collection에서 찾아서 PushToken키를 가져온다. 
+          //사용자의 Email을 User Collection에서 찾아서 PushToken키를 가져온다.
           var pushtoken = '';
           User.findOne({
               email: req.body.writerEmail
