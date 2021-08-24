@@ -181,7 +181,7 @@ exports.getUserOrders = (req, res) => {
 exports.getUserOrdersTrackingInfo = (req, res) => {
   // console.log(req.params.email);
   // console.log(req.params.t_invoice);
-  var request = require('request'); 
+  var request = require('request');  
 
   var url = 'http://info.sweettracker.co.kr/api/v1/trackingInfo';
   var queryParams = '?' + encodeURIComponent('t_key') + '=XnVEEK1m0nYcjNF3Vp8uTQ'; /* Service Key*/
