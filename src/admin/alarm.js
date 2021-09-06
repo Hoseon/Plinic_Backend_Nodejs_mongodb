@@ -2,6 +2,8 @@ var express = require("express");
 var router = express.Router();
 var mongoose = require("mongoose");
 var Alarm = require("../models/Qna");
+var CommuBeautyCounter = require("../models/CommuBeautyCounter");
+var CommuBeauty = require("../models/CommuBeauty");
 // var QnaCounter = require("../models/QnaCounter");
 var async = require("async");
 var User_admin = require("../models/User_admin");
@@ -59,6 +61,92 @@ const sftpconfig = {
   user: "g1partners1",
   password: "g100210!!"
 };
+
+// router.get("/", function (req, res) {
+
+//   var vistorCounter = null;
+//   var page = Math.max(1, req.query.page) > 1 ? parseInt(req.query.page) : 1;
+//   var limit = Math.max(1, req.query.limit) > 1 ? parseInt(req.query.limit) : 10;
+//   var search = createSearch(req.query);
+//   async.waterfall(
+//     [
+//       function(callback) {
+//         CommuBeautyCounter.findOne(
+//           {
+//             name: "postMgt"
+//           },
+//           function(err, counter) {
+//             if (err) callback(err);
+//             vistorCounter = counter;
+//             callback(null);
+//           }
+//         );
+//       },
+//       function(callback) {
+//         if (!search.findUser) return callback(null);
+//         User_admin.find(search.findUser, function(err, users) {
+//           if (err) callback(err);
+//           var or = [];
+//           users.forEach(function(user) {
+//             or.push({
+//               author: mongoose.Types.ObjectId(user._id)
+//             });
+//           });
+//           if (search.findPost.$or) {
+//             search.findPost.$or = search.findPost.$or.concat(or);
+//           } else if (or.length > 0) {
+//             search.findPost = {
+//               $or: or
+//             };
+//           }
+//           callback(null);
+//         });
+//       },
+//       function(callback) {
+//         if (search.findUser && !search.findPost.$or)
+//           return callback(null, null, 0);
+//         CommuBeauty.count(search.findPost, function(err, count) {
+//           if (err) callback(err);
+//           skip = (page - 1) * limit;
+//           maxPage = Math.ceil(count / limit);
+//           callback(null, skip, maxPage);
+//         });
+//       },
+//       function(skip, maxPage, callback) {
+//         if (search.findUser && !search.findPost.$or)
+//           return callback(null, [], 0);
+//         CommuBeauty.find(search.findPost)
+//           .sort({ createdAt: -1 })
+//           .populate("author")
+//           .sort({ seq: 1, updatedAt: -1 })
+//           .skip(skip)
+//           .limit(limit)
+//           .exec(function(err, commuBeauty) {
+//             if (err) callback(err);
+//             callback(null, commuBeauty, maxPage);
+//           });
+//       }
+//     ],
+//     function(err, commuBeauty, maxPage) {
+//       if (err)
+//         return res.json({
+//           success: false,
+//           message: err
+//         });
+//       return res.render("PlinicAdmin/Contents/BeautyTip/PostMgt/index", {
+//         commuBeauty: commuBeauty,
+//         user: req.user,
+//         page: page,
+//         maxPage: maxPage,
+//         urlQuery: req._parsedUrl.query,
+//         search: search,
+//         counter: vistorCounter,
+//         postsMessage: req.flash("postsMessage")[0]
+//       });
+//     }
+//   );
+// });
+//기본 알림 화면
 
 router.get("/", function (req, res) {
 
@@ -131,7 +219,7 @@ router.get("/", function (req, res) {
           success: false,
           message: err
         });
-      return res.render("PlinicAdmin/Contents/BeautyTip/PostMgt/index", {
+      return res.render("PlinicAdmin/Operation/Alarm/index", {
         commuBeauty: commuBeauty,
         user: req.user,
         page: page,
@@ -144,7 +232,7 @@ router.get("/", function (req, res) {
     }
   );
 });
-//기본 알림 화면
+
 
 router.get("/:id", function (req, res) {
   return res.render("PlinicAdmin/Operation/Alarm/index", {});
@@ -216,23 +304,32 @@ router.post("/BeautyTip/PostMgt", isLoggedIn, function(req, res, next) {
 }
 ); // create
 
-router.get("/buy", function(req, res, next) {
-  async.waterfall([
-    () => {
-      Alarm.find(
-        {
-          // _id: req.params.id,
-          alertType: "buyAlarm"
-        },
-        (err, docs) => {
-          if (err) res.sendStatus(400);
+// router.get("/getUserAlarms", function(req, res, next) {
+//   async.waterfall([
+//     () => {
+//       Alarm.find(
+//         {
+//           mange:true
+//         },
+//         (err, docs) => {
+//           if (err) res.sendStatus(400);
 
-          if (docs) res.status(201).json(docs);
-        }
-      );
-    }
-  ]);
-});
+//           if (docs) res.status(201).json(docs);
+//         }
+//       );
+//     }
+//   ]);
+// });
+
+// router.get('/getUserAlarms/:id', function(req, res) {
+//   async.waterfall([function(callback) {
+//     Alarm.findOne({
+//       _id: req.params.id
+//     }, function(err, docs) {
+//       res.json(docs);
+//     })
+//   }]);
+// });
 
 function isLoggedIn(req, res, next) {
   if (req.isAuthenticated()) {

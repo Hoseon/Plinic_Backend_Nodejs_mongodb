@@ -264,6 +264,51 @@ router.get('/giveupchallenge/:id', function(req, res) {
   }]);
 });
 
+router.get('/upChallenge/:id', function(req, res) {
+  //var carezonelist = null;
+  //console.log("chkmission" +req.params.id);
+
+  Challenge.findOne({
+    email: req.params.id
+  }, function (err, docs) {
+      if (err) {
+        console.log("챌릭지 이력 가져오기 에러 : " + req.params.id);
+      }
+      
+      if (docs) {
+        console.log("미션 이력 : ");
+        console.log(JSON.stringify(docs));
+      } else {
+        console.log("챌릭지 이력 가져오기 에러22 : " + req.params.id);
+      }
+  });
+
+  async.waterfall([function(callback) {
+    Challenge.findOneAndUpdate({
+      email: req.params.id,
+      missioncomplete: false
+      }, {
+        $set: {
+          missioncomplete: true,
+          reward: true
+        },
+    }, 
+    function (err, docs) {
+        if (err) {
+          console.log("미션 업데이트 실패 : " + req.params.id);
+          res.sendStatus(400);
+        }
+
+        if (docs) {
+          res.json(docs);
+        } else {
+          console.log("미션 업데이트 실패2 : " + req.params.id + " : Time " + getCovertKoreaTime(Date.now()));
+          res.sendStatus(404);
+        }
+    });
+  }]);
+});
+
 //미션 참여중인지 체크 하는 내용
 router.get('/chkmission/:id', function(req, res) {
   //var carezonelist = null;
@@ -358,8 +403,8 @@ router.get('/challengeusetime2/:id/:email', function(req, res) {
     Challenge.findOne({
       missionID: req.params.id,
       email: req.params.email,
-      missioncomplete: false,
-      reward: false,
+      // missioncomplete: false,
+      // reward: false,
     }, function (err, docs) {
         if (err) {
           console.log("챌린지 성공횟수 가져오기 에러 : " + req.params.email + " : " + req.params.id);

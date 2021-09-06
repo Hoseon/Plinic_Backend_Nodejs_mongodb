@@ -142,6 +142,15 @@ routes.get('/getUserOrders/:email', orderController.getUserOrders); //결제 성
 routes.get('/getUserOrdersTrackingInfo/:email/:t_invoice', orderController.getUserOrdersTrackingInfo); //결제 성공시 오더 정보 가져오기 2021-03-10
 routes.get('/isPlinicUser/:email/', userController.isPlinicUser); //결제 성공시 오더 정보 가져오기 2021-03-10
 
+routes.get('/getUserAlarms/:writerEmail', userController.getUserAlarms);//알람 페이지 데이터
+
+routes.get('/getAlarmTime/:writerEmail', userController.getAlarmTime);//마이 페이지 알람 데이터
+
+routes.get('/alarmTypeUpdate/:_id', userController.alarmTypeUpdate);//마이 페이지 알람 클릭시 alarmCondition: false
+routes.get('/alarmTypeUpdate2/:id', userController.alarmTypeUpdate2);//앱 밖에서 알람 터치시 alarmCondition: false
+
+routes.get('/delAlarm/:writerEmail/:_id', userController.delAlarm);//알람 전체 삭제
+routes.get('/delAlarm2/:writerEmail/:_id', userController.delAlarm);//알람 선택 삭제
 
 routes.get('/auth/kakao', passport.authenticate('kakao',{
     failureRedirect: '#!/login'

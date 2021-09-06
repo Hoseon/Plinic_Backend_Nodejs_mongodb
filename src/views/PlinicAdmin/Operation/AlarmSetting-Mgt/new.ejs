@@ -47,15 +47,18 @@
                         <div class="panel-body">
                             <div class="col-md-12">
                                 <div class="col-5">
-                                    <small style="color: #6c757d;">※사용자가 앱을 사용하지 않을 때에도 기기 홈 화면에 표시됩니다. 예약발송 포함 30개로
-                                        제한됩니다. 너무 많은 알람을 보내지 않도록 주의하세요 ※</small>
+                                    <!-- <small style="color: #6c757d;">※사용자가 앱을 사용하지 않을 때에도 기기 홈 화면에 표시됩니다. 예약발송 포함 30개로
+                                        제한됩니다. 너무 많은 알람을 보내지 않도록 주의하세요 ※</small> -->
+                                    <small style="color: #6c757d;">※사용자가 앱을 사용하지 않을 때에도 기기 홈 화면에 표시됩니다. 너무 많은 알람을 보내지 않도록 주의하세요 ※</small>
                                 </div>
                                 <br><br>
                                 <div class="form-group row">
                                     <label class="col-sm-1 text-center control-label" for="name"><span
                                             class="input_title_cion" style="color: red;">* </span>제목</label>
                                     <div class="col-sm-6 controls">
-                                        <input name="price" id="price" class="form-control" value=""
+                                        <input type="text" name="post[alarmName]" class="form-control"
+                                            data-validate="data">
+                                        <input type="hidden" name="post[alertType]" class="form-control" value="마케팅알림"
                                             data-validate="data">
                                     </div>
                                 </div>
@@ -63,7 +66,7 @@
                                     <label class="col-sm-1 text-center control-label" for="name"><span
                                             class="input_title_cion" style="color: red;">* </span>내용</label>
                                     <div class="form-floating col-md-6">
-                                        <textarea class="form-control" placeholder="Leave a comment here"
+                                        <textarea name="post[alarmDesc]" class="form-control" placeholder="Leave a comment here"
                                             id="floatingTextarea" style="height: 150px"></textarea>
                                     </div>
                                 </div>
@@ -82,21 +85,21 @@
                                     <div class="form-floating col-md-6">
                                         <div class="form-check">
                                             <input class="form-check-input" type="radio" name="flexRadioDefault"
-                                                id="flexRadioDefault1">
+                                                id="flexRadioDefault1" checked>
                                             <label class="form-check-label" for="flexRadioDefault1">
                                                 전체 사용자
                                             </label>
                                         </div>
                                         <div class="form-check">
                                             <input class="form-check-input" type="radio" name="flexRadioDefault"
-                                                id="flexRadioDefault2" checked>
+                                                id="flexRadioDefault2" disabled>
                                             <label class="form-check-label" for="flexRadioDefault2">
                                                 고정 그룹
                                             </label>
                                         </div>
                                         <div class="row">
                                             <div class="col-8">
-                                                <select class="form-select" aria-label="Default select example">
+                                                <select class="form-select" aria-label="Default select example" disabled>
                                                     <option selected></option>
                                                     <option value="1">One</option>
                                                     <option value="2">Two</option>
@@ -107,14 +110,14 @@
                                         </div>
                                         <div class="form-check">
                                             <input class="form-check-input" type="radio" name="flexRadioDefault"
-                                                id="flexRadioDefault3" checked>
+                                                id="flexRadioDefault3" disabled>
                                             <label class="form-check-label" for="flexRadioDefault3">
                                                 비고정 그룹
                                             </label>
                                         </div>
                                         <div class="row">
                                             <div class="col-8">
-                                                <select class="form-select" aria-label="Default select example">
+                                                <select class="form-select" aria-label="Default select example" disabled>
                                                     <option selected>그룹명</option>
                                                     <option value="1">One</option>
                                                     <option value="2">Two</option>
@@ -122,7 +125,7 @@
                                                 </select>
                                             </div>
                                             <div class="col-2">
-                                                <button type="button" class="btn btn-primary"
+                                                <button type="button" class="btn btn-primary" disabled
                                                     onclick="location.href='/groups/new'">새 그룹 추가</button>
                                             </div>
                                         </div>
@@ -133,9 +136,9 @@
                                 <br><br>
                                 <div class="form-group row">
                                     <label class="col-sm-1 text-center control-label" for="name"><span
-                                            class="input_title_cion" style="color: red;">* </span>연결 페이지</label>
+                                            class="input_title_cion">* </span>연결 페이지</label>
                                     <div class="col-sm-6 controls">
-                                        <select class="form-select" aria-label="Default select example">
+                                        <select class="form-select" aria-label="Default select example" disabled>
                                             <option selected></option>
                                             <option value="1">홈</option>
                                             <option value="2">뷰티풀-포스트</option>
@@ -155,7 +158,7 @@
                                 <br><br>
                                 <div class="form-group row">
                                     <label class="col-sm-1 text-center control-label" for="name"><span
-                                            class="input_title_cion">* </span>알림 일정</label>
+                                            class="input_title_cion" style="color: red;">* </span>알림 일정</label>
                                     <div class="col-sm-6 controls">
                                         이 알림을 바로 보내겠습니까?
                                     </div>
@@ -177,7 +180,7 @@
                                     <div class="col-sm-6 controls">
                                         <div class="form-check">
                                             <input class="form-check-input" type="radio" name="flexRadioDefault2"
-                                                id="flexRadioDefault5" checked>
+                                                id="flexRadioDefault5" disabled>
                                             <label class="form-check-label" for="flexRadioDefault5">
                                                 알림함에만 노출 (고객 푸시알림 없음)
                                             </label>
@@ -189,14 +192,14 @@
                                     <div class="col-sm-6 controls">
                                         <div class="form-check">
                                             <input class="form-check-input" type="radio" name="flexRadioDefault2"
-                                                id="flexRadioDefault6" checked>
+                                                id="flexRadioDefault6" disabled>
                                             <label class="form-check-label" for="flexRadioDefault6">
                                                 예약 전송
                                             </label>
                                         </div>
                                     </div>
                                 </div>
-                                <br><br><br>
+                                <!-- <br><br><br> -->
                                 <div class="form-group row">
                                     <label class="col-sm-1 text-center control-label" for="name"></label>
                                     <div class="col-sm-6 controls">
@@ -204,10 +207,10 @@
                                         <br><br>
                                         <div class="row">
                                             <div class="col-4">
-                                                <input type="date" id="date" style="height:25px;">
+                                                <input type="date" id="date" style="height:25px;" disabled>
                                             </div>
                                             <div class="col-4">
-                                                <input type="time" id="time" style="height:25px;">
+                                                <input type="time" id="time" style="height:25px;" disabled>
                                             </div>
                                         </div>
                                     </div>

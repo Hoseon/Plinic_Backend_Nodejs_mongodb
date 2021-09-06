@@ -28,7 +28,7 @@
                     <div class="row">
                         <div class="col-md-12">
                             <h1 class="page-header">
-                                팝업
+                                홈 팝업
                                 <!-- <small> 챌린지 관리 Sub제목</small> -->
                             </h1>
                         </div>
@@ -39,7 +39,7 @@
                             <h2 class="accordion-header" id="headingOne">
                                 <button class="accordion-button" type="button" data-bs-toggle="collapse"
                                     data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
-                                    팝업 목록
+                                    팝업 목록 (*목록 1개만 유지*)
                                 </button>
                             </h2>
                             <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne"
@@ -58,29 +58,38 @@
                                                 class="table table-bordered  table-condensed table-hover  text-center">
                                                 <thead>
                                                     <tr>
-                                                        <th class="text-center">No</th>
                                                         <th class="text-center" width="900">제목</th>
-                                                        <th class="text-center">시작일</th>
-                                                        <th class="text-center">종료일</th>
                                                         <th class="text-center">관리</th>
                                                     </tr>
                                                 </thead>
+                                                <% if(adbanner == null || adbanner.length == 0){ %>
+                                                    <tr class="noData">
+                                                        <td colspan="5">There is no data to show :(</td>
+                                                    </tr>
+                                                <% } %>
+                                                <% adbanner.forEach(function(post){ %>
+                                                <% if(post.homePopup === true) { %>
                                                 <tbody>
                                                     <tr>
-                                                        <td>1</td>
-                                                        <td class="text-left">만족</td>
-                                                        <td>2020-12-16</td>
-                                                        <td>2020-12-17</td>
+                                                        <td class="text-center" onclick="window.location = '/homePopups/popupShow/<%= post._id %>?<%= urlQuery %>'">
+                                                            <%= post.title %>
+                                                        </td>
                                                         <td class="center">
-                                                                <button class="btn btn-primary float_left" type="button"
-                                                                    onclick="location.href='/homePopups/HomePopup/edit'">수정</button>
-                                                                <form class="float_left" name="frmSubmit">
-                                                                    <button class="btn btn-primary btn btn-danger"
-                                                                        type="button">삭제</button>
-                                                                </form>
+                                                            <div class="row justify-content-center">
+                                                                <div class="col-6 p-0 m-0">
+                                                                    <button class="btn btn-primary float_left" type="button"
+                                                                        onclick="location.href='/homePopups/<%=post._id%>/popupEdit'">수정</button>
+                                                                    <form class="float_right" action="/homePopups/popupRowdel/<%= post._id %>?_method=delete" method="post">
+                                                                        <button class="btn btn-primary btn btn-danger"
+                                                                            type="submit">삭제</button>
+                                                                    </form>
+                                                                </div>
+                                                            </div>
                                                         </td>
                                                     </tr>
                                                 </tbody>
+                                                <% } %>
+                                                <% }) %>
                                             </table>
                                         </div>
                                     </div>

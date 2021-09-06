@@ -60,6 +60,48 @@ const sftpconfig = {
   password: 'g100210!!'
 };
 
+// router.get('/compareemail/:email', function(req, res) {
+//   async.waterfall([function(callback) {
+//     Reward.findOne({
+//       missionID: req.params.id,
+//       email: req.params.email,
+//       missioncomplete: false,
+//       reward: false,
+//     }, function (err, docs) {
+//         if (err) {
+//           console.log("에러 : " + req.params.id);
+//           res.sendStatus(400);
+//         }
+//         if (docs) {
+//           res.json(docs);
+//         } else {
+//           console.log("에러2 : " + req.params.id);
+//           res.sendStatus(400);
+//         }
+//     });
+//   }]);
+// });
+
+router.get('/email_list', function(req, res) {
+  async.waterfall([function(callback) {
+    var todayDate = new Date();
+    var preToday = new Date();
+    preToday.setDate(preToday.getDate() -6);
+    Reward.find({
+      createdAt: {
+        $gte: preToday,
+        $lte: todayDate
+      }
+    },
+      function(err, docs) {
+      res.json(docs);
+    }).sort({
+      "_id": -1
+    })
+    // .limit(3);
+  }]);
+});
+
 
 router.get('/list/:email', function(req, res) {
   async.waterfall([function(callback) {
@@ -89,7 +131,8 @@ router.get('/main_list', function(req, res) {
       res.json(docs);
     }).sort({
       "_id": -1
-    }).limit(3);
+    })
+    // .limit(3);
   }]);
 });
 

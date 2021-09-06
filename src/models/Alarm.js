@@ -1,13 +1,16 @@
 var mongoose = require('mongoose');
 
 var alarmSchema = mongoose.Schema({
-  alertType: { type: String}, //경고 유형?
+  email: { type: String}, // 보내는 사람 이메일
+  writerEmail: { type: String}, // 이메일
+  alertType: { type: String}, // 경고 유형?
   alarmName : { type: String}, // 알람 이름
-  alarmCondition : { type: String}, // 알람 상태
+  alarmCondition : { type: Boolean, default: false}, // 알람 읽었는지 여부
   alarmDesc: { type: String }, // 알람 내용
-  mange: {type: Boolean, default: false}, // .
+  mange: {type: Boolean, default: true}, // 삭제 숨김 여부
   createdAt: {type:Date, default:Date.now},
   updatedAt: Date,
+  skinId: {type:String},
 });
 
 alarmSchema.methods.getFormattedDate = function (date) {

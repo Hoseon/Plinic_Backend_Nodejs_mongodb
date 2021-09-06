@@ -9,6 +9,7 @@ var Reward = require("../models/Reward");
 var async = require("async");
 var User_admin = require("../models/User_admin");
 var User = require("../models/user");
+var Alarm = require("../models/Alarm");
 var multer = require("multer");
 // var FTPStorage = require('multer-ftp');
 var sftpStorage = require("multer-sftp");
@@ -527,9 +528,9 @@ router.post('/:id/comments', function(req, res) {
 
   //사용자의 Email을 User Collection에서 찾아서 PushToken키를 가져온다.
   var pushtoken = '';
-  if(req.body.email !== '') {
+  if(req.body.post.email !== '') {
     User.findOne({
-      email : req.body.email
+      email : req.body.post.email
     },function(err, User) {
       if(User) {
         var message = { //this may vary according to the message type (single recipient, multicast, topic, et cetera)
@@ -548,8 +549,8 @@ router.post('/:id/comments', function(req, res) {
           },
 
           data: { //you can send only notification or only data(or include both)
-            mode: "myqna",
-            id: req.body.id
+            mode: "alarm",
+            id: req.body._id
           }
         };
 
@@ -562,6 +563,26 @@ router.post('/:id/comments', function(req, res) {
         });
       }
     });
+
+    //알람 테이블에 해당 내용 저장
+    Alarm.create({
+      writerEmail: req.body.post.email, //게시글 이메일
+      email: req.body.comment.email, //관리자 댓글 이메일
+      skinId: req.params.id, //게시글 아이디
+      alertType: "챌린지알림",
+      // alarmName: "축하합니다! 챌린지에 성공하여 이벤트 상품이 발송 될 예정입니다.",
+      alarmName: req.body.comment.body,
+      alarmDesc: req.body.comment.body,
+      alarmCondition: false,
+      mange: true,
+      
+    }, function(err, counter) {
+      if (err) return response.json({
+        success: false,
+        message: err
+      });
+    });
+
   }
 
 

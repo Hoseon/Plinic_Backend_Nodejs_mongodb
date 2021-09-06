@@ -77,7 +77,6 @@ router.get('/', function(req, res) {
   var limit = Math.max(1, req.query.limit) > 1 ? parseInt(req.query.limit) : 80;
   var search = createSearch(req.query);
   var testSearch = createSearchTest(req.query);
-  // var dateSearch = createSearchTests(req.query);
   async.waterfall([
     function(callback) {
     if (!search.findUser) return callback(null);
@@ -159,6 +158,94 @@ router.get('/', function(req, res) {
   });
 });
 
+router.get('/newIndex', function(req, res) {
+  var vistorCounter = null;
+  var page = Math.max(1, req.query.page) > 1 ? parseInt(req.query.page) : 1;
+  var limit = Math.max(1, req.query.limit) > 1 ? parseInt(req.query.limit) : 80;
+  var search = createSearch2(req.query);
+  var testSearch = createSearchDate(req.query);
+  async.waterfall([
+    function(callback) {
+    if (!search.findUser) return callback(null);
+    User.find(search.findUser, function(err, users) {
+      if (err) callback(err);
+      var or = [];
+      users.forEach(function(users) {
+        or.push({
+          author: mongoose.Types.ObjectId(users._id)
+        });
+      });
+      if (search.findPost.$or) {
+        search.findPost.$or = search.findPost.$or.concat(or);
+      } else if (or.length > 0) {
+        search.findPost = {
+          $or: or
+        };
+      }
+      callback(null);
+    });
+  }, function(callback) {
+      if (search.findUser && !search.findPost.$or 
+        || testSearch.findUser && testSearch.dayCreated[0].created) 
+      return callback(null, null, 0);
+      User.count(search.findPost || testSearch.dayCreated[0].created, function(err, count) {
+        if (err) callback(err);
+        skip = (page - 1) * limit;
+        maxPage = Math.ceil(count / limit);
+        callback(null, skip, maxPage);
+      });
+
+  }, 
+  function(skip, maxPage, callback) {
+    if (search.findUser && !search.findPost.$or 
+      || testSearch.findUser && testSearch.dayCreated[0].created) 
+    return callback(null, [], 0);
+
+    if(testSearch.dayCreated[0]) {
+      User.find(testSearch.dayCreated[0])
+      .populate("author")
+      .sort({created : 1})
+      .skip(skip)
+      .limit(limit)
+      .exec(function(err, user) {
+        if (err) callback(err);
+        callback(null, user, maxPage);
+      });
+    } else {
+      User.find(search.findPost)
+      .populate("author")
+      .sort({created : -1})
+      .skip(skip)
+      .limit(limit)
+      .exec(function(err, user) {
+        if (err) callback(err);
+        callback(null, user, maxPage);
+      });
+    }
+  },
+  ], 
+  function(err, user, maxPage) {
+    if (err) return res.json({
+      success: false,
+      message: err
+    });
+    return res.render("PlinicAdmin/Operation/MemberMgt/newIndex", {
+      users: user,
+      // orders: orders,
+      user: req.user,
+      page: page,
+      maxPage: maxPage,
+      urlQuery: req._parsedUrl.query,
+      search: search,
+      testSearch : testSearch,
+      // dateSearch: dateSearch,
+      counter: vistorCounter,
+      postsMessage: req.flash("postsMessage")[0]
+    });
+  });
+});
+
+
 
 router.get("/:id", function (req, res) {
   
@@ -182,48 +269,6 @@ router.get("/:id", function (req, res) {
       });
     });
 }); // 회원 정보 show
-
-
-// router.get("/orders/:id", function (req, res) {
-//   Orders.findById(req.params.id)
-//     .populate(['author', 'orders'])
-//     .exec(function (err, post) {
-//       if (err) return res.json({
-//         success: false,
-//         message: err
-//       });
-//       console.log(post);
-//       res.render("PlinicAdmin/Operation/MemberMgt/oshow", {
-//         post: post,
-//         urlQuery: req._parsedUrl.query,
-//         user: req.user,
-//         search: createSearch(req.query)
-//       });
-//     });
-// }); // 회원 정보 show
-
-// router.get('/orders', (req, res, next) => {
-//   Orders.findAll({
-//     where: {user: req.user}, //조건
-//     include: [{ //포험
-//       model: User, //어느 부분인지
-//       attributes : ['_id'] //속성
-//     }],
-//   })
-//   .then((Orders) => {
-//     res.render("PlinicAdmin/Operation/MemberMgt/oshow", {
-//       // Post: req.food,
-//       // twit : Post,
-//       user: req.user,
-//       loginError: req.flash('loginError'),
-//     });
-//     console.log(JSON.stringify(Orders))
-//   })
-//   .catch((error) => {
-//     console.error(error);
-//     next(error);
-//   });
-// });
 
 router.get("/test", function (req, res) {
   
@@ -444,7 +489,229 @@ function createSearchTest(querie) {
 }
 
 
+function createSearchDate(querie) {
+  findUser = null
+  if (!isEmpty2(querie.dateCheck)) {
+    var dayCreated = [];//기간별 조희
+    var findAfter = {
+    };
+
+    if (!isEmpty2(querie.dateCheck)) {
+      // var created = new Date();
+      if(isEmpty2(!querie.dateCheck.may)) {
+        var mayStart   = new Date( "2021", "04" );
+        var start   = new Date( "2021", "05" );
+        mayLast = new Date(start -1);
+        // var mayLast = start.setDate(start.getDate() - 1);
+        
+        dayCreated.push({
+          created: {
+            $gte: mayStart,
+            $lte: mayLast,
+          }
+        });
+      } else {
+        dayCreated.push();
+      }
+  
+      if(isEmpty2(!querie.dateCheck.jun)) {
+        var junStart   = new Date( "2021", "05" );
+        var start2   = new Date( "2021", "06" );
+        junLast = new Date(start2 -1);
+        // var junLast = start2.setDate(start2.getDate() - 1);
+        
+        dayCreated.push({
+          created: {
+            $gte: junStart,
+            $lte: junLast,
+          }
+        });
+      } else {
+        dayCreated.push();
+      }
+
+      if(isEmpty2(!querie.dateCheck.jul)) {
+        var julStart   = new Date( "2021", "06" );
+        var start3   = new Date( "2021", "07" );
+        julLast = new Date(start3 -1);
+        // var julLast = start3.setDate(start3.getDate() - 1);
+
+        dayCreated.push({
+          created: {
+            $gte: julStart,
+            $lte: julLast,
+          }
+        });
+      } else {
+        dayCreated.push();
+      }
+
+      if(isEmpty2(!querie.dateCheck.aug)) {
+        var augStart   = new Date( "2021", "07" );
+        var start4   = new Date( "2021", "08" );
+        augLast = new Date(start4 -1);
+        // var augLast = start4.setDate(start4.getDate() - 1);
+
+        dayCreated.push({
+          created: {
+            $gte: augStart,
+            $lte: augLast,
+          }
+        });
+      } else {
+        dayCreated.push();
+      }
+
+      isEmpty2(!querie.dateCheck.may) ? findAfter.may = true : findAfter.may = false;
+      isEmpty2(!querie.dateCheck.jun) ? findAfter.jun = true : findAfter.jun = false;
+      isEmpty2(!querie.dateCheck.jul) ? findAfter.jul = true : findAfter.jul = false;
+      isEmpty2(!querie.dateCheck.aug) ? findAfter.aug = true : findAfter.aug = false;
+    }
+
+    return {
+      findUser: findUser,
+      findAfter: findAfter,
+      dayCreated : dayCreated
+    };
+
+  } else {
+
+    var dayCreated = [];
+    var findAfter = {
+      may : false,
+      jun: false,
+      jul: false,
+      aug: false,
+    };
+    if (!isEmpty2(querie.dateCheck)) {
+      // var created = new Date();
+      if(isEmpty2(!querie.dateCheck.may)) {
+        var mayStart   = new Date( "2021", "04" );
+        var start   = new Date( "2021", "05" );
+        mayLast = new Date(start -1);
+        // var mayLast = start.setDate(start.getDate() - 1);
+        
+        dayCreated.push({
+          created: {
+            $gte: mayStart,
+            $lte: mayLast,
+          }
+        });
+      } else {
+      }
+  
+      if(isEmpty2(!querie.dateCheck.jun)) {
+        var junStart   = new Date( "2021", "05" );
+        var start2   = new Date( "2021", "06" );
+        junLast = new Date(start2 -1);
+        // var junLast = start2.setDate(start2.getDate() - 1);
+        
+        dayCreated.push({
+          created: {
+            $gte: junStart,
+            $lte: junLast,
+          }
+        });
+      } else {
+      }
+
+      if(isEmpty2(!querie.dateCheck.jul)) {
+        var julStart   = new Date( "2021", "06" );
+        var start3   = new Date( "2021", "07" );
+        julLast = new Date(start3 -1);
+        // var julLast = start3.setDate(start3.getDate() - 1);
+
+        dayCreated.push({
+          created: {
+            $gte: julStart,
+            $lte: julLast,
+          }
+        });
+      } else {
+      }
+
+      if(isEmpty2(!querie.dateCheck.aug)) {
+        var augStart   = new Date( "2021", "07" );
+        var start4   = new Date( "2021", "08" );
+        augLast = new Date(start4 -1);
+        // var augLast = start4.setDate(start4.getDate() - 1);
+
+        dayCreated.push({
+          created: {
+            $gte: augStart,
+            $lte: augLast,
+          }
+        });
+      } else {
+      }
+
+      isEmpty2(!querie.dateCheck.may) ? findAfter.may = true : findAfter.may = false;
+      isEmpty2(!querie.dateCheck.jun) ? findAfter.jun = true : findAfter.jun = false;
+      isEmpty2(!querie.dateCheck.jul) ? findAfter.jul = true : findAfter.jul = false;
+      isEmpty2(!querie.dateCheck.aug) ? findAfter.aug = true : findAfter.aug = false;
+    }
+
+    return {
+      findUser: findUser,
+      findAfter: findAfter,
+      dayCreated: dayCreated
+    };
+  }
+  
+}
+
+
 function createSearch(queries) {
+  var findPost = {},
+    findUser = null,
+    highlight = {};
+  if (queries.searchType && queries.searchText && queries.searchText.length >= 2) { //검색어 글자수 제한 하는 것
+    var searchTypes = queries.searchType.toLowerCase().split(",");
+    var postQueries = [];
+    if (searchTypes.indexOf("email") >= 0) {
+      postQueries.push({
+        email: {
+          $regex: new RegExp(queries.searchText, "i")
+        }
+      });
+      highlight.email = queries.searchText;
+    }
+    if (searchTypes.indexOf("name") >= 0) {
+      postQueries.push({
+        name: {
+          $regex: new RegExp(queries.searchText, "i")
+        }
+      });
+      highlight.name = queries.searchText;
+    }
+    if (searchTypes.indexOf("author!") >= 0) {
+      findUser = {
+        nickname: queries.searchText
+      };
+      highlight.author = queries.searchText;
+    } else if (searchTypes.indexOf("author") >= 0) {
+      findUser = {
+        nickname: {
+          $regex: new RegExp(queries.searchText, "i")
+        }
+      };
+      highlight.author = queries.searchText;
+    }
+    if (postQueries.length > 0) findPost = {
+      $or: postQueries
+    };
+  }
+  
+  return {
+    searchType: queries.searchType,
+    searchText: queries.searchText,
+    findPost: findPost,
+    findUser: findUser,
+    highlight: highlight
+  };
+}
+
+function createSearch2(queries) {
   var findPost = {},
     findUser = null,
     highlight = {};

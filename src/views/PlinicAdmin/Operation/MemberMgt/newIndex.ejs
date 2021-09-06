@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <% include ../../../partials/head %>
+        <title></title>
+        <link href='http://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css' />
+        
+        <script src="//netdna.bootstrapcdn.com/bootstrap/3.0.3/js/bootstrap.min.js"></script>
+        <script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
+</head>
+<script type="text/javascript" src="/js/jquery-1.10.2.js"></script>
+
+<body>
+
+    <header>
+        <% include ../../../partials/header %>
+    </header>
+
+
+    <div class="container-fluid">
+        <div class="row">
+            <!-- 2단길이의 첫번째 열 -->
+            <div class="col-md-2">
+                <% include ../../../partials/mside %>
+            </div>
+
+            <!-- 10단길이의 첫번째 열 -->
+            <div class="col-md-10">
+                <div id="page-inner">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <h1 class="page-header">
+                                월별 가입자
+                                <!-- <small> 챌린지 관리 Sub제목</small> -->
+                            </h1>
+                        </div>
+                    </div>
+
+                    <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne"
+                        data-bs-parent="#accordionExample">
+                        <div class="accordion-body">
+                            <table class="table-bordered table table-striped table-hover">
+                                <form class="checkValidation" action="/members/newIndex" id="search">
+                                    <tr>
+                                        <th class="text-center" style="padding-top: 20px;">검색 조건</th>
+                                        <td colspan="3">
+                                            <!-- <div class="row g-4 align-self-center">
+                                                <div class="col-2">
+                                                    <select class="form-select" aria-label="Default select example" name="searchType" <%=// search.searchType=="author!"?"disabled":"" %>>
+                                                        <%// var select %>
+                                                        <option value="email,name"
+                                                        <%=// search.searchType=="email,name"?select="selected":"" %>>회원 아이디+이름</option>
+                                                        <option value="email"
+                                                        <%=// search.searchType=="email"?select="selected":"" %>>회원 아이디</option>
+                                                        <option value="name"
+                                                        <%=// search.searchType=="name"?select="selected":"" %>>이름</option>
+                                                        <%//if(search.searchType=="author!"){%>
+                                                        <option value="author!"
+                                                            <%=// search.searchType=="author!"?select="selected":"" %>>Author</option>
+                                                        <%//} else {%>
+                                                        <option value="author"
+                                                            <%= //search.searchType=="author"?select="selected":"" %>>Author</option>
+                                                        <%//}%>
+                                                    </select>
+                                                </div>
+                                                <div class="col-5">
+                                                    <input class="cvMinLength" cvMinLength="2"
+                                                    cvMinLenErrTo="#searchError" style="float: left; width: 300px; height: 28px;"
+                                                    cvMinLenErrMsg="It should be at least 2 characters"
+                                                    type="text" name="searchText" value="<%=// select?search.searchText:"" %>"
+                                                    <%=// search.searchType=="author!"?"disabled":"" %>>
+                                                </div>
+                                            </div> -->
+                                        </td>
+                                        <td rowspan="2">
+                                            <div class="row justify-content-center">
+                                                <div class="col-6 p-0 m-0">
+                                                    <button type="submit" id="btnSearch"  class="btn btn-info" style="margin-top: 41px;" <%= search.searchType=="author!"?"disabled":"" %>>검색</button>
+                                                </div>
+                                                <%if(search.searchType){%>
+                                                <div class="col-6 p-0 m-0">
+                                                    <button type="button" class="btn btn-secondary" style="margin-top: 41px;" onclick="window.location = '/members/newIndex/?page=1'">취소</button>
+                                                </div>
+                                                <%}%>
+                                                <div class="message" id="searchError"></div>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th class="text-center" style="padding-top: 15px;">가입 기간</th>
+                                        <td colspan="3">
+                                            <% if(typeof testSearch.findAfter == "undefined" || testSearch.findAfter == null || testSearch.findAfter == "") {%>
+                                                <div class="row g-4 align-self-center">
+                                                    <div class="col-2">
+                                                        <!-- <button onclick="All()" class="btn btn-default btn-sm">전체</button> -->
+                                                        <!-- <button type="button" class="btn btn-sm" data-color="primary">전체</button> -->
+                                                        <input type="checkbox" class="form-check-input" name="dateCheck[may]" value="true" id="inlineCheckbox1"/>
+                                                        <label class="form-check-label" for="inlineCheckbox1">5월</label>
+                                                    </div>
+                                                    <div class="col-2">
+                                                        <!-- <button onclick="weeklyy()" class="btn btn-default btn-sm">1주일</button> -->
+                                                        <!-- <button type="button" class="btn btn-sm" data-color="primary">1주일</button> -->
+                                                        <input type="checkbox" class="form-check-input" name="dateCheck[jun]" value="true" id="inlineCheckbox2"/>
+                                                        <label class="form-check-label" for="inlineCheckbox2">6월</label>
+                                                    </div>
+                                                    <div class="col-2">
+                                                        <!-- <button onclick="monthy()" class="btn btn-default btn-sm">1개월</button> -->
+                                                        <!-- <button type="button" class="btn btn-sm" data-color="primary">1개월</button> -->
+                                                        <input type="checkbox" class="form-check-input" name="dateCheck[jul]" value="true" id="inlineCheckbox3"/>
+                                                        <label class="form-check-label" for="inlineCheckbox3">7월</label>
+                                                    </div>
+                                                    <div class="col-2">
+                                                        <!-- <button onclick="monthy()" class="btn btn-default btn-sm">1개월</button> -->
+                                                        <!-- <button type="button" class="btn btn-sm" data-color="primary">1개월</button> -->
+                                                        <input type="checkbox" class="form-check-input" name="dateCheck[aug]" value="true" id="inlineCheckbox3"/>
+                                                        <label class="form-check-label" for="inlineCheckbox3">8월</label>
+                                                    </div>
+                                                </div>
+                                            <% } else { %>
+                                                <div class="row g-4 align-self-center">
+                                                    <div class="col-2">
+                                                        <input type="checkbox" class="form-check-input" name="dateCheck[may]" 
+                                                        value="true" id="inlineCheckbox1" <% if(testSearch.findAfter.may) { %> checked <% } %>/>
+                                                        <label class="form-check-label" for="inlineCheckbox1">5월</label>
+                                                    </div>
+                                                    <div class="col-2">
+                                                        <input type="checkbox" class="form-check-input" name="dateCheck[jun]" 
+                                                        value="true" id="inlineCheckbox2" <% if(testSearch.findAfter.jun) { %> checked <% } %>/>
+                                                        <label class="form-check-label" for="inlineCheckbox2">6월</label>
+                                                    </div>
+                                                    <div class="col-2">
+                                                        <input type="checkbox" class="form-check-input" name="dateCheck[jul]" 
+                                                        value="true" id="inlineCheckbox3" <% if(testSearch.findAfter.jul) { %> checked <% } %>/>
+                                                        <label class="form-check-label" for="inlineCheckbox3">7월</label>
+                                                    </div>
+                                                    <div class="col-2">
+                                                        <input type="checkbox" class="form-check-input" name="dateCheck[aug]" 
+                                                        value="true" id="inlineCheckbox3" <% if(testSearch.findAfter.aug) { %> checked <% } %>/>
+                                                        <label class="form-check-label" for="inlineCheckbox3">8월</label>
+                                                    </div>
+                                                </div>
+                                            <% } %>
+                                        </td>
+                                    </tr>
+                                </form>
+                            </table>
+
+                            <div class="accordion-body">
+                                <% if(users) {%>
+                                    <div class="row g-4 align-items-left">
+                                        <div class="col-2" no-margin style="color:blue">
+                                            회원수 :
+                                            <% var sum = 0; %>
+                                            <% for(i = users.length; i <= users.length ;i++){ %>
+                                                <span>
+                                                    <%= sum = sum + i %>명
+                                                </span>
+                                            <% } %>
+                                        </div>
+                                        <!-- <div class="col-2" no-margin>
+                                            남성 : <%// users.gender %>
+                                            <%// var sum2 = 0; %>
+                                            <%// for(var v = 0; v < users.length ; v++) { %>
+                                                <%// if(users[v].gender == '남성') { %>
+                                                    <%=// sum2 = sum2 + users.gender %>명
+                                                <%// } %>
+                                            <%// } %>
+                                        </div> -->
+                                    </div>
+                                <% } %>
+                            </div>
+
+                            <div class="panel-body" >
+                                <div class="table-responsive dataTables_wrapper form-inline">
+                                    <table class="table table-bordered  table-condensed table-hover  text-center" heigth=300>
+                                        <colgroup>
+                                            <col class="name"/>
+                                            <col class="성별"/>
+                                            <col class="가입일"/>
+                                            <col class="생년월일"/>
+                                        </colgroup>
+                                        <thead>
+                                            <tr>
+                                                <!-- <th class="text-center">이름</th> -->
+                                                <th class="text-center">성별</th>
+                                                <th class="text-center" width=300>생년월일</th>
+                                                <th class="text-center">가입일</th>
+                                            </tr>
+                                        </thead>
+                                        <% if(users==null || users.length==0) { %>
+                                            <tr class="noData">
+                                                <td colspan="5">There is no data to show :(</td>
+                                            </tr>
+                                        <% } %>
+                                        <% users.forEach(function(post, index) { %>
+                                            <tbody>
+                                                <tr>
+                                                    <!-- <td>
+                                                        <%=// post.name %>
+                                                    </td> -->
+                                                    <td class="text-center">
+                                                        <% if(post.gender !== null) { %>
+                                                            <%= post.gender %>
+                                                        <% } else if(post.gender === null){ %>
+                                                            알 수 없음
+                                                        <% } %>
+                                                    </td>
+
+                                                    <td class="text-center">
+                                                        <%= post.birthday %>
+                                                    </td>
+                                                    <td>
+                                                        <%// var realTime = post.created %>
+                                                        <%// realTime.setHours(realTime.getHours() -9); %>
+                                                        <%= post.getFormattedDate(post.created) %>
+                                                        <%= post.getFormattedTime(post.created) %>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        <% }) %>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-auto me-auto"></div>
+                            <div class="col-auto">
+                                <nav aria-label="Page navigation example">
+                                    <ul class="pagination pagination-sm justify-content-center">
+                                        <%
+                                        var offset = 5;
+                                        var partialQuery;
+                                        if (urlQuery) partialQuery = "&" + urlQuery.replace(/page=(.*?)(&|$)/ig, "");
+                                        %>
+    
+                                        <li class="page-item disabled">
+                                            <a class="page-link" href="#" aria-label="Previous">
+                                                <span aria-hidden="true">&laquo;</span>
+                                            </a>
+                                        </li>
+    
+                                        <% for(i = 1;i <= maxPage;i++){ %>
+    
+                                            <% if(i <= offset || i > maxPage - offset || (i >= page - (offset - 1) && i <= page + (offset - 1))){ %>
+                                                <% if(i != page){ %>
+                                                    <li class="page-item"><a class="page-link"
+                                                                             href="/members/newIndex/?page=<%= i %><%= partialQuery %>"><%= i %></a>
+                                                    </li>
+                                                <% } else { %>
+                                                    <li class="page-item" name="currentPage" aria-current="page"><a
+                                                                class="page-link" href="#"><%= i %></a></li>
+                                                <% } %>
+                                            <% } else if(i == offset + 1 || i == maxPage - offset){ %>
+                                                <li>...</li>
+                                            <% } %>
+                                        <% } %>
+                                        <li class="page-item disabled">
+                                            <a class="page-link" href="#" aria-label="Next">
+                                                <span aria-hidden="true">&raquo;</span>
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </nav>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+
+</body>
+<script src="/js/custom-scripts.js"></script>
+<script src="/js/jquery-1.10.2.js"></script>
+<script src="/js/bootstrap.min.js"></script>
+<script>
+
+    $(document).ready(function () {
+
+
+
+        $(".active").removeClass("active");
+        $("#members").addClass("active");
+        $("#forms-collapse1").addClass('show');
+
+        $('.btn-number').click(function (e) {
+            e.preventDefault();
+
+            fieldName = $(this).attr('data-field');
+            type = $(this).attr('data-type');
+            var input = $("input[name='" + fieldName + "']");
+            var currentVal = parseInt(input.val());
+            if (!isNaN(currentVal)) {
+                if (type == 'minus') {
+
+                    if (currentVal > input.attr('min')) {
+                        input.val(currentVal - 1).change();
+                    }
+                    if (parseInt(input.val()) == input.attr('min')) {
+                        $(this).attr('disabled', true);
+                    }
+
+                } else if (type == 'plus') {
+
+                    if (currentVal < input.attr('max')) {
+                        input.val(currentVal + 1).change();
+                    }
+                    if (parseInt(input.val()) == input.attr('max')) {
+                        $(this).attr('disabled', true);
+                    }
+
+                }
+            } else {
+                input.val(0);
+            }
+        });
+        $('.input-number').focusin(function () {
+            $(this).data('oldValue', $(this).val());
+        });
+        $('.input-number').change(function () {
+
+            minValue = parseInt($(this).attr('min'));
+            maxValue = parseInt($(this).attr('max'));
+            valueCurrent = parseInt($(this).val());
+
+            name = $(this).attr('name');
+            if (valueCurrent >= minValue) {
+                $(".btn-number[data-type='minus'][data-field='" + name + "']").removeAttr('disabled')
+            } else {
+                alert('Sorry, the minimum value was reached');
+                $(this).val($(this).data('oldValue'));
+            }
+            if (valueCurrent <= maxValue) {
+                $(".btn-number[data-type='plus'][data-field='" + name + "']").removeAttr('disabled')
+            } else {
+                alert('Sorry, the maximum value was reached');
+                $(this).val($(this).data('oldValue'));
+            }
+
+
+        });
+        $(".input-number").keydown(function (e) {
+            // Allow: backspace, delete, tab, escape, enter and .
+            if ($.inArray(e.keyCode, [46, 8, 9, 27, 13, 190]) !== -1 ||
+                // Allow: Ctrl+A
+                (e.keyCode == 65 && e.ctrlKey === true) ||
+                // Allow: home, end, left, right
+                (e.keyCode >= 35 && e.keyCode <= 39)) {
+                // let it happen, don't do anything
+                return;
+            }
+            // Ensure that it is a number and stop the keypress
+            if ((e.shiftKey || (e.keyCode < 48 || e.keyCode > 57)) && (e.keyCode < 96 || e.keyCode > 105)) {
+                e.preventDefault();
+            }
+        });
+
+    });
+
+//     $(function () {
+//     $('.button-checkbox').each(function () {
+
+//         // Settings
+//         var $widget = $(this),
+//             $button = $widget.find('button'),
+//             $checkbox = $widget.find('input:checkbox'),
+//             color = $button.data('color'),
+//             settings = {
+//                 on: {
+//                     icon: 'glyphicon glyphicon-check'
+//                 },
+//                 off: {
+//                     icon: 'glyphicon glyphicon-unchecked'
+//                 }
+//             };
+
+//         // Event Handlers
+//         $button.on('click', function () {
+//             $checkbox.prop('checked', !$checkbox.is(':checked'));
+//             $checkbox.triggerHandler('change');
+//             updateDisplay();
+//         });
+//         $checkbox.on('change', function () {
+//             updateDisplay();
+//         });
+
+//         // Actions
+//         function updateDisplay() {
+//             var isChecked = $checkbox.is(':checked');
+
+//             // Set the button's state
+//             $button.data('state', (isChecked) ? "on" : "off");
+
+//             // Set the button's icon
+//             $button.find('.state-icon')
+//                 .removeClass()
+//                 .addClass('state-icon ' + settings[$button.data('state')].icon);
+
+//             // Update the button's color
+//             if (isChecked) {
+//                 $button
+//                     .removeClass('btn-default')
+//                     .addClass('btn-' + color + ' active');
+//             }
+//             else {
+//                 $button
+//                     .removeClass('btn-' + color + ' active')
+//                     .addClass('btn-default');
+//             }
+//         }
+
+//         // Initialization
+//         function init() {
+
+//             updateDisplay();
+
+//             // Inject the icon if applicable
+//             if ($button.find('.state-icon').length == 0) {
+//                 $button.prepend('<i class="state-icon ' + settings[$button.data('state')].icon + '"></i> ');
+//             }
+//         }
+//         init();
+//     });
+// });
+</script>
+
+</html>

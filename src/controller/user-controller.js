@@ -2580,13 +2580,8 @@ exports.isPlinicUser = (req, res) => {
 };
 
 
-//알람 테스트
+// 알람 기능
 exports.alarmBuySave = (req, res) => {
-  // if (!req.body.email) {
-  //   res.status(400).json();
-  // } else if (req.body.email) {
-    // var newBody = req.body;
-
     var newBody = Alarm(req.body);
     newBody.createdAt = new Date();
     newBody.save((err, result) => {
@@ -2601,14 +2596,12 @@ exports.alarmBuySave = (req, res) => {
         //성공이면 FCM전송로직 구성
         //사용자의 Email을 User Collection에서 찾아서 PushToken키를 가져온다.
         var pushtoken = '';
-        // if (req.body.email !== '') {
           User.findOne({
             email: req.body.email
           }, function (err, User) {
             if (User) {
               var message = {
                 to: User.pushtoken,
-                // collapse_key: 'your_collapse_key',
                 notification: {
                   title: '플리닉 알림',
                   body: req.body.alarmDesc,
@@ -2629,29 +2622,132 @@ exports.alarmBuySave = (req, res) => {
               });
             }
           });
-        // }
       }
     })
     return res.status(200).json({
       'msg': '등록 되었습니다.'
     });
-
-    // , function (err, result) {
-    //   if (err) {
-    //     console.log(": " + req.body.email);
-    //     res.status(400).json();
-    //   }
-
-    //   if (result) {
-    //     res.status(200).json(result);
-    //   } else {
-    //     console.log(" : " + req.body.email);
-    //     res.status(400).json();
-    //   }
-    // }
-  // }
 }
 
+// 알람 확인했을 때(알람 종 카운트 숫자 변경 + 알람 페이지 알람 배경색 변경)
+exports.alarmTypeUpdate = (req, res) => {
+
+  var newReply = req.body
+  Alarm.findOneAndUpdate({
+      _id: req.params._id
+    }, {
+      $set: {
+        alarmCondition: true
+      }
+    },
+    function(err, post2) {
+      if (err) {
+        console.log("tags error : " + err);
+        return res.status(400).json({
+          'msg': '알람 타입이 수정 되지 않았습니다. <br /> Error : ' + err
+        });
+      } else {
+        return res.status(201).json(post2);
+      }
+    })
+}
+
+// 앱 밖에서 FCM 알람 확인했을 때
+exports.alarmTypeUpdate2 = (req, res) => {
+
+  var newReply = req.body
+  Alarm.findOneAndUpdate({
+      id: req.params.id
+    }, {
+      $set: {
+        alarmCondition: true
+      }
+    },
+    function(err, post2) {
+      if (err) {
+        console.log("tags error : " + err);
+        return res.status(400).json({
+          'msg': '알람 타입이 수정 되지 않았습니다. <br /> Error : ' + err
+        });
+      } else {
+        return res.status(201).json(post2);
+      }
+    })
+}
+
+// 알람 데이터 출력
+exports.getUserAlarms = (req, res) => {
+  if (!req.params.writerEmail) {
+    res.status(400).json();
+  }
+
+  Alarm.find({
+    writerEmail : req.params.writerEmail
+  }, (err, result) => {
+      if (err) {
+        console.log("사용자 알람정보 조회 실패 : " + req.params.writerEmail);
+        res.status(400).json(err);
+      }
+
+      if (result) {
+        res.status(200).json(result);
+      } else {
+        console.log("사용자 알람정보 조회 실패2 : " + req.params.writerEmail);
+        res.status(400).json(err);
+      }
+  }) 
+  .sort({
+    "createdAt": -1
+  })
+};
+
+// my페이지 알람 종 카운트
+exports.getAlarmTime = (req, res) => {
+  if (!req.params.writerEmail) {
+    res.status(400).json();
+  }
+
+  Alarm.find({
+    writerEmail : req.params.writerEmail,
+    alarmCondition: false
+  }, (err, result) => {
+      if (err) {
+        console.log("사용자 알람정보 조회 실패 : " + req.params.writerEmail);
+        res.status(400).json(err);
+      }
+
+      if (result) {
+        res.status(200).json(result);
+      } else {
+        console.log("사용자 알람정보 조회 실패2 : " + req.params.writerEmail);
+        res.status(400).json(err);
+      }
+  }) 
+};
+
+// 알람 전체삭제 + 선택삭제
+exports.delAlarm = (req, res) => {
+  var newReply = req.body
+  Alarm.findOneAndUpdate({
+    writerEmail : req.params.writerEmail,
+    _id: req.params._id
+    }, {
+      $set: {
+        mange: false,
+        alarmCondition: true
+      }
+    },
+    function(err, post2) {
+      if (err) {
+        console.log("tags error : " + err);
+        return res.status(400).json({
+          'msg': '알람이 삭제 되지 않았습니다. <br /> Error : ' + err
+        });
+      } else {
+        res.status(201).json(post2);
+      }
+    })
+}
 
 function makeRandomStr() {
   var randomStr = "";

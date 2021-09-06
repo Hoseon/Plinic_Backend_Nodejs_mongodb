@@ -3,11 +3,15 @@ var SkinQna = require('../models/SkinQna');
 var Tags = require('../models/Tags');
 var PointLog = require('../models/PointLog');
 var SkinQnaCounter = require('../models/SkinQnaCounter');
+const Alarm = require('../models/Alarm');
 var jwt = require('jsonwebtoken');
 var async = require('async');
 var config = require('../config/config');
 var passport = require('passport');
 var KakaoStrategy = require('passport-kakao').Strategy;
+var FCM = require("fcm-node");
+var serverKey = "AIzaSyCAcTA318i_SVCMl94e8SFuXHhI5VtXdhU";
+var fcm = new FCM(serverKey);
 
 function createToken(user) {
   return jwt.sign({
@@ -361,8 +365,63 @@ exports.replySave = (req, res) => {
         } 
       });
 
+      //자신이 작성한 글에는 댓글 알람이 가지 않도록 한다.
+      if(req.body.email === req.body.writerEmail) {
+        return res.status(200).json({
+          'msg': '등록 되었습니다.'
+        });
+      // if(req.body.email !== req.body.sendEmail) {
+      } else {
+      //FCM 전송로직 구성
+      var newBody = Alarm(req.body);
+      newBody.save((err, result) => {
+        //에러냐
+        if (err) {
+          return res.status(400).json({
+            "msg": "실패"
+          });
+        }
+        //성공이냐
+        if (!err) {
+          //성공이면 FCM전송로직 구성
+          //사용자의 Email을 User Collection에서 찾아서 PushToken키를 가져온다. 
+          var pushtoken = '';
+          User.findOne({
+              email: req.body.writerEmail
+            }, function (err, User) {
+              if (User) {
+                var message = {
+                  to: User.pushtoken,
+                  notification: {
+                    title: req.body.alertType,
+                    // body: req.body.title,
+                    body: req.body.comment,
+                    sound: "default",
+                    click_action: "FCM_PLUGIN_ACTIVITY",
+                  },
+                  data: {
+                    mode: "qna",
+                    id: req.body.id //여기
+                  }
+                };
+                fcm.send(message, function (err, response) {
+                  if (err) {
+                    console.log("푸시 전송 실패 " + req.body.email);
+                  } else {
+                    console.log("Successfully sent with response: ", response);
+                  }
+                });
+              }
+            });
+        }
+      })
+    }
+      return res.status(200).json({
+        'msg': '등록 되었습니다.'
+      });
+
       // console.log("result tags : " + JSON.stringify(post2));
-      return res.status(201).json(post2);
+      // return res.status(201).json(post2);
     }
   })
 
