@@ -188,7 +188,7 @@ exports.getUserOrdersTrackingInfo = (req, res) => {
   queryParams += '&' + encodeURIComponent('t_code') + '=' + encodeURIComponent('04'); /* 한 페이지 결과 수 */
   queryParams += '&' + encodeURIComponent('t_invoice') + '=' + encodeURIComponent(req.params.t_invoice); /* 한 페이지 결과 수 */
 
-  request({
+  request({ 
     url: url + queryParams,
     method: 'GET'
   }, function (error, response, body) {
