@@ -171,7 +171,7 @@
                                   action="/noticeComments/<%= comment._id %>/<%= post._id %>/recomments/" method="post">
                                   <fieldset>
                                     <div class="row">
-                                      <input type="hidden" name="recomments[email]" value="<%= user.email %>" />
+                                      <!-- <input type="hidden" name="recomments[email]" value="<%=// post.email %>" /> -->
                                       <input type="hidden" name="id" value="<%=post._id%>" />
                                       <input type="hidden" name="pushtoken" value="<%= comment.pushtoken %>" />
                                       <input type="hidden" name="recomments[isDelete]" value=false />
@@ -202,7 +202,7 @@
                         action="/noticeComments/<%= post._id %>/comments?<%= urlQuery %>" method="post">
                         <fieldset>
                           <div class="row">
-                            <input type="hidden" name="comment[email]" value="<%= user.email %>" />
+                            <!-- <input type="hidden" name="comment[email]" value="<%=// comment.email %>" /> -->
                             <input type="hidden" name="comment[isDelete]" value=false />
                             <input type="hidden" name="comment[nameAdmin]" value="true" />
                             <!-- <input type="hidden" name="id" value="<%=//post._id%>" /> -->

@@ -2,166 +2,100 @@
 <html lang="en">
 
 <head>
-    <% include ../../../partials/head %>
-        <title></title>
-        <link href='http://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css' />
+  <% include ../../../partials/head %>
+    <title></title>
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css' />
+    <link rel="stylesheet" href="/stylesheets/image_upload.css">
 </head>
 <script type="text/javascript" src="/js/jquery-1.10.2.js"></script>
+<script type="text/javascript" src="/js/image_upload.js"></script>
 <script>
-    $(document).ready(function () {
-        $(".active").removeClass("active");
-        $("#contents").addClass("active");
-    });
+  $(document).ready(function () {
+    $(".active").removeClass("active");
+    $("#contents").addClass("active");
+  });
 </script>
 <title>Hello, world!</title>
 
 <body>
 
-    <header>
-        <% include ../../../partials/header %>
-    </header>
+  <header>
+    <% include ../../../partials/header %>
+  </header>
 
 
-    <div class="container-fluid">
-        <div class="row">
-            <!-- 2단길이의 첫번째 열 -->
-            <div class="col-md-2">
-                <!-- 사이드 메뉴 시작 -->
-                <% include ../../../partials/side %>
-                    <!-- 사이드 메뉴 종료 -->
-            </div>
+  <div class="container-fluid">
+    <div class="row">
+      <!-- 2단길이의 첫번째 열 -->
+      <div class="col-md-2">
+        <!-- 사이드 메뉴 시작 -->
+        <% include ../../../partials/side %>
+          <!-- 사이드 메뉴 종료 -->
+      </div>
 
 
-            <!-- 10단길이의 첫번째 열 -->
-            <div class="col-md-10">
-                <div id="page-inner">
-                    <!-- /. ROW  -->
-                    <div class="row">
-                        <form role="form" action="/banner" method="post" enctype="multipart/form-data">
-                            <div class="col-lg-12">
-                                <div class="panel panel-default">
-                                    <div class="panel-heading">
-                                        배너 정보
-                                    </div>
-                                    <br>
-                                    <form action="" method="post" enctype="multipart/form-data">
-                                        <div class="form-group row">
-                                            <label class="col-sm-2 text-center control-label" for="name"><span
-                                                    class="input_title_cion" style="color: red;">* </span>제목</label>
-                                            <div class="col-sm-4 controls">
-                                                <input name="name" id="name" class="form-control" value=""
-                                                    data-validate="data">
-                                            </div>
-                                        </div>
+      <!-- 10단길이의 첫번째 열 -->
+      <div class="col-md-10">
+        <div id="page-inner">
+          <!-- /. ROW  -->
+          <div class="row">
 
-                                        <div class="form-group row">
-                                            <label class="col-sm-2 text-center control-label" for="name"><span
-                                                    class="input_title_cion" style="color: red;">* </span>시작일</label>
-                                            <div class="col-sm-4 controls">
-                                                <input name="name" id="name" class="form-control" value=""
-                                                    data-validate="data">
-                                            </div>
-                                            <label class="col-sm-2 text-center control-label" for="email"><span
-                                                    class="input_title_cion" style="color: red;">* </span>종료일</label>
-                                            <div class="col-sm-4 controls">
-                                                <input name="email" id="email" class="form-control" value=""
-                                                    data-validate="data">
-                                            </div>
-                                        </div>
-
-                                        <label class="col-md-2 text-center">Body 배너</label>
-                                        <div class="row align-items-center w-75 mb-3">
-                                            <div class="col-md-4">
-                                                <div class="imgUp">
-                                                    <div class="imagePreview"></div>
-                                                    <label class="btn btn-primary">
-                                                        Upload
-                                                        <input name="homeimage" type="file"
-                                                            class="uploadFile img form-control" value="Upload Photo"
-                                                            style="width: 0px;height: 0px;overflow: hidden;" required
-                                                            accept=".jpg, .jpeg, .png">
-                                                    </label>
-                                                </div>
-                                            </div>
-                                            <div class="col-md-4">
-                                                <div class="imgUp">
-                                                    <div class="imagePreview"></div>
-                                                    <label class="btn btn-primary">
-                                                        Upload
-                                                        <input name="homeimage" type="file"
-                                                            class="uploadFile img form-control" value="Upload Photo"
-                                                            style="width: 0px;height: 0px;overflow: hidden;" required
-                                                            accept=".jpg, .jpeg, .png">
-                                                    </label>
-                                                </div>
-                                            </div>
-                                            <div class="col-md-4">
-                                                <div class="imgUp">
-                                                    <div class="imagePreview"></div>
-                                                    <label class="btn btn-primary">
-                                                        Upload
-                                                        <input name="homeimage" type="file"
-                                                            class="uploadFile img form-control" value="Upload Photo"
-                                                            style="width: 0px;height: 0px;overflow: hidden;" required
-                                                            accept=".jpg, .jpeg, .png">
-                                                    </label>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <label class="col-md-2 text-center">Body 배너 링크</label>
-                                        <div class="panel-body" style="padding-top:0px;padding-bottom:15px;">
-                                            <div class="table-responsive dataTables_wrapper form-inline">
-                                                <table
-                                                    class="table table-bordered  table-condensed table-hover  text-center">
-                                                    <thead>
-                                                        <tr>
-                                                            <th class="text-center" width="200">파일명</th>
-                                                            <th class="text-center">코멘트</th>
-                                                            <th class="text-center">링크주소</th>
-                                                        </tr>
-                                                    </thead>
-                                                    <tbody>
-                                                        <tr>
-                                                            <td class="text-left">191104_G100122nn.jpg</td>
-                                                            <td class="text-left"><input name="s_it_name"
-                                                                    class="form-control" type="text" value=""
-                                                                    style="width: 400px;"></td>
-                                                            <td class="text-left"><input name="s_it_name"
-                                                                    class="form-control" type="text" value=""
-                                                                    style="width: 400px;"></td>
-                                                        </tr>
-                                                        <tr>
-                                                            <td class="text-left" colspan="3">
-                                                                <div class="d-grid gap-2 d-md-flex">
-
-                                                                </div>
-                                                            </td>
-                                                        </tr>
-                                                    </tbody>
-                                                </table>
-                                            </div>
-                                        </div>
-
-                                        <div class="d-grid gap-2 d-md-block text-center">
-                                            <button type="submit"
-                                                class="w-15 m-1 btn btn-primary btn btn-danger btn-sm">저장</button>
-                                            <button type="reset" class="w-15 m-1 btn btn-primary btn btn-primary btn-sm"
-                                                onclick="location.href='/homePopups/HomePopup'">목록</button>
-                                        </div>
-                                    </form>
-                                </div>
-                            </div>
-                        </form>
-                    </div>
-                    <!-- <footer><p>All right reserved. Template by: <a href="http://webthemez.com">WebThemez</a></p></footer> -->
+            <div class="col-lg-12">
+              <div class="panel panel-default">
+                <div class="panel-heading">
+                  홈 팝업 정보
                 </div>
+                <br>
+                <form action="/homePopups/Popupedit/<%= post._id %>?_method=put" method="post" enctype="multipart/form-data">
+                  <label class="col-md-2 text-center">제목</label>
+                  <div class="form-floating col-md-5">
+                    <input name="post[title]" class="form-control" data-validate="data" value="<%= post.title %>">
+                  </div>
+                  <label class="col-md-2 text-center">팝업</label>
+                  <div class="row align-items-center w-75 mb-3">
+                  </div>
+                  <div class="panel-body">
+                    <div class="table-responsive dataTables_wrapper form-inline">
+                      <table class="table table-bordered  table-condensed table-hover  text-center">
+                        <thead>
+                          <tr>
+                            <th class="text-center" width="300">배너 이미지</th>
+                            <th class="text-center">파일명</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <tr>
+                            <td class="text-center">
+                              <div class="imgUp">
+                                <img class="imagePreview img-fluid" src="<%= url %>" style="max-width:120px;"/>
+                                <label class="btn btn-primary">
+                                  Upload
+                                  <input name="image" type="file" class="uploadFile img form-control"
+                                    value="Upload Photo" style="width: 0px;height: 0px;overflow: hidden;" required
+                                    accept=".jpg, .jpeg, .png">
+                                </label>
+                              </div>
+                            </td>
+                            <td class="text-center">
+                              <%= post.originalName %>
+                            </td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+                  <div class="d-grid gap-2 d-md-block" style="padding-top:100px;padding-bottom:15px;">
+                    <button type="submit" class="w-15 m-1 btn btn-primary btn-sm"
+                      style="margin:0 auto !important;">저장</button>
+                  </div>
+                </form>
+              </div>
             </div>
+          </div>
         </div>
+      </div>
     </div>
-
-
-
-
+  </div>
 </body>
 
 <script src="/js/jquery-1.10.2.js"></script>

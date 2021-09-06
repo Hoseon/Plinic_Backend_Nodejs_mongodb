@@ -2,9 +2,9 @@ var mongoose = require('mongoose');
 
 var adBannerSchema = mongoose.Schema({
   title: {type:String, required:true},
-  body: {type:String, required:true},
-  twoBody: {type:String, required:true},
-  ThreeBody: {type:String, required:true},
+  body: {type:String},
+  twoBody: {type:String},
+  ThreeBody: {type:String},
   author: {type:mongoose.Schema.Types.ObjectId, ref:'user_admin', required:true},
   // views: {type:Number, default: 0},
   // numId: {type:Number, required:true},
@@ -13,6 +13,7 @@ var adBannerSchema = mongoose.Schema({
   //   author: {type:mongoose.Schema.Types.ObjectId, ref:'user_admin', required:true},
   //   createdAt: {type:Date, default:Date.now}
   // }],
+  homePopup: {type: Boolean, default: false},
   createdAt: {type:Date, default:Date.now},
   updatedAt: Date,
   //이미지관리

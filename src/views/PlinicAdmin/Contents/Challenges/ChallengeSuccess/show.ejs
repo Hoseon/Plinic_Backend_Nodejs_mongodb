@@ -255,7 +255,8 @@
                                                               action="/challengeSuccess/<%= post._id %>/comments?<%= urlQuery %>"
                                                               method="post">
                                                             <input type="hidden" name="_id" value="<%= post._id %>"/>
-                                                            <input type="hidden" name="email" value="<%= post.email %>"/>
+                                                            <input type="hidden" name="post[email]" value="<%= post.email %>"/>
+                                                            <input type="hidden" name="comment[email]" value="<%= user.email %>"/>
                                                             <!-- 관리자가 댓글을 작성할시에 푸시 알림 클릭시 해당 창으로 이동 할 수 있도록 조치-->
                                                             <input type="hidden" name="pushtoken"
                                                                    value="<%= post.pushtoken %>"/>
