@@ -223,15 +223,15 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="row">
+                        <!-- <div class="row">
                             <div class="col-auto me-auto"></div>
                             <div class="col-auto">
                                 <nav aria-label="Page navigation example">
                                     <ul class="pagination pagination-sm justify-content-center">
                                         <%
-                                        var offset = 5;
-                                        var partialQuery;
-                                        if (urlQuery) partialQuery = "&" + urlQuery.replace(/page=(.*?)(&|$)/ig, "");
+                                        //var offset = 5;
+                                        //var partialQuery;
+                                        //if (urlQuery) partialQuery = "&" + urlQuery.replace(/page=(.*?)(&|$)/ig, "");
                                         %>
     
                                         <li class="page-item disabled">
@@ -240,21 +240,21 @@
                                             </a>
                                         </li>
     
-                                        <% for(i = 1;i <= maxPage;i++){ %>
+                                        <%// for(i = 1;i <= maxPage;i++){ %>
     
-                                            <% if(i <= offset || i > maxPage - offset || (i >= page - (offset - 1) && i <= page + (offset - 1))){ %>
-                                                <% if(i != page){ %>
+                                            <%// if(i <= offset || i > maxPage - offset || (i >= page - (offset - 1) && i <= page + (offset - 1))){ %>
+                                                <%// if(i != page){ %>
                                                     <li class="page-item"><a class="page-link"
-                                                                             href="/members/newIndex/?page=<%= i %><%= partialQuery %>"><%= i %></a>
+                                                                             href="/members/newIndex/?page=<%=// i %><%=// partialQuery %>"><%=// i %></a>
                                                     </li>
-                                                <% } else { %>
+                                                <%// } else { %>
                                                     <li class="page-item" name="currentPage" aria-current="page"><a
-                                                                class="page-link" href="#"><%= i %></a></li>
-                                                <% } %>
-                                            <% } else if(i == offset + 1 || i == maxPage - offset){ %>
+                                                                class="page-link" href="#"><%=// i %></a></li>
+                                                <%// } %>
+                                            <%// } else if(i == offset + 1 || i == maxPage - offset){ %>
                                                 <li>...</li>
-                                            <% } %>
-                                        <% } %>
+                                            <%// } %>
+                                        <%// } %>
                                         <li class="page-item disabled">
                                             <a class="page-link" href="#" aria-label="Next">
                                                 <span aria-hidden="true">&raquo;</span>
@@ -263,7 +263,7 @@
                                     </ul>
                                 </nav>
                             </div>
-                        </div>
+                        </div> -->
                     </div>
                 </div>
             </div>

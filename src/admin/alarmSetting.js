@@ -65,6 +65,14 @@ router.get("/", function (req, res) {
 });
 // 그룹/개별 알림 관리 리스트 화면
 
+
+router.get("/marketing", function(req, res) {
+  return res.render("PlinicAdmin/Operation/AlarmSetting-Mgt/newIndex", {});
+});
+//여기에 광고(마케팅 알림) 페이지 새로 신설
+
+
+
 router.get("/new", function (req, res) {
   return res.render("PlinicAdmin/Operation/AlarmSetting-Mgt/new", {});
 });

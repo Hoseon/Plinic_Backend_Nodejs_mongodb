@@ -1,0 +1,522 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <% include ../../../../partials/head %>
+    <title></title>
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css' />
+</head>
+<script type="text/javascript" src="/js/jquery-1.10.2.js"></script>
+<body>
+
+    <header>
+        <% include ../../../../partials/header %>
+    </header>
+
+
+    <div class="container-fluid">
+        <div class="row">
+            <!-- 2단길이의 첫번째 열 -->
+            <div class="col-md-2">
+                <% include ../../../../partials/side %>
+            </div>
+
+            <!-- 10단길이의 첫번째 열 -->
+            <div class="col-md-10">
+                <div id="page-inner">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <h1 class="page-header">
+                                챌린지 이력 관리
+                            </h1>
+                        </div>
+                    </div>
+
+                    <table class="table-bordered table table-striped table-hover">
+                        <form class="checkValidation" action="/challengeOngoing/challengeHistory" id="search">
+                            <tr>
+                                <th class="text-center" style="padding-top: 20px;">검색 조건</th>
+                                <td colspan="3">
+                                    <div class="row g-4 align-self-center">
+                                        <div class="col-2">
+                                            <select class="form-select" aria-label="Default select example" name="searchType" <%= search.searchType=="author!"?"disabled":"" %>>
+                                                <% var select %>
+                                                <option value="email,title"
+                                                <%= search.searchType=="email,title"?select="selected":"" %>>회원 아이디+제목</option>
+                                                <option value="email"
+                                                <%= search.searchType=="email"?select="selected":"" %>>회원 아이디</option>
+                                                <option value="title"
+                                                <%= search.searchType=="title"?select="selected":"" %>>제목</option>
+                                                <%if(search.searchType=="author!"){%>
+                                                <option value="author!"
+                                                    <%= search.searchType=="author!"?select="selected":"" %>>Author</option>
+                                                <%} else {%>
+                                                <option value="author"
+                                                    <%= search.searchType=="author"?select="selected":"" %>>Author</option>
+                                                <%}%>
+                                            </select>
+                                        </div>
+                                        <div class="col-5">
+                                            <input class="cvMinLength" cvMinLength="2"
+                                            cvMinLenErrTo="#searchError" style="float: left; width: 300px; height: 28px;"
+                                            cvMinLenErrMsg="It should be at least 2 characters"
+                                            type="text" name="searchText" value="<%= select?search.searchText:"" %>"
+                                            <%= search.searchType=="author!"?"disabled":"" %>>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td rowspan="2">
+                                    <div class="row justify-content-center">
+                                        <div class="col-6 p-0 m-0">
+                                            <button type="submit" id="btnSearch"  class="btn btn-info" style="margin-top: 35px;" <%= search.searchType=="author!"?"disabled":"" %>>검색</button>
+                                        </div>
+                                        <%if(search.searchType){%>
+                                        <div class="col-6 p-0 m-0">
+                                            <button type="button" class="btn btn-secondary" style="margin-top: 35px;"  onclick="window.location = '/challengeOngoing/challengeHistory?page=1'">취소</button>
+                                        </div>
+                                        <%}%>
+                                        <div class="message" id="searchError"></div>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th class="text-center" style="padding-top: 30px;">챌린지 기간</th>
+                                <td colspan="3">
+                                    <% if(typeof testSearch.findAfter == "undefined" || testSearch.findAfter == null || testSearch.findAfter == "") {%>
+                                        <div class="row g-4 align-self-center">
+                                            <div class="col-2">
+                                                <input type="checkbox" class="form-check-input" name="termCheck[all]" value="true" id="inlineCheckbox1"/>
+                                                <label class="form-check-label" for="inlineCheckbox1">전체</label>
+                                            </div>
+                                            <div class="col-2">
+                                                <input type="checkbox" class="form-check-input" name="termCheck[yesterday]" value="true" id="inlineCheckbox1"/>
+                                                <label class="form-check-label" for="inlineCheckbox1">1일 내</label>
+                                            </div>
+                                            <div class="col-2">
+                                                <input type="checkbox" class="form-check-input" name="termCheck[weeklyy]" value="true" id="inlineCheckbox2"/>
+                                                <label class="form-check-label" for="inlineCheckbox2">7일 내</label>
+                                            </div>
+                                            <div class="col-2">
+                                                <input type="checkbox" class="form-check-input" name="termCheck[monthy]" value="true" id="inlineCheckbox3"/>
+                                                <label class="form-check-label" for="inlineCheckbox3">1달 내</label>
+                                            </div>
+                                        </div>
+                                        <div class="row g-4 align-self-center">
+                                            <div class="col-2" style="padding-top: 10px; padding-left: 50px; color:slateblue;">
+                                                *달력은 1일씩 여유를 두고 검색*
+                                            </div>
+                                            <div class="col-3">
+                                                <input style="height: 30px;" type="date" name="termCheck[startDate]" id="inlineCheckbox3"/>
+                                            </div>
+                                            <div class="col-1">
+                                                <span style="width: 100px; margin-top: 8px; float: right;">
+                                                    ~
+                                                </span>
+                                            </div>
+                                            <div class="col-2">
+                                                <input style="height: 30px;" type="date" name="termCheck[endDate]" id="inlineCheckbox3"/>
+                                            </div>
+                                        </div>
+                                    <% } else { %>
+                                        <div class="row g-4 align-self-center">
+                                            <div class="col-2">
+                                                <input type="checkbox" class="form-check-input" name="termCheck[all]" 
+                                                value="true" id="inlineCheckbox1" <% if(testSearch.findAfter.all) { %> checked <% } %>/>
+                                                <label class="form-check-label" for="inlineCheckbox1">전체</label>
+                                            </div>
+                                            <div class="col-2">
+                                                <input type="checkbox" class="form-check-input" name="termCheck[yesterday]" 
+                                                value="true" id="inlineCheckbox2" <% if(testSearch.findAfter.yesterday) { %> checked <% } %>/>
+                                                <label class="form-check-label" for="inlineCheckbox2">1일 내</label>
+                                            </div>
+                                            <div class="col-2">
+                                                <input type="checkbox" class="form-check-input" name="termCheck[weeklyy]" 
+                                                value="true" id="inlineCheckbox2" <% if(testSearch.findAfter.weeklyy) { %> checked <% } %>/>
+                                                <label class="form-check-label" for="inlineCheckbox2">7일 내</label>
+                                            </div>
+                                            <div class="col-2">
+                                                <input type="checkbox" class="form-check-input" name="termCheck[monthy]" 
+                                                value="true" id="inlineCheckbox3" <% if(testSearch.findAfter.monthy) { %> checked <% } %>/>
+                                                <label class="form-check-label" for="inlineCheckbox3">1달 내</label>
+                                            </div>
+                                        </div>
+                                        <div class="row g-4 align-self-center">
+                                            <div class="col-2" style="padding-top: 10px; padding-left: 50px; color:slateblue;">
+                                                *달력은 1일씩 여유를 두고 검색*
+                                            </div>
+                                            <div class="col-3">
+                                                <input type="date" name="termCheck[startDate]" style="height: 30px;"
+                                                id="inlineCheckbox3" <% if(testSearch.findAfter.startDate) { %> checked <% } %>/>
+                                            </div>
+                                            <div class="col-1">
+                                                <span style="width: 100px; margin-top: 8px; float: right;">
+                                                    ~
+                                                </span>
+                                            </div>
+                                            <div class="col-2">
+                                                <input type="date" name="termCheck[endDate]" style="height: 30px;"
+                                                id="inlineCheckbox3" <% if(testSearch.findAfter.endDate) { %> checked <% } %>/>
+                                            </div>
+                                        </div>
+                                    <% } %>
+                                </td>
+                            </tr>
+                        </form>
+                    </table>
+
+                    <div class="table-responsive">
+                        <table class="table table-striped table-bordered table-image text-center" id="table-1">
+                            <thead>
+                                <tr>
+                                <th scope="col"></th>
+                                <th scope="col">챌린지</th>
+                                <th scope="col">아이디</th>
+                                <th scope="col">시작 날짜</th>
+                                <th scope="col">회차</th>
+                                <th scope="col">진행 여부</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <% if(challengeLog == null || challengeLog.length == 0){ %>
+                                    <tr class="noData">
+                                        <td colspan="5">There is no data to show :(</td>
+                                    </tr>
+                                <% } %>
+                                <% challengeLog.forEach(function(post, index){ %>
+                                    <tr>
+                                        <th scope="row" class="align-middle">
+                                            <div>
+                                                <input type="checkbox" onclick="selectCheckRow(this)" name="del_unit[]" value="<%= post._id %>">
+                                            </div>
+                                        </th>
+                                        <%// console.log(post) %>
+                                        <td class="align-middle"><u><%= post.title %></u></td>
+                                        <td class="align-middle"><u><%= post.email %></u></td>
+                                        <% var realTime = post.createdAt %>
+                                        <% realTime.setHours(realTime.getHours() - 9); %>
+                                        <td class="align-middle"><%= post.getFormattedDate(post.createdAt) %>
+                                        </td>
+                                        <td class="align-middle"><%= post.dailycheck.length %>일차
+                                        <%// console.log(post.dailycheck) %>
+                                        </td>
+                                        <% var toDay = new Date(); %>
+                                        <% var createdDay = post.createdAt %>
+                                        <%if(post.dailycheck.length == 7) { %>
+                                            <% if(createdDay.getDate() === toDay.getDate()) { %>
+                                                <td class="align-middle">
+                                                    실패
+                                                </td>
+                                            <% } else { %>
+                                                <td class="align-middle">
+                                                    보상 대기
+                                                </td>
+                                            <% } %>
+                                        <%} else if(post.dailycheck.length == 0) { %>
+                                            <!--시작 날짜가 오늘 날짜보다 크거나(클 수가 없음) 같으면 진행중 else는 실패. 일반적인 데이터끼리는 시간까지 나오기 때문에 값이 같을 수가 없어서 getDate로 해당 일로 비교값 사용-->
+                                            <%// if(createdDay.getDate() >= toDay.getDate()) { %>
+                                            <!-- 0일차 일 때, 시작날짜 ex)6/30 == 오늘날짜 ex) 6/30 일 때만 진행중이여야 함. -->
+                                            <% if(createdDay.getDate() === toDay.getDate()) { %>
+                                                <td class="align-middle">
+                                                    진행중
+                                                </td>
+                                            <% } else { %>
+                                                <td class="align-middle">
+                                                    실패
+                                                </td>
+                                            <% } %>
+                                        <% } else if(post.dailycheck.length > 0) { %>
+                                            <!--회차가 0보다 큰 애들은 오늘날짜 - 시작날짜가 회차보다 작거나 같으면 진행중 아니면 실패 -->
+                                            <%// console.log(toDay.getDate() - createdDay.getDate()) %>
+                                            <% if(toDay.getDate() - createdDay.getDate() <= post.dailycheck.length ) { %>
+                                                <td class="align-middle">
+                                                    진행중
+                                                </td>
+                                            <% } else { %>
+                                                <td class="align-middle">
+                                                    실패
+                                                </td>
+                                            <% } %>
+                                        <% } %>
+                                    </tr>
+                                <% }) %>
+                            </tbody>
+                        </table>
+
+
+
+
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</body>
+<script src="/js/custom-scripts.js"></script>
+<script src="/js/jquery-1.10.2.js"></script>
+<script src="/js/bootstrap.min.js"></script>
+<script src="/js/jquery.tablednd.0.7.min.js"></script>
+<script>
+
+function useYChange(chk) {
+        var chk = document.getElementsByName("del_unit[]"); // 체크박스객체를 담는다
+        var len = chk.length;    //체크박스의 전체 개수
+        var checkRow = '';      //체크된 체크박스의 value를 담기위한 변수
+        var checkCnt = 0;        //체크된 체크박스의 개수
+        var checkLast = '';      //체크된 체크박스 중 마지막 체크박스의 인덱스를 담기위한 변수
+        var rowid = '';             //체크된 체크박스의 모든 value 값을 담는다
+        var cnt = 0;
+
+        for (var i = 0; i < len; i++) {
+            if (chk[i].checked == true) {
+                checkCnt++;        //체크된 체크박스의 개수
+                checkLast = i;     //체크된 체크박스의 인덱스
+            }
+        }
+        for (var i = 0; i < len; i++) {
+            if (chk[i].checked == true) {  //체크가 되어있는 값 구분
+                checkRow = chk[i].value;
+                if (checkCnt == 1) {                            //체크된 체크박스의 개수가 한 개 일때,
+                    rowid += "" + checkRow + "";        //'value'의 형태 (뒤에 ,(콤마)가 붙지않게)
+                } else {                                            //체크된 체크박스의 개수가 여러 개 일때,
+                    if (i == checkLast) {                     //체크된 체크박스 중 마지막 체크박스일 때,
+                        rowid += "" + checkRow + "";  //'value'의 형태 (뒤에 ,(콤마)가 붙지않게)
+                    } else {
+                        rowid += "" + checkRow + ",";	 //'value',의 형태 (뒤에 ,(콤마)가 붙게)
+                    }
+                }
+                cnt++;
+                checkRow = '';    //checkRow초기화.
+            }
+            // alert(rowid);    //'value1', 'value2', 'value3' 의 형태로 출력된다.
+        }
+
+        if (confirm('적용 하시겠습니까?')) {
+            // alert(rowid);
+            var useYFormSubmit = document.useYFormSubmit;
+            useYFormSubmit.method = "post";
+            useYFormSubmit.target = "_self";
+            useYFormSubmit.action = "/contents/Challenge/UseYUpdate/" + rowid + "?_method=post";
+            useYFormSubmit.submit();
+        }
+    }
+
+    function useNChange(chk) {
+        var chk = document.getElementsByName("del_unit[]"); // 체크박스객체를 담는다
+        var len = chk.length;    //체크박스의 전체 개수
+        var checkRow = '';      //체크된 체크박스의 value를 담기위한 변수
+        var checkCnt = 0;        //체크된 체크박스의 개수
+        var checkLast = '';      //체크된 체크박스 중 마지막 체크박스의 인덱스를 담기위한 변수
+        var rowid = '';             //체크된 체크박스의 모든 value 값을 담는다
+        var cnt = 0;
+
+        for (var i = 0; i < len; i++) {
+            if (chk[i].checked == true) {
+                checkCnt++;        //체크된 체크박스의 개수
+                checkLast = i;     //체크된 체크박스의 인덱스
+            }
+        }
+        for (var i = 0; i < len; i++) {
+            if (chk[i].checked == true) {  //체크가 되어있는 값 구분
+                checkRow = chk[i].value;
+                if (checkCnt == 1) {                            //체크된 체크박스의 개수가 한 개 일때,
+                    rowid += "" + checkRow + "";        //'value'의 형태 (뒤에 ,(콤마)가 붙지않게)
+                } else {                                            //체크된 체크박스의 개수가 여러 개 일때,
+                    if (i == checkLast) {                     //체크된 체크박스 중 마지막 체크박스일 때,
+                        rowid += "" + checkRow + "";  //'value'의 형태 (뒤에 ,(콤마)가 붙지않게)
+                    } else {
+                        rowid += "" + checkRow + ",";	 //'value',의 형태 (뒤에 ,(콤마)가 붙게)
+                    }
+                }
+                cnt++;
+                checkRow = '';    //checkRow초기화.
+            }
+            // alert(rowid);    //'value1', 'value2', 'value3' 의 형태로 출력된다.
+        }
+
+        if (confirm('적용 하시겠습니까?')) {
+            // alert(rowid);
+            var useNFormSubmit = document.useNFormSubmit;
+            useNFormSubmit.method = "post";
+            useNFormSubmit.target = "_self";
+            useNFormSubmit.action = "/contents/Challenge/UseNUpdate/" + rowid + "?_method=post";
+            useNFormSubmit.submit();
+        }
+    }
+
+
+    function seqChange(seq) {
+        // var chk = document.getElementsByName("quant["+seq+"]")[0].value; // 체크박스객체를 담는다
+        var chk = document.getElementsByName("seqNumberId["+seq+"]")[0].value; // 체크박스객체를 담는다
+        if(confirm('적용 하시겠습니까?')) {
+            var seqFormSubmit = document.getElementsByName("seqFormSubmit"+seq)[0];
+            seqFormSubmit.method = "post";
+            seqFormSubmit.target = "_self";
+            seqFormSubmit.action = "/contents/Challenge/SeqUpdate/" + chk + "?_method=put";
+            seqFormSubmit.submit();
+        }
+    }
+
+    function selectDelRow(chk) {
+
+        var chk = document.getElementsByName("del_unit[]"); // 체크박스객체를 담는다
+        var len = chk.length;    //체크박스의 전체 개수
+        var checkRow = '';      //체크된 체크박스의 value를 담기위한 변수
+        var checkCnt = 0;        //체크된 체크박스의 개수
+        var checkLast = '';      //체크된 체크박스 중 마지막 체크박스의 인덱스를 담기위한 변수
+        var rowid = '';             //체크된 체크박스의 모든 value 값을 담는다
+        var cnt = 0;
+
+        for(var i=0; i<len; i++){
+            if(chk[i].checked == true){
+            checkCnt++;        //체크된 체크박스의 개수
+            checkLast = i;     //체크된 체크박스의 인덱스
+            }
+        }
+        for(var i=0; i<len; i++){
+            if(chk[i].checked == true){  //체크가 되어있는 값 구분
+                checkRow = chk[i].value;
+                if(checkCnt == 1){                            //체크된 체크박스의 개수가 한 개 일때,
+                    rowid += ""+checkRow+"";        //'value'의 형태 (뒤에 ,(콤마)가 붙지않게)
+                }else{                                            //체크된 체크박스의 개수가 여러 개 일때,
+                    if(i == checkLast){                     //체크된 체크박스 중 마지막 체크박스일 때,
+                        rowid += ""+checkRow+"";  //'value'의 형태 (뒤에 ,(콤마)가 붙지않게)
+                    }else{
+                        rowid += ""+checkRow+",";	 //'value',의 형태 (뒤에 ,(콤마)가 붙게)
+                    }
+                }
+                cnt++;
+                checkRow = '';    //checkRow초기화.
+            }
+            // alert(rowid);    //'value1', 'value2', 'value3' 의 형태로 출력된다.
+        }
+
+
+
+        if(confirm('정말 삭제하시겠습니까?')) {
+            // alert(rowid);
+            var theForm = document.frmSubmit;
+            theForm.method = "post";
+            theForm.target = "_self";
+            theForm.action = "/contents/Challenge/" + rowid + "?_method=delete";
+            theForm.submit();
+            $(this).prev().click();
+        }
+    }
+
+    function selectCheckRow(chk) {
+        var obj = document.getElementsByName("del_unit[]");
+        for(var i=0; i < obj.length; i++){
+            if(obj[i] != chk){
+                obj[i].checked = false;
+            }
+        }
+
+
+
+        // alert(rowid);
+    }
+
+    $(document).ready(function(){
+
+        // $("#table-1").tableDnD()
+
+        // $("#table-2 tr:even').addClass('alt')");
+
+        // // Initialise the second table specifying a dragClass and an onDrop function that will display an alert
+        // $("#table-2").tableDnD({
+        //     onDragClass: "myDragClass",
+        //     onDrop: function(table, row) {
+        //         var rows = table.tBodies[0].rows;
+        //         var debugStr = "Row dropped was "+row.id+". New order: ";
+        //         for (var i=0; i<rows.length; i++) {
+        //             debugStr += rows[i].id+" ";
+        //         }
+        //         $('#debugArea').html(debugStr);
+        //     },
+        //     onDragStart: function(table, row) {
+        //         $('#debugArea').html("Started dragging row "+row.id);
+        //     }
+        // });
+
+        // $("currentPage").addClass("active");
+        $('li[aria-current="page"]').addClass("active");
+        $("#forms-collapse").addClass('show');
+        $("a.active").removeClass("active");
+        $("#contents").addClass("active");
+        $('.btn-number').click(function(e){
+            e.preventDefault();
+
+            fieldName = $(this).attr('data-field');
+            type      = $(this).attr('data-type');
+            var input = $("input[name='"+fieldName+"']");
+            var currentVal = parseInt(input.val());
+            if (!isNaN(currentVal)) {
+                if(type == 'minus') {
+
+                    if(currentVal > input.attr('min')) {
+                        input.val(currentVal - 1).change();
+                    }
+                    if(parseInt(input.val()) == input.attr('min')) {
+                        $(this).attr('disabled', true);
+                    }
+
+                } else if(type == 'plus') {
+
+                    if(currentVal < input.attr('max')) {
+                        input.val(currentVal + 1).change();
+                    }
+                    if(parseInt(input.val()) == input.attr('max')) {
+                        $(this).attr('disabled', true);
+                    }
+
+                }
+            } else {
+                input.val(0);
+            }
+        });
+        $('.input-number').focusin(function(){
+        $(this).data('oldValue', $(this).val());
+        });
+        $('.input-number').change(function() {
+
+            minValue =  parseInt($(this).attr('min'));
+            maxValue =  parseInt($(this).attr('max'));
+            valueCurrent = parseInt($(this).val());
+
+            name = $(this).attr('name');
+            if(valueCurrent >= minValue) {
+                $(".btn-number[data-type='minus'][data-field='"+name+"']").removeAttr('disabled')
+            } else {
+                alert('Sorry, the minimum value was reached');
+                $(this).val($(this).data('oldValue'));
+            }
+            if(valueCurrent <= maxValue) {
+                $(".btn-number[data-type='plus'][data-field='"+name+"']").removeAttr('disabled')
+            } else {
+                alert('Sorry, the maximum value was reached');
+                $(this).val($(this).data('oldValue'));
+            }
+
+
+        });
+        $(".input-number").keydown(function (e) {
+                // Allow: backspace, delete, tab, escape, enter and .
+                if ($.inArray(e.keyCode, [46, 8, 9, 27, 13, 190]) !== -1 ||
+                    // Allow: Ctrl+A
+                    (e.keyCode == 65 && e.ctrlKey === true) ||
+                    // Allow: home, end, left, right
+                    (e.keyCode >= 35 && e.keyCode <= 39)) {
+                        // let it happen, don't do anything
+                        return;
+                }
+                // Ensure that it is a number and stop the keypress
+                if ((e.shiftKey || (e.keyCode < 48 || e.keyCode > 57)) && (e.keyCode < 96 || e.keyCode > 105)) {
+                    e.preventDefault();
+                }
+            });
+
+        });
+</script>
+</html>

@@ -160,8 +160,8 @@ router.get('/', function(req, res) {
 
 router.get('/newIndex', function(req, res) {
   var vistorCounter = null;
-  var page = Math.max(1, req.query.page) > 1 ? parseInt(req.query.page) : 1;
-  var limit = Math.max(1, req.query.limit) > 1 ? parseInt(req.query.limit) : 80;
+  // var page = Math.max(1, req.query.page) > 1 ? parseInt(req.query.page) : 1;
+  // var limit = Math.max(1, req.query.limit) > 1 ? parseInt(req.query.limit) : 80;
   var search = createSearch2(req.query);
   var testSearch = createSearchDate(req.query);
   async.waterfall([
@@ -190,13 +190,13 @@ router.get('/newIndex', function(req, res) {
       return callback(null, null, 0);
       User.count(search.findPost || testSearch.dayCreated[0].created, function(err, count) {
         if (err) callback(err);
-        skip = (page - 1) * limit;
-        maxPage = Math.ceil(count / limit);
-        callback(null, skip, maxPage);
+        // skip = (page - 1) * limit;
+        // maxPage = Math.ceil(count / limit);
+        callback(null);
       });
 
   }, 
-  function(skip, maxPage, callback) {
+  function( callback) {
     if (search.findUser && !search.findPost.$or 
       || testSearch.findUser && testSearch.dayCreated[0].created) 
     return callback(null, [], 0);
@@ -205,26 +205,26 @@ router.get('/newIndex', function(req, res) {
       User.find(testSearch.dayCreated[0])
       .populate("author")
       .sort({created : 1})
-      .skip(skip)
-      .limit(limit)
+      // .skip(skip)
+      // .limit(limit)
       .exec(function(err, user) {
         if (err) callback(err);
-        callback(null, user, maxPage);
+        callback(null, user);
       });
     } else {
       User.find(search.findPost)
       .populate("author")
       .sort({created : -1})
-      .skip(skip)
-      .limit(limit)
+      // .skip(skip)
+      // .limit(limit)
       .exec(function(err, user) {
         if (err) callback(err);
-        callback(null, user, maxPage);
+        callback(null, user);
       });
     }
   },
   ], 
-  function(err, user, maxPage) {
+  function(err, user) {
     if (err) return res.json({
       success: false,
       message: err
@@ -233,8 +233,8 @@ router.get('/newIndex', function(req, res) {
       users: user,
       // orders: orders,
       user: req.user,
-      page: page,
-      maxPage: maxPage,
+      // page: page,
+      // maxPage: maxPage,
       urlQuery: req._parsedUrl.query,
       search: search,
       testSearch : testSearch,

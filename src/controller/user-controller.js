@@ -2,6 +2,7 @@ var User = require('../models/user');
 var User_Admin = require('../models/User_admin');
 var Mission = require('../models/Mission');
 var Challenge = require('../models/Challenge');
+var ChallengeLog = require('../models/ChallengeLog');
 var Address = require('../models/Address');
 var PointLog = require('../models/PointLog');
 var jwt = require('jsonwebtoken');
@@ -93,8 +94,8 @@ exports.missionSave = (req, res) => {
 
 exports.challengeSave = (req, res) => {
 
-  //console.log("-------------------------------request-------------");
-  // console.log(req.body);
+  console.log("-------------------------------request-------------");
+  console.log(req.body);
   //console.log("-------------------------------response-------------" + res.body.id);
 
 
@@ -133,13 +134,25 @@ exports.challengeSave = (req, res) => {
             'msg': err
           });
         }
-        return res.status(201).json(user);
+        // return res.status(201).json(user);
         // return res.status(201).json({
         //     token: createToken(user)
         // });
 
+        //챌린지 로그 신설 2021.09.08
+        let logMission = ChallengeLog(req.body);
+        logMission.save((err, user) => {
+          if(err) {
+            console.log(err);
+            return res.status(400).json({
+              'challengeLogMsg': err
+            });
+          }
+          return res.status(201).json(user);
+        });
       });
       // return res.status(400).json({ 'msg': '이미 등록된 회원입니다.' });
+
     }
 
 
@@ -706,6 +719,28 @@ exports.loginUser = (req, res) => {
   });
 };
 
+exports.giveupLogin = (req, res) => {
+
+  var newReply = req.body
+  User.findOneAndUpdate({
+      email: req.body.email
+    }, {
+      $set: {
+        updatedAt: new Date()
+      }
+    },
+    function(err, post2) {
+      if (err) {
+        console.log("tags error : " + err);
+        return res.status(400).json({
+          'msg': '시간이 업데이트 되지 않았습니다. <br /> Error : ' + err
+        });
+      } else {
+        return res.status(201).json(post2);
+      }
+    })
+}
+
 exports.loginUser_Kakao = (req, res) => {
 
   passport.use(new KakaoStrategy({
@@ -871,7 +906,29 @@ exports.challengeUpdate2 = (req, res) => {
               $inc: {
                 "usetime": req.body.points
               }
-            }, function (err, reulst) {
+            },
+            function (err, reulst) {
+              if (err) {
+                return res.status(400).json(err);
+              }
+                
+            })
+            
+            ChallengeLog.update({
+              missionID: req.body.id,
+              email: req.body.email,
+              missioncomplete: false
+            }, {
+              $push: {
+                dailycheck: dailycheck,
+                usedmission: newPoint
+              },
+              $inc: {
+                "usetime": req.body.points
+              }
+            },
+            
+            function (err, reulst) {
               if (err) {
                 return res.status(400).json(err);
               } else {
@@ -881,6 +938,7 @@ exports.challengeUpdate2 = (req, res) => {
                 });
               }
             })
+
           } else {
             return res.status(201).json({
               // 'msg': '오늘 사용시간 2분을 초과 하여 <br> 챌린지 도전에 성공하였습니다!.'
@@ -2651,6 +2709,68 @@ exports.alarmTypeUpdate = (req, res) => {
       }
     })
 }
+
+//챌린지 로그 테스트
+// exports.ChallengeLogTest = (req, res) => {
+//   Challenge.findOne({
+//     missionID: req.body.id,
+//     email: req.body.email,
+//     missioncomplete: false
+//   },
+//   function (err, result) {
+
+//   var dailycheck = {
+//     isdaily: true,
+//     updatedAt: new Date(),
+//     status: "챌린지 성공"
+//   }
+
+//   Challenge.update({
+//     missionID: req.body.id,
+//     email: req.body.email,
+//     missioncomplete: false
+//   }, {
+//     $push: {
+//       dailycheck: dailycheck,
+//       // usedmission: newPoint
+//     },
+//     // $inc: {
+//     //   "usetime": req.body.points
+//     // }
+//   },
+  
+//   function (err, reulst) {
+//     if (err) {
+//       return res.status(400).json(err);
+//     }
+      
+//   })
+  
+//   ChallengeLog.update({
+//     missionID: req.body.id,
+//     email: req.body.email,
+//     missioncomplete: false
+//   }, {
+//     $push: {
+//       dailycheck: dailycheck,
+//       // usedmission: newPoint
+//     },
+//     // $inc: {
+//     //   "usetime": req.body.points
+//     // }
+//   },
+//   function (err, reulst) {
+//     if (err) {
+//       return res.status(400).json(err);
+//     } else {
+//       return res.status(201).json({
+//         // 'msg': '오늘 사용시간 2분을 초과 하여 <br> 챌린지 도전에 성공하였습니다.'
+//         'msg': '사용시간 2분이상이 확인되어<br>오늘 챌린지 도전에 성공하였습니다.'
+//       });
+//     }
+//   })
+// });
+// }
 
 // 앱 밖에서 FCM 알람 확인했을 때
 exports.alarmTypeUpdate2 = (req, res) => {
