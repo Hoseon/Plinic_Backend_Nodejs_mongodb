@@ -42,6 +42,8 @@ routes.post('/savemysubproduct', userController.saveSubMainProduct); //사용자
 routes.post('/delsavemymainproduct', userController.delAndSaveMyMainProduct); //사용자 주 화장품 지우고 저장
 routes.post('/delsavemysubproduct', userController.delAndSaveSubMainProduct); //사용자 보조 화장품 지우고 저장
 routes.post('/login', userController.loginUser);
+routes.post('/giveuplogin', userController.giveupLogin);//로그인 시 UpdatedAt 갱신 20210924
+routes.post('/giveupMember', userController.giveupMember);//어플 오픈 시 UpdatedAt 갱신 20210927
 routes.post('/pointupdate', userController.pointUpdate);
 routes.post('/snspointupdate', userController.snsPointUpdate);
 routes.post('/usetimeupdate', userController.useTimeUpdate);
@@ -53,7 +55,7 @@ routes.post('/challengesave', userController.challengeSave); //챌린지를 시�
 routes.post('/addressSave', userController.addressSave); // 회원의 주소록 정보 저장
 routes.post('/setAddressMain', userController.setAddressMain); // 회원의 대표 주소록 정보 저장
 routes.post('/getIamPortPayment', userController.getIamPortPayment); // 회원의 대표 주소록 정보 저장
-
+// routes.post('/challengelogtest', userController.ChallengeLogTest); //테스트 용
 //피부분석 데이터 저장
 routes.post('/saveskinanaly',skinAnalyController.skinAnalySave)
 

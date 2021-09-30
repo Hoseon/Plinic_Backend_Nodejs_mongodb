@@ -53,6 +53,7 @@ var UserSchema = new mongoose.Schema({
   pushtoken: String,
   from: String,
   created: { type: Date, default: Date.now },
+  updatedAt: { type: Date, default: Date.now },
   totalusetime: {type:Number, default:0},
   totaluserpoint: {type:Number, default:0}, //사용자 포인트 총 시간
   userpoint: [{ //사용자 포인트 누적 이력

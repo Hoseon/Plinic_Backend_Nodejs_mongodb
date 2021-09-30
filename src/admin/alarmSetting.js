@@ -1,6 +1,8 @@
 var express = require("express");
 var router = express.Router();
 var mongoose = require("mongoose");
+var User = require("../models/user");
+var Alarm = require("../models/Qna");
 var Qna = require("../models/Qna");
 var QnaCounter = require("../models/QnaCounter");
 var async = require("async");
@@ -64,6 +66,150 @@ router.get("/", function (req, res) {
   return res.render("PlinicAdmin/Operation/AlarmSetting-Mgt/index", {});
 });
 // 그룹/개별 알림 관리 리스트 화면
+
+
+// router.get("/marketing", function(req, res) {
+//   return res.render("PlinicAdmin/Operation/AlarmSetting-Mgt/newIndex", {});
+// });
+//여기에 광고(마케팅 알림) 페이지 새로 신설
+
+router.get('/marketing', function(req, res) {
+  var vistorCounter = null;
+  var page = Math.max(1, req.query.page) > 1 ? parseInt(req.query.page) : 1;
+  var limit = Math.max(1, req.query.limit) > 1 ? parseInt(req.query.limit) : 80;
+  var search = createSearch(req.query);
+  // var testSearch = createSearchTest(req.query);
+  async.waterfall([
+    function(callback) {
+    if (!search.findUser) return callback(null);
+    User_admin.find(search.findUser, function(err, users) {
+      if (err) callback(err);
+      var or = [];
+      users.forEach(function(users) {
+        or.push({
+          author: mongoose.Types.ObjectId(users._id)
+        });
+      });
+      if (search.findPost.$or) {
+        search.findPost.$or = search.findPost.$or.concat(or);
+      } else if (or.length > 0) {
+        search.findPost = {
+          $or: or
+        };
+      }
+      callback(null);
+    });
+  }, function(callback) {
+      if (search.findUser && !search.findPost.$or) 
+      return callback(null, null, 0);
+      User.count(search.findPost, function(err, count) {
+        if (err) callback(err);
+        skip = (page - 1) * limit;
+        maxPage = Math.ceil(count / limit);
+        callback(null, skip, maxPage);
+      });
+
+  }, 
+  function(skip, maxPage, callback) {
+    if (search.findUser && !search.findPost.$or) 
+    return callback(null, [], 0);
+
+      User.find(search.findPost)
+      .populate("author")
+      .sort({created : -1})
+      .skip(skip)
+      .limit(limit)
+      .exec(function(err, user) {
+        if (err) callback(err);
+        callback(null, user, maxPage);
+      });
+    }
+  ], 
+  function(err, user, maxPage) {
+    if (err) return res.json({
+      success: false,
+      message: err
+    });
+    return res.render("PlinicAdmin/Operation/AlarmSetting-Mgt/newIndex", {
+      users: user,
+      user: req.user,
+      page: page,
+      maxPage: maxPage,
+      urlQuery: req._parsedUrl.query,
+      search: search,
+      counter: vistorCounter,
+      postsMessage: req.flash("postsMessage")[0]
+    });
+  });
+});
+// 광고(마케팅 알림) 페이지 새로 신설
+
+
+//여기 알림 보내기 들어오면 필요한 input post 넣어서 써보기//
+router.post('/:id/fcm', function(req, res) {
+
+  //사용자의 Email을 User Collection에서 찾아서 PushToken키를 가져온다.
+  var pushtoken = '';
+  if(req.body.email !== '') {
+    User.findOne({
+      email : req.body.email
+    },function(err, User) {
+      if(User) {
+        var message = { //this may vary according to the message type (single recipient, multicast, topic, et cetera)
+          to: User.pushtoken,
+
+          notification: {
+            title: '플리닉 보상 알림',
+            // body: req.body.comment.body,
+            body: "마케팅 광고입니다.",
+            sound: "default",
+            click_action: "FCM_PLUGIN_ACTIVITY",
+          },
+
+          data: { //you can send only notification or only data(or include both)
+            mode: "marketing",
+            // id: req.body.id
+            id: req.params.id
+          }
+        };
+
+        fcm.send(message, function(err, response) {
+          if (err) {
+            console.log("챌린지 보상 푸시 전송 실패 " + req.body.email);
+          } else {
+            console.log("Successfully sent with response: ", response);
+          }
+        });
+      }
+    });
+
+    Alarm.findOneAndUpdate({
+      email: req.body.user.email
+    }, {
+      $set: {
+        alarmCondition: false,
+        mange: false,
+        writerEmail: req.body.email, //받는 사람 이메일
+        // email: 보내는 사람은 파이어베이스를 통하기 때문에 이메일이 없음
+        // skinId: 열어야할 페이지의 id가 없음
+        alertType: "마케팅알림",
+        alermName: req.notification.title,
+        alarmDesc: notification.body,
+      }
+    },
+    function(err, post2) {
+      if (err) {
+        console.log("error : " + err);
+        return res.status(400).json({
+          'msg': '알림 FCM이 저장 되지 않았습니다. <br /> Error : ' + err
+        });
+      } else {
+        return res.status(201).json(post2);
+      }
+    })
+  }
+});
+// 마케팅 mode 보내기 FCM
 
 router.get("/new", function (req, res) {
   return res.render("PlinicAdmin/Operation/AlarmSetting-Mgt/new", {});
