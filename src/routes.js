@@ -43,6 +43,7 @@ routes.post('/delsavemymainproduct', userController.delAndSaveMyMainProduct); //
 routes.post('/delsavemysubproduct', userController.delAndSaveSubMainProduct); //사용자 보조 화장품 지우고 저장
 routes.post('/login', userController.loginUser);
 routes.post('/giveuplogin', userController.giveupLogin);//로그인 시 UpdatedAt 갱신 20210924
+routes.post('/giveupMember', userController.giveupMember);//어플 오픈 시 UpdatedAt 갱신 20210927
 routes.post('/pointupdate', userController.pointUpdate);
 routes.post('/snspointupdate', userController.snsPointUpdate);
 routes.post('/usetimeupdate', userController.useTimeUpdate);

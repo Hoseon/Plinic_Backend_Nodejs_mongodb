@@ -719,6 +719,7 @@ exports.loginUser = (req, res) => {
   });
 };
 
+// 20210924 로그인 시 해당 회원 마지막 이력 업데이트
 exports.giveupLogin = (req, res) => {
 
   var newReply = req.body
@@ -731,7 +732,30 @@ exports.giveupLogin = (req, res) => {
     },
     function(err, post2) {
       if (err) {
-        console.log("tags error : " + err);
+        console.log("error : " + err);
+        return res.status(400).json({
+          'msg': '시간이 업데이트 되지 않았습니다. <br /> Error : ' + err
+        });
+      } else {
+        return res.status(201).json(post2);
+      }
+    })
+}
+
+// 20210927 로그인 상태로 어플 오픈 시 해당 회원 마지막 이력 업데이트
+exports.giveupMember = (req, res) => {
+
+  var newReply = req.body
+  User.findOneAndUpdate({
+      email: req.body.email
+    }, {
+      $set: {
+        updatedAt: new Date()
+      }
+    },
+    function(err, post2) {
+      if (err) {
+        console.log("error : " + err);
         return res.status(400).json({
           'msg': '시간이 업데이트 되지 않았습니다. <br /> Error : ' + err
         });

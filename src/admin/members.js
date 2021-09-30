@@ -164,6 +164,7 @@ router.get('/newIndex', function(req, res) {
   // var limit = Math.max(1, req.query.limit) > 1 ? parseInt(req.query.limit) : 80;
   var search = createSearch2(req.query);
   var testSearch = createSearchDate(req.query);
+  var dateSearch = createSearchDate2(req.query);
   async.waterfall([
     function(callback) {
     if (!search.findUser) return callback(null);
@@ -186,9 +187,10 @@ router.get('/newIndex', function(req, res) {
     });
   }, function(callback) {
       if (search.findUser && !search.findPost.$or 
-        || testSearch.findUser && testSearch.dayCreated[0].created) 
+        || testSearch.findUser && testSearch.dayCreated[0].created
+        || dateSearch.findUser && dateSearch.dayCreated[0].updatedAt) 
       return callback(null, null, 0);
-      User.count(search.findPost || testSearch.dayCreated[0].created, function(err, count) {
+      User.count(search.findPost || testSearch.dayCreated[0].created || dateSearch.dayCreated[0].updatedAt, function(err, count) {
         if (err) callback(err);
         // skip = (page - 1) * limit;
         // maxPage = Math.ceil(count / limit);
@@ -198,7 +200,8 @@ router.get('/newIndex', function(req, res) {
   }, 
   function( callback) {
     if (search.findUser && !search.findPost.$or 
-      || testSearch.findUser && testSearch.dayCreated[0].created) 
+      || testSearch.findUser && testSearch.dayCreated[0].created
+      || dateSearch.findUser && dateSearch.dayCreated[0].updatedAt) 
     return callback(null, [], 0);
 
     if(testSearch.dayCreated[0]) {
@@ -207,6 +210,14 @@ router.get('/newIndex', function(req, res) {
       .sort({created : 1})
       // .skip(skip)
       // .limit(limit)
+      .exec(function(err, user) {
+        if (err) callback(err);
+        callback(null, user);
+      });
+    } else if(dateSearch.dayCreated[0]) {
+      User.find(dateSearch.dayCreated[0])
+      .populate("author")
+      .sort({updatedAt : 1})
       .exec(function(err, user) {
         if (err) callback(err);
         callback(null, user);
@@ -237,8 +248,8 @@ router.get('/newIndex', function(req, res) {
       // maxPage: maxPage,
       urlQuery: req._parsedUrl.query,
       search: search,
-      testSearch : testSearch,
-      // dateSearch: dateSearch,
+      testSearch: testSearch,
+      dateSearch: dateSearch,
       counter: vistorCounter,
       postsMessage: req.flash("postsMessage")[0]
     });
@@ -361,7 +372,8 @@ function isLoggedIn(req, res, next) {
 
 module.exports = router;
 
-
+// index
+// 가입 기간
 function createSearchTest(querie) {
   findUser = null
   if (!isEmpty2(querie.termCheck)) {
@@ -487,180 +499,7 @@ function createSearchTest(querie) {
   }
   
 }
-
-
-function createSearchDate(querie) {
-  findUser = null
-  if (!isEmpty2(querie.dateCheck)) {
-    var dayCreated = [];//기간별 조희
-    var findAfter = {
-    };
-
-    if (!isEmpty2(querie.dateCheck)) {
-      // var created = new Date();
-      if(isEmpty2(!querie.dateCheck.may)) {
-        var mayStart   = new Date( "2021", "04" );
-        var start   = new Date( "2021", "05" );
-        mayLast = new Date(start -1);
-        // var mayLast = start.setDate(start.getDate() - 1);
-        
-        dayCreated.push({
-          created: {
-            $gte: mayStart,
-            $lte: mayLast,
-          }
-        });
-      } else {
-        dayCreated.push();
-      }
-  
-      if(isEmpty2(!querie.dateCheck.jun)) {
-        var junStart   = new Date( "2021", "05" );
-        var start2   = new Date( "2021", "06" );
-        junLast = new Date(start2 -1);
-        // var junLast = start2.setDate(start2.getDate() - 1);
-        
-        dayCreated.push({
-          created: {
-            $gte: junStart,
-            $lte: junLast,
-          }
-        });
-      } else {
-        dayCreated.push();
-      }
-
-      if(isEmpty2(!querie.dateCheck.jul)) {
-        var julStart   = new Date( "2021", "06" );
-        var start3   = new Date( "2021", "07" );
-        julLast = new Date(start3 -1);
-        // var julLast = start3.setDate(start3.getDate() - 1);
-
-        dayCreated.push({
-          created: {
-            $gte: julStart,
-            $lte: julLast,
-          }
-        });
-      } else {
-        dayCreated.push();
-      }
-
-      if(isEmpty2(!querie.dateCheck.aug)) {
-        var augStart   = new Date( "2021", "07" );
-        var start4   = new Date( "2021", "08" );
-        augLast = new Date(start4 -1);
-        // var augLast = start4.setDate(start4.getDate() - 1);
-
-        dayCreated.push({
-          created: {
-            $gte: augStart,
-            $lte: augLast,
-          }
-        });
-      } else {
-        dayCreated.push();
-      }
-
-      isEmpty2(!querie.dateCheck.may) ? findAfter.may = true : findAfter.may = false;
-      isEmpty2(!querie.dateCheck.jun) ? findAfter.jun = true : findAfter.jun = false;
-      isEmpty2(!querie.dateCheck.jul) ? findAfter.jul = true : findAfter.jul = false;
-      isEmpty2(!querie.dateCheck.aug) ? findAfter.aug = true : findAfter.aug = false;
-    }
-
-    return {
-      findUser: findUser,
-      findAfter: findAfter,
-      dayCreated : dayCreated
-    };
-
-  } else {
-
-    var dayCreated = [];
-    var findAfter = {
-      may : false,
-      jun: false,
-      jul: false,
-      aug: false,
-    };
-    if (!isEmpty2(querie.dateCheck)) {
-      // var created = new Date();
-      if(isEmpty2(!querie.dateCheck.may)) {
-        var mayStart   = new Date( "2021", "04" );
-        var start   = new Date( "2021", "05" );
-        mayLast = new Date(start -1);
-        // var mayLast = start.setDate(start.getDate() - 1);
-        
-        dayCreated.push({
-          created: {
-            $gte: mayStart,
-            $lte: mayLast,
-          }
-        });
-      } else {
-      }
-  
-      if(isEmpty2(!querie.dateCheck.jun)) {
-        var junStart   = new Date( "2021", "05" );
-        var start2   = new Date( "2021", "06" );
-        junLast = new Date(start2 -1);
-        // var junLast = start2.setDate(start2.getDate() - 1);
-        
-        dayCreated.push({
-          created: {
-            $gte: junStart,
-            $lte: junLast,
-          }
-        });
-      } else {
-      }
-
-      if(isEmpty2(!querie.dateCheck.jul)) {
-        var julStart   = new Date( "2021", "06" );
-        var start3   = new Date( "2021", "07" );
-        julLast = new Date(start3 -1);
-        // var julLast = start3.setDate(start3.getDate() - 1);
-
-        dayCreated.push({
-          created: {
-            $gte: julStart,
-            $lte: julLast,
-          }
-        });
-      } else {
-      }
-
-      if(isEmpty2(!querie.dateCheck.aug)) {
-        var augStart   = new Date( "2021", "07" );
-        var start4   = new Date( "2021", "08" );
-        augLast = new Date(start4 -1);
-        // var augLast = start4.setDate(start4.getDate() - 1);
-
-        dayCreated.push({
-          created: {
-            $gte: augStart,
-            $lte: augLast,
-          }
-        });
-      } else {
-      }
-
-      isEmpty2(!querie.dateCheck.may) ? findAfter.may = true : findAfter.may = false;
-      isEmpty2(!querie.dateCheck.jun) ? findAfter.jun = true : findAfter.jun = false;
-      isEmpty2(!querie.dateCheck.jul) ? findAfter.jul = true : findAfter.jul = false;
-      isEmpty2(!querie.dateCheck.aug) ? findAfter.aug = true : findAfter.aug = false;
-    }
-
-    return {
-      findUser: findUser,
-      findAfter: findAfter,
-      dayCreated: dayCreated
-    };
-  }
-  
-}
-
-
+// 회원 검색
 function createSearch(queries) {
   var findPost = {},
     findUser = null,
@@ -711,6 +550,443 @@ function createSearch(queries) {
   };
 }
 
+// newIndex
+// 가입 기간
+function createSearchDate(querie) {
+  findUser = null
+  if (!isEmpty2(querie.dateCheck)) {
+    var dayCreated = [];//기간별 조희
+    var findAfter = {
+    };
+
+    if (!isEmpty2(querie.dateCheck)) {
+      // var created = new Date();
+
+      if(isEmpty2(!querie.dateCheck.january)) {
+        var januaryStart   = new Date( "2020", "12" );
+        var start12   = new Date( "2021", "01" );
+        januaryLast = new Date(start12 -1);
+        // var mayLast = start.setDate(start.getDate() - 1);
+        
+        dayCreated.push({
+          created: {
+            $gte: januaryStart,
+            $lte: januaryLast,
+          }
+        });
+      } else {
+        dayCreated.push();
+      }
+
+      if(isEmpty2(!querie.dateCheck.february)) {
+        var februaryStart   = new Date( "2021", "01" );
+        var start11   = new Date( "2021", "02" );
+        februaryLast = new Date(start11 -1);
+        // var mayLast = start.setDate(start.getDate() - 1);
+        
+        dayCreated.push({
+          created: {
+            $gte: februaryStart,
+            $lte: februaryLast,
+          }
+        });
+      } else {
+        dayCreated.push();
+      }
+
+      if(isEmpty2(!querie.dateCheck.march)) {
+        var marchStart   = new Date( "2021", "02" );
+        var start10   = new Date( "2021", "03" );
+        marchLast = new Date(start10 -1);
+        // var mayLast = start.setDate(start.getDate() - 1);
+        
+        dayCreated.push({
+          created: {
+            $gte: marchStart,
+            $lte: marchLast,
+          }
+        });
+      } else {
+        dayCreated.push();
+      }
+
+      if(isEmpty2(!querie.dateCheck.april)) {
+        var aprilStart   = new Date( "2021", "03" );
+        var start9   = new Date( "2021", "04" );
+        aprilLast = new Date(start9 -1);
+        // var mayLast = start.setDate(start.getDate() - 1);
+        
+        dayCreated.push({
+          created: {
+            $gte: aprilStart,
+            $lte: aprilLast,
+          }
+        });
+      } else {
+        dayCreated.push();
+      }
+
+      if(isEmpty2(!querie.dateCheck.may)) {
+        var mayStart   = new Date( "2021", "04" );
+        var start   = new Date( "2021", "05" );
+        mayLast = new Date(start -1);
+        // var mayLast = start.setDate(start.getDate() - 1);
+        
+        dayCreated.push({
+          created: {
+            $gte: mayStart,
+            $lte: mayLast,
+          }
+        });
+      } else {
+        dayCreated.push();
+      }
+  
+      if(isEmpty2(!querie.dateCheck.jun)) {
+        var junStart   = new Date( "2021", "05" );
+        var start2   = new Date( "2021", "06" );
+        junLast = new Date(start2 -1);
+        // var junLast = start2.setDate(start2.getDate() - 1);
+        
+        dayCreated.push({
+          created: {
+            $gte: junStart,
+            $lte: junLast,
+          }
+        });
+      } else {
+        dayCreated.push();
+      }
+
+      if(isEmpty2(!querie.dateCheck.jul)) {
+        var julStart   = new Date( "2021", "06" );
+        var start3   = new Date( "2021", "07" );
+        julLast = new Date(start3 -1);
+        // var julLast = start3.setDate(start3.getDate() - 1);
+
+        dayCreated.push({
+          created: {
+            $gte: julStart,
+            $lte: julLast,
+          }
+        });
+      } else {
+        dayCreated.push();
+      }
+
+      if(isEmpty2(!querie.dateCheck.aug)) {
+        var augStart   = new Date( "2021", "07" );
+        var start4   = new Date( "2021", "08" );
+        augLast = new Date(start4 -1);
+        // var augLast = start4.setDate(start4.getDate() - 1);
+
+        dayCreated.push({
+          created: {
+            $gte: augStart,
+            $lte: augLast,
+          }
+        });
+      } else {
+        dayCreated.push();
+      }
+
+      if(isEmpty2(!querie.dateCheck.september)) {
+        var septemberStart   = new Date( "2021", "08" );
+        var start5   = new Date( "2021", "09" );
+        septemberLast = new Date(start5 -1);
+
+        dayCreated.push({
+          created: {
+            $gte: septemberStart,
+            $lte: septemberLast,
+          }
+        });
+      } else {
+        dayCreated.push();
+      }
+
+      if(isEmpty2(!querie.dateCheck.october)) {
+        var octoberStart   = new Date( "2021", "09" );
+        var start6   = new Date( "2021", "10" );
+        octoberLast = new Date(start6 -1);
+
+        dayCreated.push({
+          created: {
+            $gte: octoberStart,
+            $lte: octoberLast,
+          }
+        });
+      } else {
+        dayCreated.push();
+      }
+
+      if(isEmpty2(!querie.dateCheck.november)) {
+        var novemberStart   = new Date( "2021", "10" );
+        var start7   = new Date( "2021", "11" );
+        novemberLast = new Date(start7 -1);
+
+        dayCreated.push({
+          created: {
+            $gte: novemberStart,
+            $lte: novemberLast,
+          }
+        });
+      } else {
+        dayCreated.push();
+      }
+
+      if(isEmpty2(!querie.dateCheck.december)) {
+        var decemberStart   = new Date( "2021", "11" );
+        var start8   = new Date( "2021", "12" );
+        decemberLast = new Date(start8 -1);
+
+        dayCreated.push({
+          created: {
+            $gte: decemberStart,
+            $lte: decemberLast,
+          }
+        });
+      } else {
+        dayCreated.push();
+      }
+      isEmpty2(!querie.dateCheck.january) ? findAfter.january = true : findAfter.january = false;
+      isEmpty2(!querie.dateCheck.february) ? findAfter.february = true : findAfter.february = false;
+      isEmpty2(!querie.dateCheck.march) ? findAfter.march = true : findAfter.march = false;
+      isEmpty2(!querie.dateCheck.april) ? findAfter.april = true : findAfter.april = false;
+      isEmpty2(!querie.dateCheck.may) ? findAfter.may = true : findAfter.may = false;
+      isEmpty2(!querie.dateCheck.jun) ? findAfter.jun = true : findAfter.jun = false;
+      isEmpty2(!querie.dateCheck.jul) ? findAfter.jul = true : findAfter.jul = false;
+      isEmpty2(!querie.dateCheck.aug) ? findAfter.aug = true : findAfter.aug = false;
+      isEmpty2(!querie.dateCheck.september) ? findAfter.september = true : findAfter.september = false;
+      isEmpty2(!querie.dateCheck.october) ? findAfter.october = true : findAfter.october = false;
+      isEmpty2(!querie.dateCheck.november) ? findAfter.november = true : findAfter.november = false;
+      isEmpty2(!querie.dateCheck.december) ? findAfter.december = true : findAfter.december = false;
+    }
+
+    return {
+      findUser: findUser,
+      findAfter: findAfter,
+      dayCreated : dayCreated
+    };
+
+  } else {
+
+    var dayCreated = [];
+    var findAfter = {
+      january: false,
+      february: false,
+      march: false,
+      april: false,
+      may : false,
+      jun: false,
+      jul: false,
+      aug: false,
+      september: false,
+      october: false,
+      november: false,
+      december: false,
+    };
+    if (!isEmpty2(querie.dateCheck)) {
+      // var created = new Date();
+
+      if(isEmpty2(!querie.dateCheck.january)) {
+        var januaryStart   = new Date( "2020", "12" );
+        var start12   = new Date( "2021", "01" );
+        januaryLast = new Date(start12 -12);
+        // var mayLast = start.setDate(start.getDate() - 1);
+        
+        dayCreated.push({
+          created: {
+            $gte: januaryStart,
+            $lte: januaryLast,
+          }
+        });
+      } else {
+      }
+
+      if(isEmpty2(!querie.dateCheck.february)) {
+        var februaryStart   = new Date( "2021", "01" );
+        var start11   = new Date( "2021", "02" );
+        februaryLast = new Date(start11 -1);
+        // var mayLast = start.setDate(start.getDate() - 1);
+        
+        dayCreated.push({
+          created: {
+            $gte: februaryStart,
+            $lte: februaryLast,
+          }
+        });
+      } else {
+      }
+
+      if(isEmpty2(!querie.dateCheck.march)) {
+        var marchStart   = new Date( "2021", "02" );
+        var start10   = new Date( "2021", "03" );
+        marchLast = new Date(start10 -1);
+        // var mayLast = start.setDate(start.getDate() - 1);
+        
+        dayCreated.push({
+          created: {
+            $gte: marchStart,
+            $lte: marchLast,
+          }
+        });
+      } else {
+      }
+
+      if(isEmpty2(!querie.dateCheck.april)) {
+        var aprilStart   = new Date( "2021", "03" );
+        var start9   = new Date( "2021", "04" );
+        aprilLast = new Date(start9 -1);
+        // var mayLast = start.setDate(start.getDate() - 1);
+        
+        dayCreated.push({
+          created: {
+            $gte: aprilStart,
+            $lte: aprilLast,
+          }
+        });
+      } else {
+      }
+
+      if(isEmpty2(!querie.dateCheck.may)) {
+        var mayStart   = new Date( "2021", "04" );
+        var start   = new Date( "2021", "05" );
+        mayLast = new Date(start -1);
+        // var mayLast = start.setDate(start.getDate() - 1);
+        
+        dayCreated.push({
+          created: {
+            $gte: mayStart,
+            $lte: mayLast,
+          }
+        });
+      } else {
+      }
+  
+      if(isEmpty2(!querie.dateCheck.jun)) {
+        var junStart   = new Date( "2021", "05" );
+        var start2   = new Date( "2021", "06" );
+        junLast = new Date(start2 -1);
+        // var junLast = start2.setDate(start2.getDate() - 1);
+        
+        dayCreated.push({
+          created: {
+            $gte: junStart,
+            $lte: junLast,
+          }
+        });
+      } else {
+      }
+
+      if(isEmpty2(!querie.dateCheck.jul)) {
+        var julStart   = new Date( "2021", "06" );
+        var start3   = new Date( "2021", "07" );
+        julLast = new Date(start3 -1);
+        // var julLast = start3.setDate(start3.getDate() - 1);
+
+        dayCreated.push({
+          created: {
+            $gte: julStart,
+            $lte: julLast,
+          }
+        });
+      } else {
+      }
+
+      if(isEmpty2(!querie.dateCheck.aug)) {
+        var augStart   = new Date( "2021", "07" );
+        var start4   = new Date( "2021", "08" );
+        augLast = new Date(start4 -1);
+        // var augLast = start4.setDate(start4.getDate() - 1);
+
+        dayCreated.push({
+          created: {
+            $gte: augStart,
+            $lte: augLast,
+          }
+        });
+      } else {
+      }
+
+      if(isEmpty2(!querie.dateCheck.september)) {
+        var septemberStart   = new Date( "2021", "08" );
+        var start5   = new Date( "2021", "09" );
+        septemberLast = new Date(start5 -1);
+
+        dayCreated.push({
+          created: {
+            $gte: septemberStart,
+            $lte: septemberLast,
+          }
+        });
+      } else {
+      }
+
+      if(isEmpty2(!querie.dateCheck.october)) {
+        var octoberStart   = new Date( "2021", "09" );
+        var start6   = new Date( "2021", "10" );
+        octoberLast = new Date(start6 -1);
+
+        dayCreated.push({
+          created: {
+            $gte: octoberStart,
+            $lte: octoberLast,
+          }
+        });
+      } else {
+      }
+
+      if(isEmpty2(!querie.dateCheck.november)) {
+        var novemberStart   = new Date( "2021", "10" );
+        var start7   = new Date( "2021", "11" );
+        novemberLast = new Date(start7 -1);
+
+        dayCreated.push({
+          created: {
+            $gte: novemberStart,
+            $lte: novemberLast,
+          }
+        });
+      } else {
+      }
+
+      if(isEmpty2(!querie.dateCheck.december)) {
+        var decemberStart   = new Date( "2021", "10" );
+        var start8   = new Date( "2021", "11" );
+        decemberLast = new Date(start8 -1);
+
+        dayCreated.push({
+          created: {
+            $gte: decemberStart,
+            $lte: decemberLast,
+          }
+        });
+      } else {
+      }
+      isEmpty2(!querie.dateCheck.january) ? findAfter.january = true : findAfter.january = false;
+      isEmpty2(!querie.dateCheck.february) ? findAfter.february = true : findAfter.february = false;
+      isEmpty2(!querie.dateCheck.march) ? findAfter.march = true : findAfter.march = false;
+      isEmpty2(!querie.dateCheck.april) ? findAfter.april = true : findAfter.april = false;
+      isEmpty2(!querie.dateCheck.may) ? findAfter.may = true : findAfter.may = false;
+      isEmpty2(!querie.dateCheck.jun) ? findAfter.jun = true : findAfter.jun = false;
+      isEmpty2(!querie.dateCheck.jul) ? findAfter.jul = true : findAfter.jul = false;
+      isEmpty2(!querie.dateCheck.aug) ? findAfter.aug = true : findAfter.aug = false;
+      isEmpty2(!querie.dateCheck.september) ? findAfter.september = true : findAfter.september = false;
+      isEmpty2(!querie.dateCheck.october) ? findAfter.october = true : findAfter.october = false;
+      isEmpty2(!querie.dateCheck.november) ? findAfter.november = true : findAfter.november = false;
+      isEmpty2(!querie.dateCheck.december) ? findAfter.december = true : findAfter.december = false;
+    }
+
+    return {
+      findUser: findUser,
+      findAfter: findAfter,
+      dayCreated: dayCreated
+    };
+  }
+  
+}
+// 회원 검색
 function createSearch2(queries) {
   var findPost = {},
     findUser = null,
@@ -759,6 +1035,71 @@ function createSearch2(queries) {
     findUser: findUser,
     highlight: highlight
   };
+}
+// 월간 사용자 수
+function createSearchDate2(querie) {
+  findUser = null
+  if (!isEmpty2(querie.dateChecks)) {
+    var dayCreated = [];//기간별 조희
+    var findAfters = {
+    };
+
+    if (!isEmpty2(querie.dateChecks)) {
+      // var created = new Date();
+
+      if(isEmpty2(!querie.dateChecks.startDate && !querie.dateChecks.endDate)) {
+        // var startDate = startDate.setDate(startDate.getDate());
+        // var endDate = endDate.setDate(endDate.getDate());
+        dayCreated.push({
+          updatedAt: {
+            $gte: querie.dateChecks.startDate,
+            $lte: querie.dateChecks.endDate,
+          }
+        });
+      } else {
+        dayCreated.push();
+      }
+
+      isEmpty2(!querie.dateChecks.january) ? findAfters.january = true : findAfters.january = false;
+    }
+
+    return {
+      findUser: findUser,
+      findAfters: findAfters,
+      dayCreated : dayCreated
+    };
+
+  } else {
+
+    var dayCreated = [];
+    var findAfters = {
+      january: false,
+    };
+    if (!isEmpty2(querie.dateChecks)) {
+      // var created = new Date();
+
+      if(isEmpty2(!querie.dateChecks.startDate && !querie.dateChecks.endDate)) {
+        // var startDate = startDate.setDate(startDate.getDate());
+        // var endDate = endDate.setDate(endDate.getDate());
+      dayCreated.push({
+        updatedAt: {
+          $gte: querie.dateChecks.startDate,
+          $lte: querie.dateChecks.endDate,
+        }
+      });
+    } else {
+    }
+
+      isEmpty2(!querie.dateChecks.january) ? findAfters.january = true : findAfters.january = false;
+    }
+
+    return {
+      findUser: findUser,
+      findAfters: findAfters,
+      dayCreated: dayCreated
+    };
+  }
+  
 }
 
 function isEmpty2(str) {
