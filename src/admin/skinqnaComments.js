@@ -144,7 +144,7 @@ router.get('/', function (req, res) {
       success: false,
       message: err
     });
-    return res.render("PlinicAdmin/Contents/Comments/SkinQna/index", {
+    return res.render("PlinicAdmin/Contents/Comments/SkinQnA/index", {
       skinqna: skinqna,
       // sum: sum,
       user: req.user,

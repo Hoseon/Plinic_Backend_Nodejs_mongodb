@@ -148,66 +148,73 @@ router.get('/marketing', function(req, res) {
 //여기 알림 보내기 들어오면 필요한 input post 넣어서 써보기//
 router.post('/:id/fcm', function(req, res) {
 
-  //사용자의 Email을 User Collection에서 찾아서 PushToken키를 가져온다.
-  var pushtoken = '';
-  if(req.body.email !== '') {
-    User.findOne({
-      email : req.body.email
-    },function(err, User) {
-      if(User) {
-        var message = { //this may vary according to the message type (single recipient, multicast, topic, et cetera)
-          to: User.pushtoken,
+  Alarm.findOneAndUpdate({
+    email: req.body.user.email
+  }, {
+    $set: {
+      alarmCondition: false,
+      mange: false,
+      writerEmail: req.body.user.email, //받는 사람 이메일
+      // email: 보내는 사람은 파이어베이스를 통하기 때문에 이메일이 없음
+      // skinId: 열어야할 페이지의 id가 없음
+      alertType: "마케팅알림",
+      // alermName: req.notification.title, x
+      // alermName: notification.title, x
+      // alermName: data.title, x
+      
+      // alermName: message.notification.title, // ?
+      // alermName: message.title, ?
+      alarmDesc: notification.body,
+    }
+  },
+  function(err, post2) {
+    // 에러냐
+    if (err) {
+      console.log("error : " + err);
+      return res.status(400).json({
+        'msg': '알림 FCM이 저장 되지 않았습니다. <br /> Error : ' + err
+      });
+    // 성공이냐
+    } if(!err) {
+      // return res.status(201).json(post2);
+      //사용자의 Email을 User Collection에서 찾아서 PushToken키를 가져온다.
+      var pushtoken = '';
+      if(req.body.email !== '') {
+        User.findOne({
+          email : req.body.email
+        },function(err, User) {
+          if(User) {
+            var message = { //this may vary according to the message type (single recipient, multicast, topic, et cetera)
+              to: User.pushtoken,
 
-          notification: {
-            title: '플리닉 보상 알림',
-            // body: req.body.comment.body,
-            body: "마케팅 광고입니다.",
-            sound: "default",
-            click_action: "FCM_PLUGIN_ACTIVITY",
-          },
+              notification: {
+                // title: '플리닉 보상 알림',
+                title: req.body.user.alertType, //newIndex에서 가져오는지
+                // body: "마케팅 광고입니다.",
+                body: req.body.user.alarmDesc, //newIndex에서 가져오는지
+                sound: "default",
+                click_action: "FCM_PLUGIN_ACTIVITY",
+              },
 
-          data: { //you can send only notification or only data(or include both)
-            mode: "marketing",
-            // id: req.body.id
-            id: req.params.id
-          }
-        };
+              data: { //you can send only notification or only data(or include both)
+                mode: "marketing",
+                // id: req.body.id
+                id: req.params.id
+              }
+            };
 
-        fcm.send(message, function(err, response) {
-          if (err) {
-            console.log("챌린지 보상 푸시 전송 실패 " + req.body.email);
-          } else {
-            console.log("Successfully sent with response: ", response);
+            fcm.send(message, function(err, response) {
+              if (err) {
+                console.log("챌린지 보상 푸시 전송 실패 " + req.body.user.email);
+              } else {
+                console.log("Successfully sent with response: ", response);
+              }
+            });
           }
         });
       }
-    });
-
-    Alarm.findOneAndUpdate({
-      email: req.body.user.email
-    }, {
-      $set: {
-        alarmCondition: false,
-        mange: false,
-        writerEmail: req.body.email, //받는 사람 이메일
-        // email: 보내는 사람은 파이어베이스를 통하기 때문에 이메일이 없음
-        // skinId: 열어야할 페이지의 id가 없음
-        alertType: "마케팅알림",
-        alermName: req.notification.title,
-        alarmDesc: notification.body,
-      }
-    },
-    function(err, post2) {
-      if (err) {
-        console.log("error : " + err);
-        return res.status(400).json({
-          'msg': '알림 FCM이 저장 되지 않았습니다. <br /> Error : ' + err
-        });
-      } else {
-        return res.status(201).json(post2);
-      }
-    })
-  }
+    }
+  })
 });
 // 마케팅 mode 보내기 FCM
 
