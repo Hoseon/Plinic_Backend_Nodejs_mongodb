@@ -127,6 +127,9 @@
                                 <form action="/alarmSetting/<%=user._id%>/fcm" method="post">
                                     <input type="hidden" name="user[email]" value="<%= user.email %>" />
                                     <input type="hidden" name="pushtoken" value="<%= user.pushtoken %>" />
+                                    <input type="hidden" name="user[alertType]" value="마케팅알림"/>
+                                    <input type="hidden" name="user[alarmDesc]" value="마케팅 광고입니다."/>
+                                    <input type="hidden" name="user[]"/>
                                     <button class="btn btn-primary" type="submit">알림 보내기</button>
                                 </form>
                             <% } %>
