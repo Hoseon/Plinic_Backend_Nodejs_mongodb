@@ -266,7 +266,7 @@ router.get('/:id', function(req, res) {
       // var url = req.protocol + '://' + 'plinic.cafe24app.com' + '/skinqnaimage/' + post._id;
       // var prod_url = req.protocol + '://' + req.get('host') + '/skinqna_prodimages/' + post._id;
       //fs.createReadStream(path.join(__dirname, '../uploads/', post.filename)).pipe(res);
-      res.render("PlinicAdmin/Contents/Comments/SkinQna/show", {
+      res.render("PlinicAdmin/Contents/Comments/SkinQnA/show", {
         post: post,
         url: url,
         // sum: sum,

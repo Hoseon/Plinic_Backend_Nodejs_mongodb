@@ -146,77 +146,125 @@ router.get('/marketing', function(req, res) {
 
 
 //여기 알림 보내기 들어오면 필요한 input post 넣어서 써보기//
-router.post('/:id/fcm', function(req, res) {
+// router.post('/:id/fcm', function(req, res) {
 
-  Alarm.findOneAndUpdate({
-    email: req.body.user.email
-  }, {
-    $set: {
-      alarmCondition: false,
-      mange: false,
-      writerEmail: req.body.user.email, //받는 사람 이메일
-      // email: 보내는 사람은 파이어베이스를 통하기 때문에 이메일이 없음
-      // skinId: 열어야할 페이지의 id가 없음
-      alertType: "마케팅알림",
-      // alermName: req.notification.title, x
-      // alermName: notification.title, x
-      // alermName: data.title, x
+//   Alarm.findOneAndUpdate({
+//     // email: req.body.user.email
+//     email: "sorcerer10@naver.com"
+//   }, {
+//     $set: {
+//       alarmCondition: false,
+//       mange: false,
+//       writerEmail: req.body.user.email, //받는 사람 이메일
+//       // email: 보내는 사람은 파이어베이스를 통하기 때문에 이메일이 없음
+//       // skinId: 열어야할 페이지의 id가 없음
+//       alertType: "마케팅알림",
+//       alermName: "마케팅 광고입니다.",
+//       alarmDesc: "알람 내용",
+//       // alermName: req.notification.title, x
+//       // alermName: notification.title, x
+//       // alermName: data.title, x
       
-      // alermName: message.notification.title, // ?
-      // alermName: message.title, ?
-      alarmDesc: notification.body,
-    }
-  },
-  function(err, post2) {
-    // 에러냐
-    if (err) {
-      console.log("error : " + err);
-      return res.status(400).json({
-        'msg': '알림 FCM이 저장 되지 않았습니다. <br /> Error : ' + err
-      });
-    // 성공이냐
-    } if(!err) {
-      // return res.status(201).json(post2);
-      //사용자의 Email을 User Collection에서 찾아서 PushToken키를 가져온다.
-      var pushtoken = '';
-      if(req.body.email !== '') {
-        User.findOne({
-          email : req.body.email
-        },function(err, User) {
-          if(User) {
-            var message = { //this may vary according to the message type (single recipient, multicast, topic, et cetera)
-              to: User.pushtoken,
+//       // alermName: message.notification.title,  x
+//       // alermName: message.title, x
+//       // alarmDesc: notification.body,  x
+//       // alarmDesc: message.notification.body, x
+//     }
+//   },
+//   function(err, post2) {
+//     // 에러냐
+//     if (err) {
+//       console.log("error : " + err);
+//       return res.status(400).json({
+//         'msg': '알림 FCM이 저장 되지 않았습니다. <br /> Error : ' + err
+//       });
+//     // 성공이냐
+//     } if(!err) {
+//       // return res.status(201).json(post2);
+//       //사용자의 Email을 User Collection에서 찾아서 PushToken키를 가져온다.
+//       var pushtoken = '';
+//       if(req.body.user.email !== '') {
+//         User.findOne({
+//           email : "sorcerer10@naver.com"
+//         },function(err, User) {
+//           if(User) {
+//             var message = { //this may vary according to the message type (single recipient, multicast, topic, et cetera)
+//               to: User.pushtoken,
 
-              notification: {
-                // title: '플리닉 보상 알림',
-                title: req.body.user.alertType, //newIndex에서 가져오는지
-                // body: "마케팅 광고입니다.",
-                body: req.body.user.alarmDesc, //newIndex에서 가져오는지
-                sound: "default",
-                click_action: "FCM_PLUGIN_ACTIVITY",
-              },
+//               notification: {
+//                 // title: '플리닉 보상 알림',
+//                 title: req.body.user.alertType, //newIndex에서 가져오는지
+//                 // body: "마케팅 광고입니다.",
+//                 body: req.body.user.alarmDesc, //newIndex에서 가져오는지
+//                 sound: "default",
+//                 click_action: "FCM_PLUGIN_ACTIVITY",
+//               },
 
-              data: { //you can send only notification or only data(or include both)
-                mode: "marketing",
-                // id: req.body.id
-                id: req.params.id
-              }
-            };
+//               data: { //you can send only notification or only data(or include both)
+//                 mode: "marketing",
+//                 // id: req.body.id
+//                 id: req.params.id
+//               }
+//             };
 
-            fcm.send(message, function(err, response) {
-              if (err) {
-                console.log("챌린지 보상 푸시 전송 실패 " + req.body.user.email);
-              } else {
-                console.log("Successfully sent with response: ", response);
-              }
-            });
-          }
-        });
-      }
-    }
-  })
-});
+//             fcm.send(message, function(err, response) {
+//               if (err) {
+//                 console.log("챌린지 보상 푸시 전송 실패 " + req.body.user.email);
+//               } else {
+//                 console.log("Successfully sent with response: ", response);
+//               }
+//             });
+//           }
+//         });
+//       }
+//     }
+//   })
+// });
 // 마케팅 mode 보내기 FCM
+
+
+
+router.post('/:id/fcm', function (req, res) {
+  var message = { 
+    to: User.pushtoken, //// 전체 body에서 pushtoken을 가져온다.
+    notification: { //// 전달되는 메시지 내용들
+      title: '문의하신 댓글에 답글이 작성되었습니다.', 
+      body: req.body.recomments.body, //// 달린 답글의 내용을 지정한다.
+      sound: "default",
+      click_action: "FCM_PLUGIN_ACTIVITY",
+    },
+    data: { 
+      mode: "marketing",
+      id: req.params.id   //// 데이터를 marketing로 하며 (plinic앱 연계) id 푸쉬를 줘야할 유저의 id로 지정한다.
+    }
+  };
+  fcm.send(message, function(err, response) {
+    if (err) {
+      console.log("Something has gone wrong!");
+    } else {
+      console.log("Successfully sent with response: ", response);
+    }
+  });
+    console.log(req.body);
+    var newComment = req.body.recomments; //항상 껍데기가 무엇을 감싸는지 확인
+    Notice.findOneAndUpdate({
+      'comments._id' : req.params.commentId //comment의 id를 가져와야 한다. > 해당 comment id 아래에 대댓글을 넣기 위한 주소값 같은.
+    }, {
+      $push: {
+        'comments.$.recomments' : newComment //달러 배열
+      }
+    }, function(err, post) {
+      if (err) return res.json({
+        success: false,
+        message: err
+      });
+        
+      res.redirect('/noticeComments/' + req.params.id + "?" + req._parsedUrl.query);
+    });
+  }); // 대댓글
+
+
+
 
 router.get("/new", function (req, res) {
   return res.render("PlinicAdmin/Operation/AlarmSetting-Mgt/new", {});
