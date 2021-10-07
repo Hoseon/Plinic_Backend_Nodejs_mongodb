@@ -2,7 +2,7 @@ var express = require("express");
 var router = express.Router();
 var mongoose = require("mongoose");
 var User = require("../models/user");
-var Alarm = require("../models/Qna");
+var Alarm = require("../models/Alarm");
 var Qna = require("../models/Qna");
 var QnaCounter = require("../models/QnaCounter");
 var async = require("async");
@@ -225,43 +225,148 @@ router.get('/marketing', function(req, res) {
 
 
 router.post('/:id/fcm', function (req, res) {
-  var message = { 
-    to: User.pushtoken, //// 전체 body에서 pushtoken을 가져온다.
-    notification: { //// 전달되는 메시지 내용들
-      title: '문의하신 댓글에 답글이 작성되었습니다.', 
-      body: req.body.recomments.body, //// 달린 답글의 내용을 지정한다.
-      sound: "default",
-      click_action: "FCM_PLUGIN_ACTIVITY",
-    },
-    data: { 
-      mode: "marketing",
-      id: req.params.id   //// 데이터를 marketing로 하며 (plinic앱 연계) id 푸쉬를 줘야할 유저의 id로 지정한다.
-    }
-  };
-  fcm.send(message, function(err, response) {
-    if (err) {
-      console.log("Something has gone wrong!");
-    } else {
-      console.log("Successfully sent with response: ", response);
-    }
-  });
-    console.log(req.body);
-    var newComment = req.body.recomments; //항상 껍데기가 무엇을 감싸는지 확인
-    Notice.findOneAndUpdate({
-      'comments._id' : req.params.commentId //comment의 id를 가져와야 한다. > 해당 comment id 아래에 대댓글을 넣기 위한 주소값 같은.
-    }, {
-      $push: {
-        'comments.$.recomments' : newComment //달러 배열
+
+  //사용자의 Email을 User Collection에서 찾아서 PushToken키를 가져온다.
+  var pushtoken = '';
+  if(req.body.user.email !== '') {
+    User.findOne({
+      email : "sorcerer10@naver.com"
+    },function(err, User) {
+      if(User) {
+        var message = { //this may vary according to the message type (single recipient, multicast, topic, et cetera)
+          to: User.pushtoken,
+
+          notification: {
+            title: req.body.user.alertType, 
+            body: req.body.user.alarmName,
+            sound: "default",
+            click_action: "FCM_PLUGIN_ACTIVITY",
+          },
+
+          data: { //you can send only notification or only data(or include both)
+            mode: "marketing",
+            id: req.params.id
+          }
+        };
+
+        fcm.send(message, function(err, response) {
+          if (err) {
+            console.log("챌린지 보상 푸시 전송 실패 " + req.body.email);
+          } else {
+            console.log("Successfully sent with response: ", response);
+          }
+        });
       }
-    }, function(err, post) {
-      if (err) return res.json({
+    });
+
+    //알람 테이블에 해당 내용 저장
+    Alarm.create({
+      writerEmail: req.body.user.email,
+      email: req.body.user.email,
+      skinId: req.params.id,
+      alarmCondition: true,
+      mange: true,
+      alertType: req.body.user.alertType,
+      alarmName: req.body.user.alarmName, //알림함에서는 이게 보임
+      alarmDesc: req.body.user.alarmDesc,
+      
+    }, function(err, counter) {
+      if (err) return response.json({
         success: false,
         message: err
       });
-        
-      res.redirect('/noticeComments/' + req.params.id + "?" + req._parsedUrl.query);
+      res.redirect('/alarmSetting/marketing');
     });
-  }); // 대댓글
+
+  }
+
+  // if("sorcerer10@naver.com") {
+  //   User.findOne({
+  //     email : "sorcerer10@naver.com"
+  //   },function(err, User) {
+  //     if(User) {
+  //       var message = { 
+  //         to: User.pushtoken, //// 전체 body에서 pushtoken을 가져온다.
+  //         notification: { //// 전달되는 메시지 내용들
+  //           title: req.body.user.alertType, 
+  //           // body: req.body.recomments.body,
+  //           body: req.body.user.alarmDesc,
+  //           sound: "default",
+  //           click_action: "FCM_PLUGIN_ACTIVITY",
+  //         },
+  //         data: { 
+  //           mode: "marketing",
+  //           id: req.params.id   //// 데이터를 marketing로 하며 (plinic앱 연계) id 푸쉬를 줘야할 유저의 id로 지정한다.
+  //         }
+  //       };
+  //       fcm.send(message, function(err, response) {
+  //         if (err) {
+  //           console.log("Something has gone wrong!");
+  //         } else {
+  //           console.log("Successfully sent with response: ", response);
+  //         }
+  //       });
+  //     }
+  //   });
+
+
+  //   console.log(req.body);
+  //   var newBody = req.body.user;
+
+  //   Alarm.create({
+  //     writerEmail: newBody.email,
+  //     email: newBody.email,
+  //     skinId: req.params.id,
+  //     alarmCondition: false,
+  //     mange: false,
+  //     alertType: newBody.alertType,
+  //     alermName: newBody.alarmDesc,
+  //     alarmDesc: newBody.alarmDesc,
+
+  //   }, function(err, post) {
+  //     if (err) return res.json({
+  //       success: false,
+  //       message: err
+  //     });
+  //     if(!err) {
+  //       res.redirect('/alarmSetting/marketing');
+  //     }
+  //   });
+
+  // }
+    // console.log(req.body);
+    // var newBody = req.body.user; //항상 껍데기가 무엇을 감싸는지 확인
+    
+    // Alarm.findOneAndUpdate({
+    //   email: newBody.email
+    // }, {
+    //   $set: {
+    //     alarmCondition: false,
+    //     mange: false,
+    //     writerEmail: newBody.email,
+    //     alertType: newBody.alertType,
+    //     alermName: newBody.alarmDesc,
+    //     alarmDesc: newBody.alarmDesc,
+    //   }
+    // Alarm.create({
+    //   writerEmail: newBody.email,
+    //   skinId: req.params.id,
+    //   alarmCondition: false,
+    //   mange: false,
+    //   alertType: newBody.alertType,
+    //   alermName: newBody.alarmDesc,
+    //   alarmDesc: newBody.alarmDesc,
+
+    // }, function(err, post) {
+    //   if (err) return res.json({
+    //     success: false,
+    //     message: err
+    //   });
+        
+    //   res.redirect('/alarmSetting/marketing');
+    // });
+  });
+  // 마케팅 mode 보내기 FCM
 
 
 

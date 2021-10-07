@@ -410,8 +410,9 @@
                                                                     </div>
                                                                 </td>
                                                                 <td class="align-middle">
-                                                                    <%= post.Amount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ','); %> <!-- 판매가격 -->
-                                                                    <%=// post.price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ','); %> 원 <!-- 소비자가 -->
+                                                                    <%=// post.Amount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ','); %> <!-- 판매가격 -->
+                                                                    <%=// post.price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ','); %> <!--원--> <!-- 소비자가 -->
+                                                                    <%=post.Amount %> 원
                                                                 </td>
                                                                 <!-- <td class="align-middle">
                                                                     <%// if(post.nextDeal == false) { %>
