@@ -11,6 +11,7 @@
   $(document).ready(function () {
     $(".active").removeClass("active");
     $("#contents").addClass("active");
+    $("#forms-collapse2").addClass('show');
   });
 </script>
 
@@ -115,7 +116,48 @@
                         <%// recomments.recommentId.forEach(function(recommentId) { %>
                           <%// if(post[0].reDelete === true) { %>
                           <tbody>
-                          <td>⤷&nbsp;<%=post[0].rebody%> <!-- forEach된 rebody를 풀어준다. -->
+                          <td>
+                            <!-- <%// if(recomments._id){ %>
+                              <form class="float_left" method="post"
+                                  action="">
+                                  ⤷&nbsp;<%=//post[0].rebody%>
+                                  <small class="d-block">
+                                      수정
+                                  </small>
+                              </form>
+                            <%// } %> -->
+                              <!-- forEach된 rebody를 풀어준다. -->
+
+                              <!-- <pre>⤷&nbsp;<%=//post[0].rebody%></pre> -->
+
+
+
+
+
+                                <form class="float_left" action="/challengeComments/<%= post[0]._id %>/recommentEdit/<%=post[0].recommentId%>" method="post">
+                                  <!-- ⤷&nbsp; -->
+                                  <input type="hidden" name="post[_id]" value="<%= post[0].recommentId %>"/>
+                                  <input type="hidden" name="post[isDelete]" value="<%= post[0].reDelete %>"/>
+                                  <input type="hidden" name="post[nameAdmin]" value="<%= post[0].reAdmin %>"/>
+                                  <input type="hidden" name="post[email]" value="<%= post[0].reEmail %>"/>
+                                  <input type="hidden" name="post[createdAt]" value="<%= post[0].reCreatedAt %>"/>
+                                  <textarea class="cvRequired" style="min-width: 600px;" name="post[body]" cvRqErrMsg="Body is required." cvRqErrTo="#cvErrBody"><%= post[0].rebody %></textarea>
+                                  <button type="submit" class="btn btn-primary btn-sm" style="margin-bottom: 22px;">
+                                      댓글 수정
+                                  </button>
+                                  <% console.log(post[0]._id) %>
+                                  <% console.log(post[0].recommentId) %>
+                                  <% console.log(post[0].reDelete) %>
+                                  <% console.log(post[0].reAdmin) %>
+                                  <% console.log(post[0].reEmail) %>
+                                  <% console.log(post[0].rebody) %>
+                                  <% console.log(post[0].reCreatedAt) %>
+                                  <!-- input hidden type으로 대댓글 자료 다 긁어오기 -->
+                                </form>
+
+
+
+
                             <%=// post[0].recommentId %>
                             <%// console.log(post[0].reDelete) %>
                             <!-- <form class="float_right" method="post"

@@ -149,7 +149,7 @@
                                         <div class="col-lg-2">
                                           <%// if(user && user.equals(post.author._id)) { %>
                                             <form class="float_right" method="post"
-                                              action="/noticeComments/<%= post._id %>/recomments/<%= recomments._id %>?_method=delete&<%= urlQuery %>">
+                                              action="/noticeComments/<%= post._id %>/<%= comment._id %>/recomments/<%= recomments._id %>?_method=delete&<%= urlQuery %>">
                                               <button type="button" class="w-15 m-1 btn btn-danger btn-sm"
                                                 onclick="confirm('Your recomment will be deleted')?this.parentElement.submit():null;">
                                                 x

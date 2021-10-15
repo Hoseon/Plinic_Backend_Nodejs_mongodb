@@ -374,7 +374,10 @@ router.get("/comments/:id/:commentId", function (req, res) {
         commentId: req.params.id,
         rebody: "$comments.recomments.body",
         reDelete: "$comments.recomments.isDelete",
+        reAdmin: "$comments.recomments.nameAdmin",
+        reEmail: "$comments.recomments.email",
         recommentId: "$comments.recomments._id",
+        reCreatedAt: "$comments.recomments.createdAt"
       }
     },
     // { $unwind: "$rcomments" },
@@ -427,6 +430,7 @@ router.post('/recomments/:id/', function (req, res) {
     });
       
     res.redirect('/challengeComments/comments/' + req.body.post.commentId + '/' + req.params.id);
+    // res.redirect('/challengeComments/');
     // return res.status(201).json({
     //   'msg': '커뮤니티 작성 포인트가 누적되었습니다!!'
     // });
@@ -453,6 +457,28 @@ router.post('/:id/recomments/:recommentId', function (req, res) {
     });
 }); //대댓글 삭제
 
+router.post('/:id/recommentEdit/:recommentId', function (req, res) {
+  console.log(req.body.post);
+  console.log(req.recomments);
+  var newRecomment = req.body.post;
+  Carezone.findOneAndUpdate(
+    {
+      // _id: '60b6fa0c0a2b3bdacf8227f9',
+      "comments.recomments._id": req.params.recommentId
+    },
+    {
+      $set: {
+        "comments.$.recomments": newRecomment
+      }
+    },
+    req.body,
+    function (err, newRecomment) {
+      console.log(newRecomment);
+      // res.redirect('/challengeComments/comments/' + req.body.post.commentId + '/' + req.params.id);
+      res.redirect('/challengeComments/');
+    });
+});
+// 대댓글 수정
 
 
 router.get('/:id/edit', isLoggedIn, function (req, res) {

@@ -234,14 +234,40 @@
                                                                     <tr>
                                                                         <%// console.log(recomments) %>
                                                                         <td colspan="4"><pre class="float_left">⤷&nbsp;<%= recomments.body %></pre>
-                                                                            <form class="float_left" method="post"
-                                                                            action="/challengeComments/<%= post._id %>/recomments/<%= recomments._id %>">
-                                                                            <input type="hidden" name="recomments[body]" value="<%= recomments.body %>"/>
+                                                                            <!-- <form class="float_left" method="post"
+                                                                            action="/challengeComments/<%=// post._id %>/recomments/<%=// recomments._id %>">
+                                                                            <input type="hidden" name="recomments[body]" value="<%=// recomments.body %>"/>
                                                                             <input type="hidden" name="recomments[isDelete]" value="true" />
                                                                             <button type="submit" class="w-15 m-1 btn btn-danger btn-sm">
                                                                               x
                                                                             </button>
-                                                                          </form>
+                                                                          </form> -->
+
+                                                                          <div class="col-md-4 d-grid gap-2 d-md-block" style="width: max-content;">
+                                                                            <!-- <form class="float_left" action="/challengeComments/<%=// post._id %>/recommentEdit/<%=//recomments._id%>" method="post">
+                                                                                    ⤷&nbsp;
+                                                                                    <textarea class="cvRequired" style="min-width: 600px;" name="recomments[body]" cvRqErrMsg="Body is required." cvRqErrTo="#cvErrBody" <%=recomments.body%>></textarea>
+                                                                                    <input type="hidden" name="recomments[_id]" value="<%=// recomments._id %>"/>
+                                                                                    <input type="hidden" name="recomments[isDelete]" value="<%=// recomments.isDelete %>"/>
+                                                                                    <input type="hidden" name="recomments[nameAdmin]" value="<%=// recomments.nameAdmin %>"/>
+                                                                                    <input type="hidden" name="recomments[email]" value="<%=// recomments.email %>"/>
+                                                                                    <input type="hidden" name="recomments[createdAt]" value="<%=// recomments.createdAt %>"/>
+                                                                                <button type="submit" class="btn btn-primary btn-sm" style="margin-bottom: 22px;">
+                                                                                    댓글 수정
+                                                                                </button>
+                                                                            </form> -->
+                                                                            <form class="float_left" method="post"
+                                                                                action="/challengeComments/<%= post._id %>/recomments/<%= recomments._id %>">
+                                                                                <input type="hidden" name="recomments[body]" value="<%= recomments.body %>"/>
+                                                                                <input type="hidden" name="recomments[isDelete]" value="true" />
+                                                                                <button type="submit" class="btn btn-danger btn-sm" style="margin-top: 22px;">
+                                                                                    댓글 삭제
+                                                                                </button>
+                                                                            </form>
+                                                                        </div>
+
+
+
                                                                         </td>
                                                                         <td class="text-center"><%=// post.getFormattedDate(recomments.createdAt) %>
                                                                             <% var realTime = recomments.createdAt %>
