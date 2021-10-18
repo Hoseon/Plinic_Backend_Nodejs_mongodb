@@ -2819,6 +2819,27 @@ exports.alarmTypeUpdate2 = (req, res) => {
     })
 }
 
+// 마케팅 알람 수신 시
+exports.alarmCreate = (req, res) => {
+  var newBody = Alarm(req.body);
+  newBody.createdAt = new Date();
+  newBody.save((err, result) => {
+    //에러냐
+    if (err) {
+      return res.status(400).json({
+        "msg": "실패"
+      });
+    }
+    //성공이냐
+    if (!err) {
+      return res.status(200).json({
+        'msg': '등록 되었습니다.'
+      });
+    }
+
+  });
+};
+
 // 알람 데이터 출력
 exports.getUserAlarms = (req, res) => {
   if (!req.params.writerEmail) {

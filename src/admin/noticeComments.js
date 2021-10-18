@@ -244,8 +244,6 @@ router.get("/:id", function (req, res) {
       // post.views++;
       // post.save();
 
-      console.log(post);
-
       //이미지 가져 오기 
       //res.setHeader('Content-Type', 'image/jpeg');
       var url = 'https://plinic.s3.ap-northeast-2.amazonaws.com/' + post.filename;
@@ -435,15 +433,56 @@ router.delete('/:postId/comments/:commentId', function(req, res) {
     });
 }); //댓글 삭제
 
-router.delete('/:commentId/recomments/:recommentId', function(req, res) {
+// router.delete('/:postId/:commentId/recomments/:recommentId', function(req, res) {
+//   Notice.findOneAndUpdate({
+//     _id: req.params.postId,
+//   }, 
+//   {
+//     // comments: {
+//     //   _id: req.params.commentId,
+//     // },
+//     comments: {
+//       // _id: req.params.commentId,
+//       // recomments: {
+//       $pull: {
+//             // _id: req.params.recommentId //comment 안에 recomment의 id를 가져오는 중
+//             "comments.$.recomments" : {
+//               _id: req.params.recommentId
+//             }
+//         }
+//       // }
+//     }
+//   },
+//   function(err, post) {
+//     if(err) return res.json({
+//       success: false,
+//       message: err
+//     });
+//     // res.redirect('/noticeComments/' + req.params.commentId + "?" +
+//     //   req._parsedUrl.query.replace(/_method=(.*?)(&|$)/ig, ""));
+//     res.redirect('/noticeComments/');
+//   });
+// }); //대댓글 삭제   >>> recomment 삭제되는 되는데 comment글 까지 같이 지워짐
+
+
+router.delete('/:postId/:commentId/recomments/:recommentId', function(req, res) {
   Notice.findOneAndUpdate({
-    _id: req.params.commentId,
-  }, {
-    $pull: {
-      recomments: {
-        _id: req.params.recommentId
-        // 'recomments._id' : req.params.recommentId
-      }
+    _id: req.params.postId,
+  }, 
+  {
+    // comments: {
+    //   _id: req.params.commentId,
+    // },
+    comments: {
+      // _id: req.params.commentId,
+      // recomments: {
+      $pull: {
+            _id: req.params.recommentId //comment 안에 recomment의 id를 가져오는 중
+            // "comments.$.recomments" : {
+            //   _id: req.params.recommentId
+            // }
+        }
+      // }
     }
   },
   function(err, post) {
@@ -451,10 +490,13 @@ router.delete('/:commentId/recomments/:recommentId', function(req, res) {
       success: false,
       message: err
     });
-    res.redirect('/noticeComments/' + req.params.commentId + "?" +
-      req._parsedUrl.query.replace(/_method=(.*?)(&|$)/ig, ""));
+    // res.redirect('/noticeComments/' + req.params.commentId + "?" +
+    //   req._parsedUrl.query.replace(/_method=(.*?)(&|$)/ig, ""));
+    res.redirect('/noticeComments/');
   });
-}); //대댓글 삭제
+}); //대댓글 삭제 >> 마찬가지
+
+
 
 router.get('/:id/edit', isLoggedIn, function (req, res) {
   Notice.findById(req.params.id, function (err, post) {

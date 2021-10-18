@@ -150,6 +150,7 @@ routes.get('/getAlarmTime/:writerEmail', userController.getAlarmTime);//마이 �
 
 routes.get('/alarmTypeUpdate/:_id', userController.alarmTypeUpdate);//마이 페이지 알람 클릭시 alarmCondition: false
 routes.get('/alarmTypeUpdate2/:id', userController.alarmTypeUpdate2);//앱 밖에서 알람 터치시 alarmCondition: false
+routes.get('/alarmCreate/:id', userController.alarmCreate);//알람 mode: marketing 일시 alarm 테이블 내용 저장
 
 routes.get('/delAlarm/:writerEmail/:_id', userController.delAlarm);//알람 전체 삭제
 routes.get('/delAlarm2/:writerEmail/:_id', userController.delAlarm);//알람 선택 삭제
