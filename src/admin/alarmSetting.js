@@ -224,6 +224,64 @@ router.get('/marketing', function(req, res) {
 
 
 
+// router.post('/fcm', function (req, res) {
+
+//   //사용자의 Email을 User Collection에서 찾아서 PushToken키를 가져온다.
+//   var pushtoken = '';
+//     User.findOne({
+//       email : "sorcerer10@naver.com"
+//     },function(err, User) {
+//       if(User) {
+//         var message = { //this may vary according to the message type (single recipient, multicast, topic, et cetera)
+//           to: "cG9vF2Rav_A:APA91bG043qddYITwIhjsglU41SRU0oBiP1teXgDsVUuBcxteEOlrAYf3JIb5sTl5axUnCZ6vsV1pRQi2pxf3PBGoKHeunGmtL5JYv8SaR_b4deeJwbb71M76ghfHazUuf9y92l5TCYD",
+
+//           notification: {
+//             title: "111", 
+//             body: "2222",
+//             sound: "default",
+//             click_action: "FCM_PLUGIN_ACTIVITY",
+//           },
+
+//           data: { //you can send only notification or only data(or include both)
+//             mode: "marketing",
+//             // id: req.params.id
+//           }
+//         };
+
+//         fcm.send(message, function(err, response) {
+//           if (err) {
+//             console.log("챌린지 보상 푸시 전송 실패 " + req.body.email);
+//           } else {
+//             console.log("Successfully sent with response: ", response);
+//           }
+//         });
+//       }
+//     });
+
+//     //알람 테이블에 해당 내용 저장
+//     Alarm.create({
+//       writerEmail: "sorcerer10@naver.com",
+//       email: "sorcerer10@naver.com",
+//       // skinId: req.params.id,
+//       alarmCondition: true,
+//       mange: true,
+//       alertType: "마케팅알림",
+//       alarmName: "111", //알림함에서는 이게 보임
+//       alarmDesc: "2222",
+      
+//     }, function(err, counter) {
+//       if (err) return response.json({
+//         success: false,
+//         message: err
+//       });
+//       res.redirect('/alarmSetting/marketing');
+//     });
+
+//   });
+
+
+
+
 router.post('/:id/fcm', function (req, res) {
 
   //사용자의 Email을 User Collection에서 찾아서 PushToken키를 가져온다.
@@ -248,6 +306,7 @@ router.post('/:id/fcm', function (req, res) {
             id: req.params.id
           }
         };
+        console.log(message.data.mode);
 
         fcm.send(message, function(err, response) {
           if (err) {

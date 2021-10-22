@@ -256,14 +256,23 @@
                                                                                     댓글 수정
                                                                                 </button>
                                                                             </form> -->
-                                                                            <form class="float_left" method="post"
+                                                                            <!-- <form class="float_left" method="post"
                                                                                 action="/challengeComments/<%= post._id %>/recomments/<%= recomments._id %>">
                                                                                 <input type="hidden" name="recomments[body]" value="<%= recomments.body %>"/>
                                                                                 <input type="hidden" name="recomments[isDelete]" value="true" />
                                                                                 <button type="submit" class="btn btn-danger btn-sm" style="margin-top: 22px;">
                                                                                     댓글 삭제
                                                                                 </button>
+                                                                            </form> -->
+
+                                                                            <form class="float_right" method="post"
+                                                                                action="/challengeComments/<%= post._id %>/<%= post.comments._id %>/recomments/<%= recomments._id %>?_method=delete&<%= urlQuery %>">
+                                                                                <button type="button" class="w-15 m-1 btn btn-danger btn-sm"
+                                                                                    onclick="confirm('답글을 삭제하시겠습니까?')?this.parentElement.submit():null;">
+                                                                                    x
+                                                                                </button>
                                                                             </form>
+
                                                                         </div>
 
 

@@ -45,7 +45,9 @@
                 </div>
                 <br>
                 <div class="col-md-4 d-grid gap-2 d-md-block">
-                  <form action="/faqComments/del/<%= post._id %>?_method=delete" method="post">
+                  <button class="w-15 m-1 btn btn-success btn-sm float_left"
+                      onclick="location.href='/faqComments/<%=post._id%>/edit'">수정</button>
+                  <form action="/faqComments/<%= post._id %>?_method=delete" method="post">
                     <button type="submit" class="w-15 m-1 btn btn-danger btn-sm float_left"
                       onclick="confirm('정말 삭제하시겠습니까?')?this.parentElement.submit():null;">삭제</button>
                   </form>
@@ -55,7 +57,7 @@
 
                 <table class="table-bordered table table-striped table-hover">
                   <tr>
-                    <th class="text-center">제목</th>
+                    <th class="text-center">카테고리 + 제목</th>
                     <td class="text-left"><%= post.category %>&nbsp;<%= post.title %></td>
                     <th class="text-center">조회수</th>
                     <td class="text-left"><%= post.views %></td>
@@ -73,49 +75,6 @@
                 </table>
                 <div class="body">
                   <pre style="max-width: auto; white-space: normal;"><%= post.body %></pre>
-                </div>
-                <div class="comments">
-                  <h4>댓글<%=// post.comments?post.comments.length:"0"%><%=// console.log(sum) %></h4>
-                  <% if(post.comments) { %>
-                    <% post.comments.forEach(function(comment) { %>
-                      <% if(comment.isDelete === false) { %>
-                        <div class="comment">
-                          <div class="top">
-                            <!-- 댓글 작성자 : <b><%= //comment.author.nickname %></b> -->
-                            <% var realTime = comment.createdAt %>
-                            <% realTime.setHours(realTime.getHours() - 9); %>
-                            (작성일 : <span><%= post.getFormattedDate(comment.createdAt) %> ,
-                            <%= post.getFormattedTime(comment.createdAt) %> )</span>
-                            <form class="float_right" method="post"
-                              action="/faqComments/<%= post._id %>/<%= comment._id %>/commentsDel/">
-                              <input type="hidden" name="comments[isDelete]" value=true />
-                              <input type="hidden" name="comments[body]" value="<%= comment.body %>" />
-                              <button type="button" class="w-15 m-1 btn btn-danger btn-sm"
-                                onclick="confirm('댓글 삭제하시겠습니까?')?this.parentElement.submit():null;">
-                                x
-                              </button>  
-                            </form>
-                          </div>
-                          <div class="body">
-                            <pre><%= comment.body %></pre>
-                          </div>
-                        </div>
-                      <% } %>
-                    <% }) %>
-                  <% } %>
-
-                  <form action="/faqComments/<%= post._id %>/comments?<%= urlQuery %>" method="post">
-                    <!-- <input type="hidden" name="comment[commentId]" value="<%=// post.commentId %>"/> -->
-                    <input type="hidden" name="comment[isDelete]" value=false />
-                    <!-- <input type="hidden" name="comment[nameAdmin]" value="true" />
-                    <input type="hidden" name="comment[email]" value="<%=// user.email %>" /> -->
-                    <textarea class="cvRequired" type="text" name="comment[body]" cvRqErrMsg="comments is empty."
-                      cvRqErrTo="#cvErrTitle"></textarea>
-                    <button type="submit" class="w-15 m-1 btn btn-primary btn-sm">저장</button>
-                    <div id="cvErrTitle" class="message"></div>
-                  </form>
-                  
-
                 </div>
               </div>
             </div>

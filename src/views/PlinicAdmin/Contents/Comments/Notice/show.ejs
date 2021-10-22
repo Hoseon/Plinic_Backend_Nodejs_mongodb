@@ -117,7 +117,7 @@
                                   <form class="float_right" method="post"
                                     action="/noticeComments/<%= post._id %>/comments/<%= comment._id %>?_method=delete&<%= urlQuery %>">
                                     <button type="button" class="w-15 m-1 btn btn-danger btn-sm"
-                                      onclick="confirm('Your comment will be deleted')?this.parentElement.submit():null;">
+                                      onclick="confirm('댓글을 삭제하시겠습니까?')?this.parentElement.submit():null;">
                                       x
                                     </button>  
                                   </form>
@@ -151,7 +151,7 @@
                                             <form class="float_right" method="post"
                                               action="/noticeComments/<%= post._id %>/<%= comment._id %>/recomments/<%= recomments._id %>?_method=delete&<%= urlQuery %>">
                                               <button type="button" class="w-15 m-1 btn btn-danger btn-sm"
-                                                onclick="confirm('Your recomment will be deleted')?this.parentElement.submit():null;">
+                                                onclick="confirm('답글을 삭제하시겠습니까?')?this.parentElement.submit():null;">
                                                 x
                                               </button>
                                             </form>

@@ -64,53 +64,55 @@
                                                         <th class="text-center">관리</th>
                                                     </tr>
                                                 </thead>
-                                                <tbody>
-                                                    <% if(adbanner==null || adbanner.length==0) { %>
-                                                        <tr class="noData">
-                                                            <td colspan="5">There is no data to show :(</td>
-                                                        </tr>
+                                                <% if(adbanner==null || adbanner.length==0) { %>
+                                                    <tr class="noData">
+                                                        <td colspan="5">There is no data to show :(</td>
+                                                    </tr>
+                                                <% } %>
+                                                <% adbanner.forEach(function(post, index){ %>
+                                                    <% if(post.homePopup !== true) { %>
+                                                        <tbody>
+                                                            <tr>
+                                                                <td class="text-center"></td>
+                                                                <td class="text-center"
+                                                                onclick="window.location = '/adBanners/<%= post._id %>?<%= urlQuery %>'">
+                                                                    <%= post.title %>
+                                                                </td>
+                                                                <td class="text-center">
+                                                                    <% var realTime = post.createdAt %>
+                                                                    <% realTime.setHours(realTime.getHours() - 9); %>
+                                                                    <%= post.getFormattedDate(post.createdAt) %>
+                                                                    <%= post.getFormattedTime(post.createdAt) %>
+                                                                </td>
+                                                                <% if(post.updatedAt ==null || post.updatedAt.length==0) { %>
+                                                                    <td class="text-center">
+                                                                        진행중
+                                                                    </td>
+                                                                <% } else { %>
+                                                                    <td class="text-center">
+                                                                        <% var realTime = post.updatedAt %>
+                                                                        <% realTime.setHours(realTime.getHours() - 9); %>
+                                                                        <%= post.getFormattedDate(post.updatedAt) %>
+                                                                        <%= post.getFormattedTime(post.updatedAt) %>
+                                                                    </td>
+                                                                <% } %>
+                                                                <td class="center">
+                                                                    <div class="row justify-content-center">
+                                                                        <div class="col-6 p-0 m-0">
+                                                                            <button class="btn btn-primary" type="button"
+                                                                            onclick="location.href='/adBanners/<%=post._id%>/edit'">수정</button>
+                                                                        </div>
+                                                                        <div class="col-6 p-0 m-0">
+                                                                            <form action="/adBanners/rowdel/<%= post._id %>?_method=delete" method="post">
+                                                                                <button type="submit" class="btn btn-danger">삭제</button>
+                                                                            </form>
+                                                                        </div>
+                                                                    </div>
+                                                                </td>
+                                                            </tr>
+                                                        </tbody>
                                                     <% } %>
-                                                    <% adbanner.forEach(function(post, index){ %>
-                                                        <tr>
-                                                            <td class="text-center"></td>
-                                                            <td class="text-center"
-                                                            onclick="window.location = '/adBanners/<%= post._id %>?<%= urlQuery %>'">
-                                                                <%= post.title %>
-                                                            </td>
-                                                            <td class="text-center">
-                                                                <% var realTime = post.createdAt %>
-                                                                <% realTime.setHours(realTime.getHours() - 9); %>
-                                                                <%= post.getFormattedDate(post.createdAt) %>
-                                                                <%= post.getFormattedTime(post.createdAt) %>
-                                                            </td>
-                                                        <% if(post.updatedAt ==null || post.updatedAt.length==0) { %>
-                                                            <td class="text-center">
-                                                                진행중
-                                                            </td>
-                                                        <% } else { %>
-                                                            <td class="text-center">
-                                                                <% var realTime = post.updatedAt %>
-                                                                <% realTime.setHours(realTime.getHours() - 9); %>
-                                                                <%= post.getFormattedDate(post.updatedAt) %>
-                                                                <%= post.getFormattedTime(post.updatedAt) %>
-                                                            </td>
-                                                        <% } %>
-                                                            <td class="center">
-                                                                <div class="row justify-content-center">
-                                                                    <div class="col-6 p-0 m-0">
-                                                                        <button class="btn btn-primary" type="button"
-                                                                        onclick="location.href='/adBanners/<%=post._id%>/edit'">수정</button>
-                                                                    </div>
-                                                                    <div class="col-6 p-0 m-0">
-                                                                        <form action="/adBanners/rowdel/<%= post._id %>?_method=delete" method="post">
-                                                                            <button type="submit" class="btn btn-danger">삭제</button>
-                                                                        </form>
-                                                                    </div>
-                                                                </div>
-                                                            </td>
-                                                        </tr>
-                                                    <% }) %>
-                                                </tbody>
+                                                <% }) %>
                                             </table>
                                         </div>
                                     </div>

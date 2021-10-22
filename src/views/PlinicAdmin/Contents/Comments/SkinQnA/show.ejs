@@ -113,10 +113,9 @@
                           (작성일 : <span><%= post.getFormattedDate(comment.createdAt) %> ,
                           <%= post.getFormattedTime(comment.createdAt) %> )</span>
                           <form class="float_right" method="post"
-                            action="/skinqnaComments/<%= post._id %>/<%= comment._id %>/commentsDel/">
-                            <input type="hidden" name="comment[isDelete]" value=true />
+                            action="/skinqnaComments/<%= post._id %>/<%= comment._id %>/commentsDel/?_method=delete&<%= urlQuery %>">
                             <button type="button" class="w-15 m-1 btn btn-danger btn-sm"
-                              onclick="confirm('댓글 삭제하시겠습니까?')?this.parentElement.submit():null;">
+                              onclick="confirm('댓글을 삭제하시겠습니까?')?this.parentElement.submit():null;">
                               x
                             </button>  
                           </form>
@@ -145,12 +144,9 @@
                                     (작성일 : <span><%= post.getFormattedDate(recomments.createdAt) %> , 
                                     <%= post.getFormattedTime(recomments.createdAt) %> )</span>
                                     <form class="float_right" method="post"
-                                          action="/skinqnaComments/<%= post._id %>/recomments/<%= recomments._id %>">
-                                          <input type="hidden" name="recomments[email]" value="<%= user.email %>"/>
-                                          <input type="hidden" name="recomments[body]" value="<%= recomments.body %>"/>
-                                          <!-- <input type="hidden" name="recomments[recommentId]" value="<%=//recomments._id%>" /> -->
-                                          <input type="hidden" name="recomments[isDelete]" value="true" />
-                                      <button type="submit" class="w-15 m-1 btn btn-danger btn-sm">
+                                          action="/skinqnaComments/<%= post._id %>/<%= comment._id %>/recomments/<%= recomments._id %>?_method=delete&<%= urlQuery %>">
+                                      <button type="submit" class="w-15 m-1 btn btn-danger btn-sm"
+                                      onclick="confirm('답글을 삭제하시겠습니까?')?this.parentElement.submit():null;">
                                         x
                                       </button>
                                     </form>
