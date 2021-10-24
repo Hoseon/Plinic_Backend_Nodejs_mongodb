@@ -44,53 +44,81 @@
                             <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne"
                                 data-bs-parent="#accordionExample">
                                 <div class="accordion-body">
-
-                                    <div class="admin_top_info">
-                                        0 항목, 1/1 페이지
-                                    </div>
-                                    <div class="admin_search_container">
-                                        <input type="hidden" name="table" value="notice">
-                                        <input type="hidden" name="mode" value="">
-                                        <input type="hidden" name="pg" value="">
-                                        <select name="opr">
-                                            <option value="vsubject">제목</option>
-                                            <option value="vname">작성자</option>
-                                            <option value="vcontent">내용</option>
-                                        </select>
-                                        <input type="text" name="keyword" size="15" value="">
-                                        <input type="submit" value="검색" class="btn btn-primary">
-
-                                    </div>
+                                    <table class="table-bordered table table-striped table-hover">
+                                        <form class="checkValidation" action="/noticeComments/" id="search">
+                                            <tr>
+                                                <th class="text-center" style="padding-top: 15px;">검색 조건</th>
+                                                <td colspan="3">
+                                                    <div class="row g-4 align-self-center">
+                                                        <div class="col-2">
+                                                            <select class="form-select" aria-label="Default select example" name="searchType" <%= search.searchType=="author!"?"disabled":"" %>>
+                                                                <% var select %>
+                                                                <option value="title"
+                                                                <%= search.searchType=="title"?select="selected":"" %>>제목</option>
+                                                                <%if(search.searchType=="author!"){%>
+                                                                <option value="author!"
+                                                                    <%= search.searchType=="author!"?select="selected":"" %>>Author</option>
+                                                                <%} else {%>
+                                                                <option value="author"
+                                                                    <%= search.searchType=="author"?select="selected":"" %>>Author</option>
+                                                                <%}%>
+                                                            </select>
+                                                        </div>
+                                                        <div class="col-5">
+                                                            <input class="cvMinLength" cvMinLength="2"
+                                                            cvMinLenErrTo="#searchError" style="float: left; width: 300px; height: 28px;"
+                                                            cvMinLenErrMsg="It should be at least 2 characters"
+                                                            type="text" name="searchText" value="<%= select?search.searchText:"" %>"
+                                                            <%= search.searchType=="author!"?"disabled":"" %>>
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                                <td rowspan="2">
+                                                    <div class="row justify-content-center">
+                                                        <div class="col-6 p-0 m-0">
+                                                            <button type="submit" id="btnSearch"  class="btn btn-info" <%= search.searchType=="author!"?"disabled":"" %>>검색</button>
+                                                        </div>
+                                                        <%if(search.searchType){%>
+                                                        <div class="col-6 p-0 m-0">
+                                                            <button type="button" class="btn btn-secondary" onclick="window.location = '/noticeComments?page=1'">취소</button>
+                                                        </div>
+                                                        <%}%>
+                                                        <div class="message" id="searchError"></div>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        </form>
+                                    </table>
                                     <div class="panel-body" style="padding-top:0px;padding-bottom:15px;">
                                         <div class="table-responsive dataTables_wrapper form-inline">
                                             <table
                                                 class="table table-bordered  table-condensed table-hover  text-center">
                                                 <thead>
                                                     <tr>
+                                                        <th class="text-center">✓</th>
                                                         <th class="text-center">No</th>
                                                         <th class="text-center" width="700">제목</th>
-                                                        <th class="text-center" width="300">작성자</th>
+                                                        <!-- <th class="text-center" width="300">작성자</th> -->
                                                         <th class="text-center">작성일</th>
                                                         <th class="text-center">첨부</th>
-                                                        <th class="text-center">✓</th>
                                                     </tr>
                                                 </thead>
                                                 <tbody>
                                                 <%if(post != null && post != undefined) {%>
                                                     <% post.forEach(function(post2, index){ %>
                                                             <tr>
-                                                                <td class="align-middle"><%=post2.numId%></td>
-                                                                <td class="align-middle text-center" onclick="window.location = '/noticeComments/<%= post2._id %>?<%= urlQuery %>'"><u><%= post2.title %></u></td>
-                                                                <td class="align-middle"><%=//post2.author.nickname%><%= post2.email %></td>
-                                                                <% var realTime = post2.createdAt %>
-                                                                <% realTime.setHours(realTime.getHours() - 9); %>
-                                                                <td class="align-middle"><%=post2.getFormattedDate(post2.created)%></td>
-                                                                <td class="align-middle"><img style="max-width: 120px;" src="https://plinic.s3.ap-northeast-2.amazonaws.com/<%= post2.filename %>" class="img-thumbnail" alt="..."></td>
-                                                                <td class="align-middle">
+                                                                <td class="align-middle text-center">
                                                                     <div>
                                                                         <input type="checkbox" onclick="selectCheckRow(this)" name="del_unit[]" value="<%= post2._id %>">
                                                                     </div>
                                                                 </td>
+                                                                <td class="align-middle text-center"><%=post2.numId%></td>
+                                                                <td class="align-middle text-center" onclick="window.location = '/noticeComments/<%= post2._id %>?<%= urlQuery %>'"><u><%= post2.title %></u></td>
+                                                                <!-- <td class="align-middle"><%=//post2.author.nickname%><%=// post2.email %></td> -->
+                                                                <% var realTime = post2.createdAt %>
+                                                                <% realTime.setHours(realTime.getHours() - 9); %>
+                                                                <td class="align-middle"><%=post2.getFormattedDate(post2.created)%></td>
+                                                                <td class="align-middle"><img style="max-width: 120px;" src="https://plinic.s3.ap-northeast-2.amazonaws.com/<%= post2.filename %>" class="img-thumbnail" alt="..."></td>
                                                             </tr>
                                                     <%})%>
                                                 <%} else {%>

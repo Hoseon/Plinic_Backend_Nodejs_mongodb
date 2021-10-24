@@ -317,6 +317,51 @@ router.post('/:commentId/:id/recomments/', function(req, res) {
   });
 }); // 대댓글 작성
 
+
+router.delete('/:postId/:commentId/commentsDel', function(req, res) {
+  SkinQna.findOneAndUpdate({
+      _id: req.params.postId
+    }, {
+      $pull: {
+        comments: {
+          _id: req.params.commentId
+        }
+      }
+    },
+    function(err, post) {
+      if (err) return res.json({
+        success: false,
+        message: err
+      });
+      res.redirect('/skinqnaComments/' + req.params.postId + "?" +
+        req._parsedUrl.query.replace(/_method=(.*?)(&|$)/ig, ""));
+    });
+}); //댓글 삭제
+
+
+router.delete('/:postId/:commentId/recomments/:recommentId', function(req, res) {
+  SkinQna.findOneAndUpdate({
+    _id: req.params.postId, // 글 아이디
+    "comments._id": req.params.commentId, // 댓글 아이디
+  }, 
+  {
+    $pull: {
+      "comments.$.recomments" : {
+        _id: req.params.recommentId // 대댓글 아이디
+      }
+    }
+  },
+  function(err, post) {
+    if(err) return res.json({
+      success: false,
+      message: err
+    });
+    res.redirect('/skinqnaComments/' + req.params.postId + "?" +
+      req._parsedUrl.query.replace(/_method=(.*?)(&|$)/ig, ""));
+  });
+}); //대댓글 삭제 20211018(성공)
+
+
 router.post('/:id/recomments/:recommentId', function (req, res) {
   console.log(req.body);
   SkinQna.findOneAndUpdate(
@@ -347,23 +392,7 @@ router.post('/:id/recomments/:recommentId', function (req, res) {
 //   }]);
 // }); //대댓글 isDelete 필드 false일 때만 보여주기
 
-router.post("/test", function (req, res) {
-  SkinQna.find(
-    {
-      // "comments.recomments._id": "60c054ac180b5f136d24a502",
-      "comments.$.recomments": req.body.recomments,
-      'comments.recomments.isDelete': false
-    },
-     function (err, docs) {
-      if (err) {
-        console.log(err);
-      }
-      if (docs) {
-        console.log(docs);
-        res.json(docs);
-      }
-    })
-});
+
 
 
 router.post('/:id/editorUpdate', function (req, res, next) {

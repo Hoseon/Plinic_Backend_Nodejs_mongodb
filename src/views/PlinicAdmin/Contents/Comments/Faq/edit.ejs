@@ -11,9 +11,9 @@
     $(document).ready(function () {
         $(".active").removeClass("active");
         $("#contents").addClass("active");
+        $("#forms-collapse2").addClass('show');
     });
 </script>
-<title>Hello, world!</title>
 
 <body>
 
@@ -40,62 +40,53 @@
                         <div class="col-lg-12">
                             <div class="panel panel-default">
                                 <div class="panel-heading">
-                                    내용보기
+                                    FAQ 수정 내용보기
                                 </div>
                                 <br>
-                                <form action="" method="post" enctype="multipart/form-data">
+                                <form action="/faqComments/<%=post._id%>?_method=put" method="post" enctype="multipart/form-data">
                                     <div class="form-group row">
                                         <label class="col-sm-2 text-center control-label" for="name">제목</label>
                                         <div class="col-sm-10 controls">
-                                            <input name="name" id="name" class="form-control" value=""
-                                                data-validate="data">
+                                            <input name="post[title]" id="name" class="form-control"
+                                                data-validate="data" value="<%= post.title %>" required>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group row">
+                                        <label class="col-sm-2 text-center control-label" for="name">카테고리</label>
+                                        <div class="col-sm-10 controls">
+                                            <select class="form-select" name="post[category]" aria-label="Default select example" required>
+                                                <option value="[계정]" <% if(post.category === '[계정]') {%> selected <% } %> > [계정]</option>
+                                                <option value="[챌린지]" <% if(post.category === '[챌린지]') {%> selected <% } %> > [챌린지]</option>
+                                                <option value="[포인트]" <% if(post.category === '[포인트]') {%> selected <% } %> > [포인트]</option>
+                                                <option value="[플리닉]" <% if(post.category === '[플리닉]') {%> selected <% } %> > [플리닉]</option>
+                                                <option value="[이벤트]" <% if(post.category === '[이벤트]') {%> selected <% } %> > [이벤트]</option>
+                                                <option value="[상품]" <% if(post.category === '[상품]') {%> selected <% } %> > [상품]</option>
+                                            </select>
                                         </div>
                                     </div>
 
                                     <div class="form-group row">
                                         <label class="col-sm-2 text-center control-label" for="name">이름</label>
-                                        <div class="col-sm-4 controls">
-                                            <input name="name" id="name" class="form-control" value=""
-                                                data-validate="data">
-                                        </div>
-                                        <label class="col-sm-2 text-center control-label" for="email">이메일</label>
-                                        <div class="col-sm-4 controls">
-                                            <input name="email" id="email" class="form-control" value=""
-                                                data-validate="data">
+                                        <div class="col-sm-10 controls">
+                                            <input disabled type="text" value="<%= user.nickname %>">
                                         </div>
                                     </div>
+
+                                    
 
                                     <div class="form-group row">
                                         <label class="col-sm-2 text-center control-label" for="name">본문</label>
                                         <div class="col-sm-10 controls">
-                                            <textarea class="form-control" id="floatingTextarea2"
-                                                style="width: 1092px; height: 200px;"></textarea>
-                                        </div>
-                                    </div>
-
-                                    <div class="form-group row">
-                                        <label class="col-sm-2 text-center control-label" for="name">첨부파일</label>
-                                        <div class="col-sm-4 controls">
-                                            <div class="row align-items-center w-75 mb-3">
-                                                <div class="col-md-4">
-                                                    <div class="imgUp">
-                                                        <div class="imagePreview"></div>
-                                                        <label class="btn btn-primary">
-                                                            Upload
-                                                            <input name="homeimage" type="file"
-                                                                class="uploadFile img form-control" value="Upload Photo"
-                                                                style="width: 0px;height: 0px;overflow: hidden;"
-                                                                required accept=".jpg, .jpeg, .png">
-                                                        </label>
-                                                    </div>
-                                                </div>
-                                            </div>
+                                            <textarea class="form-control" id="floatingTextarea2" name="post[body]"
+                                                style="width: 1065px; height: 200px;" required><%= post.body %></textarea>
                                         </div>
                                     </div>
 
                                     <div class="d-grid gap-2 d-md-flex justify-content-md-end">
                                         <button type="submit" class="w-15 m-1 btn btn-dark btn-sm">저장하기</button>
-                                        <button type="reset" class="w-15 m-1 btn btn-danger btn-sm">취소</button>
+                                        <button type="reset" class="w-15 m-1 btn btn-danger btn-sm"
+                                        onclick="location.href='/faqComments/'">취소</button>
                                     </div>
                                 </form>
                             </div>

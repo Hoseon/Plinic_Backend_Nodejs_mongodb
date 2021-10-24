@@ -365,18 +365,18 @@ router.get("/comments/:id/:commentId", function (req, res) {
     { $unwind: "$comments" },
     { $match: { "comments._id": mongoose.Types.ObjectId(req.params.commentId) } },
     { "$project": {
-        _id: "$comments._id",
+        _id: "$comments._id", // 댓글 아이디
         title: "$comments.title",
         body: "$comments.body",
         name:"$comments.name",
         comment: "$comments.comment",
         updatedAt: "$comments.updatedAt",
-        commentId: req.params.id,
+        commentId: req.params.id, // 글 아이디
         rebody: "$comments.recomments.body",
         reDelete: "$comments.recomments.isDelete",
         reAdmin: "$comments.recomments.nameAdmin",
         reEmail: "$comments.recomments.email",
-        recommentId: "$comments.recomments._id",
+        recommentId: "$comments.recomments._id", // 대댓글 아이디
         reCreatedAt: "$comments.recomments.createdAt"
       }
     },
@@ -438,24 +438,29 @@ router.post('/recomments/:id/', function (req, res) {
 }); //create a recomment
 
 
-router.post('/:id/recomments/:recommentId', function (req, res) {
-  console.log(req.body);
-  Carezone.findOneAndUpdate(
-    {
-      // _id: '60b6fa0c0a2b3bdacf8227f9',
-      "comments.recomments._id": req.params.recommentId
-    },
-    {
-      $set: {
-        "comments.$.recomments": req.body.recomments
+router.delete('/:postId/:commentId/recomments/:recommentId', function(req, res) {
+  Carezone.findOneAndUpdate({
+    _id: req.params.postId,
+    "comments._id": req.params.commentId,
+  }, 
+  {
+    $pull: {
+      "comments.$.recomments" : {
+        _id: req.params.recommentId
       }
-    },
-    req.body,
-    function (err, recomments) {
-      console.log(recomments);
-      res.redirect('/challengeComments/');
+    }
+  },
+  function(err, post) {
+    if(err) return res.json({
+      success: false,
+      message: err
     });
-}); //대댓글 삭제
+    // res.redirect('/challengeComments/' + req.params.postId + "?" +
+    //   req._parsedUrl.query.replace(/_method=(.*?)(&|$)/ig, ""));
+    res.redirect('/challengeComments/');
+  });
+}); //대댓글 삭제 20211018(성공)
+
 
 router.post('/:id/recommentEdit/:recommentId', function (req, res) {
   console.log(req.body.post);
