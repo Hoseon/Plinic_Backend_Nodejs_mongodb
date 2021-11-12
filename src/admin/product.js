@@ -62,6 +62,7 @@ router.get('/', function (req, res) {
   var page = Math.max(1, req.query.page) > 1 ? parseInt(req.query.page) : 1;
   var limit = Math.max(1, req.query.limit) > 1 ? parseInt(req.query.limit) : 7;
   var search = createSearch(req.query);
+  var testSearch = createSearchTest(req.query);
   async.waterfall([
     function (callback) {
     if (!search.findUser) return callback(null);
@@ -83,7 +84,8 @@ router.get('/', function (req, res) {
       callback(null);
     });
   }, function (callback) {
-    if (search.findUser && !search.findPost.$or) return callback(null, null, 0);
+    if (search.findUser && !search.findPost.$or
+      || testSearch.findUser && testSearch.dayCreated[0].createdAt) return callback(null, null, 0);
     Product.count(search.findPost, function (err, count) {
       if (err) callback(err);
       skip = (page - 1) * limit;
@@ -91,8 +93,20 @@ router.get('/', function (req, res) {
       callback(null, skip, maxPage);
     });
   }, function (skip, maxPage, callback) {
-    if (search.findUser && !search.findPost.$or)
+    if (search.findUser && !search.findPost.$or
+      || testSearch.findUser && testSearch.dayCreated[0].createdAt)
      return callback(null, [], 0);
+    
+     if(testSearch.dayCreated[0]) {
+      Product.find(testSearch.dayCreated[0])
+    .sort({createdAt:-1})
+    .skip(skip)
+    .limit(limit)
+    .exec(function (err, product) {
+      if (err) callback(err);
+      callback(null, product, maxPage);
+    });
+  } else {
     Product.find(search.findPost)
       .sort({ tab: -1 })
       // .sort({ "seq": 1 })
@@ -104,6 +118,7 @@ router.get('/', function (req, res) {
         if (err) callback(err);
         callback(null, product, maxPage);
     });
+  }
   }], function (err, product, maxPage) {
     if (err) return res.json({
       success: false,
@@ -116,6 +131,7 @@ router.get('/', function (req, res) {
       maxPage: maxPage,
       urlQuery: req._parsedUrl.query,
       search: search,
+      testSearch: testSearch,
       counter: vistorCounter,
       postsMessage: req.flash("postsMessage")[0]
     });
@@ -240,6 +256,7 @@ router.post("/", s3upload.fields([{ name: "productimage" }, {name: "jepumImage" 
         newPost.author = req.user._id;
         newPost.numId = counter.totalCount + 1;
         req.body.post.product_num = Date.now();
+        req.body.post.createdAt = Date.now();
         req.body.post.isPlinic = true;
         req.body.post.filename = req.files["productimage"][0].key;
         req.body.post.originaFileName = req.files["productimage"][0].originalname;
@@ -259,12 +276,13 @@ router.post("/", s3upload.fields([{ name: "productimage" }, {name: "jepumImage" 
             });
           counter.totalCount++;
           counter.save();
-          res.render("PlinicAdmin/Product/ProductData/ProductRegister/index", {});
+          res.redirect('/product/');
+          // res.render("PlinicAdmin/Product/ProductData/ProductRegister/index", {});
         });
       }
     );
   }
-); // create
+); // 상품 create
 
 router.get('/ProductRegister/:id/edit', isLoggedIn, function (req, res) {
   Product.findById(req.params.id, function (err, post) {
@@ -723,4 +741,201 @@ function createSearch(queries) {
     findUser: findUser,
     highlight: highlight
   };
+}
+
+function createSearchTest(querie) {
+  findUser = null
+  if (!isEmpty2(querie.termCheck)) {
+    var dayCreated = [];//기간별 조희
+    var findAfter = {
+    };
+
+    if (!isEmpty2(querie.termCheck)) {
+      var created = new Date();
+      if(isEmpty2(!querie.termCheck.all)) {
+        var today = new Date()
+        today = today.setMonth(today.getMonth());;
+        var preToday = created.setMonth(created.getMonth()-12);
+        
+        dayCreated.push({
+          createdAt: {
+            $gte: preToday,
+            $lte: today,
+          }
+        });
+      } else {
+        dayCreated.push();
+      }
+
+      if(isEmpty2(!querie.termCheck.yesterday)) {
+        var today = new Date();
+        today = today.setDate(today.getDate());
+        var preToday = created.setDate(created.getDate()-1);
+        
+        dayCreated.push({
+          createdAt: {
+            $gte: preToday,
+            $lte: today,
+          }
+        });
+      } else {
+        dayCreated.push();
+      }
+  
+      if(isEmpty2(!querie.termCheck.weeklyy)) {
+        var today = new Date();
+        today = today.setDate(today.getDate());
+        var preToday = created.setDate(created.getDate()-7);
+        
+        dayCreated.push({
+          createdAt: {
+            $gte: preToday,
+            $lte: today,
+          }
+        });
+      } else {
+        dayCreated.push();
+      }
+
+      if(isEmpty2(!querie.termCheck.monthy)) {
+        var today = new Date();
+        today = today.setMonth(today.getMonth());
+        var preToday = created.setMonth(created.getMonth()-1);
+
+        dayCreated.push({
+          createdAt: {
+            $gte: preToday,
+            $lte: today,
+          }
+        });
+      } else {
+        dayCreated.push();
+      }
+
+      if(isEmpty2(!querie.termCheck.startDate && !querie.termCheck.endDate)) {
+        // var startDate = startDate.setDate(startDate.getDate());
+        // var endDate = endDate.setDate(endDate.getDate());
+        dayCreated.push({
+          createdAt: {
+            $gte: querie.termCheck.startDate,
+            $lte: querie.termCheck.endDate,
+          }
+        });
+      } else {
+        dayCreated.push();
+      }
+
+      isEmpty2(!querie.termCheck.all) ? findAfter.all = true : findAfter.all = false;
+      isEmpty2(!querie.termCheck.yesterday) ? findAfter.yesterday = true : findAfter.yesterday = false;
+      isEmpty2(!querie.termCheck.weeklyy) ? findAfter.weeklyy = true : findAfter.weeklyy = false;
+      isEmpty2(!querie.termCheck.monthy) ? findAfter.monthy = true : findAfter.monthy = false;
+    }
+
+    return {
+      findUser: findUser,
+      findAfter: findAfter,
+      dayCreated : dayCreated
+    };
+
+  } else {
+
+    var dayCreated = [];
+    var findAfter = {
+      all : false,
+      weeklyy: false,
+      monthy: false,
+      yesterday: false,
+
+    };
+    if (!isEmpty2(querie.termCheck)) {
+      var created = new Date();
+      if(isEmpty2(!querie.termCheck.all)) {
+        var today = new Date();
+        today = today.setMonth(today.getMonth());
+        var preToday = created.setMonth(created.getMonth()-12);
+        
+        dayCreated.push({
+          createdAt: {
+            $gte: preToday,
+            $lte: today,
+          }
+        });
+      } else {
+      }
+
+      if(isEmpty2(!querie.termCheck.yesterday)) {
+        var today = new Date();
+        today = today.setDate(today.getDate());
+        var preToday = created.setDate(created.getDate()-1);
+        
+        dayCreated.push({
+          createdAt: {
+            $gte: preToday,
+            $lte: today,
+          }
+        });
+      } else {
+      }
+  
+      if(isEmpty2(!querie.termCheck.weeklyy)) {
+        var today = new Date();
+        today = today.setDate(today.getDate());
+        var preToday = created.setDate(created.getDate()-7);
+        
+        dayCreated.push({
+          createdAt: {
+            $gte: preToday,
+            $lte: today,
+          }
+        });
+      } else {
+      }
+
+      if(isEmpty2(!querie.termCheck.monthy)) {
+        var today = new Date();
+        today = today.setMonth(today.getMonth());
+        var preToday = created.setMonth(created.getMonth()-1);
+
+        dayCreated.push({
+          createdAt: {
+            $gte: preToday,
+            $lte: today,
+          }
+        });
+      } else {
+      }
+
+      if(isEmpty2(!querie.termCheck.startDate && !querie.termCheck.endDate)) {
+          // var startDate = startDate.setDate(startDate.getDate());
+          // var endDate = endDate.setDate(endDate.getDate());
+        dayCreated.push({
+          createdAt: {
+            $gte: querie.termCheck.startDate,
+            $lte: querie.termCheck.endDate,
+          }
+        });
+      } else {
+      }
+
+      isEmpty2(!querie.termCheck.all) ? findAfter.all = true : findAfter.all = false;
+      isEmpty2(!querie.termCheck.yesterday) ? findAfter.yesterday = true : findAfter.yesterday = false;
+      isEmpty2(!querie.termCheck.weeklyy) ? findAfter.weeklyy = true : findAfter.weeklyy = false;
+      isEmpty2(!querie.termCheck.monthy) ? findAfter.monthy = true : findAfter.monthy = false;
+    }
+
+
+    return {
+      findUser: findUser,
+      findAfter: findAfter,
+      dayCreated: dayCreated
+    };
+  }
+  
+}
+
+function isEmpty2(str) {
+  if(typeof str == "undefined" || str == null || str == "")
+    return true;
+  else
+    return false ;
 }

@@ -187,6 +187,7 @@
                                                 <th class="text-center">연락처</th>
                                                 <th class="text-center">가입일</th>
                                                 <th class="text-center">관리</th>
+                                                <th class="text-center">author nickname</th>
                                             </tr>
                                         </thead>
                                         <% if(users==null || users.length==0) { %>
@@ -226,6 +227,10 @@
                                                                 </form>
                                                             </div>
                                                         </div>
+                                                    </td>
+                                                    <td>
+                                                        <%=// post.author.nickname %>
+                                                        <%= console.log(post.mpoint) %>
                                                     </td>
                                                 </tr>
                                             </tbody>

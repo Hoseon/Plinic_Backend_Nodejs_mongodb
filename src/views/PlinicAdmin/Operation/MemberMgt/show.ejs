@@ -182,7 +182,6 @@
         <div class="col-sm-12">
           <br><br>
         </div>
-
         <div class="col-sm-12">
           <section class="profile-info-tabs" style="margin-bottom: 2px;">
             <ul class="nav nav-tabs">
@@ -190,9 +189,10 @@
                 <a href="#profile" class="btn btn-light" data-toggle="tab">회원 정보</a>
               </li>
               <li>
-                <a onclick="window.location = '/members/orders/<%= post._id %>'" class="btn btn-light" data-toggle="tab">통합 주문내역</a>
+                <a onclick="window.location = '/members/morders/<%= post._id %>'" class="btn btn-light" data-toggle="tab">통합 주문내역</a>
               </li>
               <li>
+                <!-- <a onclick="window.location = '/members/mpoint/<%=// post._id%>/<%=// post.email %>'" class="btn btn-light" data-toggle="tab">포인트 내역</a> -->
                 <a href="#point" class="btn btn-light" data-toggle="tab">포인트 내역</a>
               </li>
               <li>
@@ -235,7 +235,7 @@
                       <% realTime.setHours(realTime.getHours() - 9); %>
                       <td class="text-left" class="text-left"><%= post.getFormattedDate(post.created) %></td>
                       <th class="text-center">최종 방문일</th>
-                      <td class="text-left"></td>
+                      <td class="text-left"><%= post.getFormattedDate(post.updatedAt) %></td>
                     </tr>
                     <% //if(orders) { %>
                       <tr>
@@ -266,27 +266,32 @@
                         <tr>
                           <th class="text-center"><input type="checkbox" name="del_unit[]"></th>
                           <th class="text-center">회원 아이디</th>
-                          <th class="text-center">적립일자 내용</th>
+                          <th class="text-center">적립 일자</th>
                           <th class="text-center">포인트 내용</th>
-                          <th class="text-center">포인트</th>
+                          <th class="text-center">적립 포인트</th>
                           <th class="text-center">현재 포인트</th>
-                          <th class="text-center" width="300">메모</th>
                         </tr>
                       </thead>
                       <tbody>
+                        <%// post.mpoint.point.forEach(function(post2) { %>
                         <tr>
                           <td class="align-middle">
                             <div>
                               <input type="checkbox" name="del_unit[]">
                             </div>
                           </td>
-                          <td class="align-middle text-center">ID@gmail.com</td>
-                          <td class="align-middle text-center">2021-03-31</td>
+                          <td class="align-middle text-center"><%= post.email %></td>
+                          <td class="align-middle text-center">
+                            <%// var realTime = post2.updatedAt %>
+                            <%// realTime.setHours(realTime.getHours() - 9); %>
+                            <%=// post2.getFormattedDate(post2.updatedAt) %>
+                            <%=// post2.updatedAt %>
+                          </td>
                           <td class="align-middle">리뷰 글 등록</td>
-                          <td class="align-middle">500</td>
+                          <td class="align-middle"><%=// post2.point %></td>
                           <td class="align-middle">5,500</td>
-                          <td class="align-middle"></td>
                         </tr>
+                        <%// }) %>
                       </tbody>
                     </table>
                   </div>

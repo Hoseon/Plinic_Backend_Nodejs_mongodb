@@ -98,7 +98,7 @@
                                                         <th class="text-center">✓</th>
                                                         <th class="text-center">No</th>
                                                         <th class="text-center" width="700">제목</th>
-                                                        <!-- <th class="text-center" width="300">작성자</th> -->
+                                                        <th class="text-center" width="300">작성자</th>
                                                         <th class="text-center">작성일</th>
                                                         <th class="text-center">첨부</th>
                                                     </tr>
@@ -114,7 +114,7 @@
                                                                 </td>
                                                                 <td class="align-middle text-center"><%=post2.numId%></td>
                                                                 <td class="align-middle text-center" onclick="window.location = '/noticeComments/<%= post2._id %>?<%= urlQuery %>'"><u><%= post2.title %></u></td>
-                                                                <!-- <td class="align-middle"><%=//post2.author.nickname%><%=// post2.email %></td> -->
+                                                                <td class="align-middle"><%=post2.author.nickname%><%= post2.email %> <%= console.log(post2.author) %></td>
                                                                 <% var realTime = post2.createdAt %>
                                                                 <% realTime.setHours(realTime.getHours() - 9); %>
                                                                 <td class="align-middle"><%=post2.getFormattedDate(post2.created)%></td>

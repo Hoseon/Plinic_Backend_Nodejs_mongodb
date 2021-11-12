@@ -190,7 +190,6 @@ router.post('/statusUpdate/:id', function(req, res) {
 }); // 주문 상태 업데이트
 
 
-
 router.post('/:id/deliverNoUpdate', function(req, res) {
     // console.log(req.body);
     var status = req.body;
