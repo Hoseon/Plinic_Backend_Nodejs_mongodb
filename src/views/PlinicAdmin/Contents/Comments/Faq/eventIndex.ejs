@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <% include ../../../../partials/head %>
+        <title></title>
+        <link href='http://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css' />
+</head>
+<script type="text/javascript" src="/js/jquery-1.10.2.js"></script>
+<script>
+
+    function  selectDelRow(chk) {
+
+        var chk = document.getElementsByName("del_unit[]");
+        var len = chk.length;
+        var checkRow = '';
+        var checkCnt = 0;
+        var checkLast = '';
+        var rowid = '';
+        var cnt = 0;
+
+        for(var i=0; i<len; i++) {
+            if(chk[i].checked == true) {
+                checkCnt++;
+                checkLast = i;
+            }
+        }
+        for(var i=0; i<len; i++) {
+            if(chk[i].checked == true) {
+                checkRow = chk[i].value;
+                if(checkCnt == 1) {
+                    rowid += ""+checkRow+"";
+                } else {
+                    if(i == checkLast) {
+                        rowid += ""+checkRow+"";
+                    } else {
+                        rowid += ""+checkRow+",";
+                    }
+                }
+                cnt++;
+                checkRow = '';
+            }
+        }
+
+        if(confirm('정말 삭제하시겠습니까?')) {
+            var theForm = document.frmSubmit;
+            theForm.method = "post";
+            theForm.target = "_self";
+            theForm.action = "/faqComments/" + rowid + "?_method=delete";
+            theForm.submit();
+        }
+
+    }
+
+    function selectCheckRow(chk) {
+        var obj = document.getElementsByName("del_unit[]");
+        for(var i=0; i < obj.length; i++) {
+            if(obj[i] != chk) {
+                obj[i].checked = false;
+            }
+        }
+    }
+
+
+    $(document).ready(function () {
+        $(".active").removeClass("active");
+        $("#contents").addClass("active");
+
+        // $("#challBtn").bind("click");
+        // $("#challBtn").trigger("click");
+        // $("#challBtn").removeClass("collapsed");
+        // $("#challBtn").attr('aria-expanded', 'true');
+        $("#forms-collapse2").addClass('show');
+
+
+
+
+        $('.btn-number').click(function (e) {
+            e.preventDefault();
+
+            fieldName = $(this).attr('data-field');
+            type = $(this).attr('data-type');
+            var input = $("input[name='" + fieldName + "']");
+            var currentVal = parseInt(input.val());
+            if (!isNaN(currentVal)) {
+                if (type == 'minus') {
+
+                    if (currentVal > input.attr('min')) {
+                        input.val(currentVal - 1).change();
+                    }
+                    if (parseInt(input.val()) == input.attr('min')) {
+                        $(this).attr('disabled', true);
+                    }
+
+                } else if (type == 'plus') {
+
+                    if (currentVal < input.attr('max')) {
+                        input.val(currentVal + 1).change();
+                    }
+                    if (parseInt(input.val()) == input.attr('max')) {
+                        $(this).attr('disabled', true);
+                    }
+
+                }
+            } else {
+                input.val(0);
+            }
+        });
+        $('.input-number').focusin(function () {
+            $(this).data('oldValue', $(this).val());
+        });
+        $('.input-number').change(function () {
+
+            minValue = parseInt($(this).attr('min'));
+            maxValue = parseInt($(this).attr('max'));
+            valueCurrent = parseInt($(this).val());
+
+            name = $(this).attr('name');
+            if (valueCurrent >= minValue) {
+                $(".btn-number[data-type='minus'][data-field='" + name + "']").removeAttr('disabled')
+            } else {
+                alert('Sorry, the minimum value was reached');
+                $(this).val($(this).data('oldValue'));
+            }
+            if (valueCurrent <= maxValue) {
+                $(".btn-number[data-type='plus'][data-field='" + name + "']").removeAttr('disabled')
+            } else {
+                alert('Sorry, the maximum value was reached');
+                $(this).val($(this).data('oldValue'));
+            }
+
+
+        });
+        $(".input-number").keydown(function (e) {
+            // Allow: backspace, delete, tab, escape, enter and .
+            if ($.inArray(e.keyCode, [46, 8, 9, 27, 13, 190]) !== -1 ||
+                // Allow: Ctrl+A
+                (e.keyCode == 65 && e.ctrlKey === true) ||
+                // Allow: home, end, left, right
+                (e.keyCode >= 35 && e.keyCode <= 39)) {
+                // let it happen, don't do anything
+                return;
+            }
+            // Ensure that it is a number and stop the keypress
+            if ((e.shiftKey || (e.keyCode < 48 || e.keyCode > 57)) && (e.keyCode < 96 || e.keyCode > 105)) {
+                e.preventDefault();
+            }
+        });
+
+    });
+</script>
+
+<body>
+
+    <header>
+        <% include ../../../../partials/header %>
+    </header>
+
+
+    <div class="container-fluid">
+        <div class="row">
+            <!-- 2단길이의 첫번째 열 -->
+            <div class="col-md-2">
+                <% include ../../../../partials/side %>
+            </div>
+
+            <!-- 10단길이의 첫번째 열 -->
+            <div class="col-md-10">
+                <div id="page-inner">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <h1 class="page-header">
+                                자주하는 질문(FAQ) 게시판
+                            </h1>
+                        </div>
+                    </div>
+
+                    <div class="accordion" id="accordionExample">
+                        <div class="accordion-item">
+                            <h2 class="accordion-header" id="headingOne">
+                                <button class="accordion-button" type="button" data-bs-toggle="collapse"
+                                    data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                                    목록
+                                </button>
+                            </h2>
+                            <table class="table-bordered table table-striped table-hover">
+                                <form class="checkValidation" action="/faqComments/" id="search">
+                                    <tr>
+                                        <th class="text-center" style="padding-top: 15px;">검색 조건</th>
+                                        <td colspan="3">
+                                            <div class="row g-4 align-self-center">
+                                                <div class="col-2">
+                                                    <select class="form-select" aria-label="Default select example" name="searchType" <%= search.searchType=="author!"?"disabled":"" %>>
+                                                        <% var select %>
+                                                        <option value="title,category"
+                                                        <%= search.searchType=="title,category"?select="selected":"" %>>제목+카테고리</option>
+                                                        <option value="title"
+                                                        <%= search.searchType=="title"?select="selected":"" %>>제목</option>
+                                                        <option value="category"
+                                                        <%= search.searchType=="category"?select="selected":"" %>>카테고리</option>
+                                                        <%if(search.searchType=="author!"){%>
+                                                        <option value="author!"
+                                                            <%= search.searchType=="author!"?select="selected":"" %>>Author</option>
+                                                        <%} else {%>
+                                                        <option value="author"
+                                                            <%= search.searchType=="author"?select="selected":"" %>>Author</option>
+                                                        <%}%>
+                                                    </select>
+                                                </div>
+                                                <div class="col-5">
+                                                    <input class="cvMinLength" cvMinLength="2"
+                                                    cvMinLenErrTo="#searchError" style="float: left; width: 300px; height: 28px;"
+                                                    cvMinLenErrMsg="It should be at least 2 characters"
+                                                    type="text" name="searchText" value="<%= select?search.searchText:"" %>"
+                                                    <%= search.searchType=="author!"?"disabled":"" %>>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td rowspan="2">
+                                            <div class="row justify-content-center">
+                                                <div class="col-6 p-0 m-0">
+                                                    <button type="submit" id="btnSearch"  class="btn btn-info" <%= search.searchType=="author!"?"disabled":"" %>>검색</button>
+                                                </div>
+                                                <%if(search.searchType){%>
+                                                <div class="col-6 p-0 m-0">
+                                                    <button type="button" class="btn btn-secondary" onclick="window.location = '/faqComments?page=1'">취소</button>
+                                                </div>
+                                                <%}%>
+                                                <div class="message" id="searchError"></div>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </form>
+                            </table>
+
+                            <div class="col-sm-12">
+                                <section class="profile-info-tabs" style="margin-bottom: 2px;">
+                                  <ul class="nav nav-tabs">
+                                    <li class="active">
+                                      <a onclick="window.location = '/faqComments/'" class="btn btn-light" data-toggle="tab">전체</a>
+                                    </li>
+                                    <li>
+                                      <a onclick="window.location = '/faqComments/accountIndex'" class="btn btn-light" data-toggle="tab">계정</a>
+                                    </li>
+                                    <li>
+                                      <a onclick="window.location = '/faqComments/challengeIndex'" class="btn btn-light" data-toggle="tab">챌린지</a>
+                                    </li>
+                                    <li>
+                                      <a onclick="window.location = '/faqComments/pointIndex'" class="btn btn-light" data-toggle="tab">포인트</a>
+                                    </li>
+                                    <li>
+                                      <a onclick="window.location = '/faqComments/plinicIndex'" class="btn btn-light" data-toggle="tab">플리닉</a>
+                                    </li>
+                                    <li>
+                                      <a onclick="window.location = '/faqComments/eventIndex'" class="btn btn-info" data-toggle="tab">이벤트</a>
+                                    </li>
+                                    <li>
+                                      <a onclick="window.location = '/faqComments/productIndex'" class="btn btn-light" data-toggle="tab">상품</a>
+                                    </li>
+                                  </ul>
+                                </section>
+                                <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne"
+                                    data-bs-parent="#accordionExample">
+                                    <div class="accordion-body">
+                                        <div class="panel-body" style="padding-top:0px;padding-bottom:15px;">
+                                            <div class="table-responsive dataTables_wrapper form-inline">
+                                                <table class="table table-bordered  table-condensed table-hover  text-center">
+                                                    <thead>
+                                                        <tr>
+                                                            <th class="text-center">✓</th>
+                                                            <th class="text-center">카테고리</th>
+                                                            <th class="text-center">자주하는 질문 제목</th>
+                                                            <th class="text-center">조회수</th>
+                                                            <th class="text-center">작성일</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        <% if(faq==null || faq.length==0) { %>
+                                                            <tr class="noData">
+                                                                <td colspan="5">There is no data to show :(</td>
+                                                            </tr>
+                                                        <% } %>
+                                                          <% faq.forEach(function(post){ %>
+                                                            <% if(post.category == '[이벤트]') { %>
+                                                              <tr>
+                                                                  <td class="text-center">
+                                                                      <div>
+                                                                          <input type="checkbox" onclick="selectCheckRow(this)" name="del_unit[]" value="<%= post._id %>">
+                                                                      </div>
+                                                                  </td>
+                                                                  <td class="text-center"><%= post.category %></td>
+                                                                  <td onclick="window.location = '/faqComments/<%= post._id %>?<%= urlQuery %>'"><%= post.title %></td>
+                                                                  <td><%= post.views %></td>
+                                                                  <% var realTime = post.createdAt %>
+                                                                  <% realTime.setHours(realTime.getHours() - 9); %>
+                                                                  <td><%= post.getFormattedDate(post.createdAt) %></td>
+                                                              </tr>
+                                                            <% } %>
+                                                          <% }) %>
+                                                    </tbody>
+                                                </table>
+                                                <div class="row">
+                                                    <div class="col-md-4 d-grid gap-2 d-md-block">
+                                                        <button class="btn btn-primary float_left" type="button"
+                                                            onclick="location.href='/faqComments/new'">작성</button>
+                                                        <form class="float_left" name="frmSubmit">
+                                                            <button class="btn btn-primary btn btn-danger" type="button" onclick="selectDelRow(this)">삭제</button>
+                                                        </form>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                </div>
+                              </div>
+                            
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+
+</body>
+<script src="/js/custom-scripts.js"></script>
+<script src="/js/jquery-1.10.2.js"></script>
+<script src="/js/bootstrap.min.js"></script>
+
+</html>

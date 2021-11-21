@@ -27,13 +27,13 @@
         <div class="col-sm-12">
           <section class="profile-info-tabs" style="margin-bottom: 2px;">
             <ul class="nav nav-tabs">
-              <%// if(user) {%>
+              <% if(orders) {%>
               <li class="active">
-                <!-- <a onclick="window.location = '/members/<%=// user._id %>?<%=// urlQuery %>'" class="btn btn-light" data-toggle="tab">회원 정보</a> -->
+                <a onclick="window.location = '/members/<%= orders._id %>?<%= urlQuery %>'" class="btn btn-light" data-toggle="tab">회원 정보</a>
               </li>
-              <%// } %>
+              <% } %>
               <li>
-                <a href="#order" class="btn btn-light" data-toggle="tab">통합 주문내역</a>
+                <a href="#order" class="btn btn-info" data-toggle="tab">통합 주문내역</a>
               </li>
               <li>
                 <a href="#point" class="btn btn-light" data-toggle="tab">포인트 내역</a>
@@ -76,8 +76,6 @@
                     </div>
                     <table class="table table-bordered  table-condensed table-hover  text-center">
                       <thead>
-                        <% console.log(orders) %>
-                        <% console.log(user._id) %>
                         <tr>
                           <th rowspan="2" style="padding-bottom: 22px;"><input class="form-check-input" type="checkbox"
                               value="" id="flexCheckDisabled" disabled></th>

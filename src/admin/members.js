@@ -3,6 +3,7 @@ var router = express.Router();
 var mongoose = require("mongoose");
 var User = require("../models/user");
 var Orders = require("../models/Orders");
+var PointLog = require("../models/PointLog");
 var UserCounter = require("../models/UserCounter");
 var async = require("async");
 var User_admin = require("../models/User_admin");
@@ -20,6 +21,7 @@ var fcm = new FCM(serverKey);
 var multerS3 = require("multer-s3");
 const AWS = require("aws-sdk");
 const { search } = require("./product");
+// const PointLog = require("../models/PointLog");
 AWS.config.loadFromPath(__dirname + "/../config/awsconfig.json");
 let s3 = new AWS.S3();
 
@@ -80,14 +82,22 @@ router.get('/', function(req, res) {
   async.waterfall([
     function(callback) {
     if (!search.findUser) return callback(null);
-    User.find(search.findUser, function(err, users) {
+    PointLog.find(search.findUser, function(err, points) {
       if (err) callback(err);
       var or = [];
-      users.forEach(function(users) {
+      points.forEach(function(point) {
         or.push({
-          author: mongoose.Types.ObjectId(users._id)
+          mpoint: mongoose.Types.ObjectId(point._id)
         });
       });
+    // User.find(search.findUser, function(err, users) {
+    //   if (err) callback(err);
+    //   var or = [];
+    //   users.forEach(function(user) {
+    //     or.push({
+    //       mpoint: mongoose.Types.ObjectId(user._id)
+    //     });
+    //   });
       if (search.findPost.$or) {
         search.findPost.$or = search.findPost.$or.concat(or);
       } else if (or.length > 0) {
@@ -116,6 +126,7 @@ router.get('/', function(req, res) {
 
     if(testSearch.dayCreated[0]) {
       User.find(testSearch.dayCreated[0])
+      // .populate("mpoint")
       .populate("author")
       .sort({created : -1})
       .skip(skip)
@@ -126,6 +137,7 @@ router.get('/', function(req, res) {
       });
     } else {
       User.find(search.findPost)
+      // .populate("mpoint")
       .populate("author")
       .sort({created : -1})
       .skip(skip)
@@ -145,7 +157,7 @@ router.get('/', function(req, res) {
     return res.render("PlinicAdmin/Operation/MemberMgt/index", {
       users: user,
       // orders: orders,
-      user: req.user,
+      point: req.point,
       page: page,
       maxPage: maxPage,
       urlQuery: req._parsedUrl.query,
@@ -257,12 +269,111 @@ router.get('/newIndex', function(req, res) {
 });
 
 
+// router.get('/morders/:id', function(req, res) {
+//   var vistorCounter = null;
+//   // var page = Math.max(1, req.query.page) > 1 ? parseInt(req.query.page) : 1;
+//   // var limit = Math.max(1, req.query.limit) > 1 ? parseInt(req.query.limit) : 80;
+//   var search = createSearch2(req.query);
+//   var testSearch = createSearchDate(req.query);
+//   var dateSearch = createSearchDate2(req.query);
+//   async.waterfall([
+//     function(callback) {
+//     if (!search.findUser) return callback(null);
+//     User.find(search.findUser, function(err, users) {
+//       if (err) callback(err);
+//       var or = [];
+//       users.forEach(function(users) {
+//         or.push({
+//           author: mongoose.Types.ObjectId(users._id)
+//         });
+//       });
+//       if (search.findPost.$or) {
+//         search.findPost.$or = search.findPost.$or.concat(or);
+//       } else if (or.length > 0) {
+//         search.findPost = {
+//           $or: or
+//         };
+//       }
+//       callback(null);
+//     });
+//   }, function(callback) {
+//       if (search.findUser && !search.findPost.$or 
+//         || testSearch.findUser && testSearch.dayCreated[0].created
+//         || dateSearch.findUser && dateSearch.dayCreated[0].updatedAt) 
+//       return callback(null, null, 0);
+//       Orders.count(search.findPost || testSearch.dayCreated[0].created || dateSearch.dayCreated[0].updatedAt, function(err, count) {
+//         if (err) callback(err);
+//         // skip = (page - 1) * limit;
+//         // maxPage = Math.ceil(count / limit);
+//         callback(null);
+//       });
+
+//   }, 
+//   function( callback) {
+//     if (search.findUser && !search.findPost.$or 
+//       || testSearch.findUser && testSearch.dayCreated[0].created
+//       || dateSearch.findUser && dateSearch.dayCreated[0].updatedAt) 
+//     return callback(null, [], 0);
+
+//     if(testSearch.dayCreated[0]) {
+//       Orders.find(testSearch.dayCreated[0])
+//       .populate("author")
+//       .sort({created : 1})
+//       // .skip(skip)
+//       // .limit(limit)
+//       .exec(function(err, orders) {
+//         if (err) callback(err);
+//         callback(null, orders);
+//       });
+//     } else if(dateSearch.dayCreated[0]) {
+//       Orders.find(dateSearch.dayCreated[0])
+//       .populate("author")
+//       .sort({updatedAt : 1})
+//       .exec(function(err, orders) {
+//         if (err) callback(err);
+//         callback(null, orders);
+//       });
+//     } else {
+//       Orders.find(search.findPost)
+//       .populate("author")
+//       .sort({created : -1})
+//       // .skip(skip)
+//       // .limit(limit)
+//       .exec(function(err, orders) {
+//         if (err) callback(err);
+//         callback(null, orders);
+//       });
+//     }
+//   },
+//   ], 
+//   function(err, orders) {
+//     if (err) return res.json({
+//       success: false,
+//       message: err
+//     });
+//     return res.render("PlinicAdmin/Operation/MemberMgt/oshow", {
+//       // users: user,
+//       orders: orders,
+//       user: req.user,
+//       // page: page,
+//       // maxPage: maxPage,
+//       urlQuery: req._parsedUrl.query,
+//       search: search,
+//       testSearch: testSearch,
+//       dateSearch: dateSearch,
+//       counter: vistorCounter,
+//       postsMessage: req.flash("postsMessage")[0]
+//     });
+//   });
+// });
+// 회원 주문내역 oshow 페이지
 
 router.get("/:id", function (req, res) {
   
   // if(User.findById(req.params.id) && Orders.findById(req.params.id)) {
     User.findById(req.params.id)
-    .populate(['author', 'orders'])
+    // .populate("mpoint")
+    .populate("author")
     .exec(function (err, post) {
       if (err) return res.json({
         success: false,
@@ -281,59 +392,24 @@ router.get("/:id", function (req, res) {
     });
 }); // 회원 정보 show
 
-router.get("/test", function (req, res) {
-  
-    // User.findById(req.params.id)
-    Orders.findAll({
-      where: {user: req.user}, //조건
-      include: [{ //포험
-        model: User, //어느 부분인지
-        attributes : ['_id'] //속성
-      }],
-    })
-    .populate(['author', 'orders'])
-    .exec(function (err, post) {
-      if (err) return res.json({
-        success: false,
-        message: err
-      });
-      var url = 'https://plinic.s3.ap-northeast-2.amazonaws.com/' + post.filename;
-      var prod_url = 'https://plinic.s3.ap-northeast-2.amazonaws.com/' + post.prodfilename;
-      res.render("PlinicAdmin/Operation/MemberMgt/oshow", {
-        post: post,
-        url: url,
-        prod_url: prod_url,
-        urlQuery: req._parsedUrl.query,
-        user: req.user,
-        search: createSearch(req.query)
-      });
-    });
-}); // 회원 정보 show
 
-// router.get("/orders/test", function (req, res) {
-//   // SkinQna.find(
-//   //   {
-//   //     // "comments.recomments._id": "60c054ac180b5f136d24a502",
-//   //     "comments.$.recomments": req.body.recomments,
-//   //     'comments.recomments.isDelete': false
-//   //   },
-//   User.findAll({
-//     // where: {user: req.user}, //조건
-//     // include: [{ //포험
-//     //   model: Orders, //어느 부분인지
-//     //   attributes : ['_id'] //속성
-//     // }],
-//   },
-//      function (err, docs) {
-//       if (err) {
-//         console.log(err);
-//       }
-//       if (docs) {
-//         console.log(docs);
-//         res.json(docs);
-//       }
-//     })
-// });
+// router.get("/mpoint/:id/:email", function (req, res) {
+  
+//     PointLog.findById(req.params.id)
+//     .populate("mpoint")
+//     .exec(function (err, post) {
+//       if (err) return res.json({
+//         success: false,
+//         message: err
+//       });
+//       res.render("PlinicAdmin/Operation/MemberMgt/pshow", {
+//         post: post,
+//         urlQuery: req._parsedUrl.query,
+//         user: req.user,
+//         search: createSearch(req.query)
+//       });
+//     });
+// }); // pshow
 
 
 router.delete('/rowdel/:id', isLoggedIn, function(req, res, next) {
@@ -1108,3 +1184,12 @@ function isEmpty2(str) {
   else
     return false ;
 }
+
+
+function get2digits(num) {
+  return ("0" + num).slice(-2);
+}
+
+function getFormattedDate(date) {
+  return date.getFullYear() + "-" + get2digits(date.getMonth() + 1) + "-" + get2digits(date.getDate());
+};

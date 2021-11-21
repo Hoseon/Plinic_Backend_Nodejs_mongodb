@@ -131,7 +131,14 @@ router.get('/', function (req, res) {
     });
   }, function (skip, maxPage, callback) {
     if (search.findUser && !search.findPost.$or) return callback(null, [], 0);
-    Notice.find(search.findPost).sort({ "seq": 1 }).populate("author").sort({ "createdAt": -1 }).skip(skip).limit(limit).exec(function (err, notice) {
+    Notice.find(search.findPost)
+    .sort({ "seq": 1 })
+    .populate("author")
+    // .populate("mpoint")
+    .sort({ "createdAt": -1 })
+    .skip(skip)
+    .limit(limit)
+    .exec(function (err, notice) {
       if (err) callback(err);
       callback(null, notice, maxPage);
     });

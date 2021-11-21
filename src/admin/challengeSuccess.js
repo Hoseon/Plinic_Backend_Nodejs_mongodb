@@ -89,8 +89,9 @@ const sftpconfig = {
 router.get('/Challenge/newIndex', function (req, res) {
   var vistorCounter = null;
   var page = Math.max(1, req.query.page) > 1 ? parseInt(req.query.page) : 1;
-  var limit = Math.max(1, req.query.limit) > 1 ? parseInt(req.query.limit) : 10;
+  var limit = Math.max(1, req.query.limit) > 1 ? parseInt(req.query.limit) : 100;
   var search = createSearch(req.query);
+  var testSearch = createSearchTest(req.query);
   async.waterfall([function (callback) {
     CarezoneCounter.findOne({
       name: "carezone"
@@ -119,7 +120,8 @@ router.get('/Challenge/newIndex', function (req, res) {
       callback(null);
     });
   }, function (callback) {
-    if (search.findUser && !search.findPost.$or) return callback(null, null, 0);
+    if (search.findUser && !search.findPost.$or
+      || testSearch.findUser && testSearch.dayCreated[0].createdAt) return callback(null, null, 0);
     Reward.count(search.findPost, function (err, count) {
       if (err) callback(err);
       skip = (page - 1) * limit;
@@ -127,11 +129,30 @@ router.get('/Challenge/newIndex', function (req, res) {
       callback(null, skip, maxPage);
     });
   }, function (skip, maxPage, callback) {
-    if (search.findUser && !search.findPost.$or) return callback(null, [], 0);
-    Reward.find(search.findPost).sort({ "seq": 1 }).populate("author").sort({ "seq": 1, "createdAt": -1 }).skip(skip).limit(limit).exec(function (err, reward) {
+    if (search.findUser && !search.findPost.$or
+      || testSearch.findUser && testSearch.dayCreated[0].createdAt) return callback(null, [], 0);
+    
+      if(testSearch.dayCreated[0]) {
+        Reward.find(testSearch.dayCreated[0])
+      .sort({createdAt:-1})
+      .skip(skip)
+      .limit(limit)
+      .exec(function (err, reward) {
+        if (err) callback(err);
+        callback(null, reward, maxPage);
+      });
+    } else {
+      Reward.find(search.findPost)
+      .sort({ "seq": 1 })
+      .populate("author")
+      .sort({ "seq": 1, "createdAt": -1 })
+      .skip(skip)
+      .limit(limit)
+      .exec(function (err, reward) {
       if (err) callback(err);
       callback(null, reward, maxPage);
     });
+  }
   }], function (err, reward, maxPage) {
     if (err) return res.json({
       success: false,
@@ -144,6 +165,7 @@ router.get('/Challenge/newIndex', function (req, res) {
       maxPage: maxPage,
       urlQuery: req._parsedUrl.query,
       search: search,
+      testSearch: testSearch,
       counter: vistorCounter,
       postsMessage: req.flash("postsMessage")[0]
     });
@@ -155,6 +177,7 @@ router.get("/Challenge/new", function (req, res) {
   return res.render("PlinicAdmin/Contents/Challenges/ChallengeSuccess/new", {});
 });
 //콘텐츠관리 챌린지 신규 등록 화면
+
 
 router.post('/Challenge/', s3upload.fields([{ name: 'image' }, { name: 'homeimage' }, { name: 'challenge_image1' }, { name: 'challenge_image2' }, { name: 'challenge_image3' }, { name: 'challenge_image4' }, { name: 'challenge_image5' }]), isLoggedIn, function (req, res, next) {
     async.waterfall([function (callback) {
@@ -216,7 +239,9 @@ router.post('/Challenge/', s3upload.fields([{ name: 'image' }, { name: 'homeimag
         res.redirect('/contents/Challenge/newIndex');
       });
     });
-  }); // create
+}); 
+// create
+
 
 router.delete('/Challenge/:id', isLoggedIn, function (req, res, next) {
   console.log(req);
@@ -257,7 +282,9 @@ router.delete('/Challenge/:id', isLoggedIn, function (req, res, next) {
     });
     res.redirect('/contents/Challenge/newIndex');
   });
-}); //destroy
+}); 
+//destroy
+
 
 router.get("/Challenge/:id", function (req, res) {
   Reward.findById(req.params.id)
@@ -293,6 +320,7 @@ router.get("/Challenge/:id", function (req, res) {
     });
 });
 //콘텐츠관리 챌린지 Show
+
 
 router.get('/Challenge/:id/edit', isLoggedIn, function (req, res) {
   Carezone.findById(req.params.id, function (err, post) {
@@ -374,7 +402,9 @@ router.get('/Challenge/:id/edit', isLoggedIn, function (req, res) {
       user: req.user
     });
   });
-}); // 콘텐츠관리 챌린지 edit
+}); 
+// 콘텐츠관리 챌린지 edit
+
 
 router.put('/Challenge/:id', s3upload.fields([{
   name: 'image'
@@ -475,7 +505,9 @@ router.put('/Challenge/:id', s3upload.fields([{
       res.redirect('/contents/Challenge/' + req.params.id);
     });
   });
-}); //update
+}); 
+//update
+
 
 router.put('/Challenge/SeqUpdate/:id', isLoggedIn, function (req, res, next) {
   // console.log(req.params.id);
@@ -498,31 +530,6 @@ router.put('/Challenge/SeqUpdate/:id', isLoggedIn, function (req, res, next) {
   });
 });
 
-router.get("/BeautyTip/PostMgt", function (req, res) {
-  return res.render("PlinicAdmin/Contents/BeautyTip/PostMgt/index", {});
-});
-//포스트 관리 리스트 화면
-
-router.get("/BeautyTip/PostMgt/edit", function (req, res) {
-  return res.render("PlinicAdmin/Contents/BeautyTip/PostMgt/edit", {});
-});
-//포스트 관리 edit
-
-router.get("/BeautyTip/PostMgt/new", function (req, res) {
-  return res.render("PlinicAdmin/Contents/BeautyTip/PostMgt/new", {});
-});
-//포스트 신규 등록 화면
-
-router.get("/BeautyTip/PostDisplay", function (req, res) {
-  return res.render("PlinicAdmin/Contents/BeautyTip/PostDisplay/index", {});
-});
-//포스트 진열관리 리스트 화면
-
-
-router.get("/", function (req, res) {
-  return res.render("PlinicAdmin/bootstraptest/index", {});
-});
-// index
 
 router.post('/:id/comments', function(req, res) {
 
@@ -601,7 +608,9 @@ router.post('/:id/comments', function(req, res) {
     });
     res.redirect('/challengeSuccess/Challenge/' + req.params.id + "?" + req._parsedUrl.query);
   });
-}); //create a comment
+}); 
+//create a comment
+
 
 router.delete('/:postId/comments/:commentId', function(req, res) {
   Reward.update({
@@ -621,7 +630,8 @@ router.delete('/:postId/comments/:commentId', function(req, res) {
         res.redirect('/challengeSuccess/Challenge/' + req.params.postId + "?" +
             req._parsedUrl.query.replace(/_method=(.*?)(&|$)/ig, ""));
       });
-}); //destroy a comment
+}); 
+//destroy a comment
 
 
 function isLoggedIn(req, res, next) {
@@ -633,6 +643,7 @@ function isLoggedIn(req, res, next) {
 }
 
 module.exports = router;
+
 
 function createSearch(queries) {
   var findPost = {},
@@ -646,21 +657,21 @@ function createSearch(queries) {
     //검색어 글자수 제한 하는 것
     var searchTypes = queries.searchType.toLowerCase().split(",");
     var postQueries = [];
-    if (searchTypes.indexOf("title") >= 0) {
+    if (searchTypes.indexOf("email") >= 0) {
       postQueries.push({
-        title: {
+        email: {
           $regex: new RegExp(queries.searchText, "i")
         }
       });
-      highlight.title = queries.searchText;
+      highlight.email = queries.searchText;
     }
-    if (searchTypes.indexOf("body") >= 0) {
+    if (searchTypes.indexOf("name") >= 0) {
       postQueries.push({
-        body: {
+        name: {
           $regex: new RegExp(queries.searchText, "i")
         }
       });
-      highlight.body = queries.searchText;
+      highlight.name = queries.searchText;
     }
     if (searchTypes.indexOf("author!") >= 0) {
       findUser = {
@@ -687,4 +698,201 @@ function createSearch(queries) {
     findUser: findUser,
     highlight: highlight
   };
+}
+
+function createSearchTest(querie) {
+  findUser = null
+  if (!isEmpty2(querie.termCheck)) {
+    var dayCreated = [];//기간별 조희
+    var findAfter = {
+    };
+
+    if (!isEmpty2(querie.termCheck)) {
+      var created = new Date();
+      if(isEmpty2(!querie.termCheck.all)) {
+        var today = new Date()
+        today = today.setMonth(today.getMonth());;
+        var preToday = created.setMonth(created.getMonth()-12);
+        
+        dayCreated.push({
+          createdAt: {
+            $gte: preToday,
+            $lte: today,
+          }
+        });
+      } else {
+        dayCreated.push();
+      }
+
+      if(isEmpty2(!querie.termCheck.yesterday)) {
+        var today = new Date();
+        today = today.setDate(today.getDate());
+        var preToday = created.setDate(created.getDate()-1);
+        
+        dayCreated.push({
+          createdAt: {
+            $gte: preToday,
+            $lte: today,
+          }
+        });
+      } else {
+        dayCreated.push();
+      }
+  
+      if(isEmpty2(!querie.termCheck.weeklyy)) {
+        var today = new Date();
+        today = today.setDate(today.getDate());
+        var preToday = created.setDate(created.getDate()-7);
+        
+        dayCreated.push({
+          createdAt: {
+            $gte: preToday,
+            $lte: today,
+          }
+        });
+      } else {
+        dayCreated.push();
+      }
+
+      if(isEmpty2(!querie.termCheck.monthy)) {
+        var today = new Date();
+        today = today.setMonth(today.getMonth());
+        var preToday = created.setMonth(created.getMonth()-1);
+
+        dayCreated.push({
+          createdAt: {
+            $gte: preToday,
+            $lte: today,
+          }
+        });
+      } else {
+        dayCreated.push();
+      }
+
+      if(isEmpty2(!querie.termCheck.startDate && !querie.termCheck.endDate)) {
+        // var startDate = startDate.setDate(startDate.getDate());
+        // var endDate = endDate.setDate(endDate.getDate());
+        dayCreated.push({
+          createdAt: {
+            $gte: querie.termCheck.startDate,
+            $lte: querie.termCheck.endDate,
+          }
+        });
+      } else {
+        dayCreated.push();
+      }
+
+      isEmpty2(!querie.termCheck.all) ? findAfter.all = true : findAfter.all = false;
+      isEmpty2(!querie.termCheck.yesterday) ? findAfter.yesterday = true : findAfter.yesterday = false;
+      isEmpty2(!querie.termCheck.weeklyy) ? findAfter.weeklyy = true : findAfter.weeklyy = false;
+      isEmpty2(!querie.termCheck.monthy) ? findAfter.monthy = true : findAfter.monthy = false;
+    }
+
+    return {
+      findUser: findUser,
+      findAfter: findAfter,
+      dayCreated : dayCreated
+    };
+
+  } else {
+
+    var dayCreated = [];
+    var findAfter = {
+      all : false,
+      weeklyy: false,
+      monthy: false,
+      yesterday: false,
+
+    };
+    if (!isEmpty2(querie.termCheck)) {
+      var created = new Date();
+      if(isEmpty2(!querie.termCheck.all)) {
+        var today = new Date();
+        today = today.setMonth(today.getMonth());
+        var preToday = created.setMonth(created.getMonth()-12);
+        
+        dayCreated.push({
+          createdAt: {
+            $gte: preToday,
+            $lte: today,
+          }
+        });
+      } else {
+      }
+
+      if(isEmpty2(!querie.termCheck.yesterday)) {
+        var today = new Date();
+        today = today.setDate(today.getDate());
+        var preToday = created.setDate(created.getDate()-1);
+        
+        dayCreated.push({
+          createdAt: {
+            $gte: preToday,
+            $lte: today,
+          }
+        });
+      } else {
+      }
+  
+      if(isEmpty2(!querie.termCheck.weeklyy)) {
+        var today = new Date();
+        today = today.setDate(today.getDate());
+        var preToday = created.setDate(created.getDate()-7);
+        
+        dayCreated.push({
+          createdAt: {
+            $gte: preToday,
+            $lte: today,
+          }
+        });
+      } else {
+      }
+
+      if(isEmpty2(!querie.termCheck.monthy)) {
+        var today = new Date();
+        today = today.setMonth(today.getMonth());
+        var preToday = created.setMonth(created.getMonth()-1);
+
+        dayCreated.push({
+          createdAt: {
+            $gte: preToday,
+            $lte: today,
+          }
+        });
+      } else {
+      }
+
+      if(isEmpty2(!querie.termCheck.startDate && !querie.termCheck.endDate)) {
+          // var startDate = startDate.setDate(startDate.getDate());
+          // var endDate = endDate.setDate(endDate.getDate());
+        dayCreated.push({
+          createdAt: {
+            $gte: querie.termCheck.startDate,
+            $lte: querie.termCheck.endDate,
+          }
+        });
+      } else {
+      }
+
+      isEmpty2(!querie.termCheck.all) ? findAfter.all = true : findAfter.all = false;
+      isEmpty2(!querie.termCheck.yesterday) ? findAfter.yesterday = true : findAfter.yesterday = false;
+      isEmpty2(!querie.termCheck.weeklyy) ? findAfter.weeklyy = true : findAfter.weeklyy = false;
+      isEmpty2(!querie.termCheck.monthy) ? findAfter.monthy = true : findAfter.monthy = false;
+    }
+
+
+    return {
+      findUser: findUser,
+      findAfter: findAfter,
+      dayCreated: dayCreated
+    };
+  }
+  
+}
+
+function isEmpty2(str) {
+  if(typeof str == "undefined" || str == null || str == "")
+    return true;
+  else
+    return false ;
 }

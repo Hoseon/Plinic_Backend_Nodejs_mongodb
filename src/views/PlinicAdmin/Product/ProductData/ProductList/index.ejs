@@ -264,15 +264,97 @@
                                                     <td rowspan="2">
                                                         <div class="row justify-content-center">
                                                             <div class="col-6 p-0 m-0">
-                                                                <button type="submit" id="btnSearch"  class="btn btn-info" <%= search.searchType=="author!"?"disabled":"" %>>검색</button>
+                                                                <button type="submit" id="btnSearch" style="margin-top:40px;" class="btn btn-info" <%= search.searchType=="author!"?"disabled":"" %>>검색</button>
                                                             </div>
                                                             <%if(search.searchType){%>
                                                             <div class="col-6 p-0 m-0">
-                                                                <button type="button" class="btn btn-secondary" onclick="window.location = '/product?page=1'">취소</button>
+                                                                <button type="button" style="margin-top:40px;" class="btn btn-secondary" onclick="window.location = '/product?page=1'">취소</button>
                                                             </div>
                                                             <%}%>
                                                             <div class="message" id="searchError"></div>
                                                         </div>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <th class="text-center" style="padding-top: 30px;">등록 날짜</th>
+                                                    <td colspan="3">
+                                                        <% if(typeof testSearch.findAfter == "undefined" || testSearch.findAfter == null || testSearch.findAfter == "") {%>
+                                                            <div class="row g-4 align-self-center">
+                                                                <div class="col-2">
+                                                                    <input type="checkbox" class="form-check-input" name="termCheck[all]" value="true" id="inlineCheckbox1"/>
+                                                                    <label class="form-check-label" for="inlineCheckbox1">전체</label>
+                                                                </div>
+                                                                <div class="col-2">
+                                                                    <input type="checkbox" class="form-check-input" name="termCheck[yesterday]" value="true" id="inlineCheckbox1"/>
+                                                                    <label class="form-check-label" for="inlineCheckbox1">1일 내</label>
+                                                                </div>
+                                                                <div class="col-2">
+                                                                    <input type="checkbox" class="form-check-input" name="termCheck[weeklyy]" value="true" id="inlineCheckbox2"/>
+                                                                    <label class="form-check-label" for="inlineCheckbox2">7일 내</label>
+                                                                </div>
+                                                                <div class="col-2">
+                                                                    <input type="checkbox" class="form-check-input" name="termCheck[monthy]" value="true" id="inlineCheckbox3"/>
+                                                                    <label class="form-check-label" for="inlineCheckbox3">1달 내</label>
+                                                                </div>
+                                                            </div>
+                                                            <div class="row g-4 align-self-center">
+                                                                <div class="col-2" style="padding-top: 10px; padding-left: 20px; color:slateblue;">
+                                                                    *달력은 1일씩 여유를 두고 검색*
+                                                                </div>
+                                                                <div class="col-3">
+                                                                    <input style="height: 30px;" type="date" name="termCheck[startDate]" id="inlineCheckbox3"/>
+                                                                </div>
+                                                                <div class="col-1">
+                                                                    <span style="width: 100px; margin-top: 8px; float: right;">
+                                                                        ~
+                                                                    </span>
+                                                                </div>
+                                                                <div class="col-2">
+                                                                    <input style="height: 30px;" type="date" name="termCheck[endDate]" id="inlineCheckbox3"/>
+                                                                </div>
+                                                            </div>
+                                                        <% } else { %>
+                                                            <div class="row g-4 align-self-center">
+                                                                <div class="col-2">
+                                                                    <input type="checkbox" class="form-check-input" name="termCheck[all]" 
+                                                                    value="true" id="inlineCheckbox1" <% if(testSearch.findAfter.all) { %> checked <% } %>/>
+                                                                    <label class="form-check-label" for="inlineCheckbox1">전체</label>
+                                                                </div>
+                                                                <div class="col-2">
+                                                                    <input type="checkbox" class="form-check-input" name="termCheck[yesterday]" 
+                                                                    value="true" id="inlineCheckbox2" <% if(testSearch.findAfter.yesterday) { %> checked <% } %>/>
+                                                                    <label class="form-check-label" for="inlineCheckbox2">1일 내</label>
+                                                                </div>
+                                                                <div class="col-2">
+                                                                    <input type="checkbox" class="form-check-input" name="termCheck[weeklyy]" 
+                                                                    value="true" id="inlineCheckbox2" <% if(testSearch.findAfter.weeklyy) { %> checked <% } %>/>
+                                                                    <label class="form-check-label" for="inlineCheckbox2">7일 내</label>
+                                                                </div>
+                                                                <div class="col-2">
+                                                                    <input type="checkbox" class="form-check-input" name="termCheck[monthy]" 
+                                                                    value="true" id="inlineCheckbox3" <% if(testSearch.findAfter.monthy) { %> checked <% } %>/>
+                                                                    <label class="form-check-label" for="inlineCheckbox3">1달 내</label>
+                                                                </div>
+                                                            </div>
+                                                            <div class="row g-4 align-self-center">
+                                                                <div class="col-2" style="padding-top: 10px; padding-left: 20px; color:slateblue;">
+                                                                    *달력은 1일씩 여유를 두고 검색*
+                                                                </div>
+                                                                <div class="col-3">
+                                                                    <input type="date" name="termCheck[startDate]" style="height: 30px;"
+                                                                    id="inlineCheckbox3" <% if(testSearch.findAfter.startDate) { %> checked <% } %>/>
+                                                                </div>
+                                                                <div class="col-1">
+                                                                    <span style="width: 100px; margin-top: 8px; float: right;">
+                                                                        ~
+                                                                    </span>
+                                                                </div>
+                                                                <div class="col-2">
+                                                                    <input type="date" name="termCheck[endDate]" style="height: 30px;"
+                                                                    id="inlineCheckbox3" <% if(testSearch.findAfter.endDate) { %> checked <% } %>/>
+                                                                </div>
+                                                            </div>
+                                                        <% } %>
                                                     </td>
                                                 </tr>
                                             </form>

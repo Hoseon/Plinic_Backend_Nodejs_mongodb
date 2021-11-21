@@ -3,7 +3,8 @@ var bcrypt = require('bcrypt-nodejs');
 //var bcrypt = require('bcrypt');
 
 var UserSchema = new mongoose.Schema({
-  author: {type:mongoose.Schema.Types.ObjectId, ref:'orders', required:false},
+  author: {type:mongoose.Schema.Types.ObjectId, ref:'user_admin', required:false},
+  mpoint: {type:mongoose.Schema.Types.Object, ref:'pointLog', required:false},
   email: {
     type: String
   },

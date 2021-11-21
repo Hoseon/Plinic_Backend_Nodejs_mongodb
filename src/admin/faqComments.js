@@ -151,7 +151,452 @@ router.get('/', function (req, res) {
       postsMessage: req.flash("postsMessage")[0]
     });
   });
-}); // index
+}); 
+// 전체 index
+
+
+router.get('/accountIndex', function (req, res) {
+  var vistorCounter = null;
+  // var page = Math.max(1, req.query.page) > 1 ? parseInt(req.query.page) : 1;
+  // var limit = Math.max(1, req.query.limit) > 1 ? parseInt(req.query.limit) : 7;
+  var search = createSearch(req.query);
+  async.waterfall([
+    function (callback) {
+    FaqCounter.findOne({
+      name: "faq"
+    }, function (err, counter) {
+      if (err) callback(err);
+      vistorCounter = counter;
+      callback(null);
+    });
+  }, 
+  function (callback) {
+    if (!search.findUser) return callback(null);
+    User_admin.find(search.findUser, function (err, users) {
+      if (err) callback(err);
+      var or = [];
+      users.forEach(function (user) {
+        or.push({
+          author: mongoose.Types.ObjectId(user._id)
+        });
+      });
+      if (search.findPost.$or) {
+        search.findPost.$or = search.findPost.$or.concat(or);
+      } else if (or.length > 0) {
+        search.findPost = {
+          $or: or
+        };
+      }
+      callback(null);
+    });
+  }, function (callback) {
+    if (search.findUser && !search.findPost.$or) return callback(null, null, 0);
+    Faq.count(search.findPost, function (err, count) {
+      if (err) callback(err);
+      // skip = (page - 1) * limit;
+      // maxPage = Math.ceil(count / limit);
+      callback(null);
+    });
+  }, function (callback) {
+    if (search.findUser && !search.findPost.$or) return callback(null, [], 0);
+    Faq.find(search.findPost)
+    .sort({ "seq": 1 })
+    .populate("author")
+    .sort({ "createdAt": -1 })
+    // .skip(skip)
+    // .limit(limit)
+    .exec(function (err, faq) {
+      if (err) callback(err);
+      callback(null, faq);
+    });
+  }], function (err, faq) {
+    if (err) return res.json({
+      success: false,
+      message: err
+    });
+    return res.render("PlinicAdmin/Contents/Comments/Faq/accountIndex", {
+      faq: faq,
+      user: req.user,
+      // page: page,
+      // maxPage: maxPage,
+      urlQuery: req._parsedUrl.query,
+      search: search,
+      counter: vistorCounter,
+      postsMessage: req.flash("postsMessage")[0]
+    });
+  });
+}); 
+// 계정 index
+
+
+router.get('/challengeIndex', function (req, res) {
+  var vistorCounter = null;
+  // var page = Math.max(1, req.query.page) > 1 ? parseInt(req.query.page) : 1;
+  // var limit = Math.max(1, req.query.limit) > 1 ? parseInt(req.query.limit) : 7;
+  var search = createSearch(req.query);
+  async.waterfall([
+    function (callback) {
+    FaqCounter.findOne({
+      name: "faq"
+    }, function (err, counter) {
+      if (err) callback(err);
+      vistorCounter = counter;
+      callback(null);
+    });
+  }, 
+  function (callback) {
+    if (!search.findUser) return callback(null);
+    User_admin.find(search.findUser, function (err, users) {
+      if (err) callback(err);
+      var or = [];
+      users.forEach(function (user) {
+        or.push({
+          author: mongoose.Types.ObjectId(user._id)
+        });
+      });
+      if (search.findPost.$or) {
+        search.findPost.$or = search.findPost.$or.concat(or);
+      } else if (or.length > 0) {
+        search.findPost = {
+          $or: or
+        };
+      }
+      callback(null);
+    });
+  }, function (callback) {
+    if (search.findUser && !search.findPost.$or) return callback(null, null, 0);
+    Faq.count(search.findPost, function (err, count) {
+      if (err) callback(err);
+      // skip = (page - 1) * limit;
+      // maxPage = Math.ceil(count / limit);
+      callback(null);
+    });
+  }, function (callback) {
+    if (search.findUser && !search.findPost.$or) return callback(null, [], 0);
+    Faq.find(search.findPost)
+    .sort({ "seq": 1 })
+    .populate("author")
+    .sort({ "createdAt": -1 })
+    // .skip(skip)
+    // .limit(limit)
+    .exec(function (err, faq) {
+      if (err) callback(err);
+      callback(null, faq);
+    });
+  }], function (err, faq) {
+    if (err) return res.json({
+      success: false,
+      message: err
+    });
+    return res.render("PlinicAdmin/Contents/Comments/Faq/challengeIndex", {
+      faq: faq,
+      user: req.user,
+      // page: page,
+      // maxPage: maxPage,
+      urlQuery: req._parsedUrl.query,
+      search: search,
+      counter: vistorCounter,
+      postsMessage: req.flash("postsMessage")[0]
+    });
+  });
+}); 
+// 챌린지 index
+
+
+router.get('/pointIndex', function (req, res) {
+  var vistorCounter = null;
+  // var page = Math.max(1, req.query.page) > 1 ? parseInt(req.query.page) : 1;
+  // var limit = Math.max(1, req.query.limit) > 1 ? parseInt(req.query.limit) : 7;
+  var search = createSearch(req.query);
+  async.waterfall([
+    function (callback) {
+    FaqCounter.findOne({
+      name: "faq"
+    }, function (err, counter) {
+      if (err) callback(err);
+      vistorCounter = counter;
+      callback(null);
+    });
+  }, 
+  function (callback) {
+    if (!search.findUser) return callback(null);
+    User_admin.find(search.findUser, function (err, users) {
+      if (err) callback(err);
+      var or = [];
+      users.forEach(function (user) {
+        or.push({
+          author: mongoose.Types.ObjectId(user._id)
+        });
+      });
+      if (search.findPost.$or) {
+        search.findPost.$or = search.findPost.$or.concat(or);
+      } else if (or.length > 0) {
+        search.findPost = {
+          $or: or
+        };
+      }
+      callback(null);
+    });
+  }, function (callback) {
+    if (search.findUser && !search.findPost.$or) return callback(null, null, 0);
+    Faq.count(search.findPost, function (err, count) {
+      if (err) callback(err);
+      // skip = (page - 1) * limit;
+      // maxPage = Math.ceil(count / limit);
+      callback(null);
+    });
+  }, function (callback) {
+    if (search.findUser && !search.findPost.$or) return callback(null, [], 0);
+    Faq.find(search.findPost)
+    .sort({ "seq": 1 })
+    .populate("author")
+    .sort({ "createdAt": -1 })
+    // .skip(skip)
+    // .limit(limit)
+    .exec(function (err, faq) {
+      if (err) callback(err);
+      callback(null, faq);
+    });
+  }], function (err, faq) {
+    if (err) return res.json({
+      success: false,
+      message: err
+    });
+    return res.render("PlinicAdmin/Contents/Comments/Faq/pointIndex", {
+      faq: faq,
+      user: req.user,
+      // page: page,
+      // maxPage: maxPage,
+      urlQuery: req._parsedUrl.query,
+      search: search,
+      counter: vistorCounter,
+      postsMessage: req.flash("postsMessage")[0]
+    });
+  });
+}); 
+// 포인트 index
+
+
+router.get('/plinicIndex', function (req, res) {
+  var vistorCounter = null;
+  // var page = Math.max(1, req.query.page) > 1 ? parseInt(req.query.page) : 1;
+  // var limit = Math.max(1, req.query.limit) > 1 ? parseInt(req.query.limit) : 7;
+  var search = createSearch(req.query);
+  async.waterfall([
+    function (callback) {
+    FaqCounter.findOne({
+      name: "faq"
+    }, function (err, counter) {
+      if (err) callback(err);
+      vistorCounter = counter;
+      callback(null);
+    });
+  }, 
+  function (callback) {
+    if (!search.findUser) return callback(null);
+    User_admin.find(search.findUser, function (err, users) {
+      if (err) callback(err);
+      var or = [];
+      users.forEach(function (user) {
+        or.push({
+          author: mongoose.Types.ObjectId(user._id)
+        });
+      });
+      if (search.findPost.$or) {
+        search.findPost.$or = search.findPost.$or.concat(or);
+      } else if (or.length > 0) {
+        search.findPost = {
+          $or: or
+        };
+      }
+      callback(null);
+    });
+  }, function (callback) {
+    if (search.findUser && !search.findPost.$or) return callback(null, null, 0);
+    Faq.count(search.findPost, function (err, count) {
+      if (err) callback(err);
+      // skip = (page - 1) * limit;
+      // maxPage = Math.ceil(count / limit);
+      callback(null);
+    });
+  }, function (callback) {
+    if (search.findUser && !search.findPost.$or) return callback(null, [], 0);
+    Faq.find(search.findPost)
+    .sort({ "seq": 1 })
+    .populate("author")
+    .sort({ "createdAt": -1 })
+    // .skip(skip)
+    // .limit(limit)
+    .exec(function (err, faq) {
+      if (err) callback(err);
+      callback(null, faq);
+    });
+  }], function (err, faq) {
+    if (err) return res.json({
+      success: false,
+      message: err
+    });
+    return res.render("PlinicAdmin/Contents/Comments/Faq/plinicIndex", {
+      faq: faq,
+      user: req.user,
+      // page: page,
+      // maxPage: maxPage,
+      urlQuery: req._parsedUrl.query,
+      search: search,
+      counter: vistorCounter,
+      postsMessage: req.flash("postsMessage")[0]
+    });
+  });
+}); 
+// 플리닉 index
+
+
+router.get('/eventIndex', function (req, res) {
+  var vistorCounter = null;
+  // var page = Math.max(1, req.query.page) > 1 ? parseInt(req.query.page) : 1;
+  // var limit = Math.max(1, req.query.limit) > 1 ? parseInt(req.query.limit) : 7;
+  var search = createSearch(req.query);
+  async.waterfall([
+    function (callback) {
+    FaqCounter.findOne({
+      name: "faq"
+    }, function (err, counter) {
+      if (err) callback(err);
+      vistorCounter = counter;
+      callback(null);
+    });
+  }, 
+  function (callback) {
+    if (!search.findUser) return callback(null);
+    User_admin.find(search.findUser, function (err, users) {
+      if (err) callback(err);
+      var or = [];
+      users.forEach(function (user) {
+        or.push({
+          author: mongoose.Types.ObjectId(user._id)
+        });
+      });
+      if (search.findPost.$or) {
+        search.findPost.$or = search.findPost.$or.concat(or);
+      } else if (or.length > 0) {
+        search.findPost = {
+          $or: or
+        };
+      }
+      callback(null);
+    });
+  }, function (callback) {
+    if (search.findUser && !search.findPost.$or) return callback(null, null, 0);
+    Faq.count(search.findPost, function (err, count) {
+      if (err) callback(err);
+      // skip = (page - 1) * limit;
+      // maxPage = Math.ceil(count / limit);
+      callback(null);
+    });
+  }, function (callback) {
+    if (search.findUser && !search.findPost.$or) return callback(null, [], 0);
+    Faq.find(search.findPost)
+    .sort({ "seq": 1 })
+    .populate("author")
+    .sort({ "createdAt": -1 })
+    // .skip(skip)
+    // .limit(limit)
+    .exec(function (err, faq) {
+      if (err) callback(err);
+      callback(null, faq);
+    });
+  }], function (err, faq) {
+    if (err) return res.json({
+      success: false,
+      message: err
+    });
+    return res.render("PlinicAdmin/Contents/Comments/Faq/eventIndex", {
+      faq: faq,
+      user: req.user,
+      // page: page,
+      // maxPage: maxPage,
+      urlQuery: req._parsedUrl.query,
+      search: search,
+      counter: vistorCounter,
+      postsMessage: req.flash("postsMessage")[0]
+    });
+  });
+}); 
+// 이벤트 index
+
+
+router.get('/productIndex', function (req, res) {
+  var vistorCounter = null;
+  // var page = Math.max(1, req.query.page) > 1 ? parseInt(req.query.page) : 1;
+  // var limit = Math.max(1, req.query.limit) > 1 ? parseInt(req.query.limit) : 7;
+  var search = createSearch(req.query);
+  async.waterfall([
+    function (callback) {
+    FaqCounter.findOne({
+      name: "faq"
+    }, function (err, counter) {
+      if (err) callback(err);
+      vistorCounter = counter;
+      callback(null);
+    });
+  }, 
+  function (callback) {
+    if (!search.findUser) return callback(null);
+    User_admin.find(search.findUser, function (err, users) {
+      if (err) callback(err);
+      var or = [];
+      users.forEach(function (user) {
+        or.push({
+          author: mongoose.Types.ObjectId(user._id)
+        });
+      });
+      if (search.findPost.$or) {
+        search.findPost.$or = search.findPost.$or.concat(or);
+      } else if (or.length > 0) {
+        search.findPost = {
+          $or: or
+        };
+      }
+      callback(null);
+    });
+  }, function (callback) {
+    if (search.findUser && !search.findPost.$or) return callback(null, null, 0);
+    Faq.count(search.findPost, function (err, count) {
+      if (err) callback(err);
+      // skip = (page - 1) * limit;
+      // maxPage = Math.ceil(count / limit);
+      callback(null);
+    });
+  }, function (callback) {
+    if (search.findUser && !search.findPost.$or) return callback(null, [], 0);
+    Faq.find(search.findPost)
+    .sort({ "seq": 1 })
+    .populate("author")
+    .sort({ "createdAt": -1 })
+    // .skip(skip)
+    // .limit(limit)
+    .exec(function (err, faq) {
+      if (err) callback(err);
+      callback(null, faq);
+    });
+  }], function (err, faq) {
+    if (err) return res.json({
+      success: false,
+      message: err
+    });
+    return res.render("PlinicAdmin/Contents/Comments/Faq/productIndex", {
+      faq: faq,
+      user: req.user,
+      // page: page,
+      // maxPage: maxPage,
+      urlQuery: req._parsedUrl.query,
+      search: search,
+      counter: vistorCounter,
+      postsMessage: req.flash("postsMessage")[0]
+    });
+  });
+}); 
+// 상품 index
 
 
 router.get("/new", function (req, res) {
@@ -159,7 +604,7 @@ router.get("/new", function (req, res) {
     user: req.user
   });
 });
-//FAQ 게시판 답변 화면
+// FAQ 게시판 답변 화면
 
 
 router.post('/faqCreate', s3upload.fields([
@@ -199,7 +644,7 @@ router.post('/faqCreate', s3upload.fields([
       });
     });
 });
-//FAQ 게시판 생성
+// FAQ 게시판 생성
 
 
 router.get('/:id/edit', isLoggedIn, function (req, res) {
@@ -336,7 +781,8 @@ router.get("/:id", function (req, res) {
         search: createSearch(req.query)
       });
     });
-}); //faq Show 페이지
+}); 
+// faq Show 페이지
 
 
 router.post('/:id/comments', function(req, res) {
@@ -355,7 +801,8 @@ router.post('/:id/comments', function(req, res) {
     });
     res.redirect('/faqComments/' + req.params.id + "?" + req._parsedUrl.query);
   });
-}); //댓글 작성
+}); 
+// 댓글 작성
 
 
 router.delete('/:postId/:commentId/commentsDel', function(req, res) {
@@ -376,7 +823,8 @@ router.delete('/:postId/:commentId/commentsDel', function(req, res) {
       res.redirect('/faqComments/' + req.params.postId + "?" +
         req._parsedUrl.query.replace(/_method=(.*?)(&|$)/ig, ""));
     });
-}); //댓글 삭제
+}); 
+// 댓글 삭제
 
 
 function isLoggedIn(req, res, next) {
@@ -388,6 +836,7 @@ function isLoggedIn(req, res, next) {
 }
 
 module.exports = router;
+
 
 function createSearch(queries) {
   var findPost = {},
