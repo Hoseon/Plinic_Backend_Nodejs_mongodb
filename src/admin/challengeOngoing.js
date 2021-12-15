@@ -89,7 +89,7 @@ const sftpconfig = {
 router.get('/challengeHistory', function (req, res) {
   var vistorCounter = null;
   var page = Math.max(1, req.query.page) > 1 ? parseInt(req.query.page) : 1;
-  var limit = Math.max(1, req.query.limit) > 1 ? parseInt(req.query.limit) : 100;
+  var limit = Math.max(1, req.query.limit) > 1 ? parseInt(req.query.limit) : 30;
   var search = createSearch(req.query);
   var testSearch = createSearchTest(req.query);
   async.waterfall([
@@ -122,7 +122,8 @@ router.get('/challengeHistory', function (req, res) {
     });
   }, function (callback) {
     if (search.findUser && !search.findPost.$or
-      || testSearch.findUser && testSearch.dayCreated[0].createdAt) return callback(null, null, 0);
+      || testSearch.findUser && testSearch.dayCreated[0].createdAt
+      || testSearch.findUser && testSearch.dayCreated[0]) return callback(null, null, 0);
     ChallengeLog.count(search.findPost, function (err, count) {
       if (err) callback(err);
       skip = (page - 1) * limit;
@@ -131,7 +132,8 @@ router.get('/challengeHistory', function (req, res) {
     });
   }, function (skip, maxPage, callback) {
     if (search.findUser && !search.findPost.$or
-      || testSearch.findUser && testSearch.dayCreated[0].createdAt) return callback(null, [], 0);
+      || testSearch.findUser && testSearch.dayCreated[0].createdAt
+      || testSearch.findUser && testSearch.dayCreated[0]) return callback(null, [], 0);
     
     if(testSearch.dayCreated[0]) {
       ChallengeLog.find(testSearch.dayCreated[0])
@@ -152,6 +154,7 @@ router.get('/challengeHistory', function (req, res) {
       callback(null, challengeLog, maxPage);
     });
   }
+
   }], function (err, challengeLog, maxPage) {
     if (err) return res.json({
       success: false,
@@ -715,7 +718,9 @@ function isLoggedIn(req, res, next) {
   res.redirect("/");
 }
 
+
 module.exports = router;
+
 
 function createSearch(queries) {
   var findPost = {},
@@ -766,6 +771,7 @@ function createSearch(queries) {
     highlight: highlight
   };
 }
+
 
 function createSearchTest(querie) {
   findUser = null
@@ -849,10 +855,107 @@ function createSearchTest(querie) {
         dayCreated.push();
       }
 
+      if(isEmpty2(!querie.termCheck.one)) {
+        // var dailycheck = Array;
+        if(post.dailycheck.length == 1) {
+          dayCreated.push({
+            dailycheck: dailycheck,
+          });
+          }
+      } else {
+        dayCreated.push();
+      }
+
+      if(isEmpty2(!querie.termCheck.two)) {
+        // var dailycheck = Array;
+        if(dailycheck.length == 2) {
+          dayCreated.push({
+            dailycheck: dailycheck,
+          });
+          }
+      } else {
+        dayCreated.push();
+      }
+
+      if(isEmpty2(!querie.termCheck.three)) {
+        // var dailycheck = Array;
+        if(dailycheck.length == 3) {
+          dayCreated.push({
+            dailycheck: dailycheck,
+          });
+          }
+      } else {
+        dayCreated.push();
+      }
+
+      if(isEmpty2(!querie.termCheck.four)) {
+        // var dailycheck = Array;
+        if(dailycheck.length == 4) {
+          dayCreated.push({
+            dailycheck: dailycheck,
+          });
+          }
+      } else {
+        dayCreated.push();
+      }
+
+      if(isEmpty2(!querie.termCheck.five)) {
+        // var dailycheck = Array;
+        if(dailycheck.length == 5) {
+          dayCreated.push({
+            dailycheck: dailycheck,
+          });
+          }
+      } else {
+        dayCreated.push();
+      }
+
+      if(isEmpty2(!querie.termCheck.six)) {
+        // var dailycheck = Array;
+        if(dailycheck.length == 6) {
+          dayCreated.push({
+            dailycheck: dailycheck,
+          });
+          }
+      } else {
+        dayCreated.push();
+      }
+
+      if(isEmpty2(!querie.termCheck.seven)) {
+        // var dailycheck = Array;
+        if(dailycheck.length == 7) {
+          dayCreated.push({
+            dailycheck: dailycheck,
+          });
+          }
+      } else {
+        dayCreated.push();
+      }
+
+      if(isEmpty2(!querie.termCheck.excess)) {
+        // var dailycheck = Array;
+        if(dailycheck.length > 7) {
+          dayCreated.push({
+            dailycheck: dailycheck,
+          });
+          }
+      } else {
+        dayCreated.push();
+      }
+
       isEmpty2(!querie.termCheck.all) ? findAfter.all = true : findAfter.all = false;
       isEmpty2(!querie.termCheck.yesterday) ? findAfter.yesterday = true : findAfter.yesterday = false;
       isEmpty2(!querie.termCheck.weeklyy) ? findAfter.weeklyy = true : findAfter.weeklyy = false;
       isEmpty2(!querie.termCheck.monthy) ? findAfter.monthy = true : findAfter.monthy = false;
+
+      isEmpty2(!querie.termCheck.one) ? findAfter.one = true : findAfter.one = false;
+      isEmpty2(!querie.termCheck.two) ? findAfter.two = true : findAfter.two = false;
+      isEmpty2(!querie.termCheck.three) ? findAfter.three = true : findAfter.three = false;
+      isEmpty2(!querie.termCheck.four) ? findAfter.four = true : findAfter.four = false;
+      isEmpty2(!querie.termCheck.five) ? findAfter.five = true : findAfter.five = false;
+      isEmpty2(!querie.termCheck.six) ? findAfter.six = true : findAfter.six = false;
+      isEmpty2(!querie.termCheck.seven) ? findAfter.seven = true : findAfter.seven = false;
+      isEmpty2(!querie.termCheck.excess) ? findAfter.excess = true : findAfter.excess = false;
     }
 
     return {
@@ -869,6 +972,15 @@ function createSearchTest(querie) {
       weeklyy: false,
       monthy: false,
       yesterday: false,
+
+      one : false,
+      two: false,
+      three: false,
+      four: false,
+      five: false,
+      six: false,
+      seven: false,
+      excess: false,
 
     };
     if (!isEmpty2(querie.termCheck)) {
@@ -941,10 +1053,99 @@ function createSearchTest(querie) {
       } else {
       }
 
+      if(isEmpty2(!querie.dayCreated.one)) {
+        // var dailycheck = Array;
+        if(post.dailycheck.length == 1) {
+          dayCreated.push({
+            dailycheck: dailycheck,
+          });
+          }
+      } else {
+      }
+
+      if(isEmpty2(!querie.dayCreated.two)) {
+        // var dailycheck = Array;
+        if(dailycheck.length == 2) {
+        dayCreated.push({
+          dailycheck: dailycheck,
+        });
+        }
+      } else {
+      }
+
+      if(isEmpty2(!querie.dayCreated.three)) {
+        // var dailycheck = Array;
+        if(dailycheck.length == 3) {
+          dayCreated.push({
+            dailycheck: dailycheck,
+          });
+          }
+      } else {
+      }
+
+      if(isEmpty2(!querie.dayCreated.four)) {
+        // var dailycheck = Array;
+        if(dailycheck.length == 4) {
+          dayCreated.push({
+            dailycheck: dailycheck,
+          });
+          }
+      } else {
+      }
+
+      if(isEmpty2(!querie.dayCreated.five)) {
+        // var dailycheck = Array;
+        if(dailycheck.length == 5) {
+          dayCreated.push({
+            dailycheck: dailycheck,
+          });
+          }
+      } else {
+      }
+
+      if(isEmpty2(!querie.dayCreated.six)) {
+        // var dailycheck = Array;
+        if(dailycheck.length == 6) {
+          dayCreated.push({
+            dailycheck: dailycheck,
+          });
+          }
+      } else {
+      }
+
+      if(isEmpty2(!querie.dayCreated.seven)) {
+        // var dailycheck = Array;
+        if(dailycheck.length == 7) {
+          dayCreated.push({
+            dailycheck: dailycheck,
+          });
+          }
+      } else {
+      }
+
+      if(isEmpty2(!querie.dayCreated.excess)) {
+        // var dailycheck = Array;
+        if(dailycheck.length > 7) {
+          dayCreated.push({
+            dailycheck: dailycheck,
+          });
+          }
+      } else {
+      }
+
       isEmpty2(!querie.termCheck.all) ? findAfter.all = true : findAfter.all = false;
       isEmpty2(!querie.termCheck.yesterday) ? findAfter.yesterday = true : findAfter.yesterday = false;
       isEmpty2(!querie.termCheck.weeklyy) ? findAfter.weeklyy = true : findAfter.weeklyy = false;
       isEmpty2(!querie.termCheck.monthy) ? findAfter.monthy = true : findAfter.monthy = false;
+    
+      isEmpty2(!querie.termCheck.one) ? findAfter.one = true : findAfter.one = false;
+      isEmpty2(!querie.termCheck.two) ? findAfter.two = true : findAfter.two = false;
+      isEmpty2(!querie.termCheck.three) ? findAfter.three = true : findAfter.three = false;
+      isEmpty2(!querie.termCheck.four) ? findAfter.four = true : findAfter.four = false;
+      isEmpty2(!querie.termCheck.five) ? findAfter.five = true : findAfter.five = false;
+      isEmpty2(!querie.termCheck.six) ? findAfter.six = true : findAfter.six = false;
+      isEmpty2(!querie.termCheck.seven) ? findAfter.seven = true : findAfter.seven = false;
+      isEmpty2(!querie.termCheck.excess) ? findAfter.excess = true : findAfter.excess = false;
     }
 
 
@@ -956,6 +1157,7 @@ function createSearchTest(querie) {
   }
   
 }
+
 
 function isEmpty2(str) {
   if(typeof str == "undefined" || str == null || str == "")

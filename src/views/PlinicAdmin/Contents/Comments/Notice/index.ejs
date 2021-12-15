@@ -114,7 +114,7 @@
                                                                 </td>
                                                                 <td class="align-middle text-center"><%=post2.numId%></td>
                                                                 <td class="align-middle text-center" onclick="window.location = '/noticeComments/<%= post2._id %>?<%= urlQuery %>'"><u><%= post2.title %></u></td>
-                                                                <td class="align-middle"><%=post2.author.nickname%><%= post2.email %> <%= console.log(post2.author) %></td>
+                                                                <td class="align-middle"><%=post2.author.nickname%><%= post2.email %></td>
                                                                 <% var realTime = post2.createdAt %>
                                                                 <% realTime.setHours(realTime.getHours() - 9); %>
                                                                 <td class="align-middle"><%=post2.getFormattedDate(post2.created)%></td>
@@ -124,7 +124,6 @@
                                                 <%} else {%>
                                                    
                                                 <% }%>
-                                                    
                                                 </tbody>
                                             </table>
 

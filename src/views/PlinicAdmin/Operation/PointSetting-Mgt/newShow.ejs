@@ -43,23 +43,11 @@
                             </h1>
                         </div>
                     </div>
-                    <form method="" action="">
+                    <form class="addComment checkValidation"
+                        action="/pointSetting/<%= post._id %>/create?<%= urlQuery %>" method="post">
                         <div class="panel-body">
                             <div class="col-md-12">
                                 <div class="mb-3">
-                                    <div class="form-group row">
-                                        <label class="col-sm-3 text-center control-label" for="name">적립 포인트</label>
-                                        <div class="col-sm-5 controls">
-                                            <input name="name" id="name" class="form-control" value=""
-                                                data-validate="data">
-                                        </div>
-                                        <span class="col-sm-1">p</span>
-                                    </div>
-                                </div>
-                                <div style="height: 0.1px; width: 100%; display: block;background-color: #f1f1f1;">
-                                </div>
-                                <div class="mb-3">
-                                    <br>
                                     <div class="form-group row">
                                         <label class="col-sm-3 text-center control-label" for="name">받는 사람</label>
                                         <div class="col-sm-5 controls">
@@ -68,14 +56,48 @@
                                                 autocomplete="off" data-bd-docs-version="5.0" spellcheck="false"
                                                 role="combobox" aria-autocomplete="list" aria-expanded="false"
                                                 aria-owns="algolia-autocomplete-listbox-0" dir="auto"
-                                                style="position: relative; vertical-align: top;">
+                                                style="position: relative; vertical-align: top;" value="<%= post.email %>" disabled>
+                                        </div>
+                                        <!-- <div class="col-sm-1">
+                                            <img class="bi x0 y0 w0 h0" alt=""
+                                                src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAIAAABvFaqvAAAACXBIWXMAABYlAAAWJQFJUiTwAAABmklEQVQ4y62UsY7CMAyGfSgPYYmFgQUhRWJCyobUhYk5L5GFJ8jDREjsqEuZiJC69gWyJ2u3VOoNvuuVEqCg+7e6zmc7sQ3trbz3Wussy+BXiCiltNa2TwX9D2NMd55zLqWUUnaWLMuccy9AMUbKgnN+H7yua6014R6l9gMiijEmxvgopnOO3KqqSoOoIq11+0ree0RERO/9EOS9p/qf5NKXtRYAlFJDEBWfzPaRqMBB4MnlcgGAxWIBo7Xb7QCgLMu+cVIUBeecMTYetFqtAOB8Pt+AAGC5XMI7mk6nADCfz4egf9EEEQ+Hw1tnrtdrArTZbAAghDAeRNcshLixUl8YY0a+fYyRxjjR2dQXTwayLxrje2egIaJ18bK5aZiSntBvfEQ8nU5JRF3Xg5UyYP3to6qqEJE2iTHGWuucc84ZY7odQg5JFgyGWymVfCkppXOuW1v3rK+2bQdnmqYpy/J4PK7Xa7IIIWazWfd3u90WRdGx8jxnjEH7vpJ5fQK6ZymlPpw1xlie5x0rhJC4o/Fqmma/34cQhBDfsq5ti4GhlNQAAAAASUVORK5CYII=" />
+                                        </div> -->
+                                    </div>
+                                </div>
+                                <% if(post.point) { %>
+                                    <%// post.point.forEach(function(points, index) { %>
+                                <div class="mb-3">
+                                    <div class="form-group row">
+                                        <label class="col-sm-3 text-center control-label" for="name">적립 포인트</label>
+                                        <div class="col-sm-5 controls">
+                                            <input type="number" name="post[point]" id="price" class="form-control"
+                                                value="" data-validate="data">
+                                        </div>
+                                        <span class="col-sm-1">p
+                                            <% console.log(post.point) %>
+                                        </span>
+                                    </div>
+                                </div>
+                                <div style="height: 0.1px; width: 100%; display: block;background-color: #f1f1f1;">
+                                </div>
+                                <div class="mb-3">
+                                    <!-- <br>
+                                    <div class="form-group row">
+                                        <label class="col-sm-3 text-center control-label" for="name">받는 사람</label>
+                                        <div class="col-sm-5 controls">
+                                            <input type="search" class="form-control ds-input" id="search-input"
+                                                placeholder="Search docs..." aria-label="Search docs for..."
+                                                autocomplete="off" data-bd-docs-version="5.0" spellcheck="false"
+                                                role="combobox" aria-autocomplete="list" aria-expanded="false"
+                                                aria-owns="algolia-autocomplete-listbox-0" dir="auto"
+                                                style="position: relative; vertical-align: top;" value="<%=// post.email %>" disabled>
                                         </div>
                                         <div class="col-sm-1">
                                             <img class="bi x0 y0 w0 h0" alt=""
                                                 src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAIAAABvFaqvAAAACXBIWXMAABYlAAAWJQFJUiTwAAABmklEQVQ4y62UsY7CMAyGfSgPYYmFgQUhRWJCyobUhYk5L5GFJ8jDREjsqEuZiJC69gWyJ2u3VOoNvuuVEqCg+7e6zmc7sQ3trbz3Wussy+BXiCiltNa2TwX9D2NMd55zLqWUUnaWLMuccy9AMUbKgnN+H7yua6014R6l9gMiijEmxvgopnOO3KqqSoOoIq11+0ree0RERO/9EOS9p/qf5NKXtRYAlFJDEBWfzPaRqMBB4MnlcgGAxWIBo7Xb7QCgLMu+cVIUBeecMTYetFqtAOB8Pt+AAGC5XMI7mk6nADCfz4egf9EEEQ+Hw1tnrtdrArTZbAAghDAeRNcshLixUl8YY0a+fYyRxjjR2dQXTwayLxrje2egIaJ18bK5aZiSntBvfEQ8nU5JRF3Xg5UyYP3to6qqEJE2iTHGWuucc84ZY7odQg5JFgyGWymVfCkppXOuW1v3rK+2bQdnmqYpy/J4PK7Xa7IIIWazWfd3u90WRdGx8jxnjEH7vpJ5fQK6ZymlPpw1xlie5x0rhJC4o/Fqmma/34cQhBDfsq5ti4GhlNQAAAAASUVORK5CYII=" />
                                         </div>
-                                    </div>
-                                    <div class="form-group row">
+                                    </div> -->
+                                    <!-- <div class="form-group row">
                                         <label class="col-sm-3 text-center control-label" for="name"></label>
                                         <div class="col-sm-3 controls">
                                             <input class="form-check-input" type="checkbox" id="inlineCheckbox1"
@@ -124,21 +146,27 @@
                                             <button type="button" class="btn btn-primary btn-sm"
                                                 onclick="location.href='/groups/new'">그룹 추가</button>
                                         </div>
-                                    </div>
-                                    <div class="form-group row">
+                                    </div> -->
+                                    <br>
+                                    <!-- <div class="form-group row">
                                         <label class="col-sm-3 text-center control-label" for="name">내용</label>
                                         <div class="col-sm-7 controls">
                                             <textarea class="form-control" id="message-text"
-                                                style="height: 100px"></textarea>
+                                                style="height: 100px" name="post[reason]"></textarea>
+                                            <input type="hidden" name="post[status]" value="admin" />
                                         </div>
-                                    </div>
+                                    </div> -->
                                 </div>
+                                    <%// }) %>
+                                <% } %>
                             </div>
                         </div>
                         <div class="panel-body">
                             <div class="text-center">
-                                <button type="button" class="w-15 m-1 btn btn-light btn-sm">취소</button>
                                 <button type="submit" class="w-15 m-1 btn btn-info btn-sm">포인트 지급</button>
+                                <!-- <button type="button" class="w-15 m-1 btn btn-light btn-sm"
+                                onclick="window.location = '/pointSetting/pointIndex'">취소</button> -->
+                                <button type="reset" class="w-15 m-1 btn btn-light btn-sm">취소</button>
                             </div>
                         </div>
                     </form>

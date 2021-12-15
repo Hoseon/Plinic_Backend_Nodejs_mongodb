@@ -47,6 +47,9 @@
                                 </div>
                                 <br>
                                 <form action="/noticeComments" method="post" enctype="multipart/form-data">
+                                    <% if(data) { %>
+                                        <% console.log(data.length) %>
+                                    <% } %>
                                     <div class="form-group row">
                                         <label class="col-sm-2 text-center control-label" for="name">제목</label>
                                         <div class="col-sm-10 controls">
