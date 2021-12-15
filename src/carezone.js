@@ -351,14 +351,46 @@ router.get('/challengechkstart/:id', function(req, res) {
   }]);
 });
 
+// router.get('/challangecount/:id/:date', function (req, res) {
+//   //2021-03-22 가져 오는 시간을 UDT로 가져오고 앱내에서 KST로 변경하여 사용자의 카운트를 매긴다.
+  
+//   var today = getCovertKoreaTime(new Date(req.params.date)).toISOString().substr(0,10)
+//   async.waterfall([function(callback) {
+//     Challenge.count({
+//       missionID: req.params.id,
+//       createdAt: {
+//         $gte: today,
+//         // $lte: new Date(req.params.date),
+//       }
+//     }, function(err, docs) {
+//       res.json(docs);
+//     });
+//   }]);
+// });
+
+
 router.get('/challangecount/:id/:date', function (req, res) {
   //2021-03-22 가져 오는 시간을 UDT로 가져오고 앱내에서 KST로 변경하여 사용자의 카운트를 매긴다.
   
+  // var start   = new Date(req.params.date);
+  
+  // var testday = start.setHours(start.getHours() - 9);
+
+  // console.log(testday);
+
+  // var today = getCovertKoreaTime(new Date(testday)).toISOString().substr(0,10)
+
+  // console.log(today);
+
+
   var today = getCovertKoreaTime(new Date(req.params.date)).toISOString().substr(0,10)
+  
+
   async.waterfall([function(callback) {
     Challenge.count({
       missionID: req.params.id,
       createdAt: {
+        // $gte: testday,
         $gte: today,
         // $lte: new Date(req.params.date),
       }
@@ -367,6 +399,7 @@ router.get('/challangecount/:id/:date', function (req, res) {
     });
   }]);
 });
+
 
 router.get('/missionusetime/:id/:email', function(req, res) {
   //var carezonelist = null;
@@ -1372,4 +1405,13 @@ function getCovertKoreaTime(time) {
   return new Date(
     new Date(time).getTime() - new Date().getTimezoneOffset() * 60000
   )
+
+function get2digits(num) {
+  return ("0" + num).slice(-2);
+}
+  
+function getFormattedDate(date) {
+  return date.getFullYear() + "-" + get2digits(date.getMonth() + 1) + "-" + get2digits(date.getDate());
+};
+
 }

@@ -2167,16 +2167,17 @@ exports.idFindWithPhone = (req, res) => {
 
 
 exports.validSendEmail = (req, res) => {
-  if (!req.body.email && !req.body.name && !req.body.birthday) {
+  // if (!req.body.email && !req.body.name && !req.body.birthday) {
+    if (!req.body.email && !req.body.name) {
     return res.status(400).json({
-      'msg': "이메일, 이름, 생년월을를 입력해 주세요."
+      'msg': "이메일, 이름을 입력해 주세요."
     });
   }
 
   User.findOne({
     email: req.body.email,
     name: req.body.name,
-    birthday: req.body.birthday
+    // birthday: req.body.birthday
   }, (err, user) => {
     if (err) {
       return res.status(400).json({
@@ -2221,7 +2222,7 @@ exports.validSendEmail = (req, res) => {
           User.findOneAndUpdate({
             email: req.body.email,
             name: req.body.name,
-            birthday: req.body.birthday
+            // birthday: req.body.birthday
           }, req.body, (err, result) => {
             if (err) {
               return res.status(400).json({
@@ -2400,7 +2401,8 @@ exports.changePush = (req, res) => {
 }
 
 exports.changePassword = (req, res) => {
-  if (!req.body.temp && !req.body.birthday && !req.body.email && !req.body.name && !req.body.password && !req.body.passwordconfirm) {
+  // if (!req.body.temp && !req.body.birthday && !req.body.email && !req.body.name && !req.body.password && !req.body.passwordconfirm) {
+    if (!req.body.temp && !req.body.email && !req.body.name && !req.body.password && !req.body.passwordconfirm) {
     return res.status(400).json({
       'msg': "사용자 정보가 정확하지 않습니다."
     });
@@ -2410,7 +2412,7 @@ exports.changePassword = (req, res) => {
   User.findOne({
     email: req.body.email,
     name: req.body.name,
-    birthday: req.body.birthday,
+    // birthday: req.body.birthday,
     pwresetvalue: req.body.temp,
   }, (err, user) => {
     if (err) {
@@ -2434,7 +2436,7 @@ exports.changePassword = (req, res) => {
           User.findOneAndUpdate({ // 저장한다.
             email: req.body.email,
             name: req.body.name,
-            birthday: req.body.birthday
+            // birthday: req.body.birthday
           }, req.body, (err, result) => {
             if (err) {
               return res.status(400).json({

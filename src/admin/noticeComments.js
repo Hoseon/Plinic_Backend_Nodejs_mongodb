@@ -10,6 +10,7 @@ var NoticeCounter = require("../models/NoticeCounter");
 var async = require("async");
 var User_admin = require("../models/User_admin");
 var User = require("../models/user");
+var Alarm = require("../models/Alarm");
 var multer = require("multer");
 // var FTPStorage = require('multer-ftp');
 var sftpStorage = require("multer-sftp");
@@ -24,6 +25,7 @@ var fcm = new FCM(serverKey);
 
 var multerS3 = require('multer-s3');
 const AWS = require("aws-sdk");
+const user = require("../models/user");
 AWS.config.loadFromPath(__dirname + "/../config/awsconfig.json");
 let s3 = new AWS.S3();
 let s3upload = multer({
@@ -94,7 +96,8 @@ router.get('/', function (req, res) {
   var limit = Math.max(1, req.query.limit) > 1 ? parseInt(req.query.limit) : 7;
   var search = createSearch(req.query);
 
-  async.waterfall([function (callback) {
+  async.waterfall([
+    function (callback) {
     NoticeCounter.findOne({
       name: "notice"
     }, function (err, counter) {
@@ -161,15 +164,53 @@ router.get('/', function (req, res) {
 }); // Real index
 
 
+// router.get('/new', isLoggedIn, function(req, res) {
+//   res.render("PlinicAdmin/Contents/Comments/Notice/new", {
+//     user: req.user
+//   });
+// }); // new
+
 router.get('/new', isLoggedIn, function(req, res) {
-  res.render("PlinicAdmin/Contents/Comments/Notice/new", {
-    user: req.user
-  });
-}); // new
+  User.find(function(err, data){
+    if(err) return res.status(400);
+
+    if(data)
+      return res.render("PlinicAdmin/Contents/Comments/Notice/new",
+        {
+          user: req.user,
+          data: data
+        });
+  })
+});
 
 
 router.post('/', s3upload.fields([
   { name: 'image' }]), isLoggedIn, function (req, res, next) {
+
+  //   for(var i = 0; user.length > i; i ++) {
+  //   var message = { 
+  //     // to: req.body.pushtoken, //// 전체 body에서 pushtoken을 가져온다.
+  //     to: user.pushtoken,
+  //     notification: { //// 전달되는 메시지 내용들
+  //       title: '새로운 공지사항이 등록되었습니다.', 
+  //       body: req.body, //// 달린 답글의 내용을 지정한다.
+  //       sound: "default",
+  //       click_action: "FCM_PLUGIN_ACTIVITY",
+  //     },
+  //     data: { 
+  //       mode: "notice",
+  //       id: req.params.commentId     //// 데이터를 notice로 하며 (plinic앱 연계) id 푸쉬를 줘야할 댓글 단 유저의 id로 지정한다.
+  //     }
+  //   };
+  //   fcm.send(message, function(err, response) {
+  //     if (err) {
+  //       console.log("Something has gone wrong!");
+  //     } else {
+  //       console.log("Successfully sent with response: ", response);
+  //     }
+  //   });
+  // }
+
     async.waterfall([function (callback) {
       NoticeCounter.findOne({
         name: "noticeComments"
@@ -207,6 +248,114 @@ router.post('/', s3upload.fields([
       });
     });
   }); // create
+
+
+// router.post('/', s3upload.fields([
+//   { name: 'image' }]), isLoggedIn, function (req, res, next) {
+//     async.waterfall([function (callback) {
+//       NoticeCounter.findOne({
+//         name: "noticeComments"
+//       }, function (err, counter) {
+//         if (err) callback(err);
+//         if (counter) {
+//           callback(null, counter);
+//         } else {
+//           NoticeCounter.create({
+//             name: "noticeComments",
+//             totalCount: 0
+//           }, function (err, counter) {
+//             if (err) return res.json({
+//               success: false,
+//               message: err
+//             });
+//             callback(null, counter);
+//           });
+//         }
+//       });
+//     }], function (callback, counter) {
+//       var newPost = req.body.post;
+//       newPost.author = req.user._id;
+//       newPost.numId = counter.totalCount + 1;
+//       req.body.post.filename = req.files['image'][0].key;
+//       req.body.post.originalName = req.files['image'][0].originalname;
+//       Notice.create(req.body.post, function (err, post) {
+//         if (err) return res.json({
+//           success: false,
+//           message: err
+//         });
+//         counter.totalCount++;
+//         counter.save();
+//         // res.redirect('/noticeComments/');
+//       });
+//     });
+
+//       //사용자의 Email을 User Collection에서 찾아서 PushToken키를 가져온다.
+//   // var pushtoken = '';
+//   // if(req.user.email !== '') {
+//   //   console.log(req.data);
+//   //   for(var i = 0; data.length > i; i ++) {
+//   //   User.find({
+//   //     // email : req.body.post.email
+//   //     email:"sorcerer10@naver.com"
+//   //   },function(err, User) {
+//   //     if(User) {
+//   //       var message = { //this may vary according to the message type (single recipient, multicast, topic, et cetera)
+//   //         to: req.data.pushtoken,
+//   //         // collapse_key: 'your_collapse_key',
+
+//   //         notification: {
+//   //           // "title": this.beautyNoteOneLoadData.title,
+//   //           // "body": this.registerReply.comment,
+//   //           // "subtitle" : '댓글알림 subtitle',
+//   //           // "badge": 1,
+//   //           title: '공지사항 알림',
+//   //           body: req.body.post.body,
+//   //           sound: "default",
+//   //           click_action: "FCM_PLUGIN_ACTIVITY",
+//   //         },
+
+//   //         data: { //you can send only notification or only data(or include both)
+//   //           mode: "alarm",
+//   //           id: req.body._id
+//   //         }
+//   //       };
+
+//   //       fcm.send(message, function(err, response) {
+//   //         if (err) {
+//   //           console.log("챌린지 보상 푸시 전송 실패 " + req.body.email);
+//   //         } else {
+//   //           console.log("Successfully sent with response: ", response);
+//   //         }
+//   //       });
+//   //     }
+//   //   });
+//   // }
+
+//     //알람 테이블에 해당 내용 저장
+//     Alarm.create({
+//       // writerEmail: req.body.post.email, //게시글 이메일
+//       writerEmail: user.email,
+//       email: user.email,
+//       // email: req.body.comment.email, //관리자 댓글 이메일
+//       skinId: req.params.id, //게시글 아이디
+//       alertType: "공지사항 알림",
+//       // alarmName: "축하합니다! 챌린지에 성공하여 이벤트 상품이 발송 될 예정입니다.",
+//       alarmName: req.body.post.title,
+//       alarmDesc: req.body.post.body,
+//       alarmCondition: false,
+//       mange: true,
+      
+//     }, function(err, counter) {
+//       if (err) return response.json({
+//         success: false,
+//         message: err
+//       });
+//       res.redirect('/noticeComments/');
+//     });
+
+//   // }
+
+//   }); // create
 
 
 router.delete('/:id', isLoggedIn, function (req, res, next) {

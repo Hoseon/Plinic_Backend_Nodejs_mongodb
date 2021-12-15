@@ -2,7 +2,7 @@ var express = require("express");
 var router = express.Router();
 var mongoose = require("mongoose");
 var PointSetting = require("../models/PointSetting");
-var QnaCounter = require("../models/QnaCounter");
+var PointLog = require("../models/PointLog");
 var async = require("async");
 var User_admin = require("../models/User_admin");
 var multer = require("multer");
@@ -81,7 +81,9 @@ router.get('/', function (req, res) {
       postsMessage: req.flash("postsMessage")[0]
     });
   });
-}); // 포인트 설정 리스트 화면
+}); 
+// 포인트 설정 리스트 화면
+
 
 router.post('/pointSettingUpdate/', isLoggedIn, function (req, res, next) {
       var newPost = req.body.post;
@@ -252,12 +254,165 @@ router.post('/pointSettingUpdate/', isLoggedIn, function (req, res, next) {
         }
       }
       res.redirect('/pointSetting/');
-  }); // update
+}); 
+// update index
 
-router.get("/new", function (req, res) {
-  return res.render("PlinicAdmin/Operation/PointSetting-Mgt/new", {});
+
+router.get('/pointIndex', function(req, res) {
+  var vistorCounter = null;
+  var page = Math.max(1, req.query.page) > 1 ? parseInt(req.query.page) : 1;
+  var limit = Math.max(1, req.query.limit) > 1 ? parseInt(req.query.limit) : 80;
+  var search = createSearch(req.query);
+  var testSearch = createSearchTest(req.query);
+  async.waterfall([
+    function(callback) {
+    if (!search.findUser) return callback(null);
+    // PointLog.find(search.findUser, function(err, points) {
+    //   if (err) callback(err);
+    //   var or = [];
+    //   points.forEach(function(point) {
+    //     or.push({
+    //       mpoint: mongoose.Types.ObjectId(point._id)
+    //     });
+    //   });
+    User_admin.find(search.findUser, function(err, users) {
+      if (err) callback(err);
+      var or = [];
+      users.forEach(function(user) {
+        or.push({
+          mpoint: mongoose.Types.ObjectId(user._id)
+        });
+      });
+      if (search.findPost.$or) {
+        search.findPost.$or = search.findPost.$or.concat(or);
+      } else if (or.length > 0) {
+        search.findPost = {
+          $or: or
+        };
+      }
+      callback(null);
+    });
+  }, function(callback) {
+      if (search.findUser && !search.findPost.$or 
+        || testSearch.findUser && testSearch.dayCreated[0].created) 
+      return callback(null, null, 0);
+      PointLog.count(search.findPost || testSearch.dayCreated[0].created, function(err, count) {
+        if (err) callback(err);
+        skip = (page - 1) * limit;
+        maxPage = Math.ceil(count / limit);
+        callback(null, skip, maxPage);
+      });
+
+  }, 
+  function(skip, maxPage, callback) {
+    if (search.findUser && !search.findPost.$or 
+      || testSearch.findUser && testSearch.dayCreated[0].created) 
+    return callback(null, [], 0);
+
+    if(testSearch.dayCreated[0]) {
+      PointLog.find(testSearch.dayCreated[0])
+      // .populate("mpoint")
+      .populate("author")
+      .sort({createdAt : -1})
+      .skip(skip)
+      .limit(limit)
+      .exec(function(err, pointlog) {
+        if (err) callback(err);
+        callback(null, pointlog, maxPage);
+      });
+    } else {
+      PointLog.find(search.findPost)
+      // .populate("mpoint")
+      .populate("author")
+      .sort({createdAt : -1})
+      .skip(skip)
+      .limit(limit)
+      .exec(function(err, pointlog) {
+        if (err) callback(err);
+        callback(null, pointlog, maxPage);
+      });
+    }
+  },
+  ], 
+  function(err, pointlog, maxPage) {
+    if (err) return res.json({
+      success: false,
+      message: err
+    });
+    return res.render("PlinicAdmin/Operation/PointSetting-Mgt/pointIndex", {
+      pointlog: pointlog,
+      user: req.user,
+      page: page,
+      maxPage: maxPage,
+      urlQuery: req._parsedUrl.query,
+      search: search,
+      testSearch : testSearch,
+      // dateSearch: dateSearch,
+      counter: vistorCounter,
+      postsMessage: req.flash("postsMessage")[0]
+    });
+  });
+});
+// 포인트 설정 리스트 화면
+
+
+router.get("/newShow/:id", function (req, res) {
+  PointLog.findById(req.params.id)
+    .populate(['author', 'comments.author'])
+    .exec(function (err, post) {
+      if (err) return res.json({
+        success: false,
+        message: err
+      });
+
+      res.render("PlinicAdmin/Operation/PointSetting-Mgt/newShow", {
+        post: post,
+        urlQuery: req._parsedUrl.query,
+        user: req.user,
+        search: createSearch(req.query)
+      });
+    });
+}); 
+// Show
+
+
+router.post('/:id/create', function(req, res) {
+  
+    console.log(req.body);
+    var newBody = req.body;
+
+    var pointPreLog = {
+      point: newBody.post.point,
+      reason: '관리자 지급',
+      status: true
+    }
+
+    newBody.author = req.user._id;
+    PointLog.findOneAndUpdate({
+      _id: req.params.id
+    }, {
+      $push: {
+        point: pointPreLog
+        // "point" : newBody
+      },
+      $inc: { "totalPoint": newBody.post.point }
+    }, function(err, post) {
+      if (err) return res.json({
+        success: false,
+        message: err
+      });
+      // res.redirect('/pointSetting/newShow/' + req.params.id + "?" + req._parsedUrl.query);
+      res.redirect('/pointSetting/pointIndex')
+    });
+  }); 
+// 포인트 지급
+
+
+router.get("/newIndex", function (req, res) {
+  return res.render("PlinicAdmin/Operation/PointSetting-Mgt/newIndex", {});
 });
 // 회원 개별 포인트 지급 화면
+
 
 function isLoggedIn(req, res, next) {
   if (req.isAuthenticated()) {
@@ -281,21 +436,13 @@ function createSearch(queries) {
     //검색어 글자수 제한 하는 것
     var searchTypes = queries.searchType.toLowerCase().split(",");
     var postQueries = [];
-    if (searchTypes.indexOf("title") >= 0) {
+    if (searchTypes.indexOf("email") >= 0) {
       postQueries.push({
-        title: {
+        email: {
           $regex: new RegExp(queries.searchText, "i")
         }
       });
-      highlight.title = queries.searchText;
-    }
-    if (searchTypes.indexOf("body") >= 0) {
-      postQueries.push({
-        body: {
-          $regex: new RegExp(queries.searchText, "i")
-        }
-      });
-      highlight.body = queries.searchText;
+      highlight.email = queries.searchText;
     }
     if (searchTypes.indexOf("author!") >= 0) {
       findUser = {
@@ -322,4 +469,137 @@ function createSearch(queries) {
     findUser: findUser,
     highlight: highlight
   };
+}
+
+function createSearchTest(querie) {
+  findUser = null
+  if (!isEmpty2(querie.termCheck)) {
+    var dayCreated = [];//기간별 조희
+    var findAfter = {
+    };
+
+    if (!isEmpty2(querie.termCheck)) {
+      var createdAt = new Date();
+      if(isEmpty2(!querie.termCheck.all)) {
+        var today = new Date();
+        var preToday = createdAt.setMonth(createdAt.getMonth()-12);
+        
+        dayCreated.push({
+          createdAt: {
+            $gte: preToday,
+            $lte: today,
+          }
+        });
+      } else {
+        dayCreated.push();
+      }
+  
+      if(isEmpty2(!querie.termCheck.weeklyy)) {
+        var today = new Date();
+        var preToday = createdAt.setDate(createdAt.getDate()-7);
+        
+        dayCreated.push({
+          createdAt: {
+            $gte: preToday,
+            $lte: today,
+          }
+        });
+      } else {
+        dayCreated.push();
+      }
+
+      if(isEmpty2(!querie.termCheck.monthy)) {
+        var today = new Date();
+        var preToday = createdAt.setMonth(createdAt.getMonth()-1);
+
+        dayCreated.push({
+          createdAt: {
+            $gte: preToday,
+            $lte: today,
+          }
+        });
+      } else {
+        dayCreated.push();
+      }
+
+      isEmpty2(!querie.termCheck.all) ? findAfter.all = true : findAfter.all = false;
+      isEmpty2(!querie.termCheck.weeklyy) ? findAfter.weeklyy = true : findAfter.weeklyy = false;
+      isEmpty2(!querie.termCheck.monthy) ? findAfter.monthy = true : findAfter.monthy = false;
+    }
+
+    return {
+      findUser: findUser,
+      findAfter: findAfter,
+      dayCreated : dayCreated
+    };
+
+  } else {
+
+    var dayCreated = [];
+    var findAfter = {
+      all : false,
+      weeklyy: false,
+      monthy: false,
+    };
+    if (!isEmpty2(querie.termCheck)) {
+      var createdAt = new Date();
+      if(isEmpty2(!querie.termCheck.all)) {
+        var today = new Date();
+        var preToday = createdAt.setMonth(createdAt.getMonth()-12);
+        
+        dayCreated.push({
+          createdAt: {
+            $gte: preToday,
+            $lte: today,
+          }
+        });
+      } else {
+      }
+  
+      if(isEmpty2(!querie.termCheck.weeklyy)) {
+        var today = new Date();
+        var preToday = createdAt.setDate(createdAt.getDate()-7);
+        
+        dayCreated.push({
+          createdAt: {
+            $gte: preToday,
+            $lte: today,
+          }
+        });
+      } else {
+      }
+
+      if(isEmpty2(!querie.termCheck.monthy)) {
+        var today = new Date();
+        var preToday = createdAt.setMonth(createdAt.getMonth()-1);
+
+        dayCreated.push({
+          createdAt: {
+            $gte: preToday,
+            $lte: today,
+          }
+        });
+      } else {
+      }
+
+      isEmpty2(!querie.termCheck.all) ? findAfter.all = true : findAfter.all = false;
+      isEmpty2(!querie.termCheck.weeklyy) ? findAfter.weeklyy = true : findAfter.weeklyy = false;
+      isEmpty2(!querie.termCheck.monthy) ? findAfter.monthy = true : findAfter.monthy = false;
+    }
+
+
+    return {
+      findUser: findUser,
+      findAfter: findAfter,
+      dayCreated: dayCreated
+    };
+  }
+  
+}
+
+function isEmpty2(str) {
+  if(typeof str == "undefined" || str == null || str == "")
+    return true;
+  else
+    return false ;
 }

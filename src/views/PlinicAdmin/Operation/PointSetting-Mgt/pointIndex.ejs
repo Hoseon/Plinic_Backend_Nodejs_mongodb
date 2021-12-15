@@ -41,7 +41,7 @@
                         data-bs-parent="#accordionExample">
                         <div class="accordion-body">
                             <table class="table-bordered table table-striped table-hover">
-                                <form class="checkValidation" action="/members/" id="search">
+                                <form class="checkValidation" action="/pointSetting/pointIndex" id="search">
                                     <tr>
                                         <th class="text-center" style="padding-top: 20px;">검색 조건</th>
                                         <td colspan="3">
@@ -49,12 +49,8 @@
                                                 <div class="col-2">
                                                     <select class="form-select" aria-label="Default select example" name="searchType" <%= search.searchType=="author!"?"disabled":"" %>>
                                                         <% var select %>
-                                                        <option value="email,name"
-                                                        <%= search.searchType=="email,name"?select="selected":"" %>>회원 아이디+이름</option>
                                                         <option value="email"
                                                         <%= search.searchType=="email"?select="selected":"" %>>회원 아이디</option>
-                                                        <option value="name"
-                                                        <%= search.searchType=="name"?select="selected":"" %>>이름</option>
                                                         <%if(search.searchType=="author!"){%>
                                                         <option value="author!"
                                                             <%= search.searchType=="author!"?select="selected":"" %>>Author</option>
@@ -80,7 +76,7 @@
                                                 </div>
                                                 <%if(search.searchType){%>
                                                 <div class="col-6 p-0 m-0">
-                                                    <button type="button" class="btn btn-secondary" style="margin-top: 21px;" onclick="window.location = '/members?page=1'">취소</button>
+                                                    <button type="button" class="btn btn-secondary" style="margin-top: 21px;" onclick="window.location = '/pointSetting/pointIndex?page=1'">취소</button>
                                                 </div>
                                                 <%}%>
                                                 <div class="message" id="searchError"></div>
@@ -145,21 +141,6 @@
 
                             <div class="accordion-body">
                                 <div class="row g-4 align-items-left">
-                                    <div class="col-2" no-margin>
-                                    <% if(users) {%>
-                                        전체목록 | 전체 회원수
-                                        <% var sum = 0; %>
-                                        <% for(i = users.length; i <= users.length ;i++){ %>
-                                            <span>
-                                                <%= sum = sum + i %>명
-                                            </span>
-                                        <% } %>
-                                    <% } %>
-                                        <!-- 전체목록 | 전체 회원수 -->
-                                            <!-- <span> -->
-                                                <!-- <%=// users.length %>명 -->
-                                            <!-- </span> -->
-                                    </div>
                                     <div class="col-10">
                                         <button type="button" class="btn btn-success btn-sm"
                                             onclick="fnExcelReport('table','주문 내역');">Excel Download</button>
@@ -184,18 +165,17 @@
                                                         type="checkbox" value="" id="flexCheckDisabled" disabled>
                                                 </th>
                                                 <th class="text-center">아이디(이메일)</th>
-                                                <th class="text-center">이름</th>
-                                                <th class="text-center">연락처</th>
+                                                <th class="text-center">포인트</th>
                                                 <th class="text-center">가입일</th>
                                                 <th class="text-center">관리</th>
                                             </tr>
                                         </thead>
-                                        <% if(users==null || users.length==0) { %>
+                                        <% if(pointlog==null || pointlog.length==0) { %>
                                             <tr class="noData">
                                                 <td colspan="5">There is no data to show :(</td>
                                             </tr>
                                         <% } %>
-                                        <% users.forEach(function(post, index) { %>
+                                        <% pointlog.forEach(function(post, index) { %>
                                             <tbody>
                                                 <tr>
                                                     <td>
@@ -206,25 +186,18 @@
                                                         <%= post.email %>
                                                     </td>
                                                     <td>
-                                                        <%= post.name %>
+                                                        <%= post.totalPoint %>p
                                                     </td>
-                                                    <td><%= post.phonenumber %></td>
                                                     <td>
-                                                        <% var realTime = post.created %>
+                                                        <% var realTime = post.createdAt %>
                                                         <% realTime.setHours(realTime.getHours() -9); %>
-                                                        <%= post.getFormattedDate(post.created) %>
-                                                        <%= post.getFormattedTime(post.created) %>
+                                                        <%= post.getFormattedDate(post.createdAt) %>
                                                     </td>
                                                     <td>
                                                         <div class="row justify-content-center">
                                                             <div class="col-6 p-0 m-0">
                                                                 <button class="btn btn-primary" type="button"
-                                                                onclick="window.location = '/members/<%= post._id %>?<%= urlQuery %>'">보기</button>
-                                                            </div>
-                                                            <div class="col-6 p-0 m-0">
-                                                                <form action="/members/rowdel/<%= post._id %>?_method=delete" method="post">
-                                                                    <button type="submit" class="btn btn-danger">탈퇴</button>
-                                                                </form>
+                                                                onclick="window.location = '/pointSetting/newShow/<%= post._id %>?<%= urlQuery %>'">포인트 지급</button>
                                                             </div>
                                                         </div>
                                                     </td>
@@ -257,7 +230,7 @@
                                             <% if(i <= offset || i > maxPage - offset || (i >= page - (offset - 1) && i <= page + (offset - 1))){ %>
                                                 <% if(i != page){ %>
                                                     <li class="page-item"><a class="page-link"
-                                                                             href="/members/?page=<%= i %><%= partialQuery %>"><%= i %></a>
+                                                                             href="/pointSetting/pointIndex?page=<%= i %><%= partialQuery %>"><%= i %></a>
                                                     </li>
                                                 <% } else { %>
                                                     <li class="page-item" name="currentPage" aria-current="page"><a
@@ -297,7 +270,7 @@
 
         $(".active").removeClass("active");
         $("#members").addClass("active");
-        $("#forms-collapse1").addClass('show');
+        $("#forms-collapse5").addClass('show');
 
         $('.btn-number').click(function (e) {
             e.preventDefault();

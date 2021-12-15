@@ -65,14 +65,14 @@
                                         </div>
                                     </div>
                                 </td>
-                                <td rowspan="2">
+                                <td rowspan="3">
                                     <div class="row justify-content-center">
                                         <div class="col-6 p-0 m-0">
-                                            <button type="submit" id="btnSearch"  class="btn btn-info" style="margin-top: 40px;" <%= search.searchType=="author!"?"disabled":"" %>>검색</button>
+                                            <button type="submit" id="btnSearch"  class="btn btn-info" style="margin-top: 41px;" <%= search.searchType=="author!"?"disabled":"" %>>검색</button>
                                         </div>
                                         <%if(search.searchType){%>
                                         <div class="col-6 p-0 m-0">
-                                            <button type="button" class="btn btn-secondary" style="margin-top: 40px;"  onclick="window.location = '/challengeOngoing/challengeHistory?page=1'">취소</button>
+                                            <button type="button" class="btn btn-secondary" style="margin-top: 41px;"  onclick="window.location = '/challengeOngoing/challengeHistory?page=1'">취소</button>
                                         </div>
                                         <%}%>
                                         <div class="message" id="searchError"></div>
@@ -89,16 +89,16 @@
                                                 <label class="form-check-label" for="inlineCheckbox1">전체</label>
                                             </div>
                                             <div class="col-2">
-                                                <input type="checkbox" class="form-check-input" name="termCheck[yesterday]" value="true" id="inlineCheckbox1"/>
-                                                <label class="form-check-label" for="inlineCheckbox1">1일 내</label>
+                                                <input type="checkbox" class="form-check-input" name="termCheck[yesterday]" value="true" id="inlineCheckbox2"/>
+                                                <label class="form-check-label" for="inlineCheckbox2">1일 내</label>
                                             </div>
                                             <div class="col-2">
-                                                <input type="checkbox" class="form-check-input" name="termCheck[weeklyy]" value="true" id="inlineCheckbox2"/>
-                                                <label class="form-check-label" for="inlineCheckbox2">7일 내</label>
+                                                <input type="checkbox" class="form-check-input" name="termCheck[weeklyy]" value="true" id="inlineCheckbox3"/>
+                                                <label class="form-check-label" for="inlineCheckbox3">7일 내</label>
                                             </div>
                                             <div class="col-2">
-                                                <input type="checkbox" class="form-check-input" name="termCheck[monthy]" value="true" id="inlineCheckbox3"/>
-                                                <label class="form-check-label" for="inlineCheckbox3">1달 내</label>
+                                                <input type="checkbox" class="form-check-input" name="termCheck[monthy]" value="true" id="inlineCheckbox4"/>
+                                                <label class="form-check-label" for="inlineCheckbox4">1달 내</label>
                                             </div>
                                         </div>
                                         <div class="row g-4 align-self-center">
@@ -131,13 +131,13 @@
                                             </div>
                                             <div class="col-2">
                                                 <input type="checkbox" class="form-check-input" name="termCheck[weeklyy]" 
-                                                value="true" id="inlineCheckbox2" <% if(testSearch.findAfter.weeklyy) { %> checked <% } %>/>
-                                                <label class="form-check-label" for="inlineCheckbox2">7일 내</label>
+                                                value="true" id="inlineCheckbox3" <% if(testSearch.findAfter.weeklyy) { %> checked <% } %>/>
+                                                <label class="form-check-label" for="inlineCheckbox3">7일 내</label>
                                             </div>
                                             <div class="col-2">
                                                 <input type="checkbox" class="form-check-input" name="termCheck[monthy]" 
-                                                value="true" id="inlineCheckbox3" <% if(testSearch.findAfter.monthy) { %> checked <% } %>/>
-                                                <label class="form-check-label" for="inlineCheckbox3">1달 내</label>
+                                                value="true" id="inlineCheckbox4" <% if(testSearch.findAfter.monthy) { %> checked <% } %>/>
+                                                <label class="form-check-label" for="inlineCheckbox4">1달 내</label>
                                             </div>
                                         </div>
                                         <div class="row g-4 align-self-center">
@@ -164,8 +164,16 @@
                         </form>
                     </table>
 
+                    <div class="row g-4 align-items-left">
+                        <div class="col-12">
+                            <button type="button" class="btn btn-success btn-sm"
+                                onclick="fnExcelReport('table','주문 내역');">Excel Download</button>
+                        </div>
+                    </div>
+                    <br>
+
                     <div class="table-responsive">
-                        <table class="table table-striped table-bordered table-image text-center" id="table-1">
+                        <table class="table table-striped table-bordered table-image text-center" id="table">
                             <thead>
                                 <tr>
                                 <th scope="col"></th>
@@ -197,7 +205,7 @@
                                         <td class="align-middle"><%= post.getFormattedDate(post.createdAt) %>
                                         </td>
                                         <td class="align-middle"><%= post.dailycheck.length %>일차
-                                        <%// console.log(post.dailycheck) %>
+                                        <%// console.log(post.dailycheck.length) %>
                                         </td>
                                         <% var toDay = new Date(); %>
                                         <% var createdDay = post.createdAt %>
@@ -241,11 +249,45 @@
                                 <% }) %>
                             </tbody>
                         </table>
+                    </div>
+                    <div class="col-md-12">
+                        <nav aria-label="Page navigation example">
+                            <ul class="pagination pagination-sm justify-content-center">
+                                <%
+                                var offset = 4;
+                                var partialQuery;
+                                if (urlQuery) partialQuery = "&" + urlQuery.replace(/page=(.*?)(&|$)/ig, "");
+                                %>
 
+                                <li class="page-item disabled">
+                                    <a class="page-link" href="#" aria-label="Previous">
+                                        <span aria-hidden="true">&laquo;</span>
+                                    </a>
+                                </li>
 
+                                <% for(i = 1;i <= maxPage;i++){ %>
 
-
-
+                                    <% if(i <= offset || i > maxPage - offset || (i >= page - (offset - 1) && i <= page + (offset - 1))){ %>
+                                        <% if(i != page){ %>
+                                            <!-- <li>[<a href="/carezone?page=<%= i %><%= partialQuery %>"> <%= i %> </a>]</li> -->
+                                            <li class="page-item"><a class="page-link"
+                                                                     href="/challengeOngoing/challengeHistory?page=<%= i %><%= partialQuery %>"><%= i %></a>
+                                            </li>
+                                        <% } else { %>
+                                            <li class="page-item" name="currentPage" aria-current="page"><a
+                                                        class="page-link" href="#"><%= i %></a></li>
+                                        <% } %>
+                                    <% } else if(i == offset + 1 || i == maxPage - offset){ %>
+                                        <li>...</li>
+                                    <% } %>
+                                <% } %>
+                                <li class="page-item disabled">
+                                    <a class="page-link" href="#" aria-label="Next">
+                                        <span aria-hidden="true">&raquo;</span>
+                                    </a>
+                                </li>
+                            </ul>
+                        </nav>
                     </div>
                 </div>
             </div>
@@ -518,5 +560,51 @@ function useYChange(chk) {
             });
 
         });
+
+        function fnExcelReport(id, title) {
+            var tab_text = '<html xmlns:x="urn:schemas-microsoft-com:office:excel">';
+            
+            tab_text = tab_text + '<head><meta http-equiv="content-type" content="application/vnd.ms-excel; charset=UTF-8">';
+            tab_text = tab_text + '<xml><x:ExcelWorkbook><x:ExcelWorksheets><x:ExcelWorksheet>'
+            tab_text = tab_text + '<x:Name>Test Sheet</x:Name>';
+            tab_text = tab_text + '<x:WorksheetOptions><x:Panes></x:Panes></x:WorksheetOptions></x:ExcelWorksheet>';
+            tab_text = tab_text + '</x:ExcelWorksheets></x:ExcelWorkbook></xml></head><body>';
+            tab_text = tab_text + "<table border='1px'>";
+            
+            var exportTable = $('#' + id).clone();
+            
+            exportTable.find('input').each(function (index, elem) { $(elem).remove(); });
+            tab_text = tab_text + exportTable.html();
+            tab_text = tab_text + '</table></body></html>';
+            
+            var data_type = 'data:application/vnd.ms-excel';
+            var ua = window.navigator.userAgent;
+            var msie = ua.indexOf("MSIE ");
+            var fileName = title + '.xls';
+
+            // 익스플로러에서 다운로드
+            if (msie > 0 || !!navigator.userAgent.match(/Trident.*rv\:11\./)) {
+                if (window.navigator.msSaveBlob) {
+                    var blob = new Blob([tab_text], {
+                        type: "application/csv;charset=utf-8;"
+                    });
+                    navigator.msSaveBlob(blob, fileName);
+                }
+            } else {
+                var blob2 = new Blob([tab_text], {
+                    type: "application/csv;charset=utf-8;"
+                });
+
+                var filename = fileName;
+                var elem = window.document.createElement('a');
+
+                elem.href = window.URL.createObjectURL(blob2);
+                elem.download = filename;
+                document.body.appendChild(elem);
+                elem.click();
+                document.body.removeChild(elem);
+            }
+        }
+
 </script>
 </html>
